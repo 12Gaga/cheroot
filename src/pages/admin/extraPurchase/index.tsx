@@ -18,7 +18,7 @@ const ExtraPurchase = () => {
         }}
       >
         <Typography variant="h4" sx={{ color: "white", fontWeight: "bold" }}>
-          ကိုယ်စားလှယ်အမည်စာရင်း
+          ထပ်ဝယ်စာရင်း
         </Typography>
       </Box>
 

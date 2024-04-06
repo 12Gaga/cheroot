@@ -64,7 +64,7 @@ const AdminLayout = ({ children }: Props) => {
       >
         {open && (
           <Typography variant="h5" sx={{ color: "white", fontWeight: "bold" }}>
-            ဂိုထောင်အဖြည့်ကုန်ကြမ်းစာရင်း
+            ဂိုထောင်အဖွင့်ကုန်ကြမ်းစာရင်း
           </Typography>
         )}
         {add && (

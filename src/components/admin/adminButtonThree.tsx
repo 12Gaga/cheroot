@@ -16,8 +16,8 @@ const AdminButton3 = () => {
             bgcolor: "#E55252",
             mt: 3,
             width: 320,
-            height: 50,
-            fontSize: 18,
+            height: 65,
+            fontSize: 16,
             borderRadius: 20,
             "&:hover": {
               bgcolor: "#FCB500",
@@ -34,8 +34,8 @@ const AdminButton3 = () => {
             bgcolor: "#E55252",
             mt: 3,
             width: 320,
-            height: 50,
-            fontSize: 18,
+            height: 65,
+            fontSize: 16,
             borderRadius: 20,
             "&:hover": {
               bgcolor: "#FCB500",

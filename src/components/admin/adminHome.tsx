@@ -4,62 +4,62 @@ import { useRouter } from "next/router";
 const btns = [
   {
     id: 1,
-    title: " အဖွင့်ငွေစာရင်း",
-    url: "",
+    title: "ကုန်ကြမ်းအမည်နှင့်ဈေးသတ်မှတ်ခြင်း",
+    url: "/admin/asignNamePrice",
   },
   {
     id: 2,
-    title: "အဖွင့်ကုန်ကြမ်းစာရင်း",
-    url: "/adminPage/openingStock",
+    title: "ဂိုထောင်အဖွင့်ကုန်ကြမ်းစာရင်း",
+    url: "/admin/openingStock",
   },
   {
     id: 3,
+    title: "ကုန်ကြမ်းထပ်ဖြည့်ခြင်း",
+    url: "/admin/addStock",
+  },
+  {
+    id: 4,
     title: "သုံးငွေစာရင်း",
     url: "",
   },
   {
-    id: 4,
+    id: 5,
     title: "ဝင်ငွေစာရင်း",
     url: "",
   },
   {
-    id: 5,
+    id: 6,
     title: "ကုန်ကြမ်းစာရင်း",
     url: "",
   },
   {
-    id: 6,
+    id: 7,
     title: "ကုန်ချောစာရင်း",
     url: "",
   },
   {
-    id: 7,
-    title: " အမည်စာရင်း",
-    url: "/adminPage/name",
-  },
-  {
     id: 8,
-    title: " ထပ်ဝယ်စာရင်း",
-    url: "",
+    title: " ကိုယ်စားလှယ်အမည်စာရင်း",
+    url: "/admin/name",
   },
   {
     id: 9,
-    title: "  ဖက်ထုပ်ပေးစာရင်း",
-    url: "",
+    title: "  ဖက်ထုပ်ပေးခြင်း",
+    url: "/admin/payLeaf",
   },
   {
     id: 10,
     title: "  ဆေးလိပ်အဝင်စာရင်း",
-    url: "",
+    url: "/admin/returnCheroot",
   },
   {
     id: 11,
-    title: " ပစ္စည်းထပ်ဖြည့်စာရင်း",
-    url: "/adminPage/addStock",
+    title: "ထပ်ဝယ်စာရင်း",
+    url: "/admin/extraPurchase",
   },
   {
     id: 12,
-    title: " စာရင်း",
+    title: "စာရင်း",
     url: "",
   },
 ];
@@ -101,9 +101,9 @@ const Admin = () => {
                   sx={{
                     bgcolor: "#E55252",
                     mt: 3,
-                    width: 220,
-                    height: 50,
-                    fontSize: 18,
+                    width: 235,
+                    height: 65,
+                    fontSize: 16,
                     borderRadius: 20,
                     "&:hover": {
                       bgcolor: "#FCB500",
