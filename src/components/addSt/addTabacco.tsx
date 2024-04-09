@@ -11,6 +11,7 @@ import { useState } from "react";
 
 const AddTabacco = () => {
   const [selectedTabacco, setSelectedTabacco] = useState<number>(1);
+  const [selectedGarage, setSelectedGarage] = useState<number>(1);
   return (
     <>
       <Box
@@ -22,6 +23,26 @@ const AddTabacco = () => {
           mt: 5,
         }}
       >
+        <Box sx={{ mt: 2, display: "flex", alignItems: "center" }}>
+          <Typography sx={{ fontWeight: "bold", width: 150 }}>
+            ဂိုထောင်
+          </Typography>
+          <FormControl variant="filled" sx={{ width: 225 }}>
+            <Select
+              labelId="demo-simple-select-filled-label"
+              id="demo-simple-select-filled"
+              value={selectedGarage}
+              onChange={(evt) => {
+                setSelectedGarage(Number(evt.target.value));
+              }}
+              sx={{ bgcolor: "#EEE8CF" }}
+            >
+              <MenuItem value={1}>ဂိုထောင် ၁</MenuItem>
+              <MenuItem value={2}>ဂိုထောင် ၂</MenuItem>
+            </Select>
+          </FormControl>
+        </Box>
+
         <Box sx={{ display: "flex", alignItems: "center" }}>
           <Typography sx={{ fontWeight: "bold", width: 150 }}>
             ဆေးစပ်အမျိုးအစား
@@ -68,27 +89,6 @@ const AddTabacco = () => {
             onChange={() => {}}
           />
         </Box>
-      </Box>
-
-      <Box sx={{ display: "flex", justifyContent: "flex-end", my: 2 }}>
-        <Button
-          variant="contained"
-          sx={{
-            bgcolor: "#E55252",
-            mr: 2,
-            width: 180,
-            height: 40,
-            fontSize: 18,
-            borderRadius: 10,
-            "&:hover": {
-              bgcolor: "#FCB500",
-              color: "white",
-              fontWeight: "bold",
-            },
-          }}
-        >
-          သိမ်းမည်
-        </Button>
       </Box>
     </>
   );

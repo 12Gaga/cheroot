@@ -34,7 +34,41 @@ const asigning = [
   { label: "ဆေးစပ်အမျိုးအစား", url: "/admin/asignNamePrice/typeTabacco" },
   { label: "တံဆိပ်အမျိုးအစား", url: "/admin/asignNamePrice/typeLabel" },
   { label: "ဆေးလိပ်အမျိုးအစား", url: "/admin/asignNamePrice/typeCheroot" },
+  { label: "အလုပ်ရုံ", url: "/admin/asignNamePrice/workShop" },
   { label: "ဂိုထောင်", url: "/admin/asignNamePrice/garage" },
+];
+
+const moneyList = [
+  { label: "ငွေစာရင်းခေါင်းစဉ်သတ်မှတ်ခြင်း", url: "/admin/moneyData" },
+  { label: "နေ့စဉ်အသုံးစာရိတ်", url: "/admin/moneyData/dailyExpenses" },
+  { label: "ပင်မငွေစာရင်း", url: "/admin/moneyData/mainMoney" },
+  { label: "ဖြည့်တင်းငွေ", url: "/admin/moneyData/addMoney" },
+  { label: "လက်ကျန်ငွေ", url: "/admin/moneyData/closingBalance" },
+  { label: "စာရင်းပိတ်ခြင်း", url: "/admin/moneyData/closing" },
+];
+
+const garageList = [
+  { label: "ပိုနံပါတ်", url: "/admin/garageTransfer" },
+  {
+    label: "အဆီခံ (အရေအတွက်/အိတ်)",
+    url: "/admin/garageTransfer/transferFilterSize",
+  },
+  { label: "ဆေးစပ် (တင်း/ပြည်)", url: "/admin/garageTransfer/transferTabacco" },
+  { label: "တံဆိပ် (လိပ်) ", url: "/admin/garageTransfer/transferLabel" },
+];
+
+const packing = [
+  { label: "ပါကင်အမျိုးအစား", url: "/admin/packing" },
+  { label: "ထုပ်ပိုးမှုအမျိုးအစား", url: "/admin/packing/packingForm" },
+  { label: "ပါကင်စာရင်းထည့်ခြင်း", url: "/admin/packing/packingData" },
+];
+
+const transferring = [
+  { label: "နေရာသတ်မှတ်ခြင်း", url: "/admin/transferCheroot" },
+  {
+    label: "ဆေးလိပ်ပို့စာရင်း",
+    url: "/admin/transferCheroot/transferCherootData",
+  },
 ];
 
 const AdminLayout = ({ children }: Props) => {
@@ -42,6 +76,10 @@ const AdminLayout = ({ children }: Props) => {
   const open = router.pathname.includes("openingStock");
   const add = router.pathname.includes("addStock");
   const asign = router.pathname.includes("asignNamePrice");
+  const garage = router.pathname.includes("garageTransfer");
+  const money = router.pathname.includes("moneyData");
+  const pack = router.pathname.includes("packing");
+  const transfer = router.pathname.includes("transferCheroot");
   let data;
   if (open) {
     data = [...opening];
@@ -49,6 +87,14 @@ const AdminLayout = ({ children }: Props) => {
     data = [...adding];
   } else if (asign) {
     data = [...asigning];
+  } else if (garage) {
+    data = [...garageList];
+  } else if (money) {
+    data = [...moneyList];
+  } else if (pack) {
+    data = [...packing];
+  } else if (transfer) {
+    data = [...transferring];
   }
 
   return (
@@ -75,6 +121,26 @@ const AdminLayout = ({ children }: Props) => {
         {asign && (
           <Typography variant="h5" sx={{ color: "white", fontWeight: "bold" }}>
             ကုန်ကြမ်းအမည်သတ်မှတ်ခြင်းနှင့်ဈေးနှုန်းသတ်မှတ်ခြင်း
+          </Typography>
+        )}
+        {garage && (
+          <Typography variant="h5" sx={{ color: "white", fontWeight: "bold" }}>
+            ဂိုထောင်အကူးအပြောင်းစာရင်း
+          </Typography>
+        )}
+        {money && (
+          <Typography variant="h5" sx={{ color: "white", fontWeight: "bold" }}>
+            ငွေစာရင်း
+          </Typography>
+        )}
+        {pack && (
+          <Typography variant="h5" sx={{ color: "white", fontWeight: "bold" }}>
+            ပစ္စည်းပါကင်ထုပ်ခြင်း
+          </Typography>
+        )}
+        {transfer && (
+          <Typography variant="h5" sx={{ color: "white", fontWeight: "bold" }}>
+            ဆေးလိပ်ပို့ခြင်း
           </Typography>
         )}
       </Box>

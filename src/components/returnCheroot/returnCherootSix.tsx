@@ -6,7 +6,7 @@ const ReturnCherootSix = () => {
       <Box
         sx={{
           display: "flex",
-          width: "60%",
+          width: "80%",
           justifyContent: "space-around",
           flexWrap: "wrap",
         }}
@@ -35,6 +35,17 @@ const ReturnCherootSix = () => {
           <Typography sx={{ fontWeight: "bold" }}>ကြိုယူငွေ(အသေး)</Typography>
           <TextField
             placeholder="ကြိုယူငွေ(အသေး)"
+            sx={{ bgcolor: "#EEE8CF" }}
+            onChange={() => {}}
+          />
+        </Box>
+
+        <Box sx={{ width: 250, mt: 4 }}>
+          <Typography sx={{ fontWeight: "bold" }}>
+            စုစုပေါင်းကိုယ်စားလှယ်ရှင်းငွေ
+          </Typography>
+          <TextField
+            placeholder="စုစုပေါင်းကိုယ်စားလှယ်ရှင်းငွေ"
             sx={{ bgcolor: "#EEE8CF" }}
             onChange={() => {}}
           />

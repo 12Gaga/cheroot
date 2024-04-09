@@ -1,5 +1,3 @@
-import PayLeafFive from "@/components/payleaf/payLeafFive";
-import PayLeafFour from "@/components/payleaf/payLeafFour";
 import PayLeafOne from "@/components/payleaf/payLeafOne";
 import PayLeafThree from "@/components/payleaf/payLeafThree";
 import PayLeafTwo from "@/components/payleaf/payLeafTwo";
@@ -60,13 +58,6 @@ const PayLeaf = () => {
         >
           <PayLeafThree />
         </Box>
-      </Box>
-
-      <Box sx={{ display: "flex" }}>
-        <PayLeafFour />
-      </Box>
-      <Box sx={{ display: "flex" }}>
-        <PayLeafFive />
       </Box>
 
       <PayLeafButton />

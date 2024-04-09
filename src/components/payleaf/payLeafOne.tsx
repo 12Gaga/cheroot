@@ -13,7 +13,7 @@ import "react-datepicker/dist/react-datepicker.css";
 const PayLeafOne = () => {
   const [selecteddate, setSelectedDate] = useState<any>(new Date());
   const [selectedLeaf, setSelectedLeaf] = useState<number>(1);
-  const [selectedBatchno, setSelectedBatchno] = useState<number>(1);
+  const [selectedBatchno, setSelectedBatchno] = useState<number[]>([]);
   return (
     <>
       <Box
@@ -55,11 +55,15 @@ const PayLeafOne = () => {
           <Typography sx={{ fontWeight: "bold" }}>ပိုနံပါတ်</Typography>
           <FormControl variant="filled" sx={{ width: 225 }}>
             <Select
+              multiple
               labelId="demo-simple-select-filled-label"
               id="demo-simple-select-filled"
               value={selectedBatchno}
               onChange={(evt) => {
-                setSelectedBatchno(Number(evt.target.value));
+                setSelectedBatchno([
+                  ...selectedBatchno,
+                  Number(evt.target.value),
+                ]);
               }}
               sx={{ bgcolor: "#EEE8CF" }}
             >

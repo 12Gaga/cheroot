@@ -1,8 +1,8 @@
-import AgentButton from "@/components/agent/agentButton";
-import AgentOne from "@/components/agent/agentOne";
-import Agent from "@/components/agent/agentOne";
-import AgentThree from "@/components/agent/agentThree";
-import AgentTwo from "@/components/agent/agentTwo";
+import AgentButton from "@/components/agentName/agentButton";
+import AgentOne from "@/components/agentName/agentOne";
+import Agent from "@/components/agentName/agentOne";
+import AgentThree from "@/components/agentName/agentThree";
+import AgentTwo from "@/components/agentName/agentTwo";
 import { Box, Typography } from "@mui/material";
 import React, { useState } from "react";
 

@@ -59,8 +59,8 @@ const btns = [
   },
   {
     id: 12,
-    title: "စာရင်း",
-    url: "",
+    title: "ပစ္စည်းထုပ်ပေးစာရင်း",
+    url: "/admin/payLeaf/payStock",
   },
 ];
 

@@ -5,7 +5,7 @@ import ReturnCherootOne from "@/components/returnCheroot/returnCherootOne";
 import ReturnCherootSix from "@/components/returnCheroot/returnCherootSix";
 import ReturnCherootThree from "@/components/returnCheroot/returnCherootThree";
 import ReturnCherootTwo from "@/components/returnCheroot/returnCherootTwo";
-import { Box, Typography } from "@mui/material";
+import { Box, Button, Typography } from "@mui/material";
 import { useState } from "react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
@@ -48,6 +48,9 @@ const ReturnCheroot = () => {
         >
           <ReturnCherootOne />
           <ReturnCherootTwo />
+          <Box sx={{ display: "flex", justifyContent: "flex-end", mr: 2 }}>
+            <Button variant="contained">သိမ်းမည်</Button>
+          </Box>
         </Box>
 
         <Box
@@ -64,7 +67,7 @@ const ReturnCheroot = () => {
       </Box>
 
       <Typography
-        variant="h5"
+        variant="h6"
         sx={{
           bgcolor: "#FCB500",
           color: "white",
@@ -79,6 +82,23 @@ const ReturnCheroot = () => {
 
       <ReturnCherootFour />
 
+      <Box sx={{ display: "flex", justifyContent: "flex-end", mt: 2 }}>
+        <Button variant="contained">သိမ်းမည်</Button>
+      </Box>
+      <Typography
+        variant="h6"
+        sx={{
+          bgcolor: "#FCB500",
+          color: "white",
+          fontWeight: "bold",
+          width: 200,
+          p: 1,
+          borderRadius: 3,
+          mt: 3,
+        }}
+      >
+        ခုနှိမ်ခြင်း
+      </Typography>
       <ReturnCherootFive />
 
       <ReturnCherootSix />

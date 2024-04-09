@@ -3,7 +3,7 @@ import { Typography, TextField, Box, Button } from "@mui/material";
 const PayLeafButton = () => {
   return (
     <>
-      <Box sx={{ display: "flex", justifyContent: "flex-end", my: 2 }}>
+      <Box sx={{ display: "flex", justifyContent: "flex-end", mt: 4 }}>
         <Button
           variant="contained"
           sx={{
