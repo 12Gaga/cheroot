@@ -5,8 +5,11 @@ import PayStockButton from "@/components/payleaf/payStockButton";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { useState } from "react";
+import { useSession } from "next-auth/react";
 const PayStock = () => {
   const [selecteddate, setSelectedDate] = useState<any>(new Date());
+  const { data: session } = useSession();
+  if (!session) return;
   return (
     <>
       <Box

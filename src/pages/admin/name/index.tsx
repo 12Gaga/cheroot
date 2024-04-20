@@ -4,9 +4,12 @@ import Agent from "@/components/agentName/agentOne";
 import AgentThree from "@/components/agentName/agentThree";
 import AgentTwo from "@/components/agentName/agentTwo";
 import { Box, Typography } from "@mui/material";
+import { useSession } from "next-auth/react";
 import React, { useState } from "react";
 
 const NamePage = () => {
+  const { data: session } = useSession();
+  if (!session) return;
   return (
     <>
       <Box

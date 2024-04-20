@@ -1,11 +1,13 @@
 import AdminLayout from "@/components/adminLayout";
-import NewLeaf from "@/components/asign/newLeaf";
 import NewTabacco from "@/components/asign/newTabacco";
+import ItemCard from "@/components/itemCard";
+import { useAppSelector } from "@/store/hooks";
 import { Box, Button, Typography } from "@mui/material";
 import { useState } from "react";
-
+import WorkspacesIcon from "@mui/icons-material/Workspaces";
 const TypeTabacco = () => {
   const [open, setOpen] = useState<boolean>(false);
+  const tabacco = useAppSelector((store) => store.typeOfTabacco.item);
   return (
     <>
       <AdminLayout>
@@ -36,6 +38,21 @@ const TypeTabacco = () => {
           >
             ဆေးစပ်အမျိုးအစားအသစ်ထည့်ခြင်း
           </Button>
+        </Box>
+
+        <Box sx={{ display: "flex", flexWrap: "wrap" }}>
+          {tabacco.map((item) => {
+            const workShopId = localStorage.getItem("selectedWorkShopId");
+            const exit = item.workShopId === Number(workShopId);
+            if (!exit) return null;
+            return (
+              <ItemCard
+                key={item.id}
+                icon={<WorkspacesIcon />}
+                title={item.name}
+              />
+            );
+          })}
         </Box>
 
         <NewTabacco open={open} setOpen={setOpen} />

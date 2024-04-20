@@ -3,9 +3,12 @@ import FilterSizeExtra from "@/components/extraPur/extraPurFilterSize";
 import ExtraPurTop from "@/components/extraPur/extraPurTop";
 import TabaccoExtra from "@/components/extraPur/extraTabacco";
 import { Box, Button, Typography } from "@mui/material";
+import { useSession } from "next-auth/react";
 
 import "react-datepicker/dist/react-datepicker.css";
 const ExtraPurchase = () => {
+  const { data: session } = useSession();
+  if (!session) return;
   return (
     <>
       <Box

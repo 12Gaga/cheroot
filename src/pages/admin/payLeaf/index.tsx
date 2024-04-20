@@ -6,9 +6,12 @@ import "react-datepicker/dist/react-datepicker.css";
 import { Box, Button, TextField, Typography } from "@mui/material";
 import { useState } from "react";
 import PayLeafButton from "@/components/payleaf/payLeafButton";
+import { useSession } from "next-auth/react";
 
 const PayLeaf = () => {
   const [selecteddate, setSelectedDate] = useState<any>(new Date());
+  const { data: session } = useSession();
+  if (!session) return;
   return (
     <>
       <Box

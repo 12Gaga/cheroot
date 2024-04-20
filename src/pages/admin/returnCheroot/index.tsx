@@ -6,12 +6,15 @@ import ReturnCherootSix from "@/components/returnCheroot/returnCherootSix";
 import ReturnCherootThree from "@/components/returnCheroot/returnCherootThree";
 import ReturnCherootTwo from "@/components/returnCheroot/returnCherootTwo";
 import { Box, Button, Typography } from "@mui/material";
+import { useSession } from "next-auth/react";
 import { useState } from "react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 
 const ReturnCheroot = () => {
   const [selecteddate, setSelectedDate] = useState<any>(new Date());
+  const { data: session } = useSession();
+  if (!session) return;
   return (
     <>
       <Box

@@ -1,3 +1,4 @@
+import { CreateNewLeaf } from "@/types/LeafType";
 import {
   Box,
   Button,
@@ -8,13 +9,41 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-
+import { useState } from "react";
+import { LoadingButton } from "@mui/lab";
+import { useAppDispatch, useAppSelector } from "@/store/hooks";
+import { CreateLeaf, setIsLoading } from "@/store/slices/typeOfLeaf";
+import { setOpenSnackbar } from "@/store/slices/snackBar";
 interface Props {
   open: boolean;
   setOpen: (value: boolean) => void;
 }
 
+const defaultValue: CreateNewLeaf = {
+  name: "",
+  price: 0,
+};
+
 const NewLeaf = ({ open, setOpen }: Props) => {
+  const [newLeaf, setNewLeaf] = useState<CreateNewLeaf>(defaultValue);
+  const { isLoading } = useAppSelector((store) => store.typeOfLeaf);
+  const dispatch = useAppDispatch();
+  console.log(newLeaf);
+  const handleClick = () => {
+    dispatch(setIsLoading(true));
+    dispatch(
+      CreateLeaf({
+        ...newLeaf,
+        onSuccess: () => {
+          setOpen(false);
+          setNewLeaf(defaultValue);
+          dispatch(setOpenSnackbar({ message: "Create new leaf success" }));
+          dispatch(setIsLoading(false));
+        },
+      })
+    );
+  };
+
   return (
     <Dialog open={open} onClose={() => setOpen(false)}>
       <DialogTitle>ဖက်အမျိုးအစားအသစ်ထည့်ခြင်း</DialogTitle>
@@ -25,7 +54,9 @@ const NewLeaf = ({ open, setOpen }: Props) => {
             <TextField
               placeholder="အမည်"
               sx={{ bgcolor: "#EEE8CF" }}
-              onChange={() => {}}
+              onChange={(evt) =>
+                setNewLeaf({ ...newLeaf, name: evt.target.value })
+              }
             />
           </Box>
 
@@ -34,7 +65,9 @@ const NewLeaf = ({ open, setOpen }: Props) => {
             <TextField
               placeholder="ဈေးနှုန်း"
               sx={{ bgcolor: "#EEE8CF" }}
-              onChange={() => {}}
+              onChange={(evt) =>
+                setNewLeaf({ ...newLeaf, price: Number(evt.target.value) })
+              }
             />
           </Box>
         </Box>
@@ -43,7 +76,14 @@ const NewLeaf = ({ open, setOpen }: Props) => {
         <Button variant="contained" onClick={() => setOpen(false)}>
           မလုပ်တော့ပါ
         </Button>
-        <Button variant="contained">အိုကေ</Button>
+        <LoadingButton
+          variant="contained"
+          disabled={!newLeaf.name || !newLeaf.price}
+          onClick={handleClick}
+          loading={isLoading}
+        >
+          အိုကေ
+        </LoadingButton>
       </DialogActions>
     </Dialog>
   );

@@ -1,10 +1,13 @@
 import AdminLayout from "@/components/adminLayout";
 import NewFilterSize from "@/components/asign/newFilterSize";
+import ItemCard from "@/components/itemCard";
+import { useAppSelector } from "@/store/hooks";
 import { Box, Button, Typography } from "@mui/material";
 import { useState } from "react";
-
+import FiberManualRecordIcon from "@mui/icons-material/FiberManualRecord";
 const TypeFilterSize = () => {
   const [open, setOpen] = useState<boolean>(false);
+  const filterSizes = useAppSelector((store) => store.typeOfFilterSize.item);
   return (
     <>
       <AdminLayout>
@@ -36,7 +39,20 @@ const TypeFilterSize = () => {
             အဆီခံအမျိုးအစားအသစ်ထည့်ခြင်း
           </Button>
         </Box>
-
+        <Box sx={{ display: "flex", flexWrap: "wrap" }}>
+          {filterSizes.map((item) => {
+            const workShopId = localStorage.getItem("selectedWorkShopId");
+            const exit = item.workShopId === Number(workShopId);
+            if (!exit) return null;
+            return (
+              <ItemCard
+                key={item.id}
+                icon={<FiberManualRecordIcon />}
+                title={item.name}
+              />
+            );
+          })}
+        </Box>
         <NewFilterSize open={open} setOpen={setOpen} />
       </AdminLayout>
     </>

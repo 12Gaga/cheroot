@@ -1,8 +1,14 @@
 import Admin from "@/components/admin/adminHome";
-
+import { useAppSelector } from "@/store/hooks";
 import { Box, Button, Typography } from "@mui/material";
+import { signOut, useSession } from "next-auth/react";
 import Image from "next/image";
+import { useRouter } from "next/router";
 const AdminPage = () => {
+  const { data: session } = useSession();
+  const router = useRouter();
+  if (!session) return null;
+
   return (
     <>
       <Box
@@ -24,7 +30,12 @@ const AdminPage = () => {
         <Typography variant="h4" sx={{ color: "white", fontWeight: "bold" }}>
           Admin Page
         </Typography>
-        <Button variant="contained">Sign out</Button>
+        <Button
+          variant="contained"
+          onClick={() => signOut({ callbackUrl: "/admin" })}
+        >
+          Sign out
+        </Button>
       </Box>
 
       <Admin />

@@ -1,11 +1,14 @@
 import AdminLayout from "@/components/adminLayout";
 import NewLabel from "@/components/asign/newLabel";
 import NewLeaf from "@/components/asign/newLeaf";
+import ItemCard from "@/components/itemCard";
+import { useAppSelector } from "@/store/hooks";
 import { Box, Button, Typography } from "@mui/material";
 import { useState } from "react";
-
+import BookmarkIcon from "@mui/icons-material/Bookmark";
 const TypeLabel = () => {
   const [open, setOpen] = useState<boolean>(false);
+  const labels = useAppSelector((store) => store.typeOfLabel.item);
   return (
     <>
       <AdminLayout>
@@ -38,6 +41,20 @@ const TypeLabel = () => {
           </Button>
         </Box>
 
+        <Box sx={{ display: "flex", flexWrap: "wrap" }}>
+          {labels.map((item) => {
+            const workShopId = localStorage.getItem("selectedWorkShopId");
+            const exit = item.workShopId === Number(workShopId);
+            if (!exit) return null;
+            return (
+              <ItemCard
+                key={item.id}
+                icon={<BookmarkIcon />}
+                title={item.name}
+              />
+            );
+          })}
+        </Box>
         <NewLabel open={open} setOpen={setOpen} />
       </AdminLayout>
     </>

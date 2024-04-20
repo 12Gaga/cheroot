@@ -13,14 +13,106 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model AgentName{
+model CigratteIndustry{
    id Int @id @default(autoincrement())
    name String
-   phoneNo Int
    address String
-   cashBalanceBig Float
-   cashBalanceSmall Float
-   fiveTaMat Float
-   fourWar Float
-   twoLateWar Float
+   users User[]
+   agents Agent[]
+   workShops WorkShop[]
+   isArchived Boolean @default(false)
 }
+
+model User{
+  id Int @id @default(autoincrement())
+  name String
+  email String @unique
+  cigratteIndustry CigratteIndustry @relation(fields: [cigratteIndustryId],references: [id])
+  cigratteIndustryId Int
+  isArchived Boolean @default(false)
+}
+
+model Agent{
+  id Int @id @default(autoincrement())
+  name String
+  phoneNo Int
+  adderess String
+  cashBalcanceBig Int
+  cashBalcanceSmall Int
+  cigratteIndustry CigratteIndustry @relation(fields: [cigratteIndustryId],references: [id])
+  cigratteIndustryId Int
+  isArchived Boolean @default(false)
+  agentLeafViss AgentLeafViss[]
+}
+
+model WorkShop{
+  id Int @id @default(autoincrement())
+  name String
+  cigratteIndustry CigratteIndustry @relation(fields: [cigratteIndustryId],references: [id])
+  cigratteIndustryId Int
+  garage Garage[]
+  typeOfLeaf TypeOfLeaf[]
+  typeOfFilterSize TypeOfFilterSize[]
+  typeOfTabacco TypeOfTabacco[]
+  typeOfLabel TypeOfLabel[]
+  isArchived Boolean @default(false)
+}
+
+model Garage{
+  id Int @id @default(autoincrement())
+  name String
+  workShop WorkShop @relation(fields: [workShopId],references: [id])
+  workShopId Int
+  isArchived Boolean @default(false)
+}
+
+model TypeOfLeaf{
+  id Int @id @default(autoincrement())
+  name String
+  price Int @default(0)
+  workShop WorkShop @relation(fields: [workShopId],references: [id])
+  workShopId Int
+  agentLeafViss AgentLeafViss[]
+  isArchived Boolean @default(false)
+  isAvariabled Boolean @default(false)
+}
+
+model TypeOfFilterSize{
+  id Int @id @default(autoincrement())
+  name String
+  price Int @default(0)
+  workShop WorkShop @relation(fields: [workShopId],references: [id])
+  workShopId Int
+  isArchived Boolean @default(false)
+  isAvariabled Boolean @default(false)
+}
+
+model TypeOfTabacco{
+  id Int @id @default(autoincrement())
+  name String
+  price Int @default(0)
+  workShop WorkShop @relation(fields: [workShopId],references: [id])
+  workShopId Int
+  isArchived Boolean @default(false)
+  isAvariabled Boolean @default(false)
+}
+
+model TypeOfLabel{
+  id Int @id @default(autoincrement())
+  name String
+  price Int @default(0)
+  workShop WorkShop @relation(fields: [workShopId],references: [id])
+  workShopId Int
+  isArchived Boolean @default(false)
+  isAvariabled Boolean @default(false)
+}
+
+model AgentLeafViss{
+  id Int @id @default(autoincrement())
+  agent Agent @relation(fields: [agentId],references: [id])
+  agentId Int
+  typeOfLeaf TypeOfLeaf @relation(fields: [typeOfLeafId],references: [id])
+  typeOfLeafId Int
+}
+
+

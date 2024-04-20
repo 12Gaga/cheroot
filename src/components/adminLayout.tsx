@@ -1,3 +1,4 @@
+import { useAppSelector } from "@/store/hooks";
 import {
   Box,
   Link,
@@ -7,8 +8,10 @@ import {
   ListItemText,
   Typography,
 } from "@mui/material";
+import { WorkShop } from "@prisma/client";
+import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
-import { ReactNode } from "react";
+import { ReactNode, useEffect, useState } from "react";
 
 interface Props {
   children: ReactNode;
@@ -72,6 +75,7 @@ const transferring = [
 ];
 
 const AdminLayout = ({ children }: Props) => {
+  const { data: session } = useSession();
   const router = useRouter();
   const open = router.pathname.includes("openingStock");
   const add = router.pathname.includes("addStock");
@@ -80,6 +84,10 @@ const AdminLayout = ({ children }: Props) => {
   const money = router.pathname.includes("moneyData");
   const pack = router.pathname.includes("packing");
   const transfer = router.pathname.includes("transferCheroot");
+  const { selectedWorkShop } = useAppSelector((store) => store.workShop);
+  const workShops = useAppSelector((store) => store.workShop.item);
+  const work = workShops.find((item) => item.id === selectedWorkShop?.id);
+
   let data;
   if (open) {
     data = [...opening];
@@ -97,6 +105,8 @@ const AdminLayout = ({ children }: Props) => {
     data = [...transferring];
   }
 
+  if (!session) return null;
+
   return (
     <>
       <Box
@@ -105,6 +115,7 @@ const AdminLayout = ({ children }: Props) => {
           p: 2,
           display: "flex",
           justifyContent: "center",
+          flexDirection: "column",
           alignItems: "center",
         }}
       >
@@ -143,6 +154,11 @@ const AdminLayout = ({ children }: Props) => {
             ဆေးလိပ်ပို့ခြင်း
           </Typography>
         )}
+        <Box>
+          <Typography sx={{ color: "white", fontWeight: "bold", mt: 1 }}>
+            {work?.name}
+          </Typography>
+        </Box>
       </Box>
 
       <Box sx={{ display: "flex", position: "relative", zIndex: 5, flex: 1 }}>
