@@ -46,7 +46,12 @@ const moneyList = [
   { label: "နေ့စဉ်အသုံးစာရိတ်", url: "/admin/moneyData/dailyExpenses" },
   { label: "ပင်မငွေစာရင်း", url: "/admin/moneyData/mainMoney" },
   { label: "ဖြည့်တင်းငွေ", url: "/admin/moneyData/addMoney" },
-  { label: "လက်ကျန်ငွေ", url: "/admin/moneyData/closingBalance" },
+  { label: "နေ့စဉ်လက်ကျန်ငွေ", url: "/admin/moneyData/closingBalance" },
+  { label: "ပင်မလက်ကျန်ငွေ", url: "/admin/moneyData/mainClosingBalance" },
+  {
+    label: "ပင်မငွေစာရင်းမှတိုက်ရိုက်ထုတ်ယူခြင်း",
+    url: "/admin/moneyData/directPayment",
+  },
   { label: "စာရင်းပိတ်ခြင်း", url: "/admin/moneyData/closing" },
 ];
 

@@ -20,7 +20,7 @@ const btns = [
   {
     id: 4,
     title: "သုံးငွေစာရင်း",
-    url: "",
+    url: "/admin/moneyData",
   },
   {
     id: 5,

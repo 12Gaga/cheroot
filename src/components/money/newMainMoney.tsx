@@ -5,6 +5,9 @@ import {
   DialogActions,
   DialogContent,
   DialogTitle,
+  FormControl,
+  MenuItem,
+  Select,
   TextField,
   Typography,
 } from "@mui/material";
@@ -18,6 +21,7 @@ interface Props {
 
 const NewMainMoney = ({ open, setOpen }: Props) => {
   const [selecteddate, setSelectedDate] = useState<any>(new Date());
+  const [selectedTown, setSelectedTown] = useState<number>(1);
 
   return (
     <Dialog open={open} onClose={() => setOpen(false)}>
@@ -39,7 +43,26 @@ const NewMainMoney = ({ open, setOpen }: Props) => {
             />
           </Box>
 
-          <Box sx={{ mt: 2 }}>
+          <Box sx={{ width: 250 }}>
+            <Typography sx={{ fontWeight: "bold" }}>မြို့နာမည်</Typography>
+            <FormControl variant="filled" sx={{ width: 300 }}>
+              <Select
+                labelId="demo-simple-select-filled-label"
+                id="demo-simple-select-filled"
+                value={selectedTown}
+                onChange={(evt) => {
+                  setSelectedTown(Number(evt.target.value));
+                }}
+                sx={{ bgcolor: "#EEE8CF" }}
+              >
+                <MenuItem value={1}>Yangon</MenuItem>
+                <MenuItem value={2}>Mandalay</MenuItem>
+                <MenuItem value={3}>Shwe Bo</MenuItem>
+              </Select>
+            </FormControl>
+          </Box>
+
+          <Box sx={{}}>
             <Typography sx={{ fontWeight: "bold" }}>ငွေပမာဏ</Typography>
             <TextField
               placeholder="ငွေပမာဏ"
