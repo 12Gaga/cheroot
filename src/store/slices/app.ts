@@ -8,6 +8,10 @@ import { setLeaf } from "./typeOfLeaf";
 import { setFilterSize } from "./typeOfFilterSize";
 import { setTabacco } from "./typeOfTabacco";
 import { setLabel } from "./typeOfLabel";
+import { setCheroot } from "./typeOfCheroot";
+import { setTypeOfPacking } from "./typeOfPacking";
+import { setFormOfPacking } from "./formOfPacking";
+import { setConveyLocation } from "./conveyLocation";
 
 const initialState: appSlice = {
   init: false,
@@ -22,8 +26,19 @@ export const fetchApp = createAsyncThunk(
     try {
       const response = await fetch(`${Config.apiBaseUrl}/app`);
       const dataFromServer = await response.json();
-      const { industry, workShop, garage, leaf, filterSize, tabacco, label } =
-        dataFromServer;
+      const {
+        industry,
+        workShop,
+        garage,
+        leaf,
+        filterSize,
+        tabacco,
+        label,
+        cheroot,
+        typeOfPacking,
+        formOfPacking,
+        conveyLocation,
+      } = dataFromServer;
       thunkApi.dispatch(setInit(true));
       thunkApi.dispatch(setIndustry(industry));
       thunkApi.dispatch(setWorkShop(workShop));
@@ -32,6 +47,10 @@ export const fetchApp = createAsyncThunk(
       thunkApi.dispatch(setFilterSize(filterSize));
       thunkApi.dispatch(setTabacco(tabacco));
       thunkApi.dispatch(setLabel(label));
+      thunkApi.dispatch(setCheroot(cheroot));
+      thunkApi.dispatch(setTypeOfPacking(typeOfPacking));
+      thunkApi.dispatch(setFormOfPacking(formOfPacking));
+      thunkApi.dispatch(setConveyLocation(conveyLocation));
       onSuccess && onSuccess();
     } catch (err) {
       onError && onError(err);

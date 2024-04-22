@@ -1,3 +1,5 @@
+import { useAppDispatch, useAppSelector } from "@/store/hooks";
+import { createNewTypeOfPacking } from "@/types/typeOfPackingType";
 import {
   Box,
   Button,
@@ -6,20 +8,58 @@ import {
   DialogContent,
   DialogTitle,
   FormControl,
+  ListItemText,
   MenuItem,
   Select,
+  SelectChangeEvent,
   TextField,
   Typography,
 } from "@mui/material";
 import { useState } from "react";
-
+import { LoadingButton } from "@mui/lab";
+import {
+  CreateTypeOfPacking,
+  setIsLoading,
+} from "@/store/slices/typeOfPacking";
+import { setOpenSnackbar } from "@/store/slices/snackBar";
 interface Props {
   open: boolean;
   setOpen: (value: boolean) => void;
 }
 
+const defaultValue: createNewTypeOfPacking = {
+  name: "",
+  typeOfCherootId: undefined,
+};
+
 const NewTypeOfPacking = ({ open, setOpen }: Props) => {
-  const [selectedCheroot, setSelectedCheroot] = useState<number>(1);
+  const cheroots = useAppSelector((store) => store.typeOfCheroot.item);
+  const dispatch = useAppDispatch();
+  const [newTypeOfPacking, setNewTypeOfPacking] =
+    useState<createNewTypeOfPacking>(defaultValue);
+  const { isLoading } = useAppSelector((store) => store.typeOfPacking);
+  // const handleChange = (evt: SelectChangeEvent<number>) => {
+  //   const selectId = evt.target.value as number;
+  //   setNewTypeOfPacking({ ...newTypeOfPacking, typeOfCherootId: selectId });
+  //   console.log("skedc", selectId);
+  // };
+
+  const handleClick = () => {
+    dispatch(setIsLoading(true));
+    dispatch(
+      CreateTypeOfPacking({
+        ...newTypeOfPacking,
+        onSuccess: () => {
+          setOpen(false);
+          setNewTypeOfPacking(defaultValue);
+          dispatch(
+            setOpenSnackbar({ message: "Create new typeOfPacking success" })
+          );
+          dispatch(setIsLoading(false));
+        },
+      })
+    );
+  };
 
   return (
     <Dialog open={open} onClose={() => setOpen(false)}>
@@ -31,7 +71,12 @@ const NewTypeOfPacking = ({ open, setOpen }: Props) => {
             <TextField
               placeholder="အမည်"
               sx={{ bgcolor: "#EEE8CF", width: 300 }}
-              onChange={() => {}}
+              onChange={(evt) =>
+                setNewTypeOfPacking({
+                  ...newTypeOfPacking,
+                  name: evt.target.value,
+                })
+              }
             />
           </Box>
 
@@ -43,14 +88,20 @@ const NewTypeOfPacking = ({ open, setOpen }: Props) => {
               <Select
                 labelId="demo-simple-select-filled-label"
                 id="demo-simple-select-filled"
-                value={selectedCheroot}
+                value={newTypeOfPacking.typeOfCherootId}
                 onChange={(evt) => {
-                  setSelectedCheroot(Number(evt.target.value));
+                  setNewTypeOfPacking({
+                    ...newTypeOfPacking,
+                    typeOfCherootId: Number(evt.target.value),
+                  });
                 }}
                 sx={{ bgcolor: "#EEE8CF" }}
               >
-                <MenuItem value={1}>ငါးတုတ်</MenuItem>
-                <MenuItem value={2}>၄ ၁/၂ ရှယ်</MenuItem>
+                {cheroots.map((item) => (
+                  <MenuItem key={item.id} value={item.id}>
+                    <ListItemText primary={item.name} />
+                  </MenuItem>
+                ))}
               </Select>
             </FormControl>
           </Box>
@@ -60,7 +111,14 @@ const NewTypeOfPacking = ({ open, setOpen }: Props) => {
         <Button variant="contained" onClick={() => setOpen(false)}>
           မလုပ်တော့ပါ
         </Button>
-        <Button variant="contained">အိုကေ</Button>
+        <LoadingButton
+          variant="contained"
+          disabled={!newTypeOfPacking.name || !newTypeOfPacking.typeOfCherootId}
+          onClick={handleClick}
+          loading={isLoading}
+        >
+          အိုကေ
+        </LoadingButton>
       </DialogActions>
     </Dialog>
   );

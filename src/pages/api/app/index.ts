@@ -60,6 +60,36 @@ export default async function handler(
     const newLabel = await prisma.typeOfLabel.create({
       data: { name: newLabelName, workShopId: newWorkShop.id },
     });
+    //9.create cheroot
+    const newCherootName = "ဆေးလိပ်၁";
+    const newCheroot = await prisma.typeOfCheroot.create({
+      data: { name: newCherootName, workShopId: newWorkShop.id },
+    });
+    //10. crate typeOfPacking
+    const newTypeOfPackingName = "ပါကင်၁";
+    const newTypeOfPacking = await prisma.typeOfPacking.create({
+      data: {
+        name: newTypeOfPackingName,
+        typeOfCherootId: newCheroot.id,
+        workShopId: newWorkShop.id,
+      },
+    });
+    //11. create formOfPacking
+    const newFormOfPackingName = "ထုပ်ပိုးမှု၁";
+    const newFormOfPacking = await prisma.formOfPacking.create({
+      data: {
+        name: newFormOfPackingName,
+        typeOfCherootId: newCheroot.id,
+        typeOfPackingId: newTypeOfPacking.id,
+        quantity: 0,
+        workShopId: newWorkShop.id,
+      },
+    });
+    //12. create conveyLocation
+    const newConveyLocationName = "နေရာ၁";
+    const newConveyLocation = await prisma.conveyLocation.create({
+      data: { name: newConveyLocationName, workShopId: newWorkShop.id },
+    });
     return res.json({
       industry: newIndustry,
       workShop: newWorkShop,
@@ -68,6 +98,10 @@ export default async function handler(
       filterSize: newFilterSize,
       tabacco: newTabacco,
       label: newLabel,
+      cheroot: newCheroot,
+      typeOfPacking: newTypeOfPacking,
+      formOfPacking: newFormOfPacking,
+      conveyLocation: newConveyLocation,
     });
   } else {
     //get cigratteIndustry Id from dbuser
@@ -102,6 +136,22 @@ export default async function handler(
     const label = await prisma.typeOfLabel.findMany({
       where: { workShopId: { in: workShopIds }, isArchived: false },
     });
+    //8. find cheroot
+    const cheroot = await prisma.typeOfCheroot.findMany({
+      where: { workShopId: { in: workShopIds }, isArchived: false },
+    });
+    //9. find typeOfPacking
+    const typeOfPacking = await prisma.typeOfPacking.findMany({
+      where: { workShopId: { in: workShopIds }, isArchived: false },
+    });
+    //10. find formOfPacking
+    const formOfPacking = await prisma.formOfPacking.findMany({
+      where: { workShopId: { in: workShopIds }, isArchived: false },
+    });
+    //11. find converyLocation
+    const conveyLocation = await prisma.conveyLocation.findMany({
+      where: { workShopId: { in: workShopIds }, isArchived: false },
+    });
     return res.json({
       industry,
       workShop,
@@ -110,6 +160,10 @@ export default async function handler(
       filterSize,
       tabacco,
       label,
+      cheroot,
+      typeOfPacking,
+      formOfPacking,
+      conveyLocation,
     });
   }
 }

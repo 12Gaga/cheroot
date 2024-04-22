@@ -8,6 +8,10 @@ import filterSizeReducer from "./slices/typeOfFilterSize";
 import tabaccoReducer from "./slices/typeOfTabacco";
 import labelReducer from "./slices/typeOfLabel";
 import snackBarReducer from "./slices/snackBar";
+import cherootReducer from "./slices/typeOfCheroot";
+import typeOfpackingReducer from "./slices/typeOfPacking";
+import formOfpackingReducer from "./slices/formOfPacking";
+import conveyLocationReducer from "./slices/conveyLocation";
 export const store = configureStore({
   reducer: {
     app: appReducer,
@@ -19,6 +23,10 @@ export const store = configureStore({
     typeOfTabacco: tabaccoReducer,
     typeOfLabel: labelReducer,
     snackBar: snackBarReducer,
+    typeOfCheroot: cherootReducer,
+    typeOfPacking: typeOfpackingReducer,
+    formOfPacking: formOfpackingReducer,
+    conveyLocation: conveyLocationReducer,
   },
 });
 

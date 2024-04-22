@@ -11,8 +11,10 @@ export default function App({ Component, pageProps }: AppProps) {
     <>
       <SessionProvider>
         <Provider store={store}>
-          <Component {...pageProps} />
-          <SnackBar />
+          <Layout>
+            <Component {...pageProps} />
+            <SnackBar />
+          </Layout>
         </Provider>
       </SessionProvider>
     </>

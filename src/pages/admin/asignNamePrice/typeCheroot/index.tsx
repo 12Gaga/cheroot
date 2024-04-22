@@ -1,11 +1,14 @@
 import AdminLayout from "@/components/adminLayout";
 import NewCheroot from "@/components/asign/newCheroot";
-import NewLeaf from "@/components/asign/newLeaf";
+import SmokingRoomsIcon from "@mui/icons-material/SmokingRooms";
+import ItemCard from "@/components/itemCard";
+import { useAppSelector } from "@/store/hooks";
 import { Box, Button, Typography } from "@mui/material";
 import { useState } from "react";
 
 const TypeCheroot = () => {
   const [open, setOpen] = useState<boolean>(false);
+  const cheroots = useAppSelector((store) => store.typeOfCheroot.item);
   return (
     <>
       <AdminLayout>
@@ -36,6 +39,21 @@ const TypeCheroot = () => {
           >
             ဆေးလိပ်အမျိုးအစားအသစ်ထည့်ခြင်း
           </Button>
+        </Box>
+
+        <Box sx={{ display: "flex", flexWrap: "wrap" }}>
+          {cheroots.map((item) => {
+            const workShopId = localStorage.getItem("selectedWorkShopId");
+            const exit = item.workShopId === Number(workShopId);
+            if (!exit) return null;
+            return (
+              <ItemCard
+                key={item.id}
+                icon={<SmokingRoomsIcon />}
+                title={item.name}
+              />
+            );
+          })}
         </Box>
 
         <NewCheroot open={open} setOpen={setOpen} />

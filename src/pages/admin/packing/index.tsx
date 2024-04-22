@@ -1,12 +1,13 @@
 import AdminLayout from "@/components/adminLayout";
-import NewMoneyTitle from "@/components/money/newMoneyTitle";
+import ItemCard from "@/components/itemCard";
 import NewTypeOfPacking from "@/components/pack/newTypeOfPacking";
+import { useAppSelector } from "@/store/hooks";
 import { Typography, Box, Button } from "@mui/material";
 import { useState } from "react";
-
+import Inventory2Icon from "@mui/icons-material/Inventory2";
 const Packing = () => {
   const [open, setOpen] = useState<boolean>(false);
-
+  const typeOfPackings = useAppSelector((store) => store.typeOfPacking.item);
   return (
     <>
       <AdminLayout>
@@ -37,6 +38,22 @@ const Packing = () => {
             ပါကင်အမျိုးအစားအသစ်ထည့်ခြင်း
           </Button>
         </Box>
+
+        <Box sx={{ display: "flex", flexWrap: "wrap" }}>
+          {typeOfPackings.map((item) => {
+            const workShopId = localStorage.getItem("selectedWorkShopId");
+            const exit = item.workShopId === Number(workShopId);
+            if (!exit) return null;
+            return (
+              <ItemCard
+                key={item.id}
+                icon={<Inventory2Icon />}
+                title={item.name}
+              />
+            );
+          })}
+        </Box>
+
         <NewTypeOfPacking open={open} setOpen={setOpen} />
       </AdminLayout>
     </>

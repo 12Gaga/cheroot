@@ -1,11 +1,13 @@
 import AdminLayout from "@/components/adminLayout";
+import ItemCard from "@/components/itemCard";
 import NewFormOfPacking from "@/components/pack/newFormOfPacking";
+import { useAppSelector } from "@/store/hooks";
 import { Typography, Box, Button } from "@mui/material";
 import { useState } from "react";
-
+import Inventory2Icon from "@mui/icons-material/Inventory2";
 const PackingForm = () => {
   const [open, setOpen] = useState<boolean>(false);
-
+  const formOfPackings = useAppSelector((store) => store.formOfPacking.item);
   return (
     <>
       <AdminLayout>
@@ -36,6 +38,22 @@ const PackingForm = () => {
             ထုပ်ပိုးမှုအမျိုးအစားအသစ်ထည့်ခြင်း
           </Button>
         </Box>
+
+        <Box sx={{ display: "flex", flexWrap: "wrap" }}>
+          {formOfPackings.map((item) => {
+            const workShopId = localStorage.getItem("selectedWorkShopId");
+            const exit = item.workShopId === Number(workShopId);
+            if (!exit) return null;
+            return (
+              <ItemCard
+                key={item.id}
+                icon={<Inventory2Icon />}
+                title={item.name}
+              />
+            );
+          })}
+        </Box>
+
         <NewFormOfPacking open={open} setOpen={setOpen} />
       </AdminLayout>
     </>

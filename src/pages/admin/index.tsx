@@ -9,14 +9,6 @@ const Admin = () => {
   const { data: session } = useSession();
   const router = useRouter();
   console.log(session);
-  const { init } = useAppSelector((store) => store.app);
-  const dispatch = useAppDispatch();
-  console.log("session", session);
-  useEffect(() => {
-    if (session && !init) {
-      dispatch(fetchApp({}));
-    }
-  }, [session]);
   if (!session) {
     return (
       <>
