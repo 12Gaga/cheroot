@@ -6,7 +6,6 @@ import Image from "next/image";
 import { useRouter } from "next/router";
 const AdminPage = () => {
   const { data: session } = useSession();
-  const router = useRouter();
   if (!session) return null;
 
   return (

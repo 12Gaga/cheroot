@@ -41,8 +41,15 @@ model Agent{
   cashBalcanceSmall Int
   cigratteIndustry CigratteIndustry @relation(fields: [cigratteIndustryId],references: [id])
   cigratteIndustryId Int
-  isArchived Boolean @default(false)
   agentLeafViss AgentLeafViss[]
+  payLeaf PayLeaf[]
+  discountViss DiscountViss[]
+  payOtherItem PayOtherItem[]
+  returnReadyCheroot ReturnReadyCheroot[]
+  otherDeduction OtherDeduction[]
+  leafDeduction LeafDeduction[]
+  extraPurchase ExtraPurchase[]
+  isArchived Boolean @default(false)
 }
 
 model WorkShop{
@@ -55,6 +62,27 @@ model WorkShop{
   typeOfFilterSize TypeOfFilterSize[]
   typeOfTabacco TypeOfTabacco[]
   typeOfLabel TypeOfLabel[]
+  typeOfCheroot TypeOfCheroot[]
+  conveyLocation ConveyLocation[]
+  typeOfPacking TypeOfPacking[]
+  formOfPacking FormOfPacking[]
+  packing Packing[]
+  expensiveLabel ExpensiveLabel[]
+  dailyExpensive DailyExpensive[]
+  town Town[]
+  conveying Conveying[]
+  mainMoney MainMoney[]
+  replenishmentMoney ReplenishmentMoney[]
+  closingDailyBalance ClosingDailyBalance[]
+  closingMainBalance ClosingMainBalance[]
+  mainDirectPayment MainDirectPayment[]
+  payLeaf PayLeaf[]
+  discountViss DiscountViss[]
+  payOtherItem PayOtherItem[]
+  returnReadyCheroot ReturnReadyCheroot[]
+  leafDeduction LeafDeduction[]
+  otherDeduction OtherDeduction[]
+  extraPurchase ExtraPurchase[]
   isArchived Boolean @default(false)
 }
 
@@ -63,6 +91,18 @@ model Garage{
   name String
   workShop WorkShop @relation(fields: [workShopId],references: [id])
   workShopId Int
+  addStock AddStock[]
+  leaf Leaf[]
+  filterSize FilterSize[]
+  tabacco Tabacco[]
+  label Label[]
+  payLeaf PayLeaf[]
+  payOtherItem PayOtherItem[]
+  extraPurchase ExtraPurchase[]
+  leafTransferGarage LeafTransferGarage[]
+  filterSizeTransferGarage FilterSizeTransferGarage[]
+  tabaccoTransferGarage TabaccoTransferGarage[]
+  labelTransferGarage LabelTransferGarage[]
   isArchived Boolean @default(false)
 }
 
@@ -73,6 +113,11 @@ model TypeOfLeaf{
   workShop WorkShop @relation(fields: [workShopId],references: [id])
   workShopId Int
   agentLeafViss AgentLeafViss[]
+  addStock AddStock[]
+  leaf Leaf[]
+  payLeaf PayLeaf[]
+  leafDeduction LeafDeduction[]
+  leafTransferGarage LeafTransferGarage[]
   isArchived Boolean @default(false)
   isAvariabled Boolean @default(false)
 }
@@ -83,6 +128,12 @@ model TypeOfFilterSize{
   price Int @default(0)
   workShop WorkShop @relation(fields: [workShopId],references: [id])
   workShopId Int
+  addStock AddStock[]
+  filterSize FilterSize[]
+  payOtherItem PayOtherItem[]
+  extraPurchase ExtraPurchase[]
+  filterSizeTransferGarage FilterSizeTransferGarage[]
+  formula Formula[]
   isArchived Boolean @default(false)
   isAvariabled Boolean @default(false)
 }
@@ -93,6 +144,12 @@ model TypeOfTabacco{
   price Int @default(0)
   workShop WorkShop @relation(fields: [workShopId],references: [id])
   workShopId Int
+  addStock AddStock[]
+  tabacco Tabacco[]
+  payOtherItem PayOtherItem[]
+  extraPurchase ExtraPurchase[]
+  tabaccoTransferGarage TabaccoTransferGarage[]
+  formula Formula[]
   isArchived Boolean @default(false)
   isAvariabled Boolean @default(false)
 }
@@ -103,8 +160,66 @@ model TypeOfLabel{
   price Int @default(0)
   workShop WorkShop @relation(fields: [workShopId],references: [id])
   workShopId Int
+  addStock AddStock[]
+  label Label[]
+  payOtherItem PayOtherItem[]
+  extraPurchase ExtraPurchase[]
+  labelTransferGarage LabelTransferGarage[]
   isArchived Boolean @default(false)
   isAvariabled Boolean @default(false)
+}
+
+
+model Leaf{
+  id Int @id @default(autoincrement())
+  date DateTime @default(now())
+  typeOfLeaf TypeOfLeaf @relation(fields: [typeOfLeafId],references: [id])
+  typeOfLeafId Int
+  batchNo Int
+  viss Int
+  shop String
+  garage Garage @relation(fields: [garageId],references: [id])
+  garageId Int
+  isArchived Boolean @default(false)
+}
+
+model FilterSize{
+  id Int @id @default(autoincrement())
+  date DateTime @default(now())
+  typeOfFilterSize TypeOfFilterSize @relation(fields: [typeOfFilterSizeId],references: [id])
+  typeOfFilterSizeId Int
+  quantity Int
+  bag Int
+  shop String
+  garage Garage @relation(fields: [garageId],references: [id])
+  garageId Int
+  isArchived Boolean @default(false)
+}
+
+model Tabacco{
+  id Int @id @default(autoincrement())
+  date DateTime @default(now())
+  typeOfTabacco TypeOfTabacco @relation(fields: [typeOfTabaccoId],references: [id])
+  typeOfTabaccoId Int
+  tin Int
+  pyi Int
+  bag Int
+  shop String
+  garage Garage @relation(fields: [garageId],references: [id])
+  garageId Int
+  isArchived Boolean @default(false)
+}
+
+model Label{
+  id Int @id @default(autoincrement())
+  date DateTime @default(now())
+  typeOfLabel TypeOfLabel @relation(fields: [typeOfLabelId],references: [id])
+  typeOfLabelId Int
+  bandle Int
+  shop String
+  garage Garage @relation(fields: [garageId],references: [id])
+  garageId Int
+  isArchived Boolean @default(false)
 }
 
 model AgentLeafViss{
@@ -113,6 +228,394 @@ model AgentLeafViss{
   agentId Int
   typeOfLeaf TypeOfLeaf @relation(fields: [typeOfLeafId],references: [id])
   typeOfLeafId Int
+  isArchived Boolean @default(false)
+}
+
+model TypeOfCheroot{
+  id Int @id @default(autoincrement())
+  name String
+  price Int @default(0)
+  workShop WorkShop @relation(fields: [workShopId],references: [id])
+  workShopId Int
+  typeOfPacking TypeOfPacking[]
+  formOfPacking FormOfPacking[]
+  packing Packing[]
+  conveying Conveying[]
+  payOtherItem PayOtherItem[]
+  returnReadyCheroot ReturnReadyCheroot[]
+  formula Formula[]
+  isArchived Boolean @default(false)
+  isAvariabled Boolean @default(false)
+}
+
+model TypeOfPacking{
+  id Int @id @default(autoincrement())
+  name String
+  typeOfCheroot TypeOfCheroot @relation(fields: [typeOfCherootId],references: [id])
+  typeOfCherootId Int
+  workShop WorkShop @relation(fields: [workShopId],references: [id])
+  workShopId Int
+  formOfPacking FormOfPacking[]
+  packing Packing[]
+  conveying Conveying[]
+  isArchived Boolean @default(false)
+}
+
+model FormOfPacking{
+  id Int @id @default(autoincrement())
+  name String
+  typeOfCheroot TypeOfCheroot @relation(fields: [typeOfCherootId],references: [id])
+  typeOfCherootId Int
+  typeOfPacking TypeOfPacking @relation(fields: [typeOfPackingId],references: [id])
+  typeOfPackingId Int
+  quantity Int
+  workShop WorkShop @relation(fields: [workShopId],references: [id])
+  workShopId Int
+  packing Packing[]
+  conveying Conveying[]
+  isArchived Boolean @default(false)
+}
+
+model Packing{
+  id Int @id @default(autoincrement())
+  date DateTime @default(now())
+  typeOfCheroot TypeOfCheroot @relation(fields: [typeOfCherootId],references: [id])
+  typeOfCherootId Int
+  typeOfPacking TypeOfPacking @relation(fields: [typeOfPackingId],references: [id])
+  typeOfPackingId Int
+  formOfPacking FormOfPacking @relation(fields: [formOfPackingId],references: [id])
+  formOfPackingId Int
+  quantity Int
+  workShop WorkShop @relation(fields: [workShopId],references: [id])
+  workShopId Int
+}
+
+model ConveyLocation{
+  id Int @id @default(autoincrement())
+  name String
+  conveying Conveying[]
+  workShop WorkShop @relation(fields: [workShopId],references: [id])
+  workShopId Int
+  isArchived Boolean @default(false)
+}
+
+model Conveying{
+  id Int @id @default(autoincrement())
+  date DateTime @default(now())
+  conveyLocation ConveyLocation @relation(fields: [conveyLocationId],references: [id])
+  conveyLocationId Int
+  typeOfCheroot TypeOfCheroot @relation(fields: [typeOfCherootId],references: [id])
+  typeOfCherootId Int
+  typeOfPacking TypeOfPacking @relation(fields: [typeOfPackingId],references: [id])
+  typeOfPackingId Int
+  formOfPacking FormOfPacking @relation(fields: [formOfPackingId],references: [id])
+  formOfPackingId Int
+  quantity Int
+  workShop WorkShop @relation(fields: [workShopId],references: [id])
+  workShopId Int
+  isArchived Boolean @default(false)
+}
+
+model Town{
+  id Int @id @default(autoincrement())
+  name String
+  workShop WorkShop @relation(fields: [workShopId],references: [id])
+  workShopId Int
+  mainMoney MainMoney[]
+  isArchived Boolean @default(false)
+}
+
+model ExpensiveLabel{
+  id Int @id @default(autoincrement())
+  name String
+  workShop WorkShop @relation(fields: [workShopId],references: [id])
+  workShopId Int
+  isAvariabled Boolean @default(false)
+  dailyExpensive DailyExpensive[]
+  isArchived Boolean @default(false)
+}
+
+model DailyExpensive{
+  id Int @id @default(autoincrement())
+  date DateTime @default(now())
+  expensiveLabel ExpensiveLabel @relation(fields: [expensiveLabelId],references: [id])
+  expensiveLabelId Int
+  content String
+  amount Int @default(0)
+  workShop WorkShop @relation(fields: [workShopId],references: [id])
+  workShopId Int
+  isArchived Boolean @default(false)
+}
+
+model MainMoney{
+  id Int @id @default(autoincrement())
+  date DateTime @default(now())
+  town Town @relation(fields: [townId],references: [id])
+  townId Int
+  amount Int @default(0)
+  workShop WorkShop @relation(fields: [workShopId],references: [id])
+  workShopId Int
+  isArchived Boolean @default(false)
+}
+
+model ReplenishmentMoney{
+  id Int @id @default(autoincrement())
+  date DateTime @default(now())
+  amount Int @default(0)
+  workShop WorkShop @relation(fields: [workShopId],references: [id])
+  workShopId Int
+  isArchived Boolean @default(false) 
+}
+
+model ClosingMainBalance{
+  id Int @id @default(autoincrement())
+  date DateTime @default(now())
+  amount Int @default(0)
+  workShop WorkShop @relation(fields: [workShopId],references: [id])
+  workShopId Int
+  isArchived Boolean @default(false)
+}
+
+model ClosingDailyBalance{
+  id Int @id @default(autoincrement())
+  date DateTime @default(now())
+  amount Int @default(0)
+  workShop WorkShop @relation(fields: [workShopId],references: [id])
+  workShopId Int
+  isArchived Boolean @default(false)
+}
+
+model MainDirectPayment{
+  id Int @id @default(autoincrement())
+  date DateTime @default(now())
+  tilte String
+  amount Int @default(0)
+  workShop WorkShop @relation(fields: [workShopId],references: [id])
+  workShopId Int
+  isArchived Boolean @default(false)
+}
+
+model AddStock{
+  id Int @id @default(autoincrement())
+  date DateTime @default(now())
+  invNo Int
+  carNo Int
+  typeOfLeaf TypeOfLeaf? @relation(fields: [typeOfLeafId],references: [id])
+  typeOfLeafId Int? 
+  typeOfFilterSize TypeOfFilterSize? @relation(fields: [typeOfFilterSizeId],references: [id])
+  typeOfFilterSizeId Int?
+  typeOfTabacco TypeOfTabacco? @relation(fields: [typeOfTabaccoId],references: [id])
+  typeOfTabaccoId Int?
+  typeOfLabel TypeOfLabel? @relation(fields: [typeOfLabelId],references: [id])
+  typeOfLabelId Int?
+  garage Garage @relation(fields: [garageId],references: [id])
+  garageId Int
+  isArchived Boolean @default(false)
+}
+
+model PayLeaf{
+  id Int @id @default(autoincrement())
+  date DateTime @default(now())
+  agent Agent @relation(fields: [agentId],references: [id])
+  agentId Int
+  typeOfLeaf TypeOfLeaf @relation(fields: [typeOfLeafId],references: [id])
+  typeOfLeafId Int
+  batchNo Int
+  viss Int
+  discountViss Int @default(0)
+  netViss Int
+  price Int 
+  amount Int 
+  garage Garage @relation(fields: [garageId],references: [id])
+  garageId Int
+  workShop WorkShop @relation(fields: [workShopId],references: [id])
+  workShopId Int
+  isArchived Boolean @default(false)
+}
+
+model DiscountViss{
+  id Int @id @default(autoincrement())
+  date DateTime @default(now())
+  agent Agent @relation(fields: [agentId],references: [id])
+  agentId Int
+  discountViss Int @default(0)
+  discountAmount Int @default(0)
+  workShop WorkShop @relation(fields: [workShopId],references: [id])
+  workShopId Int
+  isArchived Boolean @default(false)
+}
+
+model PayOtherItem{
+  id Int @id @default(autoincrement())
+  date DateTime @default(now())
+  agent Agent @relation(fields: [agentId],references: [id])
+  agentId Int
+  typeOfCheroot TypeOfCheroot @relation(fields: [typeOfCherootId],references: [id])
+  typeOfCherootId Int
+  cherootQty Int
+  typeOfFilterSize TypeOfFilterSize @relation(fields: [typeOfFilterSizeId],references: [id])
+  typeOfFilterSizeId Int
+  filterSizeQty Int
+  filterSizeBag Int
+  typeOfTabacco TypeOfTabacco @relation(fields: [typeOfTabaccoId],references: [id])
+  typeOfTabaccoId Int
+  tabaccoQty Int
+  tabaccoTin Int
+  tabaccoPyi Int
+  typeOfLabel TypeOfLabel @relation(fields: [typeOfLabelId],references: [id])
+  typeOfLabelId Int
+  labelBandle Int
+  totalPrice Int @default(0)
+  garage Garage @relation(fields: [garageId],references: [id])
+  garageId Int
+  workShop WorkShop @relation(fields: [workShopId],references: [id])
+  workShopId Int
+  isArchived Boolean @default(false)
+}
+
+model ReturnReadyCheroot{
+  id Int @id @default(autoincrement())
+  date DateTime @default(now())
+  agent Agent @relation(fields: [agentId],references: [id])
+  agentId Int
+  typeOfCheroot TypeOfCheroot @relation(fields: [typeOfCherootId],references: [id])
+  typeOfCherootId Int
+  goodQty Int
+  damage Int
+  totalCherootQty Int
+  goodPrice Int
+  amount Int
+  workShop WorkShop @relation(fields: [workShopId],references: [id])
+  workShopId Int
+  isArchived Boolean @default(false)
+}
+
+model LeafDeduction{
+  id Int @id @default(autoincrement())
+  date DateTime @default(now())
+  agent Agent @relation(fields: [agentId],references: [id])
+  agentId Int
+  typeOfLeaf TypeOfLeaf @relation(fields: [typeOfLeafId],references: [id])
+  typeOfLeafId Int
+  deductViss Int
+  price Int
+  deductionAmount Int
+  workShop WorkShop @relation(fields: [workShopId],references: [id])
+  workShopId Int
+  isArchived Boolean @default(false)
+}
+
+model OtherDeduction{
+  id Int @id @default(autoincrement())
+  date DateTime @default(now())
+  agent Agent @relation(fields: [agentId],references: [id])
+  agentId Int
+  cashAdvanceBigDeduction Int
+  cashAdvanceSmallDeduction Int
+  otherDeduction Int
+  cashAdvanceBig Int
+  cashAdvanceSmall Int
+  netAgentPayment Int
+  totalNetAgentPayment Int
+  workShop WorkShop @relation(fields: [workShopId],references: [id])
+  workShopId Int
+  isArchived Boolean @default(false)
+}
+
+model ExtraPurchase{
+  id Int @id @default(autoincrement())
+  date DateTime @default(now())
+  agent Agent @relation(fields: [agentId],references: [id])
+  agentId Int
+  typeOfFilterSize TypeOfFilterSize @relation(fields: [typeOfFilterSizeId],references: [id])
+  typeOfFilterSizeId Int
+  filterSizeQty Int @default(0)
+  filterSizeBag Int  @default(0)
+  filterSizePrice Int  @default(0)
+  typeOfTabacco TypeOfTabacco @relation(fields: [typeOfTabaccoId],references: [id])
+  typeOfTabaccoId Int
+  tabaccoQty Int  @default(0)
+  tabaccoTin Int  @default(0)
+  tabaccoPyi Int  @default(0)
+  tabaccoPrice Int  @default(0)
+  typeOfLabel TypeOfLabel @relation(fields: [typeOfLabelId],references: [id])
+  typeOfLabelId Int
+  labelBandle Int  @default(0)
+  labelPrice Int  @default(0)
+  totalAmount Int  @default(0)
+  garage Garage @relation(fields: [garageId],references: [id])
+  garageId Int
+  workShop WorkShop @relation(fields: [workShopId],references: [id])
+  workShopId Int
+  isArchived Boolean @default(false)
+}
+
+model LeafTransferGarage{
+  id Int @id @default(autoincrement())
+  date DateTime @default(now())
+  // exitGarage Garage @relation(fields: [exitGarageId],references: [id])
+  // exitGarageId Int
+  enterenceGarage Garage @relation(fields: [enterenceGarageId],references: [id])
+  enterenceGarageId Int
+  typeOfLeaf TypeOfLeaf @relation(fields: [typeOfLeafId],references: [id])
+  typeOfLeafId Int
+  batchNo Int
+  isArchived Boolean @default(false)
+}
+
+model FilterSizeTransferGarage{
+  id Int @id @default(autoincrement())
+  date DateTime @default(now())
+  // exitGarage Garage @relation(fields: [exitGarageId],references: [id])
+  // exitGarageId Int
+  enterenceGarage Garage @relation(fields: [enterenceGarageId],references: [id])
+  enterenceGarageId Int
+  typeOfFilterSize TypeOfFilterSize @relation(fields: [typeOfFilterSizeId],references: [id])
+  typeOfFilterSizeId Int
+  batchNo Int
+  isArchived Boolean @default(false)
+}
+
+model TabaccoTransferGarage{
+  id Int @id @default(autoincrement())
+  date DateTime @default(now())
+  // exitGarage Garage @relation(fields: [exitGarageId],references: [id])
+  // exitGarageId Int
+  enterenceGarage Garage @relation(fields: [enterenceGarageId],references: [id])
+  enterenceGarageId Int
+  typeOfTabacco TypeOfTabacco @relation(fields: [typeOfTabaccoId],references: [id])
+  typeOfTabaccoId Int
+  batchNo Int
+  isArchived Boolean @default(false)
 }
 
 
+model LabelTransferGarage{
+  id Int @id @default(autoincrement())
+  date DateTime @default(now())
+  // exitGarage Garage @relation(fields: [exitGarageId],references: [id])
+  // exitGarageId Int
+  enterenceGarage Garage @relation(fields: [enterenceGarageId],references: [id])
+  enterenceGarageId Int
+  typeOfLabel TypeOfLabel @relation(fields: [typeOfLabelId],references: [id])
+  typeOfLabelId Int
+  batchNo Int
+  isArchived Boolean @default(false)
+}
+
+model Formula{
+  id Int @id @default(autoincrement())
+  typeOfCheroot TypeOfCheroot @relation(fields: [typeOfCherootId],references: [id])
+  typeOfCherootId Int
+  cherootQty Int
+  typeOfFilterSize TypeOfFilterSize @relation(fields: [typeOfFilterSizeId],references: [id])
+  typeOfFilterSizeId Int
+  filterSizeQty Int
+  filterSizeBag Int
+  typeOfTabacco TypeOfTabacco @relation(fields: [typeOfTabaccoId],references: [id])
+  typeOfTabaccoId Int
+  tabaccoQty Int
+  tabaccoTin Int
+  tabaccoPyi Int
+  isArchived Boolean @default(false)
+}

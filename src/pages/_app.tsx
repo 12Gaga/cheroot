@@ -9,12 +9,10 @@ import { Provider } from "react-redux";
 export default function App({ Component, pageProps }: AppProps) {
   return (
     <>
-      <SessionProvider session={pageProps.session}>
+      <SessionProvider>
         <Provider store={store}>
-          <Layout>
-            <Component {...pageProps} />
-            <SnackBar />
-          </Layout>
+          <Component {...pageProps} />
+          <SnackBar />
         </Provider>
       </SessionProvider>
     </>

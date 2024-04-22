@@ -21,93 +21,92 @@ export default function Home() {
           zIndex: -1,
         }}
       />
-      <Box sx={{}}>
-        <Box sx={{ display: "flex", height: "100%" }}>
-          <Box
+
+      <Box sx={{ display: "flex", height: "100%" }}>
+        <Box
+          sx={{
+            width: "50%",
+            height: "100%",
+            position: "absolute",
+            top: 50,
+            zIndex: -1,
+            bgcolor: "#E7E7E7",
+          }}
+        >
+          <Image
+            src="/cheroot6.jpg"
+            alt={"middle-image"}
+            width={600}
+            height={500}
+          />
+        </Box>
+
+        <Box
+          sx={{
+            width: "50%",
+            height: "100%",
+            position: "absolute",
+            right: 0,
+            bgcolor: "#E7E7E7",
+            top: 50,
+          }}
+        >
+          <Typography
+            variant="h4"
             sx={{
-              width: "50%",
-              height: "100%",
-              position: "absolute",
-              top: 50,
-              zIndex: -1,
-              bgcolor: "#E7E7E7",
+              color: "#D83E3E",
+              fontWeight: "bold",
+              mt: 35,
+              textAlign: "center",
+              fontSize: 50,
             }}
           >
-            <Image
-              src="/cheroot6.jpg"
-              alt={"middle-image"}
-              width={600}
-              height={500}
-            />
-          </Box>
+            Shwe Bo Daw Ma
+          </Typography>
 
           <Box
-            sx={{
-              width: "50%",
-              height: "100%",
-              position: "absolute",
-              right: 0,
-              bgcolor: "#E7E7E7",
-              top: 50,
-              zIndex: -1,
-            }}
+            sx={{ display: "flex", justifyContent: "center", mt: 5, gap: 3 }}
           >
-            <Typography
-              variant="h4"
+            <Button
+              variant="contained"
               sx={{
-                color: "#D83E3E",
-                fontWeight: "bold",
-                mt: 35,
-                textAlign: "center",
-                fontSize: 50,
+                bgcolor: "#E55252",
+                width: 200,
+                height: 65,
+                fontSize: 20,
+                borderRadius: 10,
+                "&:hover": {
+                  bgcolor: "#FCB500",
+                  color: "white",
+                  fontWeight: "bold",
+                },
               }}
             >
-              Shwe Bo Daw Ma
-            </Typography>
+              Shwe Bo
+            </Button>
 
-            <Box
-              sx={{ display: "flex", justifyContent: "center", mt: 5, gap: 3 }}
+            <Button
+              variant="contained"
+              sx={{
+                bgcolor: "#E55252",
+                width: 200,
+                height: 65,
+                fontSize: 20,
+                borderRadius: 10,
+                "&:hover": {
+                  bgcolor: "#FCB500",
+                  color: "white",
+                  fontWeight: "bold",
+                },
+              }}
+              onClick={() => router.push("/admin")}
             >
-              <Button
-                variant="contained"
-                sx={{
-                  bgcolor: "#E55252",
-                  width: 200,
-                  height: 65,
-                  fontSize: 20,
-                  borderRadius: 10,
-                  "&:hover": {
-                    bgcolor: "#FCB500",
-                    color: "white",
-                    fontWeight: "bold",
-                  },
-                }}
-              >
-                Shwe Bo
-              </Button>
-
-              <Button
-                variant="contained"
-                sx={{
-                  bgcolor: "#E55252",
-                  width: 200,
-                  height: 65,
-                  fontSize: 20,
-                  borderRadius: 10,
-                  "&:hover": {
-                    bgcolor: "#FCB500",
-                    color: "white",
-                    fontWeight: "bold",
-                  },
-                }}
-                onClick={() => router.push("/admin")}
-              >
-                Bago
-              </Button>
-            </Box>
+              Bago
+            </Button>
           </Box>
         </Box>
       </Box>
+
       <Image
         src="/adminBottomWave.svg"
         alt={"header-image"}

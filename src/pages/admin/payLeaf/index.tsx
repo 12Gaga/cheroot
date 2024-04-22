@@ -3,13 +3,23 @@ import PayLeafThree from "@/components/payleaf/payLeafThree";
 import PayLeafTwo from "@/components/payleaf/payLeafTwo";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-import { Box, Button, TextField, Typography } from "@mui/material";
+import {
+  Box,
+  Button,
+  FormControl,
+  MenuItem,
+  Select,
+  TextField,
+  Typography,
+} from "@mui/material";
 import { useState } from "react";
 import PayLeafButton from "@/components/payleaf/payLeafButton";
 import { useSession } from "next-auth/react";
+import { setSelectedGarage } from "@/store/slices/garage";
 
 const PayLeaf = () => {
   const [selecteddate, setSelectedDate] = useState<any>(new Date());
+  const [selectedGarage, setSelectedGarage] = useState<number>(1);
   const { data: session } = useSession();
   if (!session) return;
   return (
@@ -34,6 +44,27 @@ const PayLeaf = () => {
           selected={selecteddate}
           onChange={(date) => setSelectedDate(date)}
         />
+      </Box>
+
+      <Box sx={{ display: "flex", alignItems: "center", ml: 3 }}>
+        <Typography sx={{ fontWeight: "bold", width: 120 }}>
+          ဂိုထောင်အမည်
+        </Typography>
+        <FormControl variant="filled" sx={{ width: 225 }}>
+          <Select
+            labelId="demo-simple-select-filled-label"
+            id="demo-simple-select-filled"
+            value={selectedGarage}
+            onChange={(evt) => {
+              setSelectedGarage(Number(evt.target.value));
+            }}
+            sx={{ bgcolor: "#EEE8CF" }}
+          >
+            <MenuItem value={1}>ဂိုထောင် ၁</MenuItem>
+            <MenuItem value={2}>ဂိုထောင် ၂</MenuItem>
+            <MenuItem value={3}>ဂိုထောင် ၃</MenuItem>
+          </Select>
+        </FormControl>
       </Box>
 
       <Box sx={{ display: "flex", mt: 2 }}>
