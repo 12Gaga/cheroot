@@ -152,6 +152,14 @@ export default async function handler(
     const conveyLocation = await prisma.conveyLocation.findMany({
       where: { workShopId: { in: workShopIds }, isArchived: false },
     });
+    //12. find agent
+    const agent = await prisma.agent.findMany({
+      where: { workShopId: { in: workShopIds }, isArchived: false },
+    });
+    //13. find agentLeafViss
+    const agentLeafViss = await prisma.agentLeafViss.findMany({
+      where: { workShopId: { in: workShopIds }, isArchived: false },
+    });
     return res.json({
       industry,
       workShop,
@@ -164,6 +172,8 @@ export default async function handler(
       typeOfPacking,
       formOfPacking,
       conveyLocation,
+      agent,
+      agentLeafViss,
     });
   }
 }

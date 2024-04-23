@@ -12,6 +12,8 @@ import { setCheroot } from "./typeOfCheroot";
 import { setTypeOfPacking } from "./typeOfPacking";
 import { setFormOfPacking } from "./formOfPacking";
 import { setConveyLocation } from "./conveyLocation";
+import { setAgent } from "./agent";
+import { setAgentLeafViss } from "./agentLeafViss";
 
 const initialState: appSlice = {
   init: false,
@@ -38,6 +40,8 @@ export const fetchApp = createAsyncThunk(
         typeOfPacking,
         formOfPacking,
         conveyLocation,
+        agent,
+        agentLeafViss,
       } = dataFromServer;
       thunkApi.dispatch(setInit(true));
       thunkApi.dispatch(setIndustry(industry));
@@ -51,6 +55,8 @@ export const fetchApp = createAsyncThunk(
       thunkApi.dispatch(setTypeOfPacking(typeOfPacking));
       thunkApi.dispatch(setFormOfPacking(formOfPacking));
       thunkApi.dispatch(setConveyLocation(conveyLocation));
+      thunkApi.dispatch(setAgent(agent));
+      thunkApi.dispatch(setAgentLeafViss(agentLeafViss));
       onSuccess && onSuccess();
     } catch (err) {
       onError && onError(err);

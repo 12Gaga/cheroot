@@ -18,7 +18,6 @@ model CigratteIndustry{
    name String
    address String
    users User[]
-   agents Agent[]
    workShops WorkShop[]
    isArchived Boolean @default(false)
 }
@@ -29,26 +28,6 @@ model User{
   email String @unique
   cigratteIndustry CigratteIndustry @relation(fields: [cigratteIndustryId],references: [id])
   cigratteIndustryId Int
-  isArchived Boolean @default(false)
-}
-
-model Agent{
-  id Int @id @default(autoincrement())
-  name String
-  phoneNo Int
-  adderess String
-  cashBalcanceBig Int
-  cashBalcanceSmall Int
-  cigratteIndustry CigratteIndustry @relation(fields: [cigratteIndustryId],references: [id])
-  cigratteIndustryId Int
-  agentLeafViss AgentLeafViss[]
-  payLeaf PayLeaf[]
-  discountViss DiscountViss[]
-  payOtherItem PayOtherItem[]
-  returnReadyCheroot ReturnReadyCheroot[]
-  otherDeduction OtherDeduction[]
-  leafDeduction LeafDeduction[]
-  extraPurchase ExtraPurchase[]
   isArchived Boolean @default(false)
 }
 
@@ -69,7 +48,6 @@ model WorkShop{
   packing Packing[]
   expensiveLabel ExpensiveLabel[]
   dailyExpensive DailyExpensive[]
-  town Town[]
   conveying Conveying[]
   mainMoney MainMoney[]
   replenishmentMoney ReplenishmentMoney[]
@@ -82,6 +60,28 @@ model WorkShop{
   returnReadyCheroot ReturnReadyCheroot[]
   leafDeduction LeafDeduction[]
   otherDeduction OtherDeduction[]
+  extraPurchase ExtraPurchase[]
+  agentLeafViss AgentLeafViss[]
+  agent Agent[]
+  isArchived Boolean @default(false)
+}
+
+model Agent{
+  id Int @id @default(autoincrement())
+  name String
+  phoneNo Int
+  adderess String
+  cashBalcanceBig Int
+  cashBalcanceSmall Int
+  workShop WorkShop @relation(fields: [workShopId],references: [id])
+  workShopId Int
+  agentLeafViss AgentLeafViss[]
+  payLeaf PayLeaf[]
+  discountViss DiscountViss[]
+  payOtherItem PayOtherItem[]
+  returnReadyCheroot ReturnReadyCheroot[]
+  otherDeduction OtherDeduction[]
+  leafDeduction LeafDeduction[]
   extraPurchase ExtraPurchase[]
   isArchived Boolean @default(false)
 }
@@ -228,6 +228,9 @@ model AgentLeafViss{
   agentId Int
   typeOfLeaf TypeOfLeaf @relation(fields: [typeOfLeafId],references: [id])
   typeOfLeafId Int
+  viss Int 
+  workShop WorkShop @relation(fields: [workShopId],references: [id])
+  workShopId Int
   isArchived Boolean @default(false)
 }
 
@@ -268,7 +271,7 @@ model FormOfPacking{
   typeOfCherootId Int
   typeOfPacking TypeOfPacking @relation(fields: [typeOfPackingId],references: [id])
   typeOfPackingId Int
-  quantity Int
+  quantity Int @default(0)
   workShop WorkShop @relation(fields: [workShopId],references: [id])
   workShopId Int
   packing Packing[]
@@ -293,9 +296,10 @@ model Packing{
 model ConveyLocation{
   id Int @id @default(autoincrement())
   name String
-  conveying Conveying[]
   workShop WorkShop @relation(fields: [workShopId],references: [id])
   workShopId Int
+  conveying Conveying[]
+  mainMoney MainMoney[]
   isArchived Boolean @default(false)
 }
 
@@ -316,14 +320,14 @@ model Conveying{
   isArchived Boolean @default(false)
 }
 
-model Town{
-  id Int @id @default(autoincrement())
-  name String
-  workShop WorkShop @relation(fields: [workShopId],references: [id])
-  workShopId Int
-  mainMoney MainMoney[]
-  isArchived Boolean @default(false)
-}
+// model Town{
+//   id Int @id @default(autoincrement())
+//   name String
+//   workShop WorkShop @relation(fields: [workShopId],references: [id])
+//   workShopId Int
+//   mainMoney MainMoney[]
+//   isArchived Boolean @default(false)
+// }
 
 model ExpensiveLabel{
   id Int @id @default(autoincrement())
@@ -350,8 +354,8 @@ model DailyExpensive{
 model MainMoney{
   id Int @id @default(autoincrement())
   date DateTime @default(now())
-  town Town @relation(fields: [townId],references: [id])
-  townId Int
+  location ConveyLocation @relation(fields: [locationId],references: [id])
+  locationId Int
   amount Int @default(0)
   workShop WorkShop @relation(fields: [workShopId],references: [id])
   workShopId Int
@@ -498,7 +502,7 @@ model LeafDeduction{
   typeOfLeaf TypeOfLeaf @relation(fields: [typeOfLeafId],references: [id])
   typeOfLeafId Int
   deductViss Int
-  price Int
+  price Int 
   deductionAmount Int
   workShop WorkShop @relation(fields: [workShopId],references: [id])
   workShopId Int

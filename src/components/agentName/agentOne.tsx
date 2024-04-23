@@ -1,3 +1,4 @@
+import { createNewAgent } from "@/types/agentType";
 import {
   Box,
   Button,
@@ -9,58 +10,44 @@ import {
   Typography,
 } from "@mui/material";
 
-const AgentOne = () => {
+interface Props {
+  newAgent: createNewAgent;
+  setNewAgent: (value: createNewAgent) => void;
+}
+
+const AgentOne = ({ newAgent, setNewAgent }: Props) => {
   return (
     <>
-      <Box>
-        <Typography
-          variant="h6"
-          sx={{
-            color: "white",
-            fontWeight: "bold",
-            bgcolor: "#FCB500",
-            width: 270,
-            p: 1,
-            borderTopRightRadius: 40,
-            borderBottomRightRadius: 40,
-          }}
-        >
-          ကိုယ်စားလှယ်အကြောင်းအရာ
-        </Typography>
-        <Box
-          sx={{
-            display: "flex",
-            ml: 2,
-            alignItems: "center",
-            flexWrap: "wrap",
-          }}
-        >
-          <Box sx={{ width: 300, mt: 2 }}>
-            <Typography sx={{ fontWeight: "bold" }}>အမည်</Typography>
-            <TextField
-              placeholder="အမည်"
-              sx={{ bgcolor: "#EEE8CF" }}
-              onChange={() => {}}
-            />
-          </Box>
-          <Box sx={{ width: 300, mt: 2 }}>
-            <Typography sx={{ fontWeight: "bold" }}>နေရပ်လိပ်စာ</Typography>
-            <TextField
-              placeholder="နေရပ်လိပ်စာ"
-              sx={{ bgcolor: "#EEE8CF" }}
-              onChange={() => {}}
-            />
-          </Box>
+      <Box sx={{ mt: 2 }}>
+        <Typography sx={{ fontWeight: "bold" }}>အမည်</Typography>
+        <TextField
+          placeholder="အမည်"
+          sx={{ bgcolor: "#EEE8CF", width: 300 }}
+          onChange={(evt) =>
+            setNewAgent({ ...newAgent, name: evt.target.value })
+          }
+        />
+      </Box>
+      <Box sx={{ mt: 2 }}>
+        <Typography sx={{ fontWeight: "bold" }}>နေရပ်လိပ်စာ</Typography>
+        <TextField
+          placeholder="နေရပ်လိပ်စာ"
+          sx={{ bgcolor: "#EEE8CF", width: 300 }}
+          onChange={(evt) =>
+            setNewAgent({ ...newAgent, address: evt.target.value })
+          }
+        />
+      </Box>
 
-          <Box sx={{ width: 300, mt: 2 }}>
-            <Typography sx={{ fontWeight: "bold" }}>ဖုန်းနံပါတ်</Typography>
-            <TextField
-              placeholder="ဖုန်းနံပါတ်"
-              sx={{ bgcolor: "#EEE8CF" }}
-              onChange={() => {}}
-            />
-          </Box>
-        </Box>
+      <Box sx={{ mt: 2 }}>
+        <Typography sx={{ fontWeight: "bold" }}>ဖုန်းနံပါတ်</Typography>
+        <TextField
+          placeholder="ဖုန်းနံပါတ်"
+          sx={{ bgcolor: "#EEE8CF", width: 300 }}
+          onChange={(evt) =>
+            setNewAgent({ ...newAgent, phoneNo: Number(evt.target.value) })
+          }
+        />
       </Box>
     </>
   );

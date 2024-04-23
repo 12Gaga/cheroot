@@ -12,6 +12,9 @@ import cherootReducer from "./slices/typeOfCheroot";
 import typeOfpackingReducer from "./slices/typeOfPacking";
 import formOfpackingReducer from "./slices/formOfPacking";
 import conveyLocationReducer from "./slices/conveyLocation";
+import agentReducer from "./slices/agent";
+import agentleafVissReducer from "./slices/agentLeafViss";
+
 export const store = configureStore({
   reducer: {
     app: appReducer,
@@ -27,6 +30,8 @@ export const store = configureStore({
     typeOfPacking: typeOfpackingReducer,
     formOfPacking: formOfpackingReducer,
     conveyLocation: conveyLocationReducer,
+    agent: agentReducer,
+    agentLeafViss: agentleafVissReducer,
   },
 });
 

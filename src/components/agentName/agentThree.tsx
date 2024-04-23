@@ -1,3 +1,5 @@
+import { useAppSelector } from "@/store/hooks";
+import { CreateNewAgentLeafViss } from "@/types/agentLeafVissType";
 import {
   Typography,
   Box,
@@ -5,16 +7,21 @@ import {
   Select,
   MenuItem,
   TextField,
+  ListItemText,
 } from "@mui/material";
-import { useState } from "react";
 
-const AgentThree = () => {
-  const [selectedLeaf, setSelectedLeaf] = useState<number>(1);
+interface Props {
+  newAgentLeafViss: CreateNewAgentLeafViss;
+  setNewAgentLeafViss: (value: CreateNewAgentLeafViss) => void;
+}
 
+const AgentThree = ({ newAgentLeafViss, setNewAgentLeafViss }: Props) => {
+  const leaves = useAppSelector((store) => store.typeOfLeaf.item);
+  const agents = useAppSelector((store) => store.agent.item);
   return (
     <>
       <Box>
-        <Typography
+        {/* <Typography
           variant="h6"
           sx={{
             color: "white",
@@ -27,30 +34,61 @@ const AgentThree = () => {
           }}
         >
           လက်ကျန်ဖက်ပိဿာ
-        </Typography>
+        </Typography> */}
         <Box
-          sx={{
-            display: "flex",
-            ml: 2,
-            alignItems: "center",
-            flexWrap: "wrap",
-          }}
+        // sx={{
+        //   display: "flex",
+        //   ml: 2,
+        //   alignItems: "center",
+        //   flexWrap: "wrap",
+        // }}
         >
+          <Box sx={{ width: 300, mt: 2 }}>
+            <Typography sx={{ fontWeight: "bold" }}>
+              ကိုယ်စားလှယ်အမည်
+            </Typography>
+            <FormControl variant="filled" sx={{ width: 225 }}>
+              <Select
+                labelId="demo-simple-select-filled-label"
+                id="demo-simple-select-filled"
+                value={newAgentLeafViss.agentId}
+                onChange={(evt) => {
+                  setNewAgentLeafViss({
+                    ...newAgentLeafViss,
+                    agentId: Number(evt.target.value),
+                  });
+                }}
+                sx={{ bgcolor: "#EEE8CF" }}
+              >
+                {agents.map((item) => (
+                  <MenuItem key={item.id} value={item.id}>
+                    <ListItemText primary={item.name} />
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+          </Box>
+
           <Box sx={{ width: 300, mt: 2 }}>
             <Typography sx={{ fontWeight: "bold" }}>ဖက်အမျိုးအစား</Typography>
             <FormControl variant="filled" sx={{ width: 225 }}>
               <Select
                 labelId="demo-simple-select-filled-label"
                 id="demo-simple-select-filled"
-                value={selectedLeaf}
+                value={newAgentLeafViss.typeOfLeafId}
                 onChange={(evt) => {
-                  setSelectedLeaf(Number(evt.target.value));
+                  setNewAgentLeafViss({
+                    ...newAgentLeafViss,
+                    typeOfLeafId: Number(evt.target.value),
+                  });
                 }}
                 sx={{ bgcolor: "#EEE8CF" }}
               >
-                <MenuItem value={1}>၅ ၁/၄ (ငါးတမတ်)</MenuItem>
-                <MenuItem value={2}>၅ (၄ဝါ)</MenuItem>
-                <MenuItem value={3}>၄ ၁/၂ (၂လိပ်ဝါ)</MenuItem>
+                {leaves.map((item) => (
+                  <MenuItem key={item.id} value={item.id}>
+                    <ListItemText primary={item.name} />
+                  </MenuItem>
+                ))}
               </Select>
             </FormControl>
           </Box>
@@ -60,7 +98,12 @@ const AgentThree = () => {
             <TextField
               placeholder="ဖက်ပိဿာ"
               sx={{ bgcolor: "#EEE8CF" }}
-              onChange={() => {}}
+              onChange={(evt) =>
+                setNewAgentLeafViss({
+                  ...newAgentLeafViss,
+                  viss: Number(evt.target.value),
+                })
+              }
             />
           </Box>
         </Box>
