@@ -3,8 +3,20 @@ import { useState } from "react";
 import AdminLayout from "@/components/adminLayout";
 import AddBoxIcon from "@mui/icons-material/AddBox";
 import LabelOpen from "@/components/openingSt/label";
+import EditIcon from "@mui/icons-material/Edit";
+import DeleteIcon from "@mui/icons-material/Delete";
+import { useAppSelector } from "@/store/hooks";
+import { useSession } from "next-auth/react";
 const FilterSize = () => {
   const [open, setOpen] = useState<boolean>(false);
+  const { data: session } = useSession();
+  const labels = useAppSelector((store) => store.typeOfLabel.item);
+  const labelStocks = useAppSelector((store) => store.labelStock.item);
+  const garage = useAppSelector((store) => store.garage.selectedGarage);
+  const concernLabelStock = labelStocks.filter(
+    (item) => item.garageId === garage?.id
+  );
+  if (!session) return null;
   return (
     <>
       <AdminLayout>
@@ -25,6 +37,34 @@ const FilterSize = () => {
         </Box>
 
         <LabelOpen open={open} setOpen={setOpen} />
+        <Box>
+          <table border={1}>
+            <thead>
+              <tr style={{ border: "1px solid" }}>
+                {/* <th>နေ့စွဲ</th> */}
+                <th>ဆေးစပ်အမျိုးအစား</th>
+                <th>တင်း</th>
+                <th>ပြည်</th>
+                <th>အိတ်</th>
+                <th>ဝယ်ယူခဲ့သည့်ဆိုင်အမည်</th>
+              </tr>
+            </thead>
+            {concernLabelStock.map((item) => (
+              <thead key={item.id}>
+                <tr style={{ border: "1px solid" }}>
+                  {/* <td>{item.date}</td> */}
+                  <td>
+                    {labels.find((f) => f.id === item.typeOfLabelId)?.name}
+                  </td>
+                  <td>{item.bandle}</td>
+                  <td>{item.shop}</td>
+                  <td>{<EditIcon />}</td>
+                  <td>{<DeleteIcon />}</td>
+                </tr>
+              </thead>
+            ))}
+          </table>
+        </Box>
       </AdminLayout>
     </>
   );

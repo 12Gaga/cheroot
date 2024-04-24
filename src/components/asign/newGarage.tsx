@@ -91,7 +91,13 @@ const NewGarage = ({ open, setOpen }: Props) => {
         </Box>
       </DialogContent>
       <DialogActions>
-        <Button variant="contained" onClick={() => setOpen(false)}>
+        <Button
+          variant="contained"
+          onClick={() => {
+            setOpen(false);
+            setNewGarage(defaultValue);
+          }}
+        >
           မလုပ်တော့ပါ
         </Button>
         <LoadingButton

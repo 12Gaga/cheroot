@@ -7,16 +7,11 @@ import {
   Button,
   Box,
 } from "@mui/material";
-import { createNewAgent } from "@/types/agentType";
 import { useAppSelector, useAppDispatch } from "@/store/hooks";
-import { CreateGarage } from "@/store/slices/garage";
 import { setOpenSnackbar } from "@/store/slices/snackBar";
 import { setIsLoading } from "@/store/slices/workShop";
 import { useState } from "react";
-import AgentOne from "./agentOne";
 import AgentThree from "./agentThree";
-import AgentTwo from "./agentTwo";
-import { CreateAgent } from "@/store/slices/agent";
 import { CreateNewAgentLeafViss } from "@/types/agentLeafVissType";
 import { CreateAgentLeafViss } from "@/store/slices/agentLeafViss";
 
@@ -75,7 +70,13 @@ const NewAgentLeafViss = ({ open, setOpen }: Props) => {
           </Box>
         </DialogContent>
         <DialogActions>
-          <Button variant="contained" onClick={() => setOpen(false)}>
+          <Button
+            variant="contained"
+            onClick={() => {
+              setOpen(false);
+              setNewAgentLeafViss(defaultValue);
+            }}
+          >
             မလုပ်တော့ပါ
           </Button>
           <LoadingButton

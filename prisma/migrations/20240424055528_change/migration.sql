@@ -1,0 +1,2 @@
+-- AlterTable
+ALTER TABLE "AddStock" ALTER COLUMN "carNo" SET DATA TYPE TEXT;

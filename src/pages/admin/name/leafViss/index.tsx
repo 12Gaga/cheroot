@@ -4,7 +4,8 @@ import AddBoxIcon from "@mui/icons-material/AddBox";
 import { Box, Typography } from "@mui/material";
 import { useSession } from "next-auth/react";
 import React, { useState } from "react";
-
+import EditIcon from "@mui/icons-material/Edit";
+import DeleteIcon from "@mui/icons-material/Delete";
 const AgentLeafVissPage = () => {
   const { data: session } = useSession();
   const [open, setOpen] = useState<boolean>(false);
@@ -63,7 +64,8 @@ const AgentLeafVissPage = () => {
                   {concernLeaves.find((l) => l.id === item.typeOfLeafId)?.name}
                 </td>
                 <td>{item.viss}</td>
-                <td>edit/delete icons</td>
+                <td>{<EditIcon />}</td>
+                <td>{<DeleteIcon />}</td>
               </tr>
             </thead>
           ))}

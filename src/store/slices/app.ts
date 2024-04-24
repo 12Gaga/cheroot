@@ -14,6 +14,11 @@ import { setFormOfPacking } from "./formOfPacking";
 import { setConveyLocation } from "./conveyLocation";
 import { setAgent } from "./agent";
 import { setAgentLeafViss } from "./agentLeafViss";
+import { setLeafStock } from "./leafStock";
+import { setFilterSizeStock } from "./filterSizeStock";
+import { setTabaccoStock } from "./tabaccoStock";
+import { setLabelStock } from "./labelStock";
+import { setAddStock } from "./addStock";
 
 const initialState: appSlice = {
   init: false,
@@ -42,6 +47,11 @@ export const fetchApp = createAsyncThunk(
         conveyLocation,
         agent,
         agentLeafViss,
+        leafStock,
+        filterSizeStock,
+        tabaccoStock,
+        labelStock,
+        addStock,
       } = dataFromServer;
       thunkApi.dispatch(setInit(true));
       thunkApi.dispatch(setIndustry(industry));
@@ -57,6 +67,11 @@ export const fetchApp = createAsyncThunk(
       thunkApi.dispatch(setConveyLocation(conveyLocation));
       thunkApi.dispatch(setAgent(agent));
       thunkApi.dispatch(setAgentLeafViss(agentLeafViss));
+      thunkApi.dispatch(setLeafStock(leafStock));
+      thunkApi.dispatch(setFilterSizeStock(filterSizeStock));
+      thunkApi.dispatch(setTabaccoStock(tabaccoStock));
+      thunkApi.dispatch(setLabelStock(labelStock));
+      thunkApi.dispatch(setAddStock(addStock));
       onSuccess && onSuccess();
     } catch (err) {
       onError && onError(err);

@@ -4,8 +4,8 @@ import {
   Dialog,
   DialogActions,
   DialogContent,
-  DialogTitle,
   FormControl,
+  ListItemText,
   MenuItem,
   Select,
   TextField,
@@ -14,15 +14,62 @@ import {
 import DatePicker from "react-datepicker";
 import { useState } from "react";
 import "react-datepicker/dist/react-datepicker.css";
+import { createNewTabaccoStock } from "@/types/tabaccoStockType";
+import { useAppSelector, useAppDispatch } from "@/store/hooks";
+import { CreateFilterSizeStock } from "@/store/slices/filterSizeStock";
+import { setSelectedGarage } from "@/store/slices/garage";
+import { setOpenSnackbar } from "@/store/slices/snackBar";
+import { setIsLoading } from "@/store/slices/workShop";
+import { CreateTabaccoStock } from "@/store/slices/tabaccoStock";
+import { LoadingButton } from "@mui/lab";
 interface Props {
   open: boolean;
   setOpen: (value: boolean) => void;
 }
 
+const defaultValue: createNewTabaccoStock = {
+  typeOfTabaccoId: undefined,
+  tin: 0,
+  pyi: 0,
+  bag: 0,
+  shop: "",
+  garageId: undefined,
+};
+
 const TabaccoOpen = ({ open, setOpen }: Props) => {
   const [selecteddate, setSelectedDate] = useState<any>(new Date());
-  const [selectedTabacco, setSelectedTabacco] = useState<number>(1);
-  const [selectedGarage, setSelectedGarage] = useState<number>(1);
+  const workShop = useAppSelector((store) => store.workShop.selectedWorkShop);
+  const { item: garages, selectedGarage } = useAppSelector(
+    (store) => store.garage
+  );
+  const concernGarage = garages.filter(
+    (item) => item.workShopId === workShop?.id
+  );
+  const tabacco = useAppSelector((store) => store.typeOfTabacco.item);
+  const concernTabacco = tabacco.filter(
+    (item) => item.workShopId === workShop?.id
+  );
+  const [newTabaccoStock, setNewTabaccoStock] =
+    useState<createNewTabaccoStock>(defaultValue);
+  const { isLoading } = useAppSelector((store) => store.tabaccoStock);
+  const dispatch = useAppDispatch();
+
+  const handleClick = () => {
+    dispatch(setIsLoading(true));
+    dispatch(
+      CreateTabaccoStock({
+        ...newTabaccoStock,
+        onSuccess: () => {
+          setOpen(false);
+          setNewTabaccoStock(defaultValue);
+          dispatch(
+            setOpenSnackbar({ message: "Create new tabacco Stock success" })
+          );
+          dispatch(setIsLoading(false));
+        },
+      })
+    );
+  };
   return (
     <>
       <Dialog open={open} onClose={() => setOpen(false)}>
@@ -41,14 +88,20 @@ const TabaccoOpen = ({ open, setOpen }: Props) => {
               <Select
                 labelId="demo-simple-select-filled-label"
                 id="demo-simple-select-filled"
-                value={selectedGarage}
+                value={newTabaccoStock.garageId}
                 onChange={(evt) => {
-                  setSelectedGarage(Number(evt.target.value));
+                  setNewTabaccoStock({
+                    ...newTabaccoStock,
+                    garageId: Number(evt.target.value),
+                  });
                 }}
                 sx={{ bgcolor: "#EEE8CF" }}
               >
-                <MenuItem value={1}>ဂိုထောင် ၁</MenuItem>
-                <MenuItem value={2}>ဂိုထောင် ၂</MenuItem>
+                {concernGarage.map((item) => (
+                  <MenuItem key={item.id} value={item.id}>
+                    <ListItemText primary={item.name} />
+                  </MenuItem>
+                ))}
               </Select>
             </FormControl>
           </Box>
@@ -68,7 +121,12 @@ const TabaccoOpen = ({ open, setOpen }: Props) => {
               <TextField
                 placeholder="ဝယ်ယူခဲ့သည့်ဆိုင်အမည်"
                 sx={{ bgcolor: "#EEE8CF", width: 350 }}
-                onChange={() => {}}
+                onChange={(evt) => {
+                  setNewTabaccoStock({
+                    ...newTabaccoStock,
+                    shop: evt.target.value,
+                  });
+                }}
               />
             </Box>
 
@@ -80,14 +138,20 @@ const TabaccoOpen = ({ open, setOpen }: Props) => {
                 <Select
                   labelId="demo-simple-select-filled-label"
                   id="demo-simple-select-filled"
-                  value={selectedTabacco}
+                  value={newTabaccoStock.typeOfTabaccoId}
                   onChange={(evt) => {
-                    setSelectedTabacco(Number(evt.target.value));
+                    setNewTabaccoStock({
+                      ...newTabaccoStock,
+                      typeOfTabaccoId: Number(evt.target.value),
+                    });
                   }}
                   sx={{ bgcolor: "#EEE8CF" }}
                 >
-                  <MenuItem value={1}>အပြင်း</MenuItem>
-                  <MenuItem value={2}>အပျော့</MenuItem>
+                  {concernTabacco.map((item) => (
+                    <MenuItem key={item.id} value={item.id}>
+                      <ListItemText primary={item.name} />
+                    </MenuItem>
+                  ))}
                 </Select>
               </FormControl>
             </Box>
@@ -97,7 +161,12 @@ const TabaccoOpen = ({ open, setOpen }: Props) => {
               <TextField
                 placeholder="တင်း"
                 sx={{ bgcolor: "#EEE8CF", width: 350 }}
-                onChange={() => {}}
+                onChange={(evt) => {
+                  setNewTabaccoStock({
+                    ...newTabaccoStock,
+                    tin: Number(evt.target.value),
+                  });
+                }}
               />
             </Box>
 
@@ -106,7 +175,12 @@ const TabaccoOpen = ({ open, setOpen }: Props) => {
               <TextField
                 placeholder="ပြည်"
                 sx={{ bgcolor: "#EEE8CF", width: 350 }}
-                onChange={() => {}}
+                onChange={(evt) => {
+                  setNewTabaccoStock({
+                    ...newTabaccoStock,
+                    pyi: Number(evt.target.value),
+                  });
+                }}
               />
             </Box>
 
@@ -115,16 +189,41 @@ const TabaccoOpen = ({ open, setOpen }: Props) => {
               <TextField
                 placeholder="အိတ်"
                 sx={{ bgcolor: "#EEE8CF", width: 350 }}
-                onChange={() => {}}
+                onChange={(evt) => {
+                  setNewTabaccoStock({
+                    ...newTabaccoStock,
+                    bag: Number(evt.target.value),
+                  });
+                }}
               />
             </Box>
           </Box>
         </DialogContent>
         <DialogActions>
-          <Button variant="contained" onClick={() => setOpen(false)}>
+          <Button
+            variant="contained"
+            onClick={() => {
+              setOpen(false);
+              setNewTabaccoStock(defaultValue);
+            }}
+          >
             မလုပ်တော့ပါ
           </Button>
-          <Button variant="contained">သိမ်းမည်</Button>
+          <LoadingButton
+            variant="contained"
+            disabled={
+              !newTabaccoStock.typeOfTabaccoId ||
+              !newTabaccoStock.tin ||
+              !newTabaccoStock.pyi ||
+              !newTabaccoStock.bag ||
+              !newTabaccoStock.garageId ||
+              !newTabaccoStock.shop
+            }
+            onClick={handleClick}
+            loading={isLoading}
+          >
+            သိမ်းမည်
+          </LoadingButton>
         </DialogActions>
       </Dialog>
     </>

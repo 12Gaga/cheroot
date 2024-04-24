@@ -1,19 +1,23 @@
-import {
-  Box,
-  FormControl,
-  MenuItem,
-  Select,
-  TextField,
-  Typography,
-} from "@mui/material";
+import { Box, Typography } from "@mui/material";
 import "react-datepicker/dist/react-datepicker.css";
-import DatePicker from "react-datepicker";
 import { useState } from "react";
 import AdminLayout from "@/components/adminLayout";
 import AddBoxIcon from "@mui/icons-material/AddBox";
 import TabaccoOpen from "@/components/openingSt/tabacco";
+import EditIcon from "@mui/icons-material/Edit";
+import DeleteIcon from "@mui/icons-material/Delete";
+import { useAppSelector } from "@/store/hooks";
+import { useSession } from "next-auth/react";
 const Tabacco = () => {
   const [open, setOpen] = useState<boolean>(false);
+  const { data: session } = useSession();
+  const tabacco = useAppSelector((store) => store.typeOfTabacco.item);
+  const tabaccoStocks = useAppSelector((store) => store.tabaccoStock.item);
+  const garage = useAppSelector((store) => store.garage.selectedGarage);
+  const concernTabaccoStock = tabaccoStocks.filter(
+    (item) => item.garageId === garage?.id
+  );
+  if (!session) return null;
   return (
     <>
       <AdminLayout>
@@ -33,6 +37,36 @@ const Tabacco = () => {
           />
         </Box>
         <TabaccoOpen open={open} setOpen={setOpen} />
+        <Box>
+          <table border={1}>
+            <thead>
+              <tr style={{ border: "1px solid" }}>
+                {/* <th>နေ့စွဲ</th> */}
+                <th>ဆေးစပ်အမျိုးအစား</th>
+                <th>တင်း</th>
+                <th>ပြည်</th>
+                <th>အိတ်</th>
+                <th>ဝယ်ယူခဲ့သည့်ဆိုင်အမည်</th>
+              </tr>
+            </thead>
+            {concernTabaccoStock.map((item) => (
+              <thead key={item.id}>
+                <tr style={{ border: "1px solid" }}>
+                  {/* <td>{item.date}</td> */}
+                  <td>
+                    {tabacco.find((f) => f.id === item.typeOfTabaccoId)?.name}
+                  </td>
+                  <td>{item.tin}</td>
+                  <td>{item.pyi}</td>
+                  <td>{item.bag}</td>
+                  <td>{item.shop}</td>
+                  <td>{<EditIcon />}</td>
+                  <td>{<DeleteIcon />}</td>
+                </tr>
+              </thead>
+            ))}
+          </table>
+        </Box>
       </AdminLayout>
     </>
   );

@@ -16,8 +16,15 @@ interface Props {
 }
 
 const AgentThree = ({ newAgentLeafViss, setNewAgentLeafViss }: Props) => {
+  const workShop = useAppSelector((store) => store.workShop.selectedWorkShop);
   const leaves = useAppSelector((store) => store.typeOfLeaf.item);
+  const concernLeaves = leaves.filter(
+    (item) => item.workShopId === workShop?.id
+  );
   const agents = useAppSelector((store) => store.agent.item);
+  const concernAgent = agents.filter(
+    (item) => item.workShopId === workShop?.id
+  );
   return (
     <>
       <Box>
@@ -60,7 +67,7 @@ const AgentThree = ({ newAgentLeafViss, setNewAgentLeafViss }: Props) => {
                 }}
                 sx={{ bgcolor: "#EEE8CF" }}
               >
-                {agents.map((item) => (
+                {concernAgent.map((item) => (
                   <MenuItem key={item.id} value={item.id}>
                     <ListItemText primary={item.name} />
                   </MenuItem>
@@ -84,7 +91,7 @@ const AgentThree = ({ newAgentLeafViss, setNewAgentLeafViss }: Props) => {
                 }}
                 sx={{ bgcolor: "#EEE8CF" }}
               >
-                {leaves.map((item) => (
+                {concernLeaves.map((item) => (
                   <MenuItem key={item.id} value={item.id}>
                     <ListItemText primary={item.name} />
                   </MenuItem>

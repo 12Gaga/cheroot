@@ -403,7 +403,7 @@ model AddStock{
   id Int @id @default(autoincrement())
   date DateTime @default(now())
   invNo Int
-  carNo Int
+  carNo String
   typeOfLeaf TypeOfLeaf? @relation(fields: [typeOfLeafId],references: [id])
   typeOfLeafId Int? 
   typeOfFilterSize TypeOfFilterSize? @relation(fields: [typeOfFilterSizeId],references: [id])

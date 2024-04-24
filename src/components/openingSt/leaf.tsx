@@ -6,6 +6,7 @@ import {
   DialogContent,
   DialogTitle,
   FormControl,
+  ListItemText,
   MenuItem,
   Select,
   TextField,
@@ -14,15 +15,58 @@ import {
 import DatePicker from "react-datepicker";
 import { useState } from "react";
 import "react-datepicker/dist/react-datepicker.css";
+import { useAppDispatch, useAppSelector } from "@/store/hooks";
+import { LoadingButton } from "@mui/lab";
+import { createNewLeafStock } from "@/types/leafStockType";
+import { CreateLeafStock, setIsLoading } from "@/store/slices/leafStock";
+import { setOpenSnackbar } from "@/store/slices/snackBar";
 interface Props {
   open: boolean;
   setOpen: (value: boolean) => void;
 }
 
+const defaultValue: createNewLeafStock = {
+  typeOfLeafId: undefined,
+  batchNo: 0,
+  viss: 0,
+  shop: "",
+  garageId: undefined,
+};
+
 const LeafOpen = ({ open, setOpen }: Props) => {
   const [selecteddate, setSelectedDate] = useState<any>(new Date());
-  const [selectedLeaf, setSelectedLeaf] = useState<number>(1);
-  const [selectedGarage, setSelectedGarage] = useState<number>(1);
+  const workShop = useAppSelector((store) => store.workShop.selectedWorkShop);
+  const { item: garages, selectedGarage } = useAppSelector(
+    (store) => store.garage
+  );
+  const concernGarage = garages.filter(
+    (item) => item.workShopId === workShop?.id
+  );
+  const leaves = useAppSelector((store) => store.typeOfLeaf.item);
+  const concernleaves = leaves.filter(
+    (item) => item.workShopId === workShop?.id
+  );
+  const [newLeafStock, setNewLeafStock] =
+    useState<createNewLeafStock>(defaultValue);
+  const { isLoading } = useAppSelector((store) => store.leafStock);
+  const dispatch = useAppDispatch();
+
+  const handleClick = () => {
+    dispatch(setIsLoading(true));
+    dispatch(
+      CreateLeafStock({
+        ...newLeafStock,
+        onSuccess: () => {
+          setOpen(false);
+          setNewLeafStock(defaultValue);
+          dispatch(
+            setOpenSnackbar({ message: "Create new leaf Stock success" })
+          );
+          dispatch(setIsLoading(false));
+        },
+      })
+    );
+  };
   return (
     <>
       <Dialog open={open} onClose={() => setOpen(false)}>
@@ -31,7 +75,9 @@ const LeafOpen = ({ open, setOpen }: Props) => {
             <Typography sx={{ mr: 2, fontWeight: "bold" }}>ရက်စွဲ</Typography>
             <DatePicker
               selected={selecteddate}
-              onChange={(date) => setSelectedDate(date)}
+              onChange={(dt) => {
+                setSelectedDate(dt);
+              }}
             />
           </Box>
 
@@ -41,14 +87,20 @@ const LeafOpen = ({ open, setOpen }: Props) => {
               <Select
                 labelId="demo-simple-select-filled-label"
                 id="demo-simple-select-filled"
-                value={selectedGarage}
-                onChange={(evt) => {
-                  setSelectedGarage(Number(evt.target.value));
-                }}
+                value={newLeafStock.garageId}
+                onChange={(evt) =>
+                  setNewLeafStock({
+                    ...newLeafStock,
+                    garageId: Number(evt.target.value),
+                  })
+                }
                 sx={{ bgcolor: "#EEE8CF" }}
               >
-                <MenuItem value={1}>ဂိုထောင် ၁</MenuItem>
-                <MenuItem value={2}>ဂိုထောင် ၂</MenuItem>
+                {concernGarage.map((item) => (
+                  <MenuItem key={item.id} value={item.id}>
+                    <ListItemText primary={item.name} />
+                  </MenuItem>
+                ))}
               </Select>
             </FormControl>
           </Box>
@@ -68,7 +120,12 @@ const LeafOpen = ({ open, setOpen }: Props) => {
               <TextField
                 placeholder="ဝယ်ယူခဲ့သည့်ဆိုင်အမည်"
                 sx={{ bgcolor: "#EEE8CF", width: 350 }}
-                onChange={() => {}}
+                onChange={(evt) =>
+                  setNewLeafStock({
+                    ...newLeafStock,
+                    shop: evt.target.value,
+                  })
+                }
               />
             </Box>
 
@@ -78,15 +135,20 @@ const LeafOpen = ({ open, setOpen }: Props) => {
                 <Select
                   labelId="demo-simple-select-filled-label"
                   id="demo-simple-select-filled"
-                  value={selectedLeaf}
-                  onChange={(evt) => {
-                    setSelectedLeaf(Number(evt.target.value));
-                  }}
+                  value={newLeafStock.typeOfLeafId}
+                  onChange={(evt) =>
+                    setNewLeafStock({
+                      ...newLeafStock,
+                      typeOfLeafId: Number(evt.target.value),
+                    })
+                  }
                   sx={{ bgcolor: "#EEE8CF" }}
                 >
-                  <MenuItem value={1}>၅ ၁/၄ (ငါးတမတ်)</MenuItem>
-                  <MenuItem value={2}>၅ (၄ဝါ)</MenuItem>
-                  <MenuItem value={3}>၄ ၁/၂ (၂လိပ်ဝါ)</MenuItem>
+                  {concernleaves.map((item) => (
+                    <MenuItem key={item.id} value={item.id}>
+                      <ListItemText primary={item.name} />
+                    </MenuItem>
+                  ))}
                 </Select>
               </FormControl>
             </Box>
@@ -96,7 +158,12 @@ const LeafOpen = ({ open, setOpen }: Props) => {
               <TextField
                 placeholder="ပိုနံပါတ်"
                 sx={{ bgcolor: "#EEE8CF", width: 350 }}
-                onChange={() => {}}
+                onChange={(evt) =>
+                  setNewLeafStock({
+                    ...newLeafStock,
+                    batchNo: Number(evt.target.value),
+                  })
+                }
               />
             </Box>
 
@@ -105,16 +172,40 @@ const LeafOpen = ({ open, setOpen }: Props) => {
               <TextField
                 placeholder="ပိဿာ"
                 sx={{ bgcolor: "#EEE8CF", width: 350 }}
-                onChange={() => {}}
+                onChange={(evt) =>
+                  setNewLeafStock({
+                    ...newLeafStock,
+                    viss: Number(evt.target.value),
+                  })
+                }
               />
             </Box>
           </Box>
         </DialogContent>
         <DialogActions>
-          <Button variant="contained" onClick={() => setOpen(false)}>
+          <Button
+            variant="contained"
+            onClick={() => {
+              setOpen(false);
+              setNewLeafStock(defaultValue);
+            }}
+          >
             မလုပ်တော့ပါ
           </Button>
-          <Button variant="contained">သိမ်းမည်</Button>
+          <LoadingButton
+            variant="contained"
+            disabled={
+              !newLeafStock.typeOfLeafId ||
+              !newLeafStock.batchNo ||
+              !newLeafStock.viss ||
+              !newLeafStock.garageId ||
+              !newLeafStock.shop
+            }
+            onClick={handleClick}
+            loading={isLoading}
+          >
+            သိမ်းမည်
+          </LoadingButton>
         </DialogActions>
       </Dialog>
     </>

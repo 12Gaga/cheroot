@@ -4,8 +4,8 @@ import {
   Dialog,
   DialogActions,
   DialogContent,
-  DialogTitle,
   FormControl,
+  ListItemText,
   MenuItem,
   Select,
   TextField,
@@ -14,15 +14,59 @@ import {
 import DatePicker from "react-datepicker";
 import { useState } from "react";
 import "react-datepicker/dist/react-datepicker.css";
+import { createNewFilterSizeStock } from "@/types/filterSizeStockType";
+import { useAppSelector, useAppDispatch } from "@/store/hooks";
+import { setOpenSnackbar } from "@/store/slices/snackBar";
+import { setIsLoading } from "@/store/slices/workShop";
+import { CreateFilterSizeStock } from "@/store/slices/filterSizeStock";
+import { LoadingButton } from "@mui/lab";
 interface Props {
   open: boolean;
   setOpen: (value: boolean) => void;
 }
 
+const defaultValue: createNewFilterSizeStock = {
+  typeOfFilterSizeId: undefined,
+  quantity: 0,
+  bag: 0,
+  shop: "",
+  garageId: undefined,
+};
+
 const FilterSizeOpen = ({ open, setOpen }: Props) => {
   const [selecteddate, setSelectedDate] = useState<any>(new Date());
-  const [selectedFilterSize, setSelectedFilterSize] = useState<number>(1);
-  const [selectedGarage, setSelectedGarage] = useState<number>(1);
+  const workShop = useAppSelector((store) => store.workShop.selectedWorkShop);
+  const { item: garages, selectedGarage } = useAppSelector(
+    (store) => store.garage
+  );
+  const concernGarage = garages.filter(
+    (item) => item.workShopId === workShop?.id
+  );
+  const filterSizes = useAppSelector((store) => store.typeOfFilterSize.item);
+  const concernFilterSizes = filterSizes.filter(
+    (item) => item.workShopId === workShop?.id
+  );
+  const [newFilterSizeStock, setNewFilterSizeStock] =
+    useState<createNewFilterSizeStock>(defaultValue);
+  const { isLoading } = useAppSelector((store) => store.filterSizeStock);
+  const dispatch = useAppDispatch();
+
+  const handleClick = () => {
+    dispatch(setIsLoading(true));
+    dispatch(
+      CreateFilterSizeStock({
+        ...newFilterSizeStock,
+        onSuccess: () => {
+          setOpen(false);
+          setNewFilterSizeStock(defaultValue);
+          dispatch(
+            setOpenSnackbar({ message: "Create new filter size Stock success" })
+          );
+          dispatch(setIsLoading(false));
+        },
+      })
+    );
+  };
   return (
     <>
       <Dialog open={open} onClose={() => setOpen(false)}>
@@ -41,14 +85,20 @@ const FilterSizeOpen = ({ open, setOpen }: Props) => {
               <Select
                 labelId="demo-simple-select-filled-label"
                 id="demo-simple-select-filled"
-                value={selectedGarage}
+                value={newFilterSizeStock.garageId}
                 onChange={(evt) => {
-                  setSelectedGarage(Number(evt.target.value));
+                  setNewFilterSizeStock({
+                    ...newFilterSizeStock,
+                    garageId: Number(evt.target.value),
+                  });
                 }}
                 sx={{ bgcolor: "#EEE8CF" }}
               >
-                <MenuItem value={1}>ဂိုထောင် ၁</MenuItem>
-                <MenuItem value={2}>ဂိုထောင် ၂</MenuItem>
+                {concernGarage.map((item) => (
+                  <MenuItem key={item.id} value={item.id}>
+                    <ListItemText primary={item.name} />
+                  </MenuItem>
+                ))}
               </Select>
             </FormControl>
           </Box>
@@ -68,7 +118,12 @@ const FilterSizeOpen = ({ open, setOpen }: Props) => {
               <TextField
                 placeholder="ဝယ်ယူခဲ့သည့်ဆိုင်အမည်"
                 sx={{ bgcolor: "#EEE8CF", width: 350 }}
-                onChange={() => {}}
+                onChange={(evt) => {
+                  setNewFilterSizeStock({
+                    ...newFilterSizeStock,
+                    shop: evt.target.value,
+                  });
+                }}
               />
             </Box>
 
@@ -80,15 +135,20 @@ const FilterSizeOpen = ({ open, setOpen }: Props) => {
                 <Select
                   labelId="demo-simple-select-filled-label"
                   id="demo-simple-select-filled"
-                  value={selectedFilterSize}
+                  value={newFilterSizeStock.typeOfFilterSizeId}
                   onChange={(evt) => {
-                    setSelectedFilterSize(Number(evt.target.value));
+                    setNewFilterSizeStock({
+                      ...newFilterSizeStock,
+                      typeOfFilterSizeId: Number(evt.target.value),
+                    });
                   }}
                   sx={{ bgcolor: "#EEE8CF" }}
                 >
-                  <MenuItem value={1}>ရှယ်</MenuItem>
-                  <MenuItem value={2}>ကြီး</MenuItem>
-                  <MenuItem value={3}>လတ်</MenuItem>
+                  {concernFilterSizes.map((item) => (
+                    <MenuItem key={item.id} value={item.id}>
+                      <ListItemText primary={item.name} />
+                    </MenuItem>
+                  ))}
                 </Select>
               </FormControl>
             </Box>
@@ -98,7 +158,12 @@ const FilterSizeOpen = ({ open, setOpen }: Props) => {
               <TextField
                 placeholder="အရေအတွက်"
                 sx={{ bgcolor: "#EEE8CF", width: 350 }}
-                onChange={() => {}}
+                onChange={(evt) => {
+                  setNewFilterSizeStock({
+                    ...newFilterSizeStock,
+                    quantity: Number(evt.target.value),
+                  });
+                }}
               />
             </Box>
 
@@ -107,16 +172,40 @@ const FilterSizeOpen = ({ open, setOpen }: Props) => {
               <TextField
                 placeholder="အိတ်"
                 sx={{ bgcolor: "#EEE8CF", width: 350 }}
-                onChange={() => {}}
+                onChange={(evt) => {
+                  setNewFilterSizeStock({
+                    ...newFilterSizeStock,
+                    bag: Number(evt.target.value),
+                  });
+                }}
               />
             </Box>
           </Box>
         </DialogContent>
         <DialogActions>
-          <Button variant="contained" onClick={() => setOpen(false)}>
+          <Button
+            variant="contained"
+            onClick={() => {
+              setOpen(false);
+              setNewFilterSizeStock(defaultValue);
+            }}
+          >
             မလုပ်တော့ပါ
           </Button>
-          <Button variant="contained">သိမ်းမည်</Button>
+          <LoadingButton
+            variant="contained"
+            disabled={
+              !newFilterSizeStock.typeOfFilterSizeId ||
+              !newFilterSizeStock.quantity ||
+              !newFilterSizeStock.bag ||
+              !newFilterSizeStock.garageId ||
+              !newFilterSizeStock.shop
+            }
+            onClick={handleClick}
+            loading={isLoading}
+          >
+            သိမ်းမည်
+          </LoadingButton>
         </DialogActions>
       </Dialog>
     </>

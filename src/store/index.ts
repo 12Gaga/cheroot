@@ -14,6 +14,11 @@ import formOfpackingReducer from "./slices/formOfPacking";
 import conveyLocationReducer from "./slices/conveyLocation";
 import agentReducer from "./slices/agent";
 import agentleafVissReducer from "./slices/agentLeafViss";
+import leafStockReducer from "./slices/leafStock";
+import filterSizeStockReducer from "./slices/filterSizeStock";
+import tabaccoStockReducer from "./slices/tabaccoStock";
+import labelStockReducer from "./slices/labelStock";
+import addStockReducer from "./slices/addStock";
 
 export const store = configureStore({
   reducer: {
@@ -32,6 +37,11 @@ export const store = configureStore({
     conveyLocation: conveyLocationReducer,
     agent: agentReducer,
     agentLeafViss: agentleafVissReducer,
+    leafStock: leafStockReducer,
+    filterSizeStock: filterSizeStockReducer,
+    tabaccoStock: tabaccoStockReducer,
+    labelStock: labelStockReducer,
+    addStock: addStockReducer,
   },
 });
 

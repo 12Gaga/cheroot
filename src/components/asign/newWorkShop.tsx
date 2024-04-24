@@ -69,7 +69,13 @@ const NewWorkShop = ({ open, setOpen }: Props) => {
         </Box>
       </DialogContent>
       <DialogActions>
-        <Button variant="contained" onClick={() => setOpen(false)}>
+        <Button
+          variant="contained"
+          onClick={() => {
+            setOpen(false);
+            setNewWorkShop(defaultValue);
+          }}
+        >
           မလုပ်တော့ပါ
         </Button>
         <LoadingButton

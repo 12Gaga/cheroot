@@ -6,6 +6,7 @@ import {
   DialogContent,
   DialogTitle,
   FormControl,
+  ListItemText,
   MenuItem,
   Select,
   TextField,
@@ -14,15 +15,60 @@ import {
 import DatePicker from "react-datepicker";
 import { useState } from "react";
 import "react-datepicker/dist/react-datepicker.css";
+import { createNewLabelStock } from "@/types/labelStockType";
+import { useAppSelector, useAppDispatch } from "@/store/hooks";
+import { setSelectedGarage } from "@/store/slices/garage";
+import { setOpenSnackbar } from "@/store/slices/snackBar";
+import { CreateTabaccoStock } from "@/store/slices/tabaccoStock";
+import { setIsLoading } from "@/store/slices/workShop";
+import { CreateLabelStock } from "@/store/slices/labelStock";
+import { LoadingButton } from "@mui/lab";
 interface Props {
   open: boolean;
   setOpen: (value: boolean) => void;
 }
 
+const defaultValue: createNewLabelStock = {
+  typeOfLabelId: undefined,
+  bandle: 0,
+  shop: "",
+  garageId: undefined,
+};
+
 const LabelOpen = ({ open, setOpen }: Props) => {
   const [selecteddate, setSelectedDate] = useState<any>(new Date());
-  const [selectedLabel, setSelectedLabel] = useState<number>(1);
-  const [selectedGarage, setSelectedGarage] = useState<number>(1);
+  const workShop = useAppSelector((store) => store.workShop.selectedWorkShop);
+  const { item: garages, selectedGarage } = useAppSelector(
+    (store) => store.garage
+  );
+  const concernGarage = garages.filter(
+    (item) => item.workShopId === workShop?.id
+  );
+  const labels = useAppSelector((store) => store.typeOfLabel.item);
+  const concernLabel = labels.filter(
+    (item) => item.workShopId === workShop?.id
+  );
+  const [newLabelStock, setNewLabelStock] =
+    useState<createNewLabelStock>(defaultValue);
+  const { isLoading } = useAppSelector((store) => store.labelStock);
+  const dispatch = useAppDispatch();
+
+  const handleClick = () => {
+    dispatch(setIsLoading(true));
+    dispatch(
+      CreateLabelStock({
+        ...newLabelStock,
+        onSuccess: () => {
+          setOpen(false);
+          setNewLabelStock(defaultValue);
+          dispatch(
+            setOpenSnackbar({ message: "Create new label Stock success" })
+          );
+          dispatch(setIsLoading(false));
+        },
+      })
+    );
+  };
   return (
     <>
       <Dialog open={open} onClose={() => setOpen(false)}>
@@ -41,14 +87,20 @@ const LabelOpen = ({ open, setOpen }: Props) => {
               <Select
                 labelId="demo-simple-select-filled-label"
                 id="demo-simple-select-filled"
-                value={selectedGarage}
+                value={newLabelStock.garageId}
                 onChange={(evt) => {
-                  setSelectedGarage(Number(evt.target.value));
+                  setNewLabelStock({
+                    ...newLabelStock,
+                    garageId: Number(evt.target.value),
+                  });
                 }}
                 sx={{ bgcolor: "#EEE8CF" }}
               >
-                <MenuItem value={1}>ဂိုထောင် ၁</MenuItem>
-                <MenuItem value={2}>ဂိုထောင် ၂</MenuItem>
+                {concernGarage.map((item) => (
+                  <MenuItem key={item.id} value={item.id}>
+                    <ListItemText primary={item.name} />
+                  </MenuItem>
+                ))}
               </Select>
             </FormControl>
           </Box>
@@ -68,7 +120,12 @@ const LabelOpen = ({ open, setOpen }: Props) => {
               <TextField
                 placeholder="ဝယ်ယူခဲ့သည့်ဆိုင်အမည်"
                 sx={{ bgcolor: "#EEE8CF", width: 350 }}
-                onChange={() => {}}
+                onChange={(evt) => {
+                  setNewLabelStock({
+                    ...newLabelStock,
+                    shop: evt.target.value,
+                  });
+                }}
               />
             </Box>
 
@@ -80,14 +137,20 @@ const LabelOpen = ({ open, setOpen }: Props) => {
                 <Select
                   labelId="demo-simple-select-filled-label"
                   id="demo-simple-select-filled"
-                  value={selectedLabel}
+                  value={newLabelStock.typeOfLabelId}
                   onChange={(evt) => {
-                    setSelectedLabel(Number(evt.target.value));
+                    setNewLabelStock({
+                      ...newLabelStock,
+                      typeOfLabelId: Number(evt.target.value),
+                    });
                   }}
                   sx={{ bgcolor: "#EEE8CF" }}
                 >
-                  <MenuItem value={1}>တောင်ကြီး</MenuItem>
-                  <MenuItem value={2}>ခဲမဲ</MenuItem>
+                  {concernLabel.map((item) => (
+                    <MenuItem key={item.id} value={item.id}>
+                      <ListItemText primary={item.name} />
+                    </MenuItem>
+                  ))}
                 </Select>
               </FormControl>
             </Box>
@@ -97,16 +160,39 @@ const LabelOpen = ({ open, setOpen }: Props) => {
               <TextField
                 placeholder="လိပ်"
                 sx={{ bgcolor: "#EEE8CF", width: 350 }}
-                onChange={() => {}}
+                onChange={(evt) => {
+                  setNewLabelStock({
+                    ...newLabelStock,
+                    bandle: Number(evt.target.value),
+                  });
+                }}
               />
             </Box>
           </Box>
         </DialogContent>
         <DialogActions>
-          <Button variant="contained" onClick={() => setOpen(false)}>
+          <Button
+            variant="contained"
+            onClick={() => {
+              setOpen(false);
+              setNewLabelStock(defaultValue);
+            }}
+          >
             မလုပ်တော့ပါ
           </Button>
-          <Button variant="contained">သိမ်းမည်</Button>
+          <LoadingButton
+            variant="contained"
+            disabled={
+              !newLabelStock.typeOfLabelId ||
+              !newLabelStock.bandle ||
+              !newLabelStock.garageId ||
+              !newLabelStock.shop
+            }
+            onClick={handleClick}
+            loading={isLoading}
+          >
+            သိမ်းမည်
+          </LoadingButton>
         </DialogActions>
       </Dialog>
     </>

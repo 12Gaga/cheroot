@@ -61,7 +61,13 @@ const NewAgent = ({ open, setOpen }: Props) => {
           <AgentTwo setNewAgent={setNewAgent} newAgent={newAgent} />
         </DialogContent>
         <DialogActions>
-          <Button variant="contained" onClick={() => setOpen(false)}>
+          <Button
+            variant="contained"
+            onClick={() => {
+              setOpen(false);
+              setNewAgent(defaultValue);
+            }}
+          >
             မလုပ်တော့ပါ
           </Button>
           <LoadingButton

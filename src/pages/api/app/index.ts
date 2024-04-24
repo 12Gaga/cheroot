@@ -120,6 +120,8 @@ export default async function handler(
     const garage = await prisma.garage.findMany({
       where: { workShopId: { in: workShopIds }, isArchived: false },
     });
+    //find garageIds
+    const garageIds = garage.map((item) => item.id);
     //4.find leaf
     const leaf = await prisma.typeOfLeaf.findMany({
       where: { workShopId: { in: workShopIds }, isArchived: false },
@@ -160,6 +162,26 @@ export default async function handler(
     const agentLeafViss = await prisma.agentLeafViss.findMany({
       where: { workShopId: { in: workShopIds }, isArchived: false },
     });
+    //14. find leafStock
+    const leafStock = await prisma.leaf.findMany({
+      where: { garageId: { in: garageIds }, isArchived: false },
+    });
+    //15. find filterSizeStock
+    const filterSizeStock = await prisma.filterSize.findMany({
+      where: { garageId: { in: garageIds }, isArchived: false },
+    });
+    //16. find tabaccoStock
+    const tabaccoStock = await prisma.tabacco.findMany({
+      where: { garageId: { in: garageIds }, isArchived: false },
+    });
+    //17. find labelStock
+    const labelStock = await prisma.label.findMany({
+      where: { garageId: { in: garageIds }, isArchived: false },
+    });
+    //18. find addStock
+    const addStock = await prisma.addStock.findMany({
+      where: { garageId: { in: garageIds }, isArchived: false },
+    });
     return res.json({
       industry,
       workShop,
@@ -174,6 +196,11 @@ export default async function handler(
       conveyLocation,
       agent,
       agentLeafViss,
+      leafStock,
+      filterSizeStock,
+      tabaccoStock,
+      labelStock,
+      addStock,
     });
   }
 }

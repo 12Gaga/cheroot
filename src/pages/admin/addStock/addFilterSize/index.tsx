@@ -1,21 +1,41 @@
-import {
-  Box,
-  Button,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  Typography,
-} from "@mui/material";
-import DatePicker from "react-datepicker";
+import { Box, Typography } from "@mui/material";
 import { useState } from "react";
 import AdminLayout from "@/components/adminLayout";
 import "react-datepicker/dist/react-datepicker.css";
-import GeneralExpensive from "@/components/addSt/generalExpensive";
-import AddFilterSize from "@/components/addSt/addFilterSize";
 import AddBoxIcon from "@mui/icons-material/AddBox";
+import { useAppSelector } from "@/store/hooks";
+import AddFilterSize from "@/components/addSt/addFilterSize";
+import EditIcon from "@mui/icons-material/Edit";
+import DeleteIcon from "@mui/icons-material/Delete";
 const FilterSizeAdd = () => {
-  const [selecteddate, setSelectedDate] = useState<any>(new Date());
   const [open, setOpen] = useState<boolean>(false);
+  const filterSizes = useAppSelector((store) => store.typeOfFilterSize.item);
+  const filterSizeStocks = useAppSelector(
+    (store) => store.filterSizeStock.item
+  );
+  const garage = useAppSelector((store) => store.garage.selectedGarage);
+  const concernFilterSizeStock = filterSizeStocks.filter(
+    (item) => item.garageId === garage?.id
+  );
+  const concernFilterSizeStockIds = concernFilterSizeStock.map(
+    (item) => item.typeOfFilterSizeId
+  );
+
+  const addStock = useAppSelector((store) => store.addStock.item);
+  const concernAddStocks = addStock.filter(
+    (item) => item.garageId === garage?.id
+  );
+
+  const filterSizeAddStockConcern = concernAddStocks.filter((item) =>
+    concernFilterSizeStockIds.includes(item.typeOfFilterSizeId as number)
+  );
+  const filterSizeAddStockConcernDate = filterSizeAddStockConcern.map(
+    (item) => item.date
+  );
+
+  const concernStock = concernFilterSizeStock.filter((item) =>
+    filterSizeAddStockConcernDate.includes(item.date)
+  );
   return (
     <>
       <AdminLayout>
@@ -34,26 +54,48 @@ const FilterSizeAdd = () => {
             sx={{ fontSize: 50 }}
           />
         </Box>
-
-        <Dialog open={open} onClose={() => setOpen(false)}>
-          <DialogContent>
-            <Box sx={{ display: "flex", justifyContent: "flex-end", mr: 2 }}>
-              <Typography sx={{ mr: 2, fontWeight: "bold" }}>ရက်စွဲ</Typography>
-              <DatePicker
-                selected={selecteddate}
-                onChange={(date) => setSelectedDate(date)}
-              />
-            </Box>
-            <GeneralExpensive />
-            <AddFilterSize />
-          </DialogContent>
-          <DialogActions>
-            <Button variant="contained" onClick={() => setOpen(false)}>
-              မလုပ်တော့ပါ
-            </Button>
-            <Button variant="contained">သိမ်းမည်</Button>
-          </DialogActions>
-        </Dialog>
+        <AddFilterSize open={open} setOpen={setOpen} />
+        <table border={1}>
+          <thead>
+            <tr style={{ border: "1px solid" }}>
+              {/* <th>နေ့စွဲ</th> */}
+              <th>ဘောက်ချာနံပါတ်</th>
+              <th>ကားနံပါတ်</th>
+              <th>အဆီခံအမျိုးအစား</th>
+              <th>အရေအတွက်</th>
+              <th>အိတ်</th>
+              <th>ဝယ်ယူခဲ့သည့်ဆိုင်အမည်</th>
+            </tr>
+          </thead>
+          {filterSizeAddStockConcern.map((item) => (
+            <thead key={item.id}>
+              <tr style={{ border: "1px solid" }}>
+                <td>{item.invNo}</td>
+                <td>{item.carNo}</td>
+                {concernStock.map(
+                  (i) =>
+                    item.date === i.date &&
+                    item.typeOfFilterSizeId === i.typeOfFilterSizeId && (
+                      <>
+                        <td>
+                          {
+                            filterSizes.find(
+                              (f) => f.id === i.typeOfFilterSizeId
+                            )?.name
+                          }
+                        </td>
+                        <td>{i.quantity}</td>
+                        <td>{i.bag}</td>
+                        <td>{i.shop}</td>
+                      </>
+                    )
+                )}
+                <td>{<EditIcon />}</td>
+                <td>{<DeleteIcon />}</td>
+              </tr>
+            </thead>
+          ))}
+        </table>
       </AdminLayout>
     </>
   );
