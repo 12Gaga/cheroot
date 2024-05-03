@@ -14,3 +14,12 @@ export interface createNewAgent extends BasicOption {
   cashBig: number | undefined;
   cashSmall: number | undefined;
 }
+
+export interface selectedAgent {
+  agentId: number | undefined;
+  phoneNo: number | undefined;
+  address: string;
+  cashBig: number | undefined;
+  cashSmall: number | undefined;
+  totalLeafViss: number;
+}

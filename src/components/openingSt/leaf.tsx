@@ -13,7 +13,7 @@ import {
   Typography,
 } from "@mui/material";
 import DatePicker from "react-datepicker";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import "react-datepicker/dist/react-datepicker.css";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { LoadingButton } from "@mui/lab";
@@ -26,6 +26,7 @@ interface Props {
 }
 
 const defaultValue: createNewLeafStock = {
+  date: undefined,
   typeOfLeafId: undefined,
   batchNo: 0,
   viss: 0,
@@ -48,6 +49,7 @@ const LeafOpen = ({ open, setOpen }: Props) => {
   );
   const [newLeafStock, setNewLeafStock] =
     useState<createNewLeafStock>(defaultValue);
+
   const { isLoading } = useAppSelector((store) => store.leafStock);
   const dispatch = useAppDispatch();
 
@@ -67,6 +69,11 @@ const LeafOpen = ({ open, setOpen }: Props) => {
       })
     );
   };
+
+  useEffect(() => {
+    setNewLeafStock({ ...newLeafStock, date: selecteddate });
+  }, []);
+
   return (
     <>
       <Dialog open={open} onClose={() => setOpen(false)}>
@@ -75,10 +82,24 @@ const LeafOpen = ({ open, setOpen }: Props) => {
             <Typography sx={{ mr: 2, fontWeight: "bold" }}>ရက်စွဲ</Typography>
             <DatePicker
               selected={selecteddate}
-              onChange={(dt) => {
-                setSelectedDate(dt);
+              onChange={(date) => {
+                setSelectedDate(date);
+                setNewLeafStock({
+                  ...newLeafStock,
+                  date: selecteddate,
+                });
+                console.log("date", date);
               }}
             />
+            {/* mui datePicker */}
+            {/* <DatePicker
+              label="Controlled picker"
+              value={setSelectedDate}
+              onChange={(date: any) => {
+                setSelectedDate(date);
+                console.log("date", date);
+              }}
+            /> */}
           </Box>
 
           <Box sx={{ mt: 2 }}>

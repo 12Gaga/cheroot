@@ -29,13 +29,13 @@ const btns = [
   },
   {
     id: 6,
-    title: "ကုန်ကြမ်းစာရင်း",
-    url: "",
+    title: "ပဲခူးပစ္စည်းစာရင်း",
+    url: "/admin/bago",
   },
   {
     id: 7,
-    title: "ကုန်ချောစာရင်း",
-    url: "",
+    title: "တောင်ကြီးစာရင်း",
+    url: "/admin/taungyi",
   },
   {
     id: 8,

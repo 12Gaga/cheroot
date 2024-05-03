@@ -1,3 +1,5 @@
+import { useAppSelector } from "@/store/hooks";
+import { createNewPayLeaf } from "@/types/payLeafType";
 import {
   Typography,
   TextField,
@@ -6,14 +8,60 @@ import {
   InputLabel,
   MenuItem,
   Select,
+  ListItemText,
+  SelectChangeEvent,
 } from "@mui/material";
+import { Leaf } from "@prisma/client";
 import { useState } from "react";
-import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-const PayLeafOne = () => {
-  const [selecteddate, setSelectedDate] = useState<any>(new Date());
-  const [selectedLeaf, setSelectedLeaf] = useState<number>(1);
-  const [selectedBatchno, setSelectedBatchno] = useState<number[]>([]);
+interface Props {
+  newPayLeaf: createNewPayLeaf;
+  setNewPayLeaf: (value: createNewPayLeaf) => void;
+  workShopId: number;
+}
+const PayLeafOne = ({ newPayLeaf, setNewPayLeaf, workShopId }: Props) => {
+  const leafStock = useAppSelector((store) => store.leafStock.item);
+  const concernLeafStock = leafStock.filter(
+    (item) => item.garageId === newPayLeaf.garageId
+  );
+  const leaves = useAppSelector((store) => store.typeOfLeaf.item);
+  const concernLeaves = leaves.filter((item) => item.workShopId === workShopId);
+  const [concernBatchNo, setConcernBatchNo] = useState<Leaf[]>([]);
+
+  console.log("newLeaf", newPayLeaf);
+
+  const handleChange = (evt: SelectChangeEvent<number[]>) => {
+    const selectBatchNo = evt.target.value as number[];
+    const totalViss = concernLeafStock
+      .filter((item) => selectBatchNo.includes(item.id))
+      .reduce((totalViss, viss) => {
+        return (totalViss += viss.viss);
+      }, 0);
+    const netViss = totalViss - newPayLeaf.discountViss;
+    // setNewPayLeaf({ ...newPayLeaf, netViss: Number(netViss) });
+    const amount = netViss * newPayLeaf.price;
+
+    // setNewPayLeaf({ ...newPayLeaf, viss: totalViss });
+    setNewPayLeaf({
+      ...newPayLeaf,
+      batchNo: selectBatchNo,
+      viss: totalViss,
+      netViss: Number(netViss),
+      amount: Number(amount),
+    });
+    console.log("batch", newPayLeaf.batchNo);
+  };
+
+  const changeBatchNo = (leafId: number) => {
+    const batchNo = concernLeafStock.filter(
+      (item) => item.typeOfLeafId === leafId
+    );
+    setConcernBatchNo(batchNo);
+    const concernPrice = leaves.find((item) => item.id === leafId)
+      ?.price as number;
+    setNewPayLeaf({ ...newPayLeaf, price: concernPrice, typeOfLeafId: leafId });
+  };
+
   return (
     <>
       <Box
@@ -28,7 +76,7 @@ const PayLeafOne = () => {
           <TextField
             placeholder="ဝယ်ယူခဲ့သည့်ဆိုင်"
             sx={{ bgcolor: "#EEE8CF" }}
-            onChange={() => {}}
+            onChange={(evt) => {}}
           />
         </Box>
 
@@ -38,15 +86,17 @@ const PayLeafOne = () => {
             <Select
               labelId="demo-simple-select-filled-label"
               id="demo-simple-select-filled"
-              value={selectedLeaf}
+              value={newPayLeaf.typeOfLeafId}
               onChange={(evt) => {
-                setSelectedLeaf(Number(evt.target.value));
+                changeBatchNo(Number(evt.target.value));
               }}
               sx={{ bgcolor: "#EEE8CF" }}
             >
-              <MenuItem value={1}>၅ ၁/၄ (ငါးတမတ်)</MenuItem>
-              <MenuItem value={2}>၅ (၄ဝါ)</MenuItem>
-              <MenuItem value={3}>၄ ၁/၂ (၂လိပ်ဝါ)</MenuItem>
+              {concernLeaves.map((item) => (
+                <MenuItem key={item.id} value={item.id}>
+                  <ListItemText primary={item.name} />
+                </MenuItem>
+              ))}
             </Select>
           </FormControl>
         </Box>
@@ -58,18 +108,37 @@ const PayLeafOne = () => {
               multiple
               labelId="demo-simple-select-filled-label"
               id="demo-simple-select-filled"
-              value={selectedBatchno}
+              value={newPayLeaf.batchNo}
               onChange={(evt) => {
-                setSelectedBatchno([
-                  ...selectedBatchno,
-                  Number(evt.target.value),
-                ]);
+                handleChange(evt);
+                // TotalViss(evt);
               }}
               sx={{ bgcolor: "#EEE8CF" }}
+              renderValue={(selectedBatchNoIds) => {
+                return selectedBatchNoIds
+                  .map((batchNoId) => {
+                    const batchNo = concernBatchNo.find(
+                      (item) => item.id === batchNoId
+                    ) as Leaf;
+                    return batchNo;
+                  })
+                  .map((item) => item.batchNo)
+                  .join(", ");
+              }}
+              MenuProps={{
+                PaperProps: {
+                  style: {
+                    maxHeight: 48 * 4.5 + 8,
+                    width: 250,
+                  },
+                },
+              }}
             >
-              <MenuItem value={1}>၁</MenuItem>
-              <MenuItem value={2}>၂</MenuItem>
-              <MenuItem value={3}>၃</MenuItem>
+              {concernBatchNo.map((item) => (
+                <MenuItem key={item.id} value={item.id}>
+                  <ListItemText primary={item.batchNo} />
+                </MenuItem>
+              ))}
             </Select>
           </FormControl>
         </Box>
@@ -77,9 +146,9 @@ const PayLeafOne = () => {
         <Box sx={{ width: 250, mt: 2 }}>
           <Typography sx={{ fontWeight: "bold" }}>ပိဿာ</Typography>
           <TextField
+            value={newPayLeaf.viss}
             placeholder="ပိဿာ"
             sx={{ bgcolor: "#EEE8CF" }}
-            onChange={() => {}}
           />
         </Box>
       </Box>

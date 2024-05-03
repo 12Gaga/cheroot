@@ -38,12 +38,6 @@ const NewTypeOfPacking = ({ open, setOpen }: Props) => {
   const [newTypeOfPacking, setNewTypeOfPacking] =
     useState<createNewTypeOfPacking>(defaultValue);
   const { isLoading } = useAppSelector((store) => store.typeOfPacking);
-  // const handleChange = (evt: SelectChangeEvent<number>) => {
-  //   const selectId = evt.target.value as number;
-  //   setNewTypeOfPacking({ ...newTypeOfPacking, typeOfCherootId: selectId });
-  //   console.log("skedc", selectId);
-  // };
-
   const handleClick = () => {
     dispatch(setIsLoading(true));
     dispatch(
@@ -108,7 +102,13 @@ const NewTypeOfPacking = ({ open, setOpen }: Props) => {
         </Box>
       </DialogContent>
       <DialogActions>
-        <Button variant="contained" onClick={() => setOpen(false)}>
+        <Button
+          variant="contained"
+          onClick={() => {
+            setOpen(false);
+            setNewTypeOfPacking(defaultValue);
+          }}
+        >
           မလုပ်တော့ပါ
         </Button>
         <LoadingButton

@@ -1,4 +1,4 @@
-import { addStockSlice } from "@/types/addStock";
+import { addStockSlice } from "@/types/addStockType";
 import { AddStock, Leaf } from "@prisma/client";
 import { PayloadAction, createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 

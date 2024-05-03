@@ -1,3 +1,6 @@
+import { useAppSelector } from "@/store/hooks";
+import { selectedAgent } from "@/types/agentType";
+import { createNewPayLeaf } from "@/types/payLeafType";
 import {
   Typography,
   TextField,
@@ -6,11 +9,55 @@ import {
   InputLabel,
   MenuItem,
   Select,
+  ListItemText,
 } from "@mui/material";
+import { Agent } from "@prisma/client";
 import { useState } from "react";
 
-const PayLeafThree = () => {
-  const [selectedName, setSelectedName] = useState<number>(1);
+const defaultValue: selectedAgent = {
+  agentId: undefined,
+  phoneNo: undefined,
+  address: "",
+  cashBig: 0,
+  cashSmall: 0,
+  totalLeafViss: 0,
+};
+
+interface Props {
+  newPayLeaf: createNewPayLeaf;
+  setNewPayLeaf: (value: createNewPayLeaf) => void;
+}
+
+const PayLeafThree = ({ newPayLeaf, setNewPayLeaf }: Props) => {
+  const workShop = useAppSelector((store) => store.workShop.selectedWorkShop);
+  const [selectAgent, setSelectedAgent] = useState<selectedAgent>(defaultValue);
+  const agents = useAppSelector((store) => store.agent.item);
+  const concernAgent = agents.filter(
+    (item) => item.workShopId === workShop?.id
+  );
+  const agentsLeafViss = useAppSelector((store) => store.agentLeafViss.item);
+
+  const handleAgent = (agentId: number) => {
+    const agent = agents.find((item) => item.id === agentId) as Agent;
+    const concernAgentLeafViss = agentsLeafViss
+      .filter((item) => item.agentId === agentId)
+      .reduce((totalViss, agentViss) => {
+        return (totalViss += agentViss.viss);
+      }, 0);
+
+    setNewPayLeaf({ ...newPayLeaf, agentId: agentId });
+
+    setSelectedAgent({
+      ...selectAgent,
+      agentId: agentId,
+      phoneNo: agent?.phoneNo,
+      address: agent?.adderess,
+      cashBig: agent.cashBalcanceBig,
+      cashSmall: agent.cashBalcanceSmall,
+      totalLeafViss: concernAgentLeafViss,
+    });
+  };
+  console.log("dfuhg", selectAgent);
   return (
     <>
       <Box
@@ -28,15 +75,21 @@ const PayLeafThree = () => {
             <Select
               labelId="demo-simple-select-filled-label"
               id="demo-simple-select-filled"
-              value={selectedName}
+              value={selectAgent.agentId}
               onChange={(evt) => {
-                setSelectedName(Number(evt.target.value));
+                // setSelectedAgent({
+                //   ...selectAgent,
+                //   agentId: Number(evt.target.value),
+                // });
+                handleAgent(Number(evt.target.value));
               }}
               sx={{ bgcolor: "#EEE8CF" }}
             >
-              <MenuItem value={1}>စုစု</MenuItem>
-              <MenuItem value={2}>လှလှ</MenuItem>
-              <MenuItem value={3}>ကိုကို</MenuItem>
+              {concernAgent.map((item) => (
+                <MenuItem key={item.id} value={item.id}>
+                  <ListItemText primary={item.name} />
+                </MenuItem>
+              ))}
             </Select>
           </FormControl>
         </Box>
@@ -46,6 +99,7 @@ const PayLeafThree = () => {
             လိပ်စာ
           </Typography>
           <TextField
+            value={selectAgent.address}
             placeholder="လိပ်စာ"
             sx={{ bgcolor: "#EEE8CF" }}
             onChange={() => {}}
@@ -57,6 +111,7 @@ const PayLeafThree = () => {
             ဖုန်းနံပါတ်
           </Typography>
           <TextField
+            value={selectAgent.phoneNo}
             placeholder="ဖုန်းနံပါတ်"
             sx={{ bgcolor: "#EEE8CF" }}
             onChange={() => {}}
@@ -68,6 +123,7 @@ const PayLeafThree = () => {
             လက်ကျန်ငွေ(အကြီး)
           </Typography>
           <TextField
+            value={selectAgent.cashBig}
             placeholder="လက်ကျန်ငွေ(အကြီး)"
             sx={{ bgcolor: "#EEE8CF" }}
             onChange={() => {}}
@@ -79,6 +135,7 @@ const PayLeafThree = () => {
             လက်ကျန်ငွေ(အသေး)
           </Typography>
           <TextField
+            value={selectAgent.cashSmall}
             placeholder="လက်ကျန်ငွေ(အသေး)"
             sx={{ bgcolor: "#EEE8CF" }}
             onChange={() => {}}
@@ -90,6 +147,7 @@ const PayLeafThree = () => {
             ကျန်ပိဿာ
           </Typography>
           <TextField
+            value={selectAgent.totalLeafViss}
             placeholder="ကျန်ပိဿာ"
             sx={{ bgcolor: "#EEE8CF" }}
             onChange={() => {}}

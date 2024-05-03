@@ -20,14 +20,24 @@ const AgentLeafVissPage = () => {
   const concernLeafViss = leafViss.filter(
     (item) => item.workShopId === workShop?.id
   );
+
+  const { selectedWorkShop, item: workShops } = useAppSelector(
+    (store) => store.workShop
+  );
+  const work = workShops.find((item) => item.id === selectedWorkShop?.id);
+  const { selectedGarage, item: garages } = useAppSelector(
+    (store) => store.garage
+  );
+  const gar = garages.find((item) => item.id === selectedGarage?.id);
   if (!session) return;
   return (
     <>
       <Box
         sx={{
           bgcolor: "#FCB500",
-          p: 3,
+          p: 1.5,
           display: "flex",
+          flexDirection: "column",
           justifyContent: "center",
           alignItems: "center",
         }}
@@ -35,6 +45,14 @@ const AgentLeafVissPage = () => {
         <Typography variant="h4" sx={{ color: "white", fontWeight: "bold" }}>
           ဖက်လက်ကျန်ထည့်ခြင်း
         </Typography>
+        <Box sx={{ display: "flex" }}>
+          <Typography sx={{ color: "white", fontWeight: "bold", mt: 1 }}>
+            {work?.name} /
+          </Typography>
+          <Typography sx={{ color: "white", fontWeight: "bold", mt: 1 }}>
+            {gar?.name}
+          </Typography>
+        </Box>
       </Box>
       <Box sx={{ display: "flex", justifyContent: "flex-end" }}>
         <AddBoxIcon

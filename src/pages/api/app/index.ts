@@ -182,6 +182,10 @@ export default async function handler(
     const addStock = await prisma.addStock.findMany({
       where: { garageId: { in: garageIds }, isArchived: false },
     });
+    //19. find formula
+    const formula = await prisma.formula.findMany({
+      where: { workShopId: { in: workShopIds }, isArchived: false },
+    });
     return res.json({
       industry,
       workShop,
@@ -201,6 +205,7 @@ export default async function handler(
       tabaccoStock,
       labelStock,
       addStock,
+      formula,
     });
   }
 }

@@ -18,25 +18,26 @@ export default function Home() {
         style={{
           width: "100%",
           height: "auto",
-          zIndex: -1,
         }}
       />
 
-      <Box sx={{ display: "flex", height: "100%" }}>
+      <Box
+        sx={{
+          display: "flex",
+          height: "100%",
+          position: "relative",
+          top: -180,
+        }}
+      >
         <Box
           sx={{
             width: "50%",
-            height: "100%",
-            position: "absolute",
-            top: 50,
-            zIndex: -1,
-            bgcolor: "#E7E7E7",
           }}
         >
           <Image
-            src="/cheroot6.jpg"
+            src="/cheroot.png"
             alt={"middle-image"}
-            width={600}
+            width={700}
             height={500}
           />
         </Box>
@@ -44,11 +45,6 @@ export default function Home() {
         <Box
           sx={{
             width: "50%",
-            height: "100%",
-            position: "absolute",
-            right: 0,
-            bgcolor: "#E7E7E7",
-            top: 50,
           }}
         >
           <Typography
@@ -56,7 +52,7 @@ export default function Home() {
             sx={{
               color: "#D83E3E",
               fontWeight: "bold",
-              mt: 35,
+              mt: 25,
               textAlign: "center",
               fontSize: 50,
             }}
@@ -106,7 +102,7 @@ export default function Home() {
           </Box>
         </Box>
       </Box>
-
+      {/* 
       <Image
         src="/adminBottomWave.svg"
         alt={"header-image"}
@@ -115,9 +111,10 @@ export default function Home() {
         style={{
           width: "100%",
           height: "auto",
-          zIndex: -1,
+          position: "relative",
+          top: -350,
         }}
-      />
+      /> */}
     </>
   );
 }

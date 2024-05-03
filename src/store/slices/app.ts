@@ -19,6 +19,7 @@ import { setFilterSizeStock } from "./filterSizeStock";
 import { setTabaccoStock } from "./tabaccoStock";
 import { setLabelStock } from "./labelStock";
 import { setAddStock } from "./addStock";
+import { setFormula } from "./formula";
 
 const initialState: appSlice = {
   init: false,
@@ -52,6 +53,7 @@ export const fetchApp = createAsyncThunk(
         tabaccoStock,
         labelStock,
         addStock,
+        formula,
       } = dataFromServer;
       thunkApi.dispatch(setInit(true));
       thunkApi.dispatch(setIndustry(industry));
@@ -72,6 +74,7 @@ export const fetchApp = createAsyncThunk(
       thunkApi.dispatch(setTabaccoStock(tabaccoStock));
       thunkApi.dispatch(setLabelStock(labelStock));
       thunkApi.dispatch(setAddStock(addStock));
+      thunkApi.dispatch(setFormula(formula));
       onSuccess && onSuccess();
     } catch (err) {
       onError && onError(err);

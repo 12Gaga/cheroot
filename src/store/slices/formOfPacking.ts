@@ -2,10 +2,6 @@ import {
   createNewFormOfPacking,
   formOfPackingSlice,
 } from "@/types/formOfPackingType";
-import {
-  createNewTypeOfPacking,
-  typeOfPackingSlice,
-} from "@/types/typeOfPackingType";
 import Config from "@/utils/config";
 import { FormOfPacking, TypeOfPacking } from "@prisma/client";
 import { PayloadAction, createAsyncThunk, createSlice } from "@reduxjs/toolkit";

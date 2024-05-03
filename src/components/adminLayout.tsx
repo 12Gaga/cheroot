@@ -22,6 +22,7 @@ const opening = [
   { label: "အဆီခံ (အရေအတွက်/အိတ်)", url: "/admin/openingStock/filterSize" },
   { label: "ဆေးစပ် (တင်း/ပြည်)", url: "/admin/openingStock/tabacco" },
   { label: "တံဆိပ် (လိပ်) ", url: "/admin/openingStock/label" },
+  { label: "ပလပ်စတစ်", url: "/admin/openingStock/plasticOp" },
 ];
 
 const adding = [
@@ -29,6 +30,7 @@ const adding = [
   { label: "အဆီခံ (အရေအတွက်/အိတ်)", url: "/admin/addStock/addFilterSize" },
   { label: "ဆေးစပ် (တင်း/ပြည်)", url: "/admin/addStock/addTabacco" },
   { label: "တံဆိပ် (လိပ်) ", url: "/admin/addStock/addLabel" },
+  { label: "ပလပ်စတစ် ", url: "/admin/addStock/addPlastic" },
 ];
 
 const asigning = [
@@ -37,8 +39,10 @@ const asigning = [
   { label: "ဆေးစပ်အမျိုးအစား", url: "/admin/asignNamePrice/typeTabacco" },
   { label: "တံဆိပ်အမျိုးအစား", url: "/admin/asignNamePrice/typeLabel" },
   { label: "ဆေးလိပ်အမျိုးအစား", url: "/admin/asignNamePrice/typeCheroot" },
+  { label: "ပလတ်စတစ်အမျိုးအစား", url: "/admin/asignNamePrice/plastic" },
   { label: "အလုပ်ရုံ", url: "/admin/asignNamePrice/workShop" },
   { label: "ဂိုထောင်", url: "/admin/asignNamePrice/garage" },
+  { label: "ပစ္စည်းဝယ်ယူသည့်ဆိုင်အမည်", url: "/admin/asignNamePrice/shop" },
 ];
 
 const moneyList = [
@@ -77,8 +81,39 @@ const transferring = [
     label: "ဆေးလိပ်ပို့စာရင်း",
     url: "/admin/transferCheroot/transferCherootData",
   },
+  {
+    label: "ဆေးလိပ်တန်ဖိုးအရစ်ကျသွင်းခြင်း",
+    url: "/admin/transferCheroot/cherootInstallment",
+  },
 ];
 
+const Taungyi = [
+  { label: "သိုလှောင်ရုံ", url: "/admin/taungyi" },
+  {
+    label: "ပွဲရုံ",
+    url: "/admin/taungyi/banquet",
+  },
+  {
+    label: "သိုလှောင်ရုံပစ္စည်းစာရင်းထည့်ခြင်း",
+    url: "/admin/taungyi/taungyiAddStock",
+  },
+  {
+    label: "သိုလှောင်ရုံပစ္စည်းစာရင်းထုတ်ခြင်း",
+    url: "/admin/taungyi/taungyiQuitStock",
+  },
+  {
+    label: "ပစ္စည်းတန်ဖိုးအရစ်ကျစာရင်း",
+    url: "/admin/taungyi/taungyiInstallment",
+  },
+];
+
+const Bago = [
+  { label: "ဖက်", url: "/admin/bago" },
+  { label: "အစီခံ", url: "/admin/bago/bagoFilterSize" },
+  { label: "တံဆိပ်", url: "/admin/bago/bagoLabel" },
+  { label: "ပလပ်စတစ်", url: "/admin/bago/bagoPlastic" },
+  { label: "ပစ္စည်းတန်ဖိုးအရစ်ကျစာရင်း", url: "/admin/bago/bagoInstallment" },
+];
 const AdminLayout = ({ children }: Props) => {
   const { data: session } = useSession();
   const router = useRouter();
@@ -88,10 +123,17 @@ const AdminLayout = ({ children }: Props) => {
   const garage = router.pathname.includes("garageTransfer");
   const money = router.pathname.includes("moneyData");
   const pack = router.pathname.includes("packing");
+  const taungyi = router.pathname.includes("taungyi");
   const transfer = router.pathname.includes("transferCheroot");
-  const { selectedWorkShop } = useAppSelector((store) => store.workShop);
-  const workShops = useAppSelector((store) => store.workShop.item);
+  const bago = router.pathname.includes("bago");
+  const { selectedWorkShop, item: workShops } = useAppSelector(
+    (store) => store.workShop
+  );
   const work = workShops.find((item) => item.id === selectedWorkShop?.id);
+  const { selectedGarage, item: garages } = useAppSelector(
+    (store) => store.garage
+  );
+  const gar = garages.find((item) => item.id === selectedGarage?.id);
 
   let data;
   if (open) {
@@ -108,6 +150,10 @@ const AdminLayout = ({ children }: Props) => {
     data = [...packing];
   } else if (transfer) {
     data = [...transferring];
+  } else if (taungyi) {
+    data = [...Taungyi];
+  } else if (bago) {
+    data = [...Bago];
   }
 
   if (!session) return null;
@@ -159,9 +205,22 @@ const AdminLayout = ({ children }: Props) => {
             ဆေးလိပ်ပို့ခြင်း
           </Typography>
         )}
-        <Box>
+        {taungyi && (
+          <Typography variant="h5" sx={{ color: "white", fontWeight: "bold" }}>
+            တောင်ကြီးစာရင်း
+          </Typography>
+        )}
+        {bago && (
+          <Typography variant="h5" sx={{ color: "white", fontWeight: "bold" }}>
+            ပဲခူးပစ္စည်းစာရင်း
+          </Typography>
+        )}
+        <Box sx={{ display: "flex" }}>
           <Typography sx={{ color: "white", fontWeight: "bold", mt: 1 }}>
-            {work?.name}
+            {work?.name} /
+          </Typography>
+          <Typography sx={{ color: "white", fontWeight: "bold", mt: 1 }}>
+            {gar?.name}
           </Typography>
         </Box>
       </Box>

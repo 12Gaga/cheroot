@@ -130,6 +130,15 @@ const NewTransferCherootData = ({ open, setOpen }: Props) => {
               onChange={() => {}}
             />
           </Box>
+
+          <Box sx={{ mt: 2 }}>
+            <Typography sx={{ fontWeight: "bold" }}>ဆေးလိပ်တန်ဖိုး</Typography>
+            <TextField
+              placeholder="ဆေးလိပ်တန်ဖိုး"
+              sx={{ bgcolor: "#EEE8CF", width: 300 }}
+              onChange={() => {}}
+            />
+          </Box>
         </Box>
       </DialogContent>
       <DialogActions>

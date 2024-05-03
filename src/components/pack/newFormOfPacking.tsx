@@ -1,6 +1,5 @@
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { setOpenSnackbar } from "@/store/slices/snackBar";
-import { CreateTypeOfPacking } from "@/store/slices/typeOfPacking";
 import { setIsLoading } from "@/store/slices/workShop";
 import {
   Box,
@@ -13,7 +12,6 @@ import {
   ListItemText,
   MenuItem,
   Select,
-  SelectChangeEvent,
   TextField,
   Typography,
 } from "@mui/material";
@@ -21,6 +19,7 @@ import { useState } from "react";
 import { LoadingButton } from "@mui/lab";
 import { createNewFormOfPacking } from "@/types/formOfPackingType";
 import { CreateFormOfPacking } from "@/store/slices/formOfPacking";
+import PlasticData from "./plasticData";
 
 interface Props {
   open: boolean;
@@ -137,6 +136,11 @@ const NewFormOfPacking = ({ open, setOpen }: Props) => {
             </FormControl>
           </Box>
 
+          <PlasticData
+            newFormOfPacking={newFormOfPacking}
+            setNewFormOfPacking={setNewFormOfPacking}
+          />
+
           <Box sx={{ mt: 2 }}>
             <Typography sx={{ fontWeight: "bold" }}>ဆေးလိပ်အရေအတွက်</Typography>
             <TextField
@@ -153,7 +157,13 @@ const NewFormOfPacking = ({ open, setOpen }: Props) => {
         </Box>
       </DialogContent>
       <DialogActions>
-        <Button variant="contained" onClick={() => setOpen(false)}>
+        <Button
+          variant="contained"
+          onClick={() => {
+            setOpen(false);
+            setNewFormOfPacking(defaultValue);
+          }}
+        >
           မလုပ်တော့ပါ
         </Button>
         <LoadingButton
@@ -161,7 +171,8 @@ const NewFormOfPacking = ({ open, setOpen }: Props) => {
           disabled={
             !newFormOfPacking.name ||
             !newFormOfPacking.typeOfCherootId ||
-            !newFormOfPacking.typeOfPackingId
+            !newFormOfPacking.typeOfPackingId ||
+            !newFormOfPacking.quantity
           }
           onClick={handleClick}
           loading={isLoading}

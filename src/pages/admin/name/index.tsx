@@ -1,4 +1,3 @@
-import AgentButton from "@/components/agentName/agentButton";
 import NewAgent from "@/components/agentName/newAgent";
 import { useAppSelector } from "@/store/hooks";
 import AddBoxIcon from "@mui/icons-material/AddBox";
@@ -7,7 +6,9 @@ import { useSession } from "next-auth/react";
 import React, { useState } from "react";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
+import { useRouter } from "next/router";
 const NamePage = () => {
+  const router = useRouter();
   const { data: session } = useSession();
   const [open, setOpen] = useState<boolean>(false);
   const agents = useAppSelector((store) => store.agent.item);
@@ -15,6 +16,14 @@ const NamePage = () => {
   const concetnAgent = agents.filter(
     (item) => item.workShopId === workShop?.id
   );
+  const { selectedWorkShop, item: workShops } = useAppSelector(
+    (store) => store.workShop
+  );
+  const work = workShops.find((item) => item.id === selectedWorkShop?.id);
+  const { selectedGarage, item: garages } = useAppSelector(
+    (store) => store.garage
+  );
+  const gar = garages.find((item) => item.id === selectedGarage?.id);
   if (!session) return null;
 
   return (
@@ -22,8 +31,9 @@ const NamePage = () => {
       <Box
         sx={{
           bgcolor: "#FCB500",
-          p: 3,
+          p: 1.5,
           display: "flex",
+          flexDirection: "column",
           justifyContent: "center",
           alignItems: "center",
         }}
@@ -31,6 +41,14 @@ const NamePage = () => {
         <Typography variant="h4" sx={{ color: "white", fontWeight: "bold" }}>
           ကိုယ်စားလှယ်အမည်စာရင်း
         </Typography>
+        <Box sx={{ display: "flex" }}>
+          <Typography sx={{ color: "white", fontWeight: "bold", mt: 1 }}>
+            {work?.name} /
+          </Typography>
+          <Typography sx={{ color: "white", fontWeight: "bold", mt: 1 }}>
+            {gar?.name}
+          </Typography>
+        </Box>
       </Box>
       <Box sx={{ display: "flex", justifyContent: "flex-end" }}>
         <AddBoxIcon
@@ -69,14 +87,12 @@ const NamePage = () => {
         </table>
       </Box>
 
-      <Box sx={{ display: "flex", justifyContent: "flex-end" }}>
+      <Box sx={{ position: "fixed", bottom: 10, right: 0 }}>
         <Button
           variant="contained"
           sx={{
             bgcolor: "#E55252",
 
-            width: 180,
-            height: 40,
             fontSize: 18,
             borderRadius: 10,
             "&:hover": {
@@ -85,6 +101,7 @@ const NamePage = () => {
               fontWeight: "bold",
             },
           }}
+          onClick={() => router.push("/admin/name/leafViss")}
         >
           ဖက်လက်ကျန်ထည့်ခြင်း
         </Button>

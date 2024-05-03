@@ -1,3 +1,5 @@
+import { useAppSelector } from "@/store/hooks";
+import { createNewPayStock, payStock } from "@/types/payStockType";
 import {
   Typography,
   FormControl,
@@ -5,11 +7,83 @@ import {
   MenuItem,
   TextField,
   Box,
+  ListItemText,
 } from "@mui/material";
+import { Formula } from "@prisma/client";
 import { useState } from "react";
 
-const PayLeafFour = () => {
-  const [selectedCheroot, setSelectedCheroot] = useState<number>(1);
+interface Props {
+  newPayStock: createNewPayStock;
+  setNewPayStock: (value: createNewPayStock) => void;
+  payStock: payStock;
+  setPayStock: (value: payStock) => void;
+  workShopId: number;
+}
+
+const PayLeafFour = ({
+  newPayStock,
+  setNewPayStock,
+  workShopId,
+  payStock,
+  setPayStock,
+}: Props) => {
+  const cheroots = useAppSelector((store) => store.typeOfCheroot.item);
+  const tabacco = useAppSelector((store) => store.typeOfTabacco.item);
+  const concernCheroot = cheroots.filter(
+    (item) => item.workShopId === workShopId
+  );
+  const formula = useAppSelector((store) => store.formula.item);
+  const concernFormula = formula.filter(
+    (item) => item.workShopId === workShopId
+  );
+
+  const handelChange = (cherootId: number) => {
+    const selectedFormula = concernFormula.find(
+      (item) => item.typeOfCherootId === cherootId
+    ) as Formula;
+    setNewPayStock({
+      ...newPayStock,
+      typeOfCherootId: cherootId,
+      cherootQty: selectedFormula?.cherootQty,
+      typeOfFilterSizeId: selectedFormula.typeOfFilterSizeId,
+      filterSizeQty: selectedFormula.filterSizeQty,
+      filterSizeBag: selectedFormula.filterSizeBag,
+      typeOfTabaccoId: selectedFormula.typeOfTabaccoId,
+      tabaccoQty: selectedFormula.tabaccoQty,
+      tabaccoTin: selectedFormula.tabaccoTin,
+      tabaccoPyi: selectedFormula.tabaccoPyi,
+    });
+    setPayStock({
+      ...payStock,
+      cherootQty: selectedFormula?.cherootQty,
+      filterSizeQty: selectedFormula.filterSizeQty,
+      filterSizeBag: selectedFormula.filterSizeBag,
+      tabaccoQty: selectedFormula.tabaccoQty,
+      tabaccoTin: selectedFormula.tabaccoTin,
+      tabaccoPyi: selectedFormula.tabaccoPyi,
+    });
+  };
+
+  const handelChangeQty = (quantity: number) => {
+    const changeFilterSizeQty =
+      (payStock.filterSizeQty * quantity) / payStock.cherootQty;
+    const changeFilterSizeBag =
+      (payStock.filterSizeBag * quantity) / payStock.cherootQty;
+    const changeTabaccoTin =
+      (payStock.tabaccoTin * quantity) / payStock.cherootQty;
+    const changeTabaccoPyi =
+      (payStock.tabaccoPyi * quantity) / payStock.cherootQty;
+    setNewPayStock({
+      ...newPayStock,
+      cherootQty: quantity,
+      filterSizeQty: changeFilterSizeQty,
+      filterSizeBag: changeFilterSizeBag,
+      tabaccoQty: quantity,
+      tabaccoTin: changeTabaccoTin,
+      tabaccoPyi: changeTabaccoPyi,
+    });
+  };
+
   return (
     <>
       <Box
@@ -26,15 +100,17 @@ const PayLeafFour = () => {
             <Select
               labelId="demo-simple-select-filled-label"
               id="demo-simple-select-filled"
-              value={selectedCheroot}
+              value={newPayStock.typeOfCherootId}
               onChange={(evt) => {
-                setSelectedCheroot(Number(evt.target.value));
+                handelChange(Number(evt.target.value));
               }}
               sx={{ bgcolor: "#EEE8CF" }}
             >
-              <MenuItem value={1}>၅ ၁/၂ (ရှယ်)</MenuItem>
-              <MenuItem value={2}>၄ ၁/၂ (တုတ်)</MenuItem>
-              <MenuItem value={3}>၅</MenuItem>
+              {concernCheroot.map((item) => (
+                <MenuItem key={item.id} value={item.id}>
+                  <ListItemText primary={item.name} />
+                </MenuItem>
+              ))}
             </Select>
           </FormControl>
         </Box>
@@ -44,7 +120,9 @@ const PayLeafFour = () => {
           <TextField
             placeholder="အရေအတွက်"
             sx={{ bgcolor: "#EEE8CF" }}
-            onChange={() => {}}
+            onChange={(evt) => {
+              handelChangeQty(Number(evt.target.value));
+            }}
           />
         </Box>
       </Box>
@@ -60,6 +138,10 @@ const PayLeafFour = () => {
         <Box sx={{ width: 250, mt: 2 }}>
           <Typography sx={{ fontWeight: "bold" }}>ဆေးစပ်အမျိုးအစား</Typography>
           <TextField
+            value={
+              tabacco.find((item) => item.id === newPayStock.typeOfTabaccoId)
+                ?.name
+            }
             placeholder="ဆေးစပ်အမျိုးအစား"
             sx={{ bgcolor: "#EEE8CF" }}
             onChange={() => {}}
@@ -69,6 +151,7 @@ const PayLeafFour = () => {
         <Box sx={{ width: 250, mt: 2 }}>
           <Typography sx={{ fontWeight: "bold" }}>အရေအတွက်</Typography>
           <TextField
+            value={newPayStock.tabaccoQty}
             placeholder="အရေအတွက်"
             sx={{ bgcolor: "#EEE8CF" }}
             onChange={() => {}}
@@ -87,6 +170,7 @@ const PayLeafFour = () => {
         <Box sx={{ width: 170, mt: 2 }}>
           <Typography sx={{ fontWeight: "bold" }}>တင်း</Typography>
           <TextField
+            value={newPayStock.tabaccoTin}
             placeholder="တင်း"
             sx={{ bgcolor: "#EEE8CF" }}
             onChange={() => {}}
@@ -95,6 +179,7 @@ const PayLeafFour = () => {
         <Box sx={{ width: 170, mt: 2 }}>
           <Typography sx={{ fontWeight: "bold" }}>ပြည်</Typography>
           <TextField
+            value={newPayStock.tabaccoPyi}
             placeholder="ပြည်"
             sx={{ bgcolor: "#EEE8CF" }}
             onChange={() => {}}
@@ -104,4 +189,5 @@ const PayLeafFour = () => {
     </>
   );
 };
+
 export default PayLeafFour;

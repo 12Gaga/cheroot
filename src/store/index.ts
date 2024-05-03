@@ -19,6 +19,9 @@ import filterSizeStockReducer from "./slices/filterSizeStock";
 import tabaccoStockReducer from "./slices/tabaccoStock";
 import labelStockReducer from "./slices/labelStock";
 import addStockReducer from "./slices/addStock";
+import formulaReducer from "./slices/formula";
+import payLeafReducer from "./slices/payLeaf";
+import payStockReducer from "./slices/payStock";
 
 export const store = configureStore({
   reducer: {
@@ -42,6 +45,9 @@ export const store = configureStore({
     tabaccoStock: tabaccoStockReducer,
     labelStock: labelStockReducer,
     addStock: addStockReducer,
+    formula: formulaReducer,
+    payLeaf: payLeafReducer,
+    payStock: payStockReducer,
   },
 });
 

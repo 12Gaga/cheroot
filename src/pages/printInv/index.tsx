@@ -1,7 +1,7 @@
-import { Box, Button } from "@mui/material";
+import { Box, Button, TextField, Typography } from "@mui/material";
 import { useSession, signIn } from "next-auth/react";
 import { useRouter } from "next/router";
-import { useRef } from "react";
+import { useRef, useState } from "react";
 
 const student = [
   { name: "မောင်မောင်", age: "၂၀", address: "ရန်ကုန်" },
@@ -11,7 +11,8 @@ const student = [
 
 const Print = () => {
   const tableRef = useRef(null);
-
+  const [value, setValue] = useState<string>("myanmar");
+  console.log("value", value);
   const handlePrint = () => {
     if (tableRef.current) {
       window.print();
@@ -38,9 +39,33 @@ const Print = () => {
         ))}
       </table>
 
-      <button className="print-btn" onClick={() => handlePrint()}>
+      <Button
+        variant="contained"
+        className="print-btn"
+        onClick={() => handlePrint()}
+        style={{ marginTop: 5 }}
+      >
         Print
-      </button>
+      </Button>
+      <br />
+      {console.log("value2", value)}
+      <TextField
+        className="print-btn"
+        placeholder="ဝယ်ယူခဲ့သည့်ဆိုင်"
+        sx={{ bgcolor: "#EEE8CF", my: 2 }}
+        value={value}
+        onChange={(evt) => {}}
+      />
+      <h1>{value}</h1>
+      <Button
+        className="print-btn"
+        onClick={() => setValue("Korea")}
+        variant="contained"
+        sx={{ mt: 3, ml: 1 }}
+      >
+        click
+      </Button>
+      {console.log("value3", value)}
     </>
   );
 };

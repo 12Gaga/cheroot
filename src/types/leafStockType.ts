@@ -9,6 +9,7 @@ export interface leafStockSlice {
 }
 
 export interface createNewLeafStock extends BasicOption {
+  date: DateTime | undefined;
   typeOfLeafId: number | undefined;
   batchNo: number;
   viss: number;

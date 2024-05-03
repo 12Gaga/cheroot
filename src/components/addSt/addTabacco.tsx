@@ -1,8 +1,9 @@
 import { useAppSelector, useAppDispatch } from "@/store/hooks";
-import { setSelectedGarage } from "@/store/slices/garage";
 import { setOpenSnackbar } from "@/store/slices/snackBar";
-import { CreateTabaccoAddStock } from "@/store/slices/tabaccoStock";
-import { setIsLoading } from "@/store/slices/workShop";
+import {
+  CreateTabaccoAddStock,
+  setIsLoading,
+} from "@/store/slices/tabaccoStock";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { createNewTabaccoAddStock } from "@/types/tabaccoStockType";
@@ -251,7 +252,13 @@ const AddTabacco = ({ open, setOpen }: Props) => {
           </Box>
         </DialogContent>
         <DialogActions>
-          <Button variant="contained" onClick={() => setOpen(false)}>
+          <Button
+            variant="contained"
+            onClick={() => {
+              setOpen(false);
+              setNewTabaccoAddStock(defaultValue);
+            }}
+          >
             မလုပ်တော့ပါ
           </Button>
           <LoadingButton

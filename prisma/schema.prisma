@@ -63,6 +63,7 @@ model WorkShop{
   extraPurchase ExtraPurchase[]
   agentLeafViss AgentLeafViss[]
   agent Agent[]
+  formula Formula[]
   isArchived Boolean @default(false)
 }
 
@@ -621,5 +622,7 @@ model Formula{
   tabaccoQty Int
   tabaccoTin Int
   tabaccoPyi Int
+  workShop WorkShop @relation(fields: [workShopId],references: [id])
+  workShopId Int
   isArchived Boolean @default(false)
 }

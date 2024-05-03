@@ -7,20 +7,48 @@ import {
   Box,
   Button,
   FormControl,
+  ListItemText,
   MenuItem,
   Select,
   TextField,
   Typography,
 } from "@mui/material";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import PayLeafButton from "@/components/payleaf/payLeafButton";
 import { useSession } from "next-auth/react";
 import { setSelectedGarage } from "@/store/slices/garage";
+import { createNewPayLeaf } from "@/types/payLeafType";
+import { useAppSelector } from "@/store/hooks";
+import { WorkShop } from "@prisma/client";
+
+const defaultValue: createNewPayLeaf = {
+  date: undefined,
+  agentId: undefined,
+  typeOfLeafId: undefined,
+  batchNo: [],
+  viss: 0,
+  discountViss: 0,
+  netViss: 0,
+  price: 0,
+  amount: 0,
+  garageId: undefined,
+};
 
 const PayLeaf = () => {
-  const [selecteddate, setSelectedDate] = useState<any>(new Date());
-  const [selectedGarage, setSelectedGarage] = useState<number>(1);
   const { data: session } = useSession();
+  const [selecteddate, setSelectedDate] = useState<any>(new Date());
+  const [newPayLeaf, setNewPayLeaf] = useState<createNewPayLeaf>(defaultValue);
+  const garages = useAppSelector((store) => store.garage.item);
+  const workShop = useAppSelector(
+    (store) => store.workShop.selectedWorkShop
+  ) as WorkShop;
+  const concernGarage = garages.filter(
+    (item) => item.workShopId === workShop?.id
+  );
+  useEffect(() => {
+    setNewPayLeaf({ ...newPayLeaf, date: selecteddate });
+  }, [selecteddate]);
+
   if (!session) return;
   return (
     <>
@@ -54,15 +82,20 @@ const PayLeaf = () => {
           <Select
             labelId="demo-simple-select-filled-label"
             id="demo-simple-select-filled"
-            value={selectedGarage}
+            value={newPayLeaf.garageId}
             onChange={(evt) => {
-              setSelectedGarage(Number(evt.target.value));
+              setNewPayLeaf({
+                ...newPayLeaf,
+                garageId: Number(evt.target.value),
+              });
             }}
             sx={{ bgcolor: "#EEE8CF" }}
           >
-            <MenuItem value={1}>ဂိုထောင် ၁</MenuItem>
-            <MenuItem value={2}>ဂိုထောင် ၂</MenuItem>
-            <MenuItem value={3}>ဂိုထောင် ၃</MenuItem>
+            {concernGarage.map((item) => (
+              <MenuItem key={item.id} value={item.id}>
+                <ListItemText primary={item.name} />
+              </MenuItem>
+            ))}
           </Select>
         </FormControl>
       </Box>
@@ -77,8 +110,12 @@ const PayLeaf = () => {
             gap: 8,
           }}
         >
-          <PayLeafOne />
-          <PayLeafTwo />
+          <PayLeafOne
+            newPayLeaf={newPayLeaf}
+            setNewPayLeaf={setNewPayLeaf}
+            workShopId={workShop?.id}
+          />
+          <PayLeafTwo newPayLeaf={newPayLeaf} setNewPayLeaf={setNewPayLeaf} />
         </Box>
 
         <Box
@@ -90,11 +127,15 @@ const PayLeaf = () => {
             py: 2,
           }}
         >
-          <PayLeafThree />
+          <PayLeafThree newPayLeaf={newPayLeaf} setNewPayLeaf={setNewPayLeaf} />
         </Box>
       </Box>
 
-      <PayLeafButton />
+      <PayLeafButton
+        newPayLeaf={newPayLeaf}
+        setNewPayLeaf={setNewPayLeaf}
+        defaultValue={defaultValue}
+      />
     </>
   );
 };

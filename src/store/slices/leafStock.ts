@@ -17,8 +17,16 @@ const initialState: leafStockSlice = {
 export const CreateLeafStock = createAsyncThunk(
   "leafStock/CreateLeafStock",
   async (option: createNewLeafStock, thunkApi) => {
-    const { typeOfLeafId, batchNo, viss, garageId, shop, onSuccess, onError } =
-      option;
+    const {
+      date,
+      typeOfLeafId,
+      batchNo,
+      viss,
+      garageId,
+      shop,
+      onSuccess,
+      onError,
+    } = option;
     try {
       const response = await fetch(`${Config.apiBaseUrl}/leafStock`, {
         method: "POST",
@@ -26,6 +34,7 @@ export const CreateLeafStock = createAsyncThunk(
           "content-type": "application/json",
         },
         body: JSON.stringify({
+          date,
           typeOfLeafId,
           batchNo,
           viss,
@@ -33,8 +42,8 @@ export const CreateLeafStock = createAsyncThunk(
           shop,
         }),
       });
-      const { newLeafStock } = await response.json();
-      thunkApi.dispatch(addLeafStock(newLeafStock));
+      const { newleafStock } = await response.json();
+      thunkApi.dispatch(addLeafStock(newleafStock));
       onSuccess && onSuccess();
     } catch (err) {
       onError && onError();

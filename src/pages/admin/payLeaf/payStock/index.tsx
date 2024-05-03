@@ -1,16 +1,74 @@
 import PayLeafFive from "@/components/payleaf/payLeafFive";
 import PayLeafFour from "@/components/payleaf/payLeafFour";
-import { Box, FormControl, MenuItem, Select, Typography } from "@mui/material";
+import {
+  Box,
+  FormControl,
+  ListItemText,
+  MenuItem,
+  Select,
+  Typography,
+} from "@mui/material";
 import PayStockButton from "@/components/payleaf/payStockButton";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
+import { payStock, createNewPayStock } from "@/types/payStockType";
+import { useAppSelector } from "@/store/hooks";
+import { setSelectedGarage } from "@/store/slices/garage";
+import { WorkShop } from "@prisma/client";
+
+const defaultValue: createNewPayStock = {
+  date: undefined,
+  agentId: undefined,
+  typeOfCherootId: undefined,
+  cherootQty: 0,
+  typeOfFilterSizeId: undefined,
+  filterSizeQty: 0,
+  filterSizeBag: 0,
+  typeOfTabaccoId: undefined,
+  tabaccoQty: 0,
+  tabaccoTin: 0,
+  tabaccoPyi: 0,
+  typeOfLabelId: undefined,
+  labelBandle: 0,
+  totalPrice: 0,
+  garageId: undefined,
+};
+
+const defaultPayStock: payStock = {
+  cherootQty: 0,
+  filterSizeQty: 0,
+  filterSizeBag: 0,
+  tabaccoQty: 0,
+  tabaccoTin: 0,
+  tabaccoPyi: 0,
+};
+
 const PayStock = () => {
-  const [selecteddate, setSelectedDate] = useState<any>(new Date());
-  const [selectedAgent, setSelectedAgent] = useState<number>(1);
-  const [selectedGarage, setSelectedGarage] = useState<number>(1);
   const { data: session } = useSession();
+  const [selecteddate, setSelectedDate] = useState<any>(new Date());
+  const [newPayStock, setNewPayStock] =
+    useState<createNewPayStock>(defaultValue);
+  const [payStock, setPayStock] = useState<payStock>(defaultPayStock);
+  const workShop = useAppSelector(
+    (store) => store.workShop.selectedWorkShop
+  ) as WorkShop;
+  const agents = useAppSelector((store) => store.agent.item);
+  const concernAgent = agents.filter(
+    (item) => item.workShopId === workShop?.id
+  );
+  const garage = useAppSelector((store) => store.garage.item);
+  const concernGarage = garage.filter(
+    (item) => item.workShopId === workShop?.id
+  );
+  useEffect(() => {
+    setNewPayStock({ ...newPayStock, date: selecteddate });
+  }, [selecteddate]);
+
+  console.log("newPayStock", newPayStock);
+  console.log("PayStock", payStock);
+
   if (!session) return;
   return (
     <>
@@ -45,15 +103,20 @@ const PayStock = () => {
             <Select
               labelId="demo-simple-select-filled-label"
               id="demo-simple-select-filled"
-              value={selectedAgent}
+              value={newPayStock.agentId}
               onChange={(evt) => {
-                setSelectedAgent(Number(evt.target.value));
+                setNewPayStock({
+                  ...newPayStock,
+                  agentId: Number(evt.target.value),
+                });
               }}
               sx={{ bgcolor: "#EEE8CF" }}
             >
-              <MenuItem value={1}>မောင်မောင်</MenuItem>
-              <MenuItem value={2}>လှလှ</MenuItem>
-              <MenuItem value={3}>စုစု</MenuItem>
+              {concernAgent.map((item) => (
+                <MenuItem key={item.id} value={item.id}>
+                  <ListItemText primary={item.name} />
+                </MenuItem>
+              ))}
             </Select>
           </FormControl>
         </Box>
@@ -66,27 +129,47 @@ const PayStock = () => {
             <Select
               labelId="demo-simple-select-filled-label"
               id="demo-simple-select-filled"
-              value={selectedGarage}
+              value={newPayStock.garageId}
               onChange={(evt) => {
-                setSelectedGarage(Number(evt.target.value));
+                setNewPayStock({
+                  ...newPayStock,
+                  garageId: Number(evt.target.value),
+                });
               }}
               sx={{ bgcolor: "#EEE8CF" }}
             >
-              <MenuItem value={1}>ဂိုထောင် ၁</MenuItem>
-              <MenuItem value={2}>ဂိုထောင် ၂</MenuItem>
-              <MenuItem value={3}>ဂိုထောင် ၃</MenuItem>
+              {concernGarage.map((item) => (
+                <MenuItem key={item.id} value={item.id}>
+                  <ListItemText primary={item.name} />
+                </MenuItem>
+              ))}
             </Select>
           </FormControl>
         </Box>
       </Box>
 
       <Box sx={{ display: "flex" }}>
-        <PayLeafFour />
+        <PayLeafFour
+          newPayStock={newPayStock}
+          setNewPayStock={setNewPayStock}
+          workShopId={workShop?.id}
+          payStock={payStock}
+          setPayStock={setPayStock}
+        />
       </Box>
       <Box sx={{ display: "flex" }}>
-        <PayLeafFive />
+        <PayLeafFive
+          newPayStock={newPayStock}
+          setNewPayStock={setNewPayStock}
+          workShopId={workShop?.id}
+        />
       </Box>
-      <PayStockButton />
+      <PayStockButton
+        newPayStock={newPayStock}
+        setNewPayStock={setNewPayStock}
+        workShopId={workShop?.id}
+        defaultValue={defaultValue}
+      />
     </>
   );
 };

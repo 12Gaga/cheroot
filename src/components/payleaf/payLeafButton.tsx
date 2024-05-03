@@ -1,6 +1,30 @@
+import { useAppDispatch, useAppSelector } from "@/store/hooks";
+import { CreatePayLeaf, setIsLoading } from "@/store/slices/payLeaf";
+import { setOpenSnackbar } from "@/store/slices/snackBar";
+import { createNewPayLeaf } from "@/types/payLeafType";
 import { Typography, TextField, Box, Button } from "@mui/material";
+import { useRouter } from "next/router";
 
-const PayLeafButton = () => {
+interface Props {
+  newPayLeaf: createNewPayLeaf;
+  setNewPayLeaf: (value: createNewPayLeaf) => void;
+  defaultValue: createNewPayLeaf;
+}
+
+const PayLeafButton = ({ newPayLeaf, setNewPayLeaf, defaultValue }: Props) => {
+  const router = useRouter();
+  const dispatch = useAppDispatch();
+  const handleClick = () => {
+    dispatch(
+      CreatePayLeaf({
+        ...newPayLeaf,
+        onSuccess: () => {
+          setNewPayLeaf(defaultValue);
+          dispatch(setOpenSnackbar({ message: "Add Pay Leaf success" }));
+        },
+      })
+    );
+  };
   return (
     <>
       <Box sx={{ display: "flex", justifyContent: "flex-end", mt: 4 }}>
@@ -19,6 +43,7 @@ const PayLeafButton = () => {
               fontWeight: "bold",
             },
           }}
+          onClick={() => handleClick()}
         >
           သိမ်းမည်
         </Button>
@@ -37,6 +62,7 @@ const PayLeafButton = () => {
               fontWeight: "bold",
             },
           }}
+          onClick={() => router.push("/admin/home")}
         >
           ထွက်မည်
         </Button>

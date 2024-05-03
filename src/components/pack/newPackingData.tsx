@@ -126,7 +126,12 @@ const NewPackingData = ({ open, setOpen }: Props) => {
         </Box>
       </DialogContent>
       <DialogActions>
-        <Button variant="contained" onClick={() => setOpen(false)}>
+        <Button
+          variant="contained"
+          onClick={() => {
+            setOpen(false);
+          }}
+        >
           မလုပ်တော့ပါ
         </Button>
         <Button variant="contained">အိုကေ</Button>

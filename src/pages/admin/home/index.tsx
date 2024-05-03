@@ -1,9 +1,7 @@
-import Admin from "@/components/admin/adminHome";
-import { useAppSelector } from "@/store/hooks";
+import Admin from "@/components/adminPage/adminHome";
 import { Box, Button, Typography } from "@mui/material";
 import { signOut, useSession } from "next-auth/react";
 import Image from "next/image";
-import { useRouter } from "next/router";
 const AdminPage = () => {
   const { data: session } = useSession();
   if (!session) return null;
