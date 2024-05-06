@@ -24,8 +24,8 @@ const btns = [
   },
   {
     id: 5,
-    title: "ဝင်ငွေစာရင်း",
-    url: "",
+    title: "Formulaထည့်ခြင်း",
+    url: "/admin/formula",
   },
   {
     id: 6,
