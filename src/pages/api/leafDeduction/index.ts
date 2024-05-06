@@ -30,15 +30,17 @@ export default async function handler(
       },
     });
 
-    const leftViss = (await prisma.agentLeafViss.findFirst({
-      where: { typeOfLeafId, agentId },
-    })) as AgentLeafViss;
-    const reduceViss = leftViss.viss - deductViss;
-
-    await prisma.agentLeafViss.updateMany({
-      data: { viss: reduceViss },
+    const leftViss = await prisma.agentLeafViss.findFirst({
       where: { typeOfLeafId, agentId },
     });
+    if (leftViss) {
+      const reduceViss = leftViss.viss - deductViss;
+
+      await prisma.agentLeafViss.updateMany({
+        data: { viss: reduceViss },
+        where: { typeOfLeafId, agentId },
+      });
+    }
 
     return res.status(200).json({ newLeafDeduction });
   }
