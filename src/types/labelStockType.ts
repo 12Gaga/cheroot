@@ -9,6 +9,7 @@ export interface labelStockSlice {
 }
 
 export interface createNewLabelStock extends BasicOption {
+  date: string;
   typeOfLabelId: number | undefined;
   bandle: number;
   shop: string;
@@ -16,6 +17,7 @@ export interface createNewLabelStock extends BasicOption {
 }
 
 export interface createNewLabelAddStock extends BasicOption {
+  date: string;
   invNo: number;
   carNo: string;
   typeOfLabelId: number | undefined;

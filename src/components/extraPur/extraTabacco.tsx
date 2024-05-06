@@ -1,3 +1,5 @@
+import { useAppSelector } from "@/store/hooks";
+import { createNewExtraPurchase } from "@/types/extraPurchaseType";
 import {
   Box,
   Typography,
@@ -5,11 +7,77 @@ import {
   Select,
   MenuItem,
   TextField,
+  ListItemText,
 } from "@mui/material";
-import { useState } from "react";
 
-const TabaccoExtra = () => {
-  const [selectedTabacco, setSelectedTabacco] = useState<number>(1);
+interface Props {
+  newExtraPurchase: createNewExtraPurchase;
+  setNewExtraPurchase: (value: createNewExtraPurchase) => void;
+  workshopId: number;
+}
+
+const TabaccoExtra = ({
+  newExtraPurchase,
+  setNewExtraPurchase,
+  workshopId,
+}: Props) => {
+  const tabacco = useAppSelector((store) => store.typeOfTabacco.item);
+  const concernTabacco = tabacco.filter(
+    (item) => item.workShopId === workshopId
+  );
+
+  const handelChange = (tabaccoId: number) => {
+    const selectTabaccoPrice = concernTabacco.find(
+      (item) => item.id === tabaccoId
+    )?.price as number;
+    const tabaccoPyis =
+      newExtraPurchase.tabaccoTin * 16 + newExtraPurchase.tabaccoPyi;
+    const amount = tabaccoPyis * selectTabaccoPrice;
+    const totalAmount =
+      newExtraPurchase.filterSizeAmount + newExtraPurchase.labelAmount + amount;
+    setNewExtraPurchase({
+      ...newExtraPurchase,
+      typeOfTabaccoId: tabaccoId,
+      tabaccoPrice: selectTabaccoPrice,
+      tabaccoAmount: amount,
+      totalAmount,
+    });
+  };
+
+  const handleTin = (tin: number) => {
+    const pyis = tin * 16 + newExtraPurchase.tabaccoPyi;
+    const amount = newExtraPurchase.tabaccoPrice * pyis;
+    const totalAmount =
+      newExtraPurchase.filterSizeAmount + newExtraPurchase.labelAmount + amount;
+    setNewExtraPurchase({
+      ...newExtraPurchase,
+      tabaccoTin: tin,
+      tabaccoAmount: amount,
+      totalAmount,
+    });
+  };
+
+  const handlePyi = (pyi: number) => {
+    const pyis = newExtraPurchase.tabaccoTin * 16 + pyi;
+    const amount = newExtraPurchase.tabaccoPrice * pyis;
+    const totalAmount =
+      newExtraPurchase.filterSizeAmount + newExtraPurchase.labelAmount + amount;
+    setNewExtraPurchase({
+      ...newExtraPurchase,
+      tabaccoPyi: pyi,
+      tabaccoAmount: amount,
+      totalAmount,
+    });
+  };
+  // useEffect(() => {
+  //   if (concernTabacco.length) {
+  //     setNewExtraPurchase({
+  //       ...newExtraPurchase,
+  //       typeOfTabaccoId: concernTabacco[0].id,
+  //       tabaccoPrice: concernTabacco[0].price,
+  //     });
+  //   }
+  // }, [concernTabacco.length]);
 
   return (
     <>
@@ -27,15 +95,17 @@ const TabaccoExtra = () => {
             <Select
               labelId="demo-simple-select-filled-label"
               id="demo-simple-select-filled"
-              value={selectedTabacco}
+              value={newExtraPurchase.typeOfTabaccoId}
               onChange={(evt) => {
-                setSelectedTabacco(Number(evt.target.value));
+                handelChange(Number(evt.target.value));
               }}
               sx={{ bgcolor: "#EEE8CF" }}
             >
-              <MenuItem value={1}>၅ ၁/၄ (ငါးတမတ်)</MenuItem>
-              <MenuItem value={2}>၅ (၄ဝါ)</MenuItem>
-              <MenuItem value={3}>၄ ၁/၂ (၂လိပ်ဝါ)</MenuItem>
+              {concernTabacco.map((item) => (
+                <MenuItem key={item.id} value={item.id}>
+                  <ListItemText primary={item.name} />
+                </MenuItem>
+              ))}
             </Select>
           </FormControl>
         </Box>
@@ -45,7 +115,12 @@ const TabaccoExtra = () => {
           <TextField
             placeholder="အရေအတွက်"
             sx={{ bgcolor: "#EEE8CF" }}
-            onChange={() => {}}
+            onChange={(evt) => {
+              setNewExtraPurchase({
+                ...newExtraPurchase,
+                tabaccoQty: Number(evt.target.value),
+              });
+            }}
           />
         </Box>
 
@@ -54,7 +129,9 @@ const TabaccoExtra = () => {
           <TextField
             placeholder="တင်း"
             sx={{ bgcolor: "#EEE8CF" }}
-            onChange={() => {}}
+            onChange={(evt) => {
+              handleTin(Number(evt.target.value));
+            }}
           />
         </Box>
 
@@ -63,7 +140,9 @@ const TabaccoExtra = () => {
           <TextField
             placeholder="ပြည်"
             sx={{ bgcolor: "#EEE8CF" }}
-            onChange={() => {}}
+            onChange={(evt) => {
+              handlePyi(Number(evt.target.value));
+            }}
           />
         </Box>
 
@@ -72,7 +151,12 @@ const TabaccoExtra = () => {
           <TextField
             placeholder="အိတ်"
             sx={{ bgcolor: "#EEE8CF" }}
-            onChange={() => {}}
+            onChange={(evt) => {
+              setNewExtraPurchase({
+                ...newExtraPurchase,
+                tabaccoBag: Number(evt.target.value),
+              });
+            }}
           />
         </Box>
       </Box>
@@ -88,6 +172,7 @@ const TabaccoExtra = () => {
         <Box sx={{ width: 250, mt: 2 }}>
           <Typography sx={{ fontWeight: "bold" }}>ဈေးနှုန်း</Typography>
           <TextField
+            value={newExtraPurchase.tabaccoPrice}
             placeholder="ဈေးနှုန်း"
             sx={{ bgcolor: "#EEE8CF" }}
             onChange={() => {}}
@@ -97,6 +182,7 @@ const TabaccoExtra = () => {
         <Box sx={{ width: 250, mt: 2 }}>
           <Typography sx={{ fontWeight: "bold" }}>ကျသင့်ငွေ</Typography>
           <TextField
+            value={newExtraPurchase.tabaccoAmount}
             placeholder="ကျသင့်ငွေ"
             sx={{ bgcolor: "#EEE8CF" }}
             onChange={() => {}}

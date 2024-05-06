@@ -1,10 +1,40 @@
+import { useAppDispatch, useAppSelector } from "@/store/hooks";
+import {
+  CreateOtherDeduction,
+  setLoadingOtherDeduction,
+} from "@/store/slices/otherDeduction";
+import { setOpenSnackbar } from "@/store/slices/snackBar";
+import { createNewOtherDeduction } from "@/types/otherDeductionType";
+import { LoadingButton } from "@mui/lab";
 import { Box, Button } from "@mui/material";
+import { useRouter } from "next/router";
 
-const ReturnCherootButton = () => {
+interface Props {
+  newOtherDeduction: createNewOtherDeduction;
+}
+
+const ReturnCherootButton = ({ newOtherDeduction }: Props) => {
+  const dispatch = useAppDispatch();
+  const router = useRouter();
+  const { isLoading } = useAppSelector((store) => store.otherDeduction);
+  const handleClick = () => {
+    dispatch(setLoadingOtherDeduction(true));
+    dispatch(
+      CreateOtherDeduction({
+        ...newOtherDeduction,
+        onSuccess: () => {
+          dispatch(setOpenSnackbar({ message: "Add Other Deduction success" }));
+          dispatch(setLoadingOtherDeduction(false));
+        },
+      })
+    );
+  };
+
   return (
     <>
       <Box sx={{ display: "flex", justifyContent: "flex-end", my: 3 }}>
-        <Button
+        <LoadingButton
+          loading={isLoading}
           variant="contained"
           sx={{
             bgcolor: "#E55252",
@@ -19,9 +49,10 @@ const ReturnCherootButton = () => {
               fontWeight: "bold",
             },
           }}
+          onClick={() => handleClick()}
         >
           သိမ်းမည်
-        </Button>
+        </LoadingButton>
         <Button
           variant="contained"
           sx={{
@@ -37,6 +68,7 @@ const ReturnCherootButton = () => {
               fontWeight: "bold",
             },
           }}
+          onClick={() => router.push("/admin/home")}
         >
           ထွက်မည်
         </Button>

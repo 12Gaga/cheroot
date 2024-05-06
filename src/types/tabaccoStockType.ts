@@ -9,6 +9,7 @@ export interface tabaccoStockSlice {
 }
 
 export interface createNewTabaccoStock extends BasicOption {
+  date: string;
   typeOfTabaccoId: number | undefined;
   tin: number;
   pyi: number;
@@ -18,6 +19,7 @@ export interface createNewTabaccoStock extends BasicOption {
 }
 
 export interface createNewTabaccoAddStock extends BasicOption {
+  date: string;
   invNo: number;
   carNo: string;
   typeOfTabaccoId: number | undefined;

@@ -186,6 +186,30 @@ export default async function handler(
     const formula = await prisma.formula.findMany({
       where: { workShopId: { in: workShopIds }, isArchived: false },
     });
+    //20. find payLeaf
+    const payLeaf = await prisma.payLeaf.findMany({
+      where: { workShopId: { in: workShopIds }, isArchived: false },
+    });
+    //21. find payStock
+    const payStock = await prisma.payOtherItem.findMany({
+      where: { workShopId: { in: workShopIds }, isArchived: false },
+    });
+    //22. returnCheroot
+    const returnCheroot = await prisma.returnReadyCheroot.findMany({
+      where: { workShopId: { in: workShopIds }, isArchived: false },
+    });
+    //23. leafDeduction
+    const leafDeduction = await prisma.leafDeduction.findMany({
+      where: { workShopId: { in: workShopIds }, isArchived: false },
+    });
+    //24. otherDeduction
+    const otherDeduction = await prisma.otherDeduction.findMany({
+      where: { workShopId: { in: workShopIds }, isArchived: false },
+    });
+    //25. extraPurchase
+    const extraPurchase = await prisma.extraPurchase.findMany({
+      where: { workShopId: { in: workShopIds }, isArchived: false },
+    });
     return res.json({
       industry,
       workShop,
@@ -206,6 +230,12 @@ export default async function handler(
       labelStock,
       addStock,
       formula,
+      payLeaf,
+      payStock,
+      returnCheroot,
+      leafDeduction,
+      otherDeduction,
+      extraPurchase,
     });
   }
 }

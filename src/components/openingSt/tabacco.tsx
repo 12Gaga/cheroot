@@ -12,15 +12,12 @@ import {
   Typography,
 } from "@mui/material";
 import DatePicker from "react-datepicker";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import "react-datepicker/dist/react-datepicker.css";
 import { createNewTabaccoStock } from "@/types/tabaccoStockType";
 import { useAppSelector, useAppDispatch } from "@/store/hooks";
-import { CreateFilterSizeStock } from "@/store/slices/filterSizeStock";
-import { setSelectedGarage } from "@/store/slices/garage";
 import { setOpenSnackbar } from "@/store/slices/snackBar";
-import { setIsLoading } from "@/store/slices/workShop";
-import { CreateTabaccoStock } from "@/store/slices/tabaccoStock";
+import { CreateTabaccoStock, setIsLoading } from "@/store/slices/tabaccoStock";
 import { LoadingButton } from "@mui/lab";
 interface Props {
   open: boolean;
@@ -28,6 +25,7 @@ interface Props {
 }
 
 const defaultValue: createNewTabaccoStock = {
+  date: "",
   typeOfTabaccoId: undefined,
   tin: 0,
   pyi: 0,
@@ -37,7 +35,9 @@ const defaultValue: createNewTabaccoStock = {
 };
 
 const TabaccoOpen = ({ open, setOpen }: Props) => {
-  const [selecteddate, setSelectedDate] = useState<any>(new Date());
+  const [selecteddate, setSelectedDate] = useState<any>(
+    new Date().toLocaleDateString()
+  );
   const workShop = useAppSelector((store) => store.workShop.selectedWorkShop);
   const { item: garages, selectedGarage } = useAppSelector(
     (store) => store.garage
@@ -53,6 +53,10 @@ const TabaccoOpen = ({ open, setOpen }: Props) => {
     useState<createNewTabaccoStock>(defaultValue);
   const { isLoading } = useAppSelector((store) => store.tabaccoStock);
   const dispatch = useAppDispatch();
+
+  useEffect(() => {
+    setNewTabaccoStock({ ...newTabaccoStock, date: selecteddate });
+  }, [selecteddate, open]);
 
   const handleClick = () => {
     dispatch(setIsLoading(true));

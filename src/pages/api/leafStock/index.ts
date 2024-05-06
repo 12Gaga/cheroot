@@ -24,9 +24,18 @@ export default async function handler(
       });
       return res.status(200).json({ newleafStock });
     } else {
-      const { invNo, carNo, typeOfLeafId, batchNo, viss, garageId, shop } =
-        req.body;
+      const {
+        date,
+        invNo,
+        carNo,
+        typeOfLeafId,
+        batchNo,
+        viss,
+        garageId,
+        shop,
+      } = req.body;
       const isValid =
+        date &&
         invNo != undefined &&
         carNo &&
         typeOfLeafId &&
@@ -37,10 +46,10 @@ export default async function handler(
       if (!isValid) return res.status(405).send("bad request");
 
       const newleafAddStock = await prisma.leaf.create({
-        data: { typeOfLeafId, batchNo, viss, garageId, shop },
+        data: { date, typeOfLeafId, batchNo, viss, garageId, shop },
       });
       const newAddStock = await prisma.addStock.create({
-        data: { invNo, carNo, typeOfLeafId, garageId },
+        data: { date, invNo, carNo, typeOfLeafId, garageId },
       });
       return res.status(200).json({ newleafAddStock, newAddStock });
     }

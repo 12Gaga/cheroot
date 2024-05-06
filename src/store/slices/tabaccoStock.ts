@@ -18,6 +18,7 @@ export const CreateTabaccoStock = createAsyncThunk(
   "tabaccoStock/CreateTabaccoStock",
   async (option: createNewTabaccoStock, thunkApi) => {
     const {
+      date,
       typeOfTabaccoId,
       tin,
       pyi,
@@ -34,6 +35,7 @@ export const CreateTabaccoStock = createAsyncThunk(
           "content-type": "application/json",
         },
         body: JSON.stringify({
+          date,
           typeOfTabaccoId,
           tin,
           pyi,
@@ -55,6 +57,7 @@ export const CreateTabaccoAddStock = createAsyncThunk(
   "tabaccoStock/CreateTabaccoAddStock",
   async (option: createNewTabaccoAddStock, thunkApi) => {
     const {
+      date,
       invNo,
       carNo,
       typeOfTabaccoId,
@@ -75,6 +78,7 @@ export const CreateTabaccoAddStock = createAsyncThunk(
             "content-type": "application/json",
           },
           body: JSON.stringify({
+            date,
             invNo,
             carNo,
             typeOfTabaccoId,

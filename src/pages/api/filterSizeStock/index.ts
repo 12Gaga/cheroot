@@ -9,8 +9,10 @@ export default async function handler(
   if (method === "POST") {
     const invNo = Number(req.query.invNo);
     if (!invNo) {
-      const { typeOfFilterSizeId, quantity, bag, garageId, shop } = req.body;
+      const { date, typeOfFilterSizeId, quantity, bag, garageId, shop } =
+        req.body;
       const isValid =
+        date &&
         typeOfFilterSizeId &&
         quantity != undefined &&
         bag != undefined &&
@@ -19,11 +21,12 @@ export default async function handler(
       if (!isValid) return res.status(405).send("bad request");
 
       const newFilterSizeStock = await prisma.filterSize.create({
-        data: { typeOfFilterSizeId, quantity, bag, garageId, shop },
+        data: { date, typeOfFilterSizeId, quantity, bag, garageId, shop },
       });
       return res.status(200).json({ newFilterSizeStock });
     } else {
       const {
+        date,
         invNo,
         carNo,
         typeOfFilterSizeId,
@@ -33,6 +36,7 @@ export default async function handler(
         shop,
       } = req.body;
       const isValid =
+        date &&
         invNo != undefined &&
         carNo &&
         typeOfFilterSizeId &&
@@ -43,10 +47,10 @@ export default async function handler(
       if (!isValid) return res.status(405).send("bad request");
 
       const newFilterSizeAddStock = await prisma.filterSize.create({
-        data: { typeOfFilterSizeId, quantity, bag, garageId, shop },
+        data: { date, typeOfFilterSizeId, quantity, bag, garageId, shop },
       });
       const newAddStock = await prisma.addStock.create({
-        data: { invNo, carNo, typeOfFilterSizeId, garageId },
+        data: { date, invNo, carNo, typeOfFilterSizeId, garageId },
       });
       return res.status(200).json({ newFilterSizeAddStock, newAddStock });
     }

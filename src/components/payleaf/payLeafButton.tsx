@@ -2,6 +2,7 @@ import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { CreatePayLeaf, setIsLoading } from "@/store/slices/payLeaf";
 import { setOpenSnackbar } from "@/store/slices/snackBar";
 import { createNewPayLeaf } from "@/types/payLeafType";
+import { LoadingButton } from "@mui/lab";
 import { Typography, TextField, Box, Button } from "@mui/material";
 import { useRouter } from "next/router";
 
@@ -14,13 +15,16 @@ interface Props {
 const PayLeafButton = ({ newPayLeaf, setNewPayLeaf, defaultValue }: Props) => {
   const router = useRouter();
   const dispatch = useAppDispatch();
+  const { isLoading } = useAppSelector((store) => store.payLeaf);
   const handleClick = () => {
+    dispatch(setIsLoading(true));
     dispatch(
       CreatePayLeaf({
         ...newPayLeaf,
         onSuccess: () => {
           setNewPayLeaf(defaultValue);
           dispatch(setOpenSnackbar({ message: "Add Pay Leaf success" }));
+          dispatch(setIsLoading(false));
         },
       })
     );
@@ -28,7 +32,8 @@ const PayLeafButton = ({ newPayLeaf, setNewPayLeaf, defaultValue }: Props) => {
   return (
     <>
       <Box sx={{ display: "flex", justifyContent: "flex-end", mt: 4 }}>
-        <Button
+        <LoadingButton
+          loading={isLoading}
           variant="contained"
           sx={{
             bgcolor: "#E55252",
@@ -46,7 +51,7 @@ const PayLeafButton = ({ newPayLeaf, setNewPayLeaf, defaultValue }: Props) => {
           onClick={() => handleClick()}
         >
           သိမ်းမည်
-        </Button>
+        </LoadingButton>
         <Button
           variant="contained"
           sx={{

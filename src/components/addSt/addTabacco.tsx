@@ -21,7 +21,7 @@ import {
   DialogContent,
   ListItemText,
 } from "@mui/material";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { LoadingButton } from "@mui/lab";
 interface Props {
   open: boolean;
@@ -29,6 +29,7 @@ interface Props {
 }
 
 const defaultValue: createNewTabaccoAddStock = {
+  date: "",
   invNo: 0,
   carNo: "",
   typeOfTabaccoId: undefined,
@@ -40,7 +41,9 @@ const defaultValue: createNewTabaccoAddStock = {
 };
 
 const AddTabacco = ({ open, setOpen }: Props) => {
-  const [selecteddate, setSelectedDate] = useState<any>(new Date());
+  const [selecteddate, setSelectedDate] = useState<any>(
+    new Date().toLocaleDateString()
+  );
   const workShop = useAppSelector((store) => store.workShop.selectedWorkShop);
   const { item: garages, selectedGarage } = useAppSelector(
     (store) => store.garage
@@ -56,6 +59,10 @@ const AddTabacco = ({ open, setOpen }: Props) => {
     useState<createNewTabaccoAddStock>(defaultValue);
   const { isLoading } = useAppSelector((store) => store.tabaccoStock);
   const dispatch = useAppDispatch();
+
+  useEffect(() => {
+    setNewTabaccoAddStock({ ...newTabaccoAddStock, date: selecteddate });
+  }, [selecteddate, open]);
 
   const handleClick = () => {
     dispatch(setIsLoading(true));

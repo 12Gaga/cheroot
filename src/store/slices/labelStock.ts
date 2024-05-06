@@ -17,7 +17,7 @@ const initialState: labelStockSlice = {
 export const CreateLabelStock = createAsyncThunk(
   "labelStock/CreateLabelStock",
   async (option: createNewLabelStock, thunkApi) => {
-    const { typeOfLabelId, bandle, garageId, shop, onSuccess, onError } =
+    const { date, typeOfLabelId, bandle, garageId, shop, onSuccess, onError } =
       option;
     try {
       const response = await fetch(`${Config.apiBaseUrl}/labelStock`, {
@@ -26,6 +26,7 @@ export const CreateLabelStock = createAsyncThunk(
           "content-type": "application/json",
         },
         body: JSON.stringify({
+          date,
           typeOfLabelId,
           bandle,
           garageId,
@@ -45,6 +46,7 @@ export const CreateLabelAddStock = createAsyncThunk(
   "labelStock/CreateLabelAddStock",
   async (option: createNewLabelAddStock, thunkApi) => {
     const {
+      date,
       invNo,
       carNo,
       typeOfLabelId,
@@ -63,6 +65,7 @@ export const CreateLabelAddStock = createAsyncThunk(
             "content-type": "application/json",
           },
           body: JSON.stringify({
+            date,
             invNo,
             carNo,
             typeOfLabelId,

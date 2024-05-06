@@ -14,11 +14,13 @@ import {
   DialogContent,
   ListItemText,
 } from "@mui/material";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useAppSelector, useAppDispatch } from "@/store/hooks";
 import { setOpenSnackbar } from "@/store/slices/snackBar";
-import { setIsLoading } from "@/store/slices/workShop";
-import { CreateFilterSizeAddStock } from "@/store/slices/filterSizeStock";
+import {
+  CreateFilterSizeAddStock,
+  setIsLoading,
+} from "@/store/slices/filterSizeStock";
 import { LoadingButton } from "@mui/lab";
 interface Props {
   open: boolean;
@@ -26,6 +28,7 @@ interface Props {
 }
 
 const defaultValue: createNewFilterSizeAddStock = {
+  date: "",
   invNo: 0,
   carNo: "",
   typeOfFilterSizeId: undefined,
@@ -36,7 +39,9 @@ const defaultValue: createNewFilterSizeAddStock = {
 };
 
 const AddFilterSize = ({ open, setOpen }: Props) => {
-  const [selecteddate, setSelectedDate] = useState<any>(new Date());
+  const [selecteddate, setSelectedDate] = useState<any>(
+    new Date().toLocaleDateString()
+  );
   const workShop = useAppSelector((store) => store.workShop.selectedWorkShop);
   const { item: garages, selectedGarage } = useAppSelector(
     (store) => store.garage
@@ -52,6 +57,10 @@ const AddFilterSize = ({ open, setOpen }: Props) => {
     useState<createNewFilterSizeAddStock>(defaultValue);
   const { isLoading } = useAppSelector((store) => store.filterSizeStock);
   const dispatch = useAppDispatch();
+
+  useEffect(() => {
+    setNewFilterSizeAddStock({ ...newFilterSizeAddStock, date: selecteddate });
+  }, [selecteddate, open]);
 
   const handleClick = () => {
     dispatch(setIsLoading(true));

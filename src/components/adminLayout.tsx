@@ -8,7 +8,7 @@ import {
   ListItemText,
   Typography,
 } from "@mui/material";
-import { WorkShop } from "@prisma/client";
+import HomeIcon from "@mui/icons-material/Home";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import { ReactNode, useEffect, useState } from "react";
@@ -224,7 +224,9 @@ const AdminLayout = ({ children }: Props) => {
           </Typography>
         </Box>
       </Box>
-
+      <Box sx={{ position: "absolute", right: 10, top: 30, color: "white" }}>
+        <HomeIcon onClick={() => router.push("/admin/home")} />
+      </Box>
       <Box sx={{ display: "flex", position: "relative", zIndex: 5, flex: 1 }}>
         <Box
           sx={{

@@ -1,17 +1,66 @@
+import { useAppSelector } from "@/store/hooks";
+import { createNewReturnCheroot } from "@/types/returnCherootType";
 import {
   Typography,
   TextField,
   Box,
   FormControl,
-  InputLabel,
   MenuItem,
   Select,
+  ListItemText,
 } from "@mui/material";
-import { useState } from "react";
-
+import { TypeOfCheroot, WorkShop } from "@prisma/client";
 import "react-datepicker/dist/react-datepicker.css";
-const ReturnCherootOne = () => {
-  const [selectedCheroot, setSelectedCheroot] = useState<number>(1);
+
+interface Props {
+  newReturnCheroot: createNewReturnCheroot;
+  setNewReturnCheroot: (value: createNewReturnCheroot) => void;
+  no: number;
+}
+const ReturnCherootOne = ({
+  newReturnCheroot,
+  setNewReturnCheroot,
+  no,
+}: Props) => {
+  const workShop = useAppSelector(
+    (store) => store.workShop.selectedWorkShop
+  ) as WorkShop;
+  const cheroots = useAppSelector((store) => store.typeOfCheroot.item);
+  const concernCheroot = cheroots.filter(
+    (item) => item.workShopId === workShop.id
+  );
+
+  const handleCheroot = (cherootId: number) => {
+    const cherootPrice = concernCheroot.find((item) => item.id === cherootId)
+      ?.price as number;
+    const totalamount = newReturnCheroot.goodQty * cherootPrice;
+    setNewReturnCheroot({
+      ...newReturnCheroot,
+      typeOfCherootId: cherootId,
+      goodPrice: cherootPrice,
+      amount: totalamount,
+    });
+  };
+
+  const handleGoodQty = (goodQty: number) => {
+    const totalamount = newReturnCheroot.goodPrice * goodQty;
+    const totalCheroot = newReturnCheroot.damage + goodQty;
+    setNewReturnCheroot({
+      ...newReturnCheroot,
+      goodQty,
+      totalCherootQty: totalCheroot,
+      amount: totalamount,
+    });
+  };
+
+  const handelDamage = (damage: number) => {
+    const totalCheroot = newReturnCheroot.goodQty + damage;
+    setNewReturnCheroot({
+      ...newReturnCheroot,
+      damage,
+      totalCherootQty: totalCheroot,
+    });
+  };
   return (
     <>
       <Box
@@ -24,6 +73,7 @@ const ReturnCherootOne = () => {
         <Box sx={{ width: 250, mt: 2 }}>
           <Typography sx={{ fontWeight: "bold" }}>စဉ်</Typography>
           <TextField
+            value={no}
             placeholder="စဉ်"
             sx={{ bgcolor: "#EEE8CF" }}
             onChange={() => {}}
@@ -36,15 +86,17 @@ const ReturnCherootOne = () => {
             <Select
               labelId="demo-simple-select-filled-label"
               id="demo-simple-select-filled"
-              value={selectedCheroot}
+              value={newReturnCheroot.typeOfCherootId}
               onChange={(evt) => {
-                setSelectedCheroot(Number(evt.target.value));
+                handleCheroot(Number(evt.target.value));
               }}
               sx={{ bgcolor: "#EEE8CF" }}
             >
-              <MenuItem value={1}>၅ ၁/၄ (ငါးတမတ်)</MenuItem>
-              <MenuItem value={2}>၅ (၄ဝါ)</MenuItem>
-              <MenuItem value={3}>၄ ၁/၂ (၂လိပ်ဝါ)</MenuItem>
+              {concernCheroot.map((item) => (
+                <MenuItem key={item.id} value={item.id}>
+                  <ListItemText primary={item.name} />
+                </MenuItem>
+              ))}
             </Select>
           </FormControl>
         </Box>
@@ -54,7 +106,9 @@ const ReturnCherootOne = () => {
           <TextField
             placeholder="အချောဆေးလိပ်"
             sx={{ bgcolor: "#EEE8CF" }}
-            onChange={() => {}}
+            onChange={(evt) => {
+              handleGoodQty(Number(evt.target.value));
+            }}
           />
         </Box>
 
@@ -63,7 +117,9 @@ const ReturnCherootOne = () => {
           <TextField
             placeholder="အကျဆေးလိပ်"
             sx={{ bgcolor: "#EEE8CF" }}
-            onChange={() => {}}
+            onChange={(evt) => {
+              handelDamage(Number(evt.target.value));
+            }}
           />
         </Box>
       </Box>

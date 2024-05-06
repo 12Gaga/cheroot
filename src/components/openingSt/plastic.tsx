@@ -13,7 +13,7 @@ import {
   Typography,
 } from "@mui/material";
 import DatePicker from "react-datepicker";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import "react-datepicker/dist/react-datepicker.css";
 import { createNewLabelStock } from "@/types/labelStockType";
 import { useAppSelector, useAppDispatch } from "@/store/hooks";
@@ -29,6 +29,7 @@ interface Props {
 }
 
 const defaultValue: createNewLabelStock = {
+  date: "",
   typeOfLabelId: undefined,
   bandle: 0,
   shop: "",
@@ -36,7 +37,9 @@ const defaultValue: createNewLabelStock = {
 };
 
 const PlasticOpen = ({ open, setOpen }: Props) => {
-  const [selecteddate, setSelectedDate] = useState<any>(new Date());
+  const [selecteddate, setSelectedDate] = useState<any>(
+    new Date().toLocaleDateString()
+  );
   const workShop = useAppSelector((store) => store.workShop.selectedWorkShop);
   const { item: garages, selectedGarage } = useAppSelector(
     (store) => store.garage
@@ -52,6 +55,10 @@ const PlasticOpen = ({ open, setOpen }: Props) => {
     useState<createNewLabelStock>(defaultValue);
   const { isLoading } = useAppSelector((store) => store.labelStock);
   const dispatch = useAppDispatch();
+
+  useEffect(() => {
+    setNewLabelStock({ ...newLabelStock, date: selecteddate });
+  }, [selecteddate]);
 
   const handleClick = () => {
     dispatch(setIsLoading(true));

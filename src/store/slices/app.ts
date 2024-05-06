@@ -20,6 +20,12 @@ import { setTabaccoStock } from "./tabaccoStock";
 import { setLabelStock } from "./labelStock";
 import { setAddStock } from "./addStock";
 import { setFormula } from "./formula";
+import { setPayLeaf } from "./payLeaf";
+import { setPayStock } from "./payStock";
+import { setReturnCheroot } from "./returnCheroot";
+import { setLeafDeduction } from "./leafDeduction";
+import { setOtherDeduction } from "./otherDeduction";
+import { setExtraPurchase } from "./extraPurchase";
 
 const initialState: appSlice = {
   init: false,
@@ -54,6 +60,12 @@ export const fetchApp = createAsyncThunk(
         labelStock,
         addStock,
         formula,
+        payLeaf,
+        payStock,
+        returnCheroot,
+        leafDeduction,
+        otherDeduction,
+        extraPurchase,
       } = dataFromServer;
       thunkApi.dispatch(setInit(true));
       thunkApi.dispatch(setIndustry(industry));
@@ -75,6 +87,12 @@ export const fetchApp = createAsyncThunk(
       thunkApi.dispatch(setLabelStock(labelStock));
       thunkApi.dispatch(setAddStock(addStock));
       thunkApi.dispatch(setFormula(formula));
+      thunkApi.dispatch(setPayLeaf(payLeaf));
+      thunkApi.dispatch(setPayStock(payStock));
+      thunkApi.dispatch(setReturnCheroot(returnCheroot));
+      thunkApi.dispatch(setLeafDeduction(leafDeduction));
+      thunkApi.dispatch(setOtherDeduction(otherDeduction));
+      thunkApi.dispatch(setExtraPurchase(extraPurchase));
       onSuccess && onSuccess();
     } catch (err) {
       onError && onError(err);

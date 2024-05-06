@@ -1,3 +1,5 @@
+import { useAppSelector } from "@/store/hooks";
+import { createNewExtraPurchase } from "@/types/extraPurchaseType";
 import {
   Box,
   Typography,
@@ -5,11 +7,70 @@ import {
   Select,
   MenuItem,
   TextField,
+  ListItemText,
 } from "@mui/material";
-import { useState } from "react";
+import { useEffect } from "react";
 
-const FilterSizeExtra = () => {
-  const [selectedFilterSize, setSelectedFilterSize] = useState<number>(1);
+interface Props {
+  newExtraPurchase: createNewExtraPurchase;
+  setNewExtraPurchase: (value: createNewExtraPurchase) => void;
+  workshopId: number;
+}
+
+const FilterSizeExtra = ({
+  newExtraPurchase,
+  setNewExtraPurchase,
+  workshopId,
+}: Props) => {
+  const filterSize = useAppSelector((store) => store.typeOfFilterSize.item);
+  const concernFilterSize = filterSize.filter(
+    (item) => item.workShopId === workshopId
+  );
+  const tabacco = useAppSelector((store) => store.typeOfTabacco.item);
+  const concernTabacco = tabacco.filter(
+    (item) => item.workShopId === workshopId
+  );
+  const label = useAppSelector((store) => store.typeOfLabel.item);
+  const concernLabel = label.filter((item) => item.workShopId === workshopId);
+  const handelChange = (filterSizeId: number) => {
+    const selectFilterSizePrice = concernFilterSize.find(
+      (item) => item.id === filterSizeId
+    )?.price as number;
+    console.log("jjj", selectFilterSizePrice);
+    const amount = newExtraPurchase.filterSizeQty * selectFilterSizePrice;
+    const totalAmount =
+      newExtraPurchase.tabaccoAmount + newExtraPurchase.labelAmount + amount;
+    setNewExtraPurchase({
+      ...newExtraPurchase,
+      typeOfFilterSizeId: filterSizeId,
+      filterSizePrice: selectFilterSizePrice,
+      filterSizeAmount: amount,
+      totalAmount,
+    });
+  };
+
+  const handleQty = (filterQty: number) => {
+    const amount = newExtraPurchase.filterSizePrice * filterQty;
+    const totalAmount =
+      newExtraPurchase.tabaccoAmount + newExtraPurchase.labelAmount + amount;
+    setNewExtraPurchase({
+      ...newExtraPurchase,
+      filterSizeQty: filterQty,
+      filterSizeAmount: amount,
+      totalAmount,
+    });
+  };
+  useEffect(() => {
+    if (concernFilterSize.length) {
+      setNewExtraPurchase({
+        ...newExtraPurchase,
+        typeOfFilterSizeId: concernFilterSize[0].id,
+        filterSizePrice: concernFilterSize[0].price,
+        typeOfTabaccoId: concernTabacco[0].id,
+        typeOfLabelId: concernLabel[0].id,
+      });
+    }
+  }, [concernFilterSize.length]);
 
   return (
     <>
@@ -27,15 +88,17 @@ const FilterSizeExtra = () => {
             <Select
               labelId="demo-simple-select-filled-label"
               id="demo-simple-select-filled"
-              value={selectedFilterSize}
+              value={3}
               onChange={(evt) => {
-                setSelectedFilterSize(Number(evt.target.value));
+                handelChange(Number(evt.target.value));
               }}
               sx={{ bgcolor: "#EEE8CF" }}
             >
-              <MenuItem value={1}>၅ ၁/၄ (ငါးတမတ်)</MenuItem>
-              <MenuItem value={2}>၅ (၄ဝါ)</MenuItem>
-              <MenuItem value={3}>၄ ၁/၂ (၂လိပ်ဝါ)</MenuItem>
+              {concernFilterSize.map((item) => (
+                <MenuItem key={item.id} value={item.id}>
+                  <ListItemText primary={item.name} />
+                </MenuItem>
+              ))}
             </Select>
           </FormControl>
         </Box>
@@ -45,7 +108,9 @@ const FilterSizeExtra = () => {
           <TextField
             placeholder="အရေအတွက်"
             sx={{ bgcolor: "#EEE8CF" }}
-            onChange={() => {}}
+            onChange={(evt) => {
+              handleQty(Number(evt.target.value));
+            }}
           />
         </Box>
 
@@ -54,13 +119,19 @@ const FilterSizeExtra = () => {
           <TextField
             placeholder="အိတ်"
             sx={{ bgcolor: "#EEE8CF" }}
-            onChange={() => {}}
+            onChange={(evt) => {
+              setNewExtraPurchase({
+                ...newExtraPurchase,
+                filterSizeBag: Number(evt.target.value),
+              });
+            }}
           />
         </Box>
 
         <Box sx={{ width: 250, mt: 2 }}>
           <Typography sx={{ fontWeight: "bold" }}>ဈေးနှုန်း</Typography>
           <TextField
+            value={newExtraPurchase.filterSizePrice}
             placeholder="ဈေးနှုန်း"
             sx={{ bgcolor: "#EEE8CF" }}
             onChange={() => {}}
@@ -70,6 +141,7 @@ const FilterSizeExtra = () => {
         <Box sx={{ width: 250, mt: 2 }}>
           <Typography sx={{ fontWeight: "bold" }}>ကျသင့်ငွေ</Typography>
           <TextField
+            value={newExtraPurchase.filterSizeAmount}
             placeholder="ကျသင့်ငွေ"
             sx={{ bgcolor: "#EEE8CF" }}
             onChange={() => {}}

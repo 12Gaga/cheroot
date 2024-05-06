@@ -13,11 +13,14 @@ import {
   DialogContent,
   ListItemText,
 } from "@mui/material";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useAppSelector, useAppDispatch } from "@/store/hooks";
-import { CreateLeafAddStock, CreateLeafStock } from "@/store/slices/leafStock";
+import {
+  CreateLeafAddStock,
+  CreateLeafStock,
+  setIsLoading,
+} from "@/store/slices/leafStock";
 import { setOpenSnackbar } from "@/store/slices/snackBar";
-import { setIsLoading } from "@/store/slices/workShop";
 import { createNewLeafAddStock } from "@/types/leafStockType";
 import { LoadingButton } from "@mui/lab";
 
@@ -27,6 +30,7 @@ interface Props {
 }
 
 const defaultValue: createNewLeafAddStock = {
+  date: "",
   invNo: 0,
   carNo: "",
   typeOfLeafId: undefined,
@@ -37,7 +41,9 @@ const defaultValue: createNewLeafAddStock = {
 };
 
 const AddLeaf = ({ open, setOpen }: Props) => {
-  const [selecteddate, setSelectedDate] = useState<any>(new Date());
+  const [selecteddate, setSelectedDate] = useState<any>(
+    new Date().toLocaleDateString()
+  );
   const workShop = useAppSelector((store) => store.workShop.selectedWorkShop);
   const { item: garages, selectedGarage } = useAppSelector(
     (store) => store.garage
@@ -70,6 +76,10 @@ const AddLeaf = ({ open, setOpen }: Props) => {
       })
     );
   };
+
+  useEffect(() => {
+    setNewLeafAddStock({ ...newLeafAddStock, date: selecteddate });
+  }, [selecteddate, open]);
   return (
     <>
       <Dialog open={open} onClose={() => setOpen(false)}>

@@ -22,6 +22,10 @@ import addStockReducer from "./slices/addStock";
 import formulaReducer from "./slices/formula";
 import payLeafReducer from "./slices/payLeaf";
 import payStockReducer from "./slices/payStock";
+import returnCherootReducer from "./slices/returnCheroot";
+import leafDeductionReducer from "./slices/leafDeduction";
+import otherDeductionReducer from "./slices/otherDeduction";
+import extraPurchaseReducer from "./slices/extraPurchase";
 
 export const store = configureStore({
   reducer: {
@@ -48,6 +52,10 @@ export const store = configureStore({
     formula: formulaReducer,
     payLeaf: payLeafReducer,
     payStock: payStockReducer,
+    returnCheroot: returnCherootReducer,
+    leafDeduction: leafDeductionReducer,
+    otherDeduction: otherDeductionReducer,
+    extraPurchase: extraPurchaseReducer,
   },
 });
 

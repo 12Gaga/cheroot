@@ -1,9 +1,8 @@
 import { useAppSelector, useAppDispatch } from "@/store/hooks";
-import { CreateLabelAddStock } from "@/store/slices/labelStock";
+import { CreateLabelAddStock, setIsLoading } from "@/store/slices/labelStock";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { setOpenSnackbar } from "@/store/slices/snackBar";
-import { setIsLoading } from "@/store/slices/workShop";
 import { createNewLabelAddStock } from "@/types/labelStockType";
 
 import {
@@ -19,7 +18,7 @@ import {
   DialogContent,
   ListItemText,
 } from "@mui/material";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { LoadingButton } from "@mui/lab";
 
 interface Props {
@@ -28,6 +27,7 @@ interface Props {
 }
 
 const defaultValue: createNewLabelAddStock = {
+  date: "",
   invNo: 0,
   carNo: "",
   typeOfLabelId: undefined,
@@ -37,7 +37,9 @@ const defaultValue: createNewLabelAddStock = {
 };
 
 const AddLabel = ({ open, setOpen }: Props) => {
-  const [selecteddate, setSelectedDate] = useState<any>(new Date());
+  const [selecteddate, setSelectedDate] = useState<any>(
+    new Date().toLocaleDateString()
+  );
   const workShop = useAppSelector((store) => store.workShop.selectedWorkShop);
   const { item: garages, selectedGarage } = useAppSelector(
     (store) => store.garage
@@ -51,6 +53,10 @@ const AddLabel = ({ open, setOpen }: Props) => {
     useState<createNewLabelAddStock>(defaultValue);
   const { isLoading } = useAppSelector((store) => store.labelStock);
   const dispatch = useAppDispatch();
+
+  useEffect(() => {
+    setNewLabelAddStock({ ...newLabelAddStock, date: selecteddate });
+  }, [selecteddate, open]);
 
   const handleClick = () => {
     dispatch(setIsLoading(true));

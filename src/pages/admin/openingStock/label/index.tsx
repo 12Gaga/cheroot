@@ -41,18 +41,16 @@ const FilterSize = () => {
           <table border={1}>
             <thead>
               <tr style={{ border: "1px solid" }}>
-                {/* <th>နေ့စွဲ</th> */}
-                <th>ဆေးစပ်အမျိုးအစား</th>
-                <th>တင်း</th>
-                <th>ပြည်</th>
-                <th>အိတ်</th>
+                <th>နေ့စွဲ</th>
+                <th>တံဆိပ်အမျိုးအစား</th>
+                <th>လိပ်</th>
                 <th>ဝယ်ယူခဲ့သည့်ဆိုင်အမည်</th>
               </tr>
             </thead>
             {concernLabelStock.map((item) => (
               <thead key={item.id}>
                 <tr style={{ border: "1px solid" }}>
-                  {/* <td>{item.date}</td> */}
+                  <td>{item.date.toString()}</td>
                   <td>
                     {labels.find((f) => f.id === item.typeOfLabelId)?.name}
                   </td>

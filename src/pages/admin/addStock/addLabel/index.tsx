@@ -58,7 +58,7 @@ const LabelAdd = () => {
         <table border={1}>
           <thead>
             <tr style={{ border: "1px solid" }}>
-              {/* <th>နေ့စွဲ</th> */}
+              <th>နေ့စွဲ</th>
               <th>ဘောက်ချာနံပါတ်</th>
               <th>ကားနံပါတ်</th>
               <th>တံဆိပ်အမျိုးအစား</th>
@@ -69,12 +69,13 @@ const LabelAdd = () => {
           {labelAddStockConcern.map((item) => (
             <thead key={item.id}>
               <tr style={{ border: "1px solid" }}>
+                <td>{item.date}</td>
                 <td>{item.invNo}</td>
                 <td>{item.carNo}</td>
                 {concernStock.map(
                   (i) =>
                     item.date === i.date &&
-                    item.typeOfLeafId === i.typeOfLabelId && (
+                    item.typeOfLabelId === i.typeOfLabelId && (
                       <>
                         <td>
                           {labels.find((l) => l.id === i.typeOfLabelId)?.name}

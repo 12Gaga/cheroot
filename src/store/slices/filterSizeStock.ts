@@ -18,6 +18,7 @@ export const CreateFilterSizeStock = createAsyncThunk(
   "filterSizeStock/CreateFilterSizeStock",
   async (option: createNewFilterSizeStock, thunkApi) => {
     const {
+      date,
       typeOfFilterSizeId,
       quantity,
       bag,
@@ -33,6 +34,7 @@ export const CreateFilterSizeStock = createAsyncThunk(
           "content-type": "application/json",
         },
         body: JSON.stringify({
+          date,
           typeOfFilterSizeId,
           quantity,
           bag,
@@ -53,6 +55,7 @@ export const CreateFilterSizeAddStock = createAsyncThunk(
   "filterSizeStock/CreateFilterSizeAddStock",
   async (option: createNewFilterSizeAddStock, thunkApi) => {
     const {
+      date,
       invNo,
       carNo,
       typeOfFilterSizeId,
@@ -72,6 +75,7 @@ export const CreateFilterSizeAddStock = createAsyncThunk(
             "content-type": "application/json",
           },
           body: JSON.stringify({
+            date,
             invNo,
             carNo,
             typeOfFilterSizeId,

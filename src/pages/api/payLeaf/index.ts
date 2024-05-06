@@ -1,4 +1,5 @@
 import { prisma } from "@/utils/db";
+import { AgentLeafViss } from "@prisma/client";
 import type { NextApiRequest, NextApiResponse } from "next";
 
 export default async function handler(
@@ -26,11 +27,11 @@ export default async function handler(
       agentId &&
       typeOfLeafId &&
       BatchNos.length &&
-      viss &&
-      discountViss &&
-      netViss &&
-      price &&
-      amount &&
+      viss != undefined &&
+      discountViss != undefined &&
+      netViss != undefined &&
+      price != undefined &&
+      amount != undefined &&
       garageId;
     if (!isValid) return res.status(405).send("bad request");
 
@@ -57,6 +58,19 @@ export default async function handler(
         })
       )
     );
+    // const addViss = realBatchNo.reduce(
+    //   (totalViss, viss) => (totalViss += viss.viss),
+    //   0
+    // );
+    const leftViss = (await prisma.agentLeafViss.findFirst({
+      where: { typeOfLeafId, agentId },
+    })) as AgentLeafViss;
+    const totalViss = netViss + leftViss.viss;
+
+    await prisma.agentLeafViss.updateMany({
+      data: { viss: totalViss },
+      where: { typeOfLeafId, agentId },
+    });
 
     await prisma.leaf.updateMany({
       data: { isArchived: true },

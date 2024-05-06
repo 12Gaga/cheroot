@@ -30,16 +30,16 @@ export default async function handler(
       date &&
       agentId &&
       typeOfCherootId &&
-      cherootQty &&
+      cherootQty != undefined &&
       typeOfFilterSizeId &&
-      filterSizeQty &&
-      filterSizeBag &&
+      filterSizeQty != undefined &&
+      filterSizeBag != undefined &&
       typeOfTabaccoId &&
-      tabaccoQty &&
-      tabaccoTin &&
-      tabaccoPyi &&
+      tabaccoQty != undefined &&
+      tabaccoTin != undefined &&
+      tabaccoPyi != undefined &&
       typeOfLabelId &&
-      labelBandle &&
+      labelBandle != undefined &&
       totalPrice != undefined &&
       garageId;
     if (!isValid) return res.status(405).send("bad request");

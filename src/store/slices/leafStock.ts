@@ -55,6 +55,7 @@ export const CreateLeafAddStock = createAsyncThunk(
   "leafStock/CreateLeafAddStock",
   async (option: createNewLeafAddStock, thunkApi) => {
     const {
+      date,
       invNo,
       carNo,
       typeOfLeafId,
@@ -74,6 +75,7 @@ export const CreateLeafAddStock = createAsyncThunk(
             "content-type": "application/json",
           },
           body: JSON.stringify({
+            date,
             invNo,
             carNo,
             typeOfLeafId,

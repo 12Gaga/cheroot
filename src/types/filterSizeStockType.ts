@@ -9,6 +9,7 @@ export interface filterSizeStockSlice {
 }
 
 export interface createNewFilterSizeStock extends BasicOption {
+  date: string;
   typeOfFilterSizeId: number | undefined;
   quantity: number;
   bag: number;
@@ -17,6 +18,7 @@ export interface createNewFilterSizeStock extends BasicOption {
 }
 
 export interface createNewFilterSizeAddStock extends BasicOption {
+  date: string;
   invNo: number;
   carNo: string;
   typeOfFilterSizeId: number | undefined;

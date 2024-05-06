@@ -7,6 +7,7 @@ import React, { useState } from "react";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { useRouter } from "next/router";
+import HomeIcon from "@mui/icons-material/Home";
 const NamePage = () => {
   const router = useRouter();
   const { data: session } = useSession();
@@ -49,6 +50,9 @@ const NamePage = () => {
             {gar?.name}
           </Typography>
         </Box>
+      </Box>
+      <Box sx={{ position: "absolute", right: 10, top: 30, color: "white" }}>
+        <HomeIcon onClick={() => router.push("/admin/home")} />
       </Box>
       <Box sx={{ display: "flex", justifyContent: "flex-end" }}>
         <AddBoxIcon

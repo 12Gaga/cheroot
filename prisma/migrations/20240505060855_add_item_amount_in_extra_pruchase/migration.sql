@@ -1,0 +1,4 @@
+-- AlterTable
+ALTER TABLE "ExtraPurchase" ADD COLUMN     "filterSizeAmount" INTEGER NOT NULL DEFAULT 0,
+ADD COLUMN     "labelAmount" INTEGER NOT NULL DEFAULT 0,
+ADD COLUMN     "tabaccoAmount" INTEGER NOT NULL DEFAULT 0;

@@ -10,7 +10,12 @@ export default async function handler(
     const { name, phoneNo, address, cashBig, cashSmall } = req.body;
     const workShopId = Number(req.query.workShopId);
     console.log("workShopId", workShopId);
-    const isValid = name && phoneNo && address && cashBig && cashSmall;
+    const isValid =
+      name &&
+      phoneNo &&
+      address &&
+      cashBig != undefined &&
+      cashSmall != undefined;
     if (!isValid) return res.status(405).send("bad request");
 
     const newAgent = await prisma.agent.create({

@@ -12,13 +12,15 @@ import {
   Typography,
 } from "@mui/material";
 import DatePicker from "react-datepicker";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import "react-datepicker/dist/react-datepicker.css";
 import { createNewFilterSizeStock } from "@/types/filterSizeStockType";
 import { useAppSelector, useAppDispatch } from "@/store/hooks";
 import { setOpenSnackbar } from "@/store/slices/snackBar";
-import { setIsLoading } from "@/store/slices/workShop";
-import { CreateFilterSizeStock } from "@/store/slices/filterSizeStock";
+import {
+  CreateFilterSizeStock,
+  setIsLoading,
+} from "@/store/slices/filterSizeStock";
 import { LoadingButton } from "@mui/lab";
 interface Props {
   open: boolean;
@@ -26,6 +28,7 @@ interface Props {
 }
 
 const defaultValue: createNewFilterSizeStock = {
+  date: "",
   typeOfFilterSizeId: undefined,
   quantity: 0,
   bag: 0,
@@ -34,7 +37,9 @@ const defaultValue: createNewFilterSizeStock = {
 };
 
 const FilterSizeOpen = ({ open, setOpen }: Props) => {
-  const [selecteddate, setSelectedDate] = useState<any>(new Date());
+  const [selecteddate, setSelectedDate] = useState<any>(
+    new Date().toLocaleDateString()
+  );
   const workShop = useAppSelector((store) => store.workShop.selectedWorkShop);
   const { item: garages, selectedGarage } = useAppSelector(
     (store) => store.garage
@@ -50,6 +55,10 @@ const FilterSizeOpen = ({ open, setOpen }: Props) => {
     useState<createNewFilterSizeStock>(defaultValue);
   const { isLoading } = useAppSelector((store) => store.filterSizeStock);
   const dispatch = useAppDispatch();
+
+  useEffect(() => {
+    setNewFilterSizeStock({ ...newFilterSizeStock, date: selecteddate });
+  }, [selecteddate, open]);
 
   const handleClick = () => {
     dispatch(setIsLoading(true));

@@ -1,3 +1,5 @@
+import { useAppSelector } from "@/store/hooks";
+import { createNewLeafDeduction } from "@/types/leafDeductionType";
 import {
   Box,
   Typography,
@@ -5,11 +7,46 @@ import {
   Select,
   MenuItem,
   TextField,
+  ListItemText,
 } from "@mui/material";
-import { useState } from "react";
 
-const ReturnCherootFour = () => {
-  const [selectedLeaf, setSelectedLeaf] = useState<number>(1);
+interface Props {
+  newLeafDeduction: createNewLeafDeduction;
+  setNewLeafDeduction: (value: createNewLeafDeduction) => void;
+  totalAmount: number;
+}
+
+const ReturnCherootFour = ({
+  newLeafDeduction,
+  setNewLeafDeduction,
+  totalAmount,
+}: Props) => {
+  const workShop = useAppSelector((store) => store.workShop.selectedWorkShop);
+  const leaves = useAppSelector((store) => store.typeOfLeaf.item);
+  const concernLeaves = leaves.filter(
+    (item) => item.workShopId === workShop?.id
+  );
+  const handleChange = (leafId: number) => {
+    const selectLeafPrice = concernLeaves.find((item) => item.id === leafId)
+      ?.price as number;
+    console.log("prie", selectLeafPrice);
+    const totalamount = newLeafDeduction.deductViss * selectLeafPrice;
+    setNewLeafDeduction({
+      ...newLeafDeduction,
+      typeOfLeafId: leafId,
+      price: selectLeafPrice,
+      deductionAmount: totalamount,
+    });
+  };
+
+  const handleViss = (viss: number) => {
+    const totalamount = newLeafDeduction.price * viss;
+    setNewLeafDeduction({
+      ...newLeafDeduction,
+      deductViss: viss,
+      deductionAmount: totalamount,
+    });
+  };
   return (
     <>
       <Box
@@ -25,15 +62,17 @@ const ReturnCherootFour = () => {
             <Select
               labelId="demo-simple-select-filled-label"
               id="demo-simple-select-filled"
-              value={selectedLeaf}
+              value={newLeafDeduction.typeOfLeafId}
               onChange={(evt) => {
-                setSelectedLeaf(Number(evt.target.value));
+                handleChange(Number(evt.target.value));
               }}
               sx={{ bgcolor: "#EEE8CF" }}
             >
-              <MenuItem value={1}>၅ ၁/၂ (ရှယ်)</MenuItem>
-              <MenuItem value={2}>၄ ၁/၂ (တုတ်)</MenuItem>
-              <MenuItem value={3}>၅</MenuItem>
+              {concernLeaves.map((item) => (
+                <MenuItem key={item.id} value={item.id}>
+                  <ListItemText primary={item.name} />
+                </MenuItem>
+              ))}
             </Select>
           </FormControl>
         </Box>
@@ -43,13 +82,16 @@ const ReturnCherootFour = () => {
           <TextField
             placeholder="ခုနှိမ်ပိဿာ"
             sx={{ bgcolor: "#EEE8CF" }}
-            onChange={() => {}}
+            onChange={(evt) => {
+              handleViss(Number(evt.target.value));
+            }}
           />
         </Box>
 
         <Box sx={{ width: 250, mt: 2 }}>
           <Typography sx={{ fontWeight: "bold" }}>နှုန်း</Typography>
           <TextField
+            value={newLeafDeduction.price}
             placeholder="နှုန်း"
             sx={{ bgcolor: "#EEE8CF" }}
             onChange={() => {}}
@@ -59,6 +101,7 @@ const ReturnCherootFour = () => {
         <Box sx={{ width: 250, mt: 2 }}>
           <Typography sx={{ fontWeight: "bold" }}>ခုနှိမ်ငွေ</Typography>
           <TextField
+            value={newLeafDeduction.deductionAmount}
             placeholder="ခုနှိမ်ငွေ"
             sx={{ bgcolor: "#EEE8CF" }}
             onChange={() => {}}
@@ -70,6 +113,7 @@ const ReturnCherootFour = () => {
             ဖက်ဖိုးခုနှိမ်ငွေပေါင်း
           </Typography>
           <TextField
+            value={totalAmount}
             placeholder="ဖက်ဖိုးခုနှိမ်ငွေပေါင်း"
             sx={{ bgcolor: "#EEE8CF" }}
             onChange={() => {}}

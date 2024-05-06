@@ -173,7 +173,7 @@ model TypeOfLabel{
 
 model Leaf{
   id Int @id @default(autoincrement())
-  date DateTime @default(now())
+  date String
   typeOfLeaf TypeOfLeaf @relation(fields: [typeOfLeafId],references: [id])
   typeOfLeafId Int
   batchNo Int
@@ -186,7 +186,7 @@ model Leaf{
 
 model FilterSize{
   id Int @id @default(autoincrement())
-  date DateTime @default(now())
+  date String
   typeOfFilterSize TypeOfFilterSize @relation(fields: [typeOfFilterSizeId],references: [id])
   typeOfFilterSizeId Int
   quantity Int
@@ -199,7 +199,7 @@ model FilterSize{
 
 model Tabacco{
   id Int @id @default(autoincrement())
-  date DateTime @default(now())
+  date String
   typeOfTabacco TypeOfTabacco @relation(fields: [typeOfTabaccoId],references: [id])
   typeOfTabaccoId Int
   tin Int
@@ -213,7 +213,7 @@ model Tabacco{
 
 model Label{
   id Int @id @default(autoincrement())
-  date DateTime @default(now())
+  date String
   typeOfLabel TypeOfLabel @relation(fields: [typeOfLabelId],references: [id])
   typeOfLabelId Int
   bandle Int
@@ -282,7 +282,7 @@ model FormOfPacking{
 
 model Packing{
   id Int @id @default(autoincrement())
-  date DateTime @default(now())
+  date String
   typeOfCheroot TypeOfCheroot @relation(fields: [typeOfCherootId],references: [id])
   typeOfCherootId Int
   typeOfPacking TypeOfPacking @relation(fields: [typeOfPackingId],references: [id])
@@ -306,7 +306,7 @@ model ConveyLocation{
 
 model Conveying{
   id Int @id @default(autoincrement())
-  date DateTime @default(now())
+  date String
   conveyLocation ConveyLocation @relation(fields: [conveyLocationId],references: [id])
   conveyLocationId Int
   typeOfCheroot TypeOfCheroot @relation(fields: [typeOfCherootId],references: [id])
@@ -342,7 +342,7 @@ model ExpensiveLabel{
 
 model DailyExpensive{
   id Int @id @default(autoincrement())
-  date DateTime @default(now())
+  date String
   expensiveLabel ExpensiveLabel @relation(fields: [expensiveLabelId],references: [id])
   expensiveLabelId Int
   content String
@@ -354,7 +354,7 @@ model DailyExpensive{
 
 model MainMoney{
   id Int @id @default(autoincrement())
-  date DateTime @default(now())
+  date String
   location ConveyLocation @relation(fields: [locationId],references: [id])
   locationId Int
   amount Int @default(0)
@@ -365,7 +365,7 @@ model MainMoney{
 
 model ReplenishmentMoney{
   id Int @id @default(autoincrement())
-  date DateTime @default(now())
+  date String
   amount Int @default(0)
   workShop WorkShop @relation(fields: [workShopId],references: [id])
   workShopId Int
@@ -374,7 +374,7 @@ model ReplenishmentMoney{
 
 model ClosingMainBalance{
   id Int @id @default(autoincrement())
-  date DateTime @default(now())
+  date String
   amount Int @default(0)
   workShop WorkShop @relation(fields: [workShopId],references: [id])
   workShopId Int
@@ -383,7 +383,7 @@ model ClosingMainBalance{
 
 model ClosingDailyBalance{
   id Int @id @default(autoincrement())
-  date DateTime @default(now())
+  date String
   amount Int @default(0)
   workShop WorkShop @relation(fields: [workShopId],references: [id])
   workShopId Int
@@ -392,7 +392,7 @@ model ClosingDailyBalance{
 
 model MainDirectPayment{
   id Int @id @default(autoincrement())
-  date DateTime @default(now())
+  date String
   tilte String
   amount Int @default(0)
   workShop WorkShop @relation(fields: [workShopId],references: [id])
@@ -402,7 +402,7 @@ model MainDirectPayment{
 
 model AddStock{
   id Int @id @default(autoincrement())
-  date DateTime @default(now())
+  date String
   invNo Int
   carNo String
   typeOfLeaf TypeOfLeaf? @relation(fields: [typeOfLeafId],references: [id])
@@ -420,7 +420,7 @@ model AddStock{
 
 model PayLeaf{
   id Int @id @default(autoincrement())
-  date DateTime @default(now())
+  date String
   agent Agent @relation(fields: [agentId],references: [id])
   agentId Int
   typeOfLeaf TypeOfLeaf @relation(fields: [typeOfLeafId],references: [id])
@@ -440,7 +440,7 @@ model PayLeaf{
 
 model DiscountViss{
   id Int @id @default(autoincrement())
-  date DateTime @default(now())
+  date String
   agent Agent @relation(fields: [agentId],references: [id])
   agentId Int
   discountViss Int @default(0)
@@ -452,7 +452,7 @@ model DiscountViss{
 
 model PayOtherItem{
   id Int @id @default(autoincrement())
-  date DateTime @default(now())
+  date String
   agent Agent @relation(fields: [agentId],references: [id])
   agentId Int
   typeOfCheroot TypeOfCheroot @relation(fields: [typeOfCherootId],references: [id])
@@ -480,7 +480,7 @@ model PayOtherItem{
 
 model ReturnReadyCheroot{
   id Int @id @default(autoincrement())
-  date DateTime @default(now())
+  date String
   agent Agent @relation(fields: [agentId],references: [id])
   agentId Int
   typeOfCheroot TypeOfCheroot @relation(fields: [typeOfCherootId],references: [id])
@@ -497,7 +497,7 @@ model ReturnReadyCheroot{
 
 model LeafDeduction{
   id Int @id @default(autoincrement())
-  date DateTime @default(now())
+  date String
   agent Agent @relation(fields: [agentId],references: [id])
   agentId Int
   typeOfLeaf TypeOfLeaf @relation(fields: [typeOfLeafId],references: [id])
@@ -512,7 +512,7 @@ model LeafDeduction{
 
 model OtherDeduction{
   id Int @id @default(autoincrement())
-  date DateTime @default(now())
+  date String
   agent Agent @relation(fields: [agentId],references: [id])
   agentId Int
   cashAdvanceBigDeduction Int
@@ -521,6 +521,7 @@ model OtherDeduction{
   cashAdvanceBig Int
   cashAdvanceSmall Int
   netAgentPayment Int
+  bonusPayment Int
   totalNetAgentPayment Int
   workShop WorkShop @relation(fields: [workShopId],references: [id])
   workShopId Int
@@ -529,7 +530,7 @@ model OtherDeduction{
 
 model ExtraPurchase{
   id Int @id @default(autoincrement())
-  date DateTime @default(now())
+  date String
   agent Agent @relation(fields: [agentId],references: [id])
   agentId Int
   typeOfFilterSize TypeOfFilterSize @relation(fields: [typeOfFilterSizeId],references: [id])
@@ -537,16 +538,20 @@ model ExtraPurchase{
   filterSizeQty Int @default(0)
   filterSizeBag Int  @default(0)
   filterSizePrice Int  @default(0)
+  filterSizeAmount Int  @default(0)
   typeOfTabacco TypeOfTabacco @relation(fields: [typeOfTabaccoId],references: [id])
   typeOfTabaccoId Int
   tabaccoQty Int  @default(0)
   tabaccoTin Int  @default(0)
   tabaccoPyi Int  @default(0)
+  tabaccoBag Int  @default(0)
   tabaccoPrice Int  @default(0)
+  tabaccoAmount Int  @default(0)
   typeOfLabel TypeOfLabel @relation(fields: [typeOfLabelId],references: [id])
   typeOfLabelId Int
   labelBandle Int  @default(0)
   labelPrice Int  @default(0)
+  labelAmount Int  @default(0)
   totalAmount Int  @default(0)
   garage Garage @relation(fields: [garageId],references: [id])
   garageId Int
@@ -557,7 +562,7 @@ model ExtraPurchase{
 
 model LeafTransferGarage{
   id Int @id @default(autoincrement())
-  date DateTime @default(now())
+  date String
   // exitGarage Garage @relation(fields: [exitGarageId],references: [id])
   // exitGarageId Int
   enterenceGarage Garage @relation(fields: [enterenceGarageId],references: [id])
@@ -570,7 +575,7 @@ model LeafTransferGarage{
 
 model FilterSizeTransferGarage{
   id Int @id @default(autoincrement())
-  date DateTime @default(now())
+  date String
   // exitGarage Garage @relation(fields: [exitGarageId],references: [id])
   // exitGarageId Int
   enterenceGarage Garage @relation(fields: [enterenceGarageId],references: [id])
@@ -583,7 +588,7 @@ model FilterSizeTransferGarage{
 
 model TabaccoTransferGarage{
   id Int @id @default(autoincrement())
-  date DateTime @default(now())
+  date String
   // exitGarage Garage @relation(fields: [exitGarageId],references: [id])
   // exitGarageId Int
   enterenceGarage Garage @relation(fields: [enterenceGarageId],references: [id])
@@ -597,7 +602,7 @@ model TabaccoTransferGarage{
 
 model LabelTransferGarage{
   id Int @id @default(autoincrement())
-  date DateTime @default(now())
+  date String
   // exitGarage Garage @relation(fields: [exitGarageId],references: [id])
   // exitGarageId Int
   enterenceGarage Garage @relation(fields: [enterenceGarageId],references: [id])

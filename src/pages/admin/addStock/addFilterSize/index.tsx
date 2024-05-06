@@ -58,7 +58,7 @@ const FilterSizeAdd = () => {
         <table border={1}>
           <thead>
             <tr style={{ border: "1px solid" }}>
-              {/* <th>နေ့စွဲ</th> */}
+              <th>နေ့စွဲ</th>
               <th>ဘောက်ချာနံပါတ်</th>
               <th>ကားနံပါတ်</th>
               <th>အဆီခံအမျိုးအစား</th>
@@ -70,6 +70,7 @@ const FilterSizeAdd = () => {
           {filterSizeAddStockConcern.map((item) => (
             <thead key={item.id}>
               <tr style={{ border: "1px solid" }}>
+                <td>{item.date}</td>
                 <td>{item.invNo}</td>
                 <td>{item.carNo}</td>
                 {concernStock.map(

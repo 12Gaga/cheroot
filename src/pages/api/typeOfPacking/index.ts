@@ -10,7 +10,7 @@ export default async function handler(
     const { name, typeOfCherootId } = req.body;
     const workShopId = Number(req.query.workShopId);
     console.log("workShopId", workShopId);
-    const isValid = name && typeOfCherootId != undefined;
+    const isValid = name && typeOfCherootId;
     if (!isValid) return res.status(405).send("bad request");
 
     const newTypeOfPacking = await prisma.typeOfPacking.create({

@@ -22,7 +22,7 @@ import { useAppSelector } from "@/store/hooks";
 import { WorkShop } from "@prisma/client";
 
 const defaultValue: createNewPayLeaf = {
-  date: undefined,
+  date: "",
   agentId: undefined,
   typeOfLeafId: undefined,
   batchNo: [],
@@ -36,7 +36,9 @@ const defaultValue: createNewPayLeaf = {
 
 const PayLeaf = () => {
   const { data: session } = useSession();
-  const [selecteddate, setSelectedDate] = useState<any>(new Date());
+  const [selecteddate, setSelectedDate] = useState<any>(
+    new Date().toLocaleDateString()
+  );
   const [newPayLeaf, setNewPayLeaf] = useState<createNewPayLeaf>(defaultValue);
   const garages = useAppSelector((store) => store.garage.item);
   const workShop = useAppSelector(

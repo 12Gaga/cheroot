@@ -26,7 +26,7 @@ interface Props {
 }
 
 const defaultValue: createNewLeafStock = {
-  date: undefined,
+  date: "",
   typeOfLeafId: undefined,
   batchNo: 0,
   viss: 0,
@@ -35,7 +35,9 @@ const defaultValue: createNewLeafStock = {
 };
 
 const LeafOpen = ({ open, setOpen }: Props) => {
-  const [selecteddate, setSelectedDate] = useState<any>(new Date());
+  const [selecteddate, setSelectedDate] = useState<any>(
+    new Date().toLocaleDateString()
+  );
   const workShop = useAppSelector((store) => store.workShop.selectedWorkShop);
   const { item: garages, selectedGarage } = useAppSelector(
     (store) => store.garage
@@ -72,7 +74,7 @@ const LeafOpen = ({ open, setOpen }: Props) => {
 
   useEffect(() => {
     setNewLeafStock({ ...newLeafStock, date: selecteddate });
-  }, []);
+  }, [selecteddate, open]);
 
   return (
     <>

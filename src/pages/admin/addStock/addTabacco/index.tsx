@@ -34,6 +34,8 @@ const TabaccoAdd = () => {
   const concernStock = concernTabaccoStock.filter((item) =>
     tabaccoAddStockConcernDate.includes(item.date)
   );
+  console.log("fdjhk", tabaccoAddStockConcern);
+  console.log("concernTabacco", concernStock);
   return (
     <>
       <AdminLayout>
@@ -56,7 +58,7 @@ const TabaccoAdd = () => {
         <table border={1}>
           <thead>
             <tr style={{ border: "1px solid" }}>
-              {/* <th>နေ့စွဲ</th> */}
+              <th>နေ့စွဲ</th>
               <th>ဘောက်ချာနံပါတ်</th>
               <th>ကားနံပါတ်</th>
               <th>ဆေးစပ်အမျိုးအစား</th>
@@ -69,12 +71,13 @@ const TabaccoAdd = () => {
           {tabaccoAddStockConcern.map((item) => (
             <thead key={item.id}>
               <tr style={{ border: "1px solid" }}>
+                <td>{item.date}</td>
                 <td>{item.invNo}</td>
                 <td>{item.carNo}</td>
                 {concernStock.map(
                   (i) =>
                     item.date === i.date &&
-                    item.typeOfLeafId === i.typeOfTabaccoId && (
+                    item.typeOfTabaccoId === i.typeOfTabaccoId && (
                       <>
                         <td>
                           {

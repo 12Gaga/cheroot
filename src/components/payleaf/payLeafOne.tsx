@@ -38,10 +38,7 @@ const PayLeafOne = ({ newPayLeaf, setNewPayLeaf, workShopId }: Props) => {
         return (totalViss += viss.viss);
       }, 0);
     const netViss = totalViss - newPayLeaf.discountViss;
-    // setNewPayLeaf({ ...newPayLeaf, netViss: Number(netViss) });
     const amount = netViss * newPayLeaf.price;
-
-    // setNewPayLeaf({ ...newPayLeaf, viss: totalViss });
     setNewPayLeaf({
       ...newPayLeaf,
       batchNo: selectBatchNo,

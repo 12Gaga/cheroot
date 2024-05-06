@@ -1,12 +1,38 @@
-import { Box, Typography, FormControl, Select, MenuItem } from "@mui/material";
-import { useState } from "react";
+import { useAppSelector } from "@/store/hooks";
+import { createNewExtraPurchase } from "@/types/extraPurchaseType";
+import {
+  Box,
+  Typography,
+  FormControl,
+  Select,
+  MenuItem,
+  ListItemText,
+} from "@mui/material";
+import { useEffect, useState } from "react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 
-const ExtraPurTop = () => {
-  const [selecteddate, setSelectedDate] = useState<any>(new Date());
-  const [selectedName, setSelectedName] = useState<number>(1);
-  const [selectedGarage, setSelectedGarage] = useState<number>(1);
+interface Props {
+  newExtraPurchase: createNewExtraPurchase;
+  setNewExtraPurchase: (value: createNewExtraPurchase) => void;
+  workshopId: number;
+}
+
+const ExtraPurTop = ({
+  newExtraPurchase,
+  setNewExtraPurchase,
+  workshopId,
+}: Props) => {
+  const [selecteddate, setSelectedDate] = useState<any>(
+    new Date().toLocaleDateString()
+  );
+  const agent = useAppSelector((store) => store.agent.item);
+  const concernAgent = agent.filter((item) => item.workShopId === workshopId);
+  const garage = useAppSelector((store) => store.garage.item);
+  const concernGarage = garage.filter((item) => item.workShopId === workshopId);
+  useEffect(() => {
+    setNewExtraPurchase({ ...newExtraPurchase, date: selecteddate });
+  }, [selecteddate]);
   return (
     <>
       <Box
@@ -32,15 +58,20 @@ const ExtraPurTop = () => {
             <Select
               labelId="demo-simple-select-filled-label"
               id="demo-simple-select-filled"
-              value={selectedName}
+              value={newExtraPurchase?.agentId}
               onChange={(evt) => {
-                setSelectedName(Number(evt.target.value));
+                setNewExtraPurchase({
+                  ...newExtraPurchase,
+                  agentId: Number(evt.target.value),
+                });
               }}
               sx={{ bgcolor: "#EEE8CF" }}
             >
-              <MenuItem value={1}>Su Su</MenuItem>
-              <MenuItem value={2}>Nyi Nyi</MenuItem>
-              <MenuItem value={3}>Ma Ma</MenuItem>
+              {concernAgent.map((item) => (
+                <MenuItem key={item.id} value={item.id}>
+                  <ListItemText primary={item.name} />
+                </MenuItem>
+              ))}
             </Select>
           </FormControl>
         </Box>
@@ -53,15 +84,20 @@ const ExtraPurTop = () => {
             <Select
               labelId="demo-simple-select-filled-label"
               id="demo-simple-select-filled"
-              value={selectedGarage}
+              value={newExtraPurchase.garageId}
               onChange={(evt) => {
-                setSelectedGarage(Number(evt.target.value));
+                setNewExtraPurchase({
+                  ...newExtraPurchase,
+                  garageId: Number(evt.target.value),
+                });
               }}
               sx={{ bgcolor: "#EEE8CF" }}
             >
-              <MenuItem value={1}>ဂိုထောင် ၁</MenuItem>
-              <MenuItem value={2}>ဂိုထောင် ၂</MenuItem>
-              <MenuItem value={3}>ဂိုထောင် ၃</MenuItem>
+              {concernGarage.map((item) => (
+                <MenuItem key={item.id} value={item.id}>
+                  <ListItemText primary={item.name} />
+                </MenuItem>
+              ))}
             </Select>
           </FormControl>
         </Box>

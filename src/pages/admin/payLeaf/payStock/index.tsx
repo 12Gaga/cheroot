@@ -19,7 +19,7 @@ import { setSelectedGarage } from "@/store/slices/garage";
 import { WorkShop } from "@prisma/client";
 
 const defaultValue: createNewPayStock = {
-  date: undefined,
+  date: "",
   agentId: undefined,
   typeOfCherootId: undefined,
   cherootQty: 0,
@@ -47,7 +47,9 @@ const defaultPayStock: payStock = {
 
 const PayStock = () => {
   const { data: session } = useSession();
-  const [selecteddate, setSelectedDate] = useState<any>(new Date());
+  const [selecteddate, setSelectedDate] = useState<any>(
+    new Date().toLocaleDateString()
+  );
   const [newPayStock, setNewPayStock] =
     useState<createNewPayStock>(defaultValue);
   const [payStock, setPayStock] = useState<payStock>(defaultPayStock);

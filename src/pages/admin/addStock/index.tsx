@@ -1,5 +1,4 @@
 import { Box, Typography } from "@mui/material";
-import DatePicker from "react-datepicker";
 import { useState } from "react";
 import AdminLayout from "@/components/adminLayout";
 import "react-datepicker/dist/react-datepicker.css";
@@ -31,7 +30,7 @@ const AddStock = () => {
   const concernStock = concernLeafStock.filter((item) =>
     leafAddStockConcernDate.includes(item.date)
   );
-
+  console.log("concernLeaf", concernStock);
   return (
     <>
       <AdminLayout>
@@ -54,7 +53,7 @@ const AddStock = () => {
         <table border={1}>
           <thead>
             <tr style={{ border: "1px solid" }}>
-              {/* <th>နေ့စွဲ</th> */}
+              <th>နေ့စွဲ</th>
               <th>ဘောက်ချာနံပါတ်</th>
               <th>ကားနံပါတ်</th>
               <th>ဖက်အမျိုးအစား</th>
@@ -66,12 +65,15 @@ const AddStock = () => {
           {leafAddStockConcern.map((item) => (
             <thead key={item.id}>
               <tr style={{ border: "1px solid" }}>
+                <td>{item.date}</td>
                 <td>{item.invNo}</td>
                 <td>{item.carNo}</td>
-                {concernStock.map(
-                  (i) =>
+                {concernStock.map((i) => {
+                  if (
                     item.date === i.date &&
-                    item.typeOfLeafId === i.typeOfLeafId && (
+                    item.typeOfLeafId === i.typeOfLeafId
+                  ) {
+                    return (
                       <>
                         <td>
                           {leaves.find((l) => l.id === i.typeOfLeafId)?.name}
@@ -82,8 +84,9 @@ const AddStock = () => {
                         <td>{<EditIcon />}</td>
                         <td>{<DeleteIcon />}</td>
                       </>
-                    )
-                )}
+                    );
+                  }
+                })}
               </tr>
             </thead>
           ))}
