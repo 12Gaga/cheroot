@@ -14,12 +14,7 @@ export default async function handler(
     const workShopId = Number(req.query.workShopId);
     console.log("workShopId", workShopId);
     const isValid =
-      date &&
-      agentId &&
-      typeOfLeafId &&
-      deductViss != undefined &&
-      price != undefined &&
-      deductionAmount != undefined;
+      date && agentId && typeOfLeafId && deductViss && price && deductionAmount;
 
     if (!isValid) return res.status(405).send("bad request");
 
