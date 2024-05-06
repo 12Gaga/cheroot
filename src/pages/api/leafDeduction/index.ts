@@ -16,7 +16,7 @@ export default async function handler(
     const isValid =
       date && agentId && typeOfLeafId && deductViss && price && deductionAmount;
 
-    if (!isValid) return res.status(405).send("bad request");
+    if (!isValid) return res.status(405).send("bad requesttttt");
 
     const newLeafDeduction = await prisma.leafDeduction.create({
       data: {
