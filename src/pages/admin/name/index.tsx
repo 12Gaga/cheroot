@@ -51,8 +51,11 @@ const NamePage = () => {
           </Typography>
         </Box>
       </Box>
-      <Box sx={{ position: "absolute", right: 10, top: 30, color: "white" }}>
-        <HomeIcon onClick={() => router.push("/admin/home")} />
+      <Box sx={{ position: "absolute", right: 10, top: 25, color: "white" }}>
+        <HomeIcon
+          onClick={() => router.push("/admin/home")}
+          sx={{ fontSize: 40 }}
+        />
       </Box>
       <Box sx={{ display: "flex", justifyContent: "flex-end" }}>
         <AddBoxIcon

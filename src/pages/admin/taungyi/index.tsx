@@ -1,11 +1,13 @@
 import AdminLayout from "@/components/adminLayout";
-import NewLeaf from "@/components/asign/newLeaf";
+import StoreIcon from "@mui/icons-material/Store";
+import ItemCard from "@/components/itemCard";
 import NewStore from "@/components/taungyi/newStore";
+import { useAppSelector } from "@/store/hooks";
 import { Box, Button, Typography } from "@mui/material";
 import { useState } from "react";
 const Store = () => {
   const [open, setOpen] = useState<boolean>(false);
-
+  const stores = useAppSelector((store) => store.typeOfStore.item);
   return (
     <>
       <AdminLayout>
@@ -38,16 +40,13 @@ const Store = () => {
           </Button>
         </Box>
 
-        {/* <Box sx={{ display: "flex", flexWrap: "wrap" }}>
-          {leaves.map((item) => {
-            const workShopId = localStorage.getItem("selectedWorkShopId");
-            const exit = item.workShopId === Number(workShopId);
-            if (!exit) return null;
+        <Box sx={{ display: "flex", flexWrap: "wrap" }}>
+          {stores.map((item) => {
             return (
-              <ItemCard key={item.id} icon={<SpaIcon />} title={item.name} />
+              <ItemCard key={item.id} icon={<StoreIcon />} title={item.name} />
             );
           })}
-        </Box> */}
+        </Box>
 
         <NewStore open={open} setOpen={setOpen} />
       </AdminLayout>

@@ -9,18 +9,18 @@ export default async function handler(
   if (method === "POST") {
     const invNo = Number(req.query.invNo);
     if (!invNo) {
-      const { date, typeOfLeafId, batchNo, viss, garageId, shop } = req.body;
+      const { date, typeOfLeafId, batchNo, viss, garageId, shopId } = req.body;
       const isValid =
         date &&
         typeOfLeafId &&
         batchNo != undefined &&
         viss != undefined &&
         garageId &&
-        shop;
+        shopId;
       if (!isValid) return res.status(405).send("bad request");
 
       const newleafStock = await prisma.leaf.create({
-        data: { date, typeOfLeafId, batchNo, viss, garageId, shop },
+        data: { date, typeOfLeafId, batchNo, viss, garageId, shopId },
       });
       return res.status(200).json({ newleafStock });
     } else {
@@ -32,7 +32,7 @@ export default async function handler(
         batchNo,
         viss,
         garageId,
-        shop,
+        shopId,
       } = req.body;
       const isValid =
         date &&
@@ -42,11 +42,11 @@ export default async function handler(
         batchNo != undefined &&
         viss != undefined &&
         garageId &&
-        shop;
+        shopId;
       if (!isValid) return res.status(405).send("bad request");
 
       const newleafAddStock = await prisma.leaf.create({
-        data: { date, typeOfLeafId, batchNo, viss, garageId, shop },
+        data: { date, typeOfLeafId, batchNo, viss, garageId, shopId },
       });
       const newAddStock = await prisma.addStock.create({
         data: { date, invNo, carNo, typeOfLeafId, garageId },

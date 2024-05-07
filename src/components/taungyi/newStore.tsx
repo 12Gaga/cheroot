@@ -8,44 +8,48 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { LoadingButton } from "@mui/lab";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
-import { CreateLeaf, setIsLoading } from "@/store/slices/typeOfLeaf";
 import { setOpenSnackbar } from "@/store/slices/snackBar";
+import { CreateNewStore } from "@/types/storeType";
+import { CreateStore, setIsLoading } from "@/store/slices/typeOfStore";
 interface Props {
   open: boolean;
   setOpen: (value: boolean) => void;
 }
 
-// const defaultValue: CreateNewLeaf = {
-//   name: "",
-//   price: 0,
-// };
+const defaultValue: CreateNewStore = {
+  name: "",
+  cigratteIndustryId: undefined,
+};
 
 const NewStore = ({ open, setOpen }: Props) => {
-  //   const [newLeaf, setNewLeaf] = useState<CreateNewLeaf>(defaultValue);
-  //   const { isLoading } = useAppSelector((store) => store.typeOfLeaf);
-  //   const dispatch = useAppDispatch();
-  //   console.log(newLeaf);
-  //   const handleClick = () => {
-  //     dispatch(setIsLoading(true));
-  //     dispatch(
-  //       CreateLeaf({
-  //         ...newLeaf,
-  //         onSuccess: () => {
-  //           setOpen(false);
-  //           setNewLeaf(defaultValue);
-  //           dispatch(setOpenSnackbar({ message: "Create new leaf success" }));
-  //           dispatch(setIsLoading(false));
-  //         },
-  //       })
-  //     );
-  //   };
-
+  const [newStore, setNewStore] = useState<CreateNewStore>(defaultValue);
+  const cigratteIndustryId = useAppSelector((store) => store.industry.item)
+    ?.id as number;
+  const { isLoading } = useAppSelector((store) => store.typeOfStore);
+  const dispatch = useAppDispatch();
+  const handleClick = () => {
+    dispatch(setIsLoading(true));
+    dispatch(
+      CreateStore({
+        ...newStore,
+        onSuccess: () => {
+          setOpen(false);
+          setNewStore(defaultValue);
+          dispatch(setOpenSnackbar({ message: "Create new store success" }));
+          dispatch(setIsLoading(false));
+        },
+      })
+    );
+  };
+  useEffect(() => {
+    setNewStore({ ...newStore, cigratteIndustryId });
+  }, []);
   return (
     <Dialog open={open} onClose={() => setOpen(false)}>
-      <DialogTitle>ပွဲရုံအသစ်ထည့်ခြင်း</DialogTitle>
+      <DialogTitle>သိုလှောင်ရုံအသစ်ထည့်ခြင်း</DialogTitle>
       <DialogContent>
         <Box>
           <Box sx={{ mt: 2 }}>
@@ -53,7 +57,9 @@ const NewStore = ({ open, setOpen }: Props) => {
             <TextField
               placeholder="အမည်"
               sx={{ bgcolor: "#EEE8CF" }}
-              onChange={(evt) => {}}
+              onChange={(evt) => {
+                setNewStore({ ...newStore, name: evt.target.value });
+              }}
             />
           </Box>
         </Box>
@@ -63,15 +69,16 @@ const NewStore = ({ open, setOpen }: Props) => {
           variant="contained"
           onClick={() => {
             setOpen(false);
+            setNewStore(defaultValue);
           }}
         >
           မလုပ်တော့ပါ
         </Button>
         <LoadingButton
           variant="contained"
-          //   disabled={!newLeaf.name || !newLeaf.price}
-          //   onClick={handleClick}
-          //   loading={isLoading}
+          disabled={!newStore.name}
+          onClick={handleClick}
+          loading={isLoading}
         >
           အိုကေ
         </LoadingButton>

@@ -11,10 +11,10 @@ import PlasticOpen from "@/components/openingSt/plastic";
 const OpeningPlastic = () => {
   const [open, setOpen] = useState<boolean>(false);
   const { data: session } = useSession();
-  const leaves = useAppSelector((store) => store.typeOfLeaf.item);
-  const leafStocks = useAppSelector((store) => store.leafStock.item);
+  const plastics = useAppSelector((store) => store.typeOfPlastic.item);
+  const plasticStock = useAppSelector((store) => store.plasticStock.item);
   const garage = useAppSelector((store) => store.garage.selectedGarage);
-
+  const shop = useAppSelector((store) => store.typeOfShop.item);
   if (!session) return null;
   return (
     <>
@@ -38,37 +38,37 @@ const OpeningPlastic = () => {
         <PlasticOpen open={open} setOpen={setOpen} />
 
         <Box>
-          {/* <table border={1}>
+          <table border={1}>
             <thead>
               <tr style={{ border: "1px solid" }}>
                 <th>နေ့စွဲ</th>
-                <th>ဖက်အမျိုးအစား</th>
-                <th>ပိုနံပါတ်</th>
-                <th>ပိဿာ</th>
+                <th>ပလပ်စတစ်အမျိုးအစား</th>
+                <th>အရေအတွက်</th>
+                <th>အိတ်</th>
                 <th>ဝယ်ယူခဲ့သည့်ဆိုင်အမည်</th>
               </tr>
             </thead>
-            {leafStocks.map((item) => {
+            {plasticStock.map((item) => {
               const exit = item.garageId === garage?.id;
               if (!exit) return null;
               return (
                 <thead key={item.id}>
                   <tr style={{ border: "1px solid" }}>
-                    <td>{item.date.toString()}</td>
+                    <td>{item.date}</td>
                     <td>
-                      {leaves.find((l) => l.id === item.typeOfLeafId)?.name}
+                      {plastics.find((p) => p.id === item.plasticId)?.name}
                     </td>
 
-                    <td>{item.batchNo}</td>
-                    <td>{item.viss}</td>
-                    <td>{item.shop}</td>
+                    <td>{item.quantity}</td>
+                    <td>{item.bag}</td>
+                    <td>{shop.find((s) => s.id === item.shopId)?.name}</td>
                     <td>{<EditIcon />}</td>
                     <td>{<DeleteIcon />}</td>
                   </tr>
                 </thead>
               );
             })}
-          </table> */}
+          </table>
         </Box>
       </AdminLayout>
     </>

@@ -36,6 +36,7 @@ const FilterSizeAdd = () => {
   const concernStock = concernFilterSizeStock.filter((item) =>
     filterSizeAddStockConcernDate.includes(item.date)
   );
+  const shop = useAppSelector((store) => store.typeOfShop.item);
   return (
     <>
       <AdminLayout>
@@ -87,7 +88,7 @@ const FilterSizeAdd = () => {
                         </td>
                         <td>{i.quantity}</td>
                         <td>{i.bag}</td>
-                        <td>{i.shop}</td>
+                        <td>{shop.find((s) => s.id === i.shopId)?.name}</td>
                       </>
                     )
                 )}

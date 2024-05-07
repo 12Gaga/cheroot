@@ -13,7 +13,7 @@ const OpeningStock = () => {
   const leaves = useAppSelector((store) => store.typeOfLeaf.item);
   const leafStocks = useAppSelector((store) => store.leafStock.item);
   const garage = useAppSelector((store) => store.garage.selectedGarage);
-
+  const shop = useAppSelector((store) => store.typeOfShop.item);
   if (!session) return null;
   return (
     <>
@@ -60,7 +60,7 @@ const OpeningStock = () => {
 
                     <td>{item.batchNo}</td>
                     <td>{item.viss}</td>
-                    <td>{item.shop}</td>
+                    <td>{shop.find((s) => s.id === item.shopId)?.name}</td>
                     <td>{<EditIcon />}</td>
                     <td>{<DeleteIcon />}</td>
                   </tr>

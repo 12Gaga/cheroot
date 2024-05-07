@@ -24,7 +24,7 @@ export const CreateTabaccoStock = createAsyncThunk(
       pyi,
       bag,
       garageId,
-      shop,
+      shopId,
       onSuccess,
       onError,
     } = option;
@@ -41,7 +41,7 @@ export const CreateTabaccoStock = createAsyncThunk(
           pyi,
           bag,
           garageId,
-          shop,
+          shopId,
         }),
       });
       const { newTabaccoStock } = await response.json();
@@ -65,7 +65,7 @@ export const CreateTabaccoAddStock = createAsyncThunk(
       pyi,
       bag,
       garageId,
-      shop,
+      shopId,
       onSuccess,
       onError,
     } = option;
@@ -86,7 +86,7 @@ export const CreateTabaccoAddStock = createAsyncThunk(
             pyi,
             bag,
             garageId,
-            shop,
+            shopId,
           }),
         }
       );

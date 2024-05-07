@@ -32,7 +32,7 @@ const defaultValue: createNewFilterSizeStock = {
   typeOfFilterSizeId: undefined,
   quantity: 0,
   bag: 0,
-  shop: "",
+  shopId: 0,
   garageId: undefined,
 };
 
@@ -47,6 +47,8 @@ const FilterSizeOpen = ({ open, setOpen }: Props) => {
   const concernGarage = garages.filter(
     (item) => item.workShopId === workShop?.id
   );
+  const shops = useAppSelector((store) => store.typeOfShop.item);
+  const concernShop = shops.filter((item) => item.workShopId === workShop?.id);
   const filterSizes = useAppSelector((store) => store.typeOfFilterSize.item);
   const concernFilterSizes = filterSizes.filter(
     (item) => item.workShopId === workShop?.id
@@ -120,20 +122,30 @@ const FilterSizeOpen = ({ open, setOpen }: Props) => {
               mt: 4,
             }}
           >
-            <Box sx={{}}>
-              <Typography sx={{ fontWeight: "bold" }}>
-                ဝယ်ယူခဲ့သည့်ဆိုင်အမည်
+            <Box sx={{ mt: 2, display: "flex", alignItems: "center" }}>
+              <Typography sx={{ fontWeight: "bold", width: 150 }}>
+                ဝယ်ယူခဲ့သည့်ဆိုင်
               </Typography>
-              <TextField
-                placeholder="ဝယ်ယူခဲ့သည့်ဆိုင်အမည်"
-                sx={{ bgcolor: "#EEE8CF", width: 350 }}
-                onChange={(evt) => {
-                  setNewFilterSizeStock({
-                    ...newFilterSizeStock,
-                    shop: evt.target.value,
-                  });
-                }}
-              />
+              <FormControl variant="filled" sx={{ width: 225 }}>
+                <Select
+                  labelId="demo-simple-select-filled-label"
+                  id="demo-simple-select-filled"
+                  value={newFilterSizeStock.shopId}
+                  onChange={(evt) => {
+                    setNewFilterSizeStock({
+                      ...newFilterSizeStock,
+                      shopId: Number(evt.target.value),
+                    });
+                  }}
+                  sx={{ bgcolor: "#EEE8CF" }}
+                >
+                  {concernShop.map((item) => (
+                    <MenuItem key={item.id} value={item.id}>
+                      <ListItemText primary={item.name} />
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
             </Box>
 
             <Box sx={{}}>
@@ -208,7 +220,7 @@ const FilterSizeOpen = ({ open, setOpen }: Props) => {
               !newFilterSizeStock.quantity ||
               !newFilterSizeStock.bag ||
               !newFilterSizeStock.garageId ||
-              !newFilterSizeStock.shop
+              !newFilterSizeStock.shopId
             }
             onClick={handleClick}
             loading={isLoading}

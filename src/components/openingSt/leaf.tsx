@@ -30,7 +30,7 @@ const defaultValue: createNewLeafStock = {
   typeOfLeafId: undefined,
   batchNo: 0,
   viss: 0,
-  shop: "",
+  shopId: 0,
   garageId: undefined,
 };
 
@@ -45,6 +45,8 @@ const LeafOpen = ({ open, setOpen }: Props) => {
   const concernGarage = garages.filter(
     (item) => item.workShopId === workShop?.id
   );
+  const shops = useAppSelector((store) => store.typeOfShop.item);
+  const concernShop = shops.filter((item) => item.workShopId === workShop?.id);
   const leaves = useAppSelector((store) => store.typeOfLeaf.item);
   const concernleaves = leaves.filter(
     (item) => item.workShopId === workShop?.id
@@ -136,20 +138,30 @@ const LeafOpen = ({ open, setOpen }: Props) => {
               mt: 4,
             }}
           >
-            <Box sx={{}}>
-              <Typography sx={{ fontWeight: "bold" }}>
-                ဝယ်ယူခဲ့သည့်ဆိုင်အမည်
+            <Box sx={{ mt: 2, display: "flex", alignItems: "center" }}>
+              <Typography sx={{ fontWeight: "bold", width: 150 }}>
+                ဝယ်ယူခဲ့သည့်ဆိုင်
               </Typography>
-              <TextField
-                placeholder="ဝယ်ယူခဲ့သည့်ဆိုင်အမည်"
-                sx={{ bgcolor: "#EEE8CF", width: 350 }}
-                onChange={(evt) =>
-                  setNewLeafStock({
-                    ...newLeafStock,
-                    shop: evt.target.value,
-                  })
-                }
-              />
+              <FormControl variant="filled" sx={{ width: 225 }}>
+                <Select
+                  labelId="demo-simple-select-filled-label"
+                  id="demo-simple-select-filled"
+                  value={newLeafStock.shopId}
+                  onChange={(evt) => {
+                    setNewLeafStock({
+                      ...newLeafStock,
+                      shopId: Number(evt.target.value),
+                    });
+                  }}
+                  sx={{ bgcolor: "#EEE8CF" }}
+                >
+                  {concernShop.map((item) => (
+                    <MenuItem key={item.id} value={item.id}>
+                      <ListItemText primary={item.name} />
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
             </Box>
 
             <Box sx={{}}>
@@ -222,7 +234,7 @@ const LeafOpen = ({ open, setOpen }: Props) => {
               !newLeafStock.batchNo ||
               !newLeafStock.viss ||
               !newLeafStock.garageId ||
-              !newLeafStock.shop
+              !newLeafStock.shopId
             }
             onClick={handleClick}
             loading={isLoading}

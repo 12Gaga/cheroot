@@ -1,8 +1,8 @@
-import { TypeOfLeaf } from "@prisma/client";
+import { TypeOfPlastic } from "@prisma/client";
 import { BasicOption } from "./appType";
 
-export interface typeOfLeafSlice {
-  item: TypeOfLeaf[];
+export interface typeOfPlasticSlice {
+  item: TypeOfPlastic[];
   isLoading: boolean;
   error: null | string;
 }

@@ -35,7 +35,7 @@ const LabelAdd = () => {
   const concernStock = concernLeafStock.filter((item) =>
     labelAddStockConcernDate.includes(item.date)
   );
-
+  const shop = useAppSelector((store) => store.typeOfShop.item);
   return (
     <>
       <AdminLayout>
@@ -81,7 +81,7 @@ const LabelAdd = () => {
                           {labels.find((l) => l.id === i.typeOfLabelId)?.name}
                         </td>
                         <td>{i.bandle}</td>
-                        <td>{i.shop}</td>
+                        <td>{shop.find((s) => s.id === i.shopId)?.name}</td>
                       </>
                     )
                 )}

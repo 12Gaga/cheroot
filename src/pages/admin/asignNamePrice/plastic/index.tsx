@@ -1,5 +1,5 @@
 import AdminLayout from "@/components/adminLayout";
-import SmokingRoomsIcon from "@mui/icons-material/SmokingRooms";
+import LocalMallIcon from "@mui/icons-material/LocalMall";
 import ItemCard from "@/components/itemCard";
 import { useAppSelector } from "@/store/hooks";
 import { Box, Button, Typography } from "@mui/material";
@@ -8,7 +8,7 @@ import NewPlastic from "@/components/asign/newPlastic";
 
 const Plastic = () => {
   const [open, setOpen] = useState<boolean>(false);
-  const cheroots = useAppSelector((store) => store.typeOfCheroot.item);
+  const plastics = useAppSelector((store) => store.typeOfPlastic.item);
   return (
     <>
       <AdminLayout>
@@ -42,14 +42,14 @@ const Plastic = () => {
         </Box>
 
         <Box sx={{ display: "flex", flexWrap: "wrap" }}>
-          {cheroots.map((item) => {
+          {plastics.map((item) => {
             const workShopId = localStorage.getItem("selectedWorkShopId");
             const exit = item.workShopId === Number(workShopId);
             if (!exit) return null;
             return (
               <ItemCard
                 key={item.id}
-                icon={<SmokingRoomsIcon />}
+                icon={<LocalMallIcon />}
                 title={item.name}
               />
             );

@@ -14,7 +14,7 @@ export interface createNewTabaccoStock extends BasicOption {
   tin: number;
   pyi: number;
   bag: number;
-  shop: string;
+  shopId: number;
   garageId: number | undefined;
 }
 
@@ -26,6 +26,6 @@ export interface createNewTabaccoAddStock extends BasicOption {
   tin: number;
   pyi: number;
   bag: number;
-  shop: string;
+  shopId: number;
   garageId: number | undefined;
 }

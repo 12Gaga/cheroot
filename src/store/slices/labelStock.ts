@@ -17,8 +17,15 @@ const initialState: labelStockSlice = {
 export const CreateLabelStock = createAsyncThunk(
   "labelStock/CreateLabelStock",
   async (option: createNewLabelStock, thunkApi) => {
-    const { date, typeOfLabelId, bandle, garageId, shop, onSuccess, onError } =
-      option;
+    const {
+      date,
+      typeOfLabelId,
+      bandle,
+      garageId,
+      shopId,
+      onSuccess,
+      onError,
+    } = option;
     try {
       const response = await fetch(`${Config.apiBaseUrl}/labelStock`, {
         method: "POST",
@@ -30,7 +37,7 @@ export const CreateLabelStock = createAsyncThunk(
           typeOfLabelId,
           bandle,
           garageId,
-          shop,
+          shopId,
         }),
       });
       const { newLabelStock } = await response.json();
@@ -52,7 +59,7 @@ export const CreateLabelAddStock = createAsyncThunk(
       typeOfLabelId,
       bandle,
       garageId,
-      shop,
+      shopId,
       onSuccess,
       onError,
     } = option;
@@ -71,7 +78,7 @@ export const CreateLabelAddStock = createAsyncThunk(
             typeOfLabelId,
             bandle,
             garageId,
-            shop,
+            shopId,
           }),
         }
       );

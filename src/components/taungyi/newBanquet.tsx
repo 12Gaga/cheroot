@@ -8,41 +8,45 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { LoadingButton } from "@mui/lab";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
-import { CreateLeaf, setIsLoading } from "@/store/slices/typeOfLeaf";
 import { setOpenSnackbar } from "@/store/slices/snackBar";
+import { CreateNewBanquet } from "@/types/banquetType";
+import { CreateBanquet, setIsLoading } from "@/store/slices/typeOfBanquet";
 interface Props {
   open: boolean;
   setOpen: (value: boolean) => void;
 }
 
-// const defaultValue: CreateNewLeaf = {
-//   name: "",
-//   price: 0,
-// };
+const defaultValue: CreateNewBanquet = {
+  name: "",
+  cigratteIndustryId: undefined,
+};
 
 const NewBanquet = ({ open, setOpen }: Props) => {
-  //   const [newLeaf, setNewLeaf] = useState<CreateNewLeaf>(defaultValue);
-  //   const { isLoading } = useAppSelector((store) => store.typeOfLeaf);
-  //   const dispatch = useAppDispatch();
-  //   console.log(newLeaf);
-  //   const handleClick = () => {
-  //     dispatch(setIsLoading(true));
-  //     dispatch(
-  //       CreateLeaf({
-  //         ...newLeaf,
-  //         onSuccess: () => {
-  //           setOpen(false);
-  //           setNewLeaf(defaultValue);
-  //           dispatch(setOpenSnackbar({ message: "Create new leaf success" }));
-  //           dispatch(setIsLoading(false));
-  //         },
-  //       })
-  //     );
-  //   };
-
+  const [newBanquet, setNewBanquet] = useState<CreateNewBanquet>(defaultValue);
+  const cigratteIndustryId = useAppSelector((store) => store.industry.item)
+    ?.id as number;
+  const { isLoading } = useAppSelector((store) => store.typeOfBanquet);
+  const dispatch = useAppDispatch();
+  const handleClick = () => {
+    dispatch(setIsLoading(true));
+    dispatch(
+      CreateBanquet({
+        ...newBanquet,
+        onSuccess: () => {
+          setOpen(false);
+          setNewBanquet(defaultValue);
+          dispatch(setOpenSnackbar({ message: "Create new banquet success" }));
+          dispatch(setIsLoading(false));
+        },
+      })
+    );
+  };
+  useEffect(() => {
+    setNewBanquet({ ...newBanquet, cigratteIndustryId });
+  }, []);
   return (
     <Dialog open={open} onClose={() => setOpen(false)}>
       <DialogTitle>ပွဲရုံအသစ်ထည့်ခြင်း</DialogTitle>
@@ -53,7 +57,9 @@ const NewBanquet = ({ open, setOpen }: Props) => {
             <TextField
               placeholder="အမည်"
               sx={{ bgcolor: "#EEE8CF" }}
-              onChange={(evt) => {}}
+              onChange={(evt) => {
+                setNewBanquet({ ...newBanquet, name: evt.target.value });
+              }}
             />
           </Box>
         </Box>
@@ -63,15 +69,16 @@ const NewBanquet = ({ open, setOpen }: Props) => {
           variant="contained"
           onClick={() => {
             setOpen(false);
+            setNewBanquet(defaultValue);
           }}
         >
           မလုပ်တော့ပါ
         </Button>
         <LoadingButton
           variant="contained"
-          //   disabled={!newLeaf.name || !newLeaf.price}
-          //   onClick={handleClick}
-          //   loading={isLoading}
+          disabled={!newBanquet.name}
+          onClick={handleClick}
+          loading={isLoading}
         >
           အိုကေ
         </LoadingButton>

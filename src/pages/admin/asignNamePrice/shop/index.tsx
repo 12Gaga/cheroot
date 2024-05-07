@@ -4,12 +4,12 @@ import ItemCard from "@/components/itemCard";
 import { useAppSelector } from "@/store/hooks";
 import { Box, Button, Typography } from "@mui/material";
 import { useState } from "react";
-import NewPlastic from "@/components/asign/newPlastic";
+import HomeWorkIcon from "@mui/icons-material/HomeWork";
 import NewShop from "@/components/asign/newShop";
 
 const Shop = () => {
   const [open, setOpen] = useState<boolean>(false);
-  const cheroots = useAppSelector((store) => store.typeOfCheroot.item);
+  const shops = useAppSelector((store) => store.typeOfShop.item);
   return (
     <>
       <AdminLayout>
@@ -43,14 +43,14 @@ const Shop = () => {
         </Box>
 
         <Box sx={{ display: "flex", flexWrap: "wrap" }}>
-          {cheroots.map((item) => {
+          {shops.map((item) => {
             const workShopId = localStorage.getItem("selectedWorkShopId");
             const exit = item.workShopId === Number(workShopId);
             if (!exit) return null;
             return (
               <ItemCard
                 key={item.id}
-                icon={<SmokingRoomsIcon />}
+                icon={<HomeWorkIcon />}
                 title={item.name}
               />
             );

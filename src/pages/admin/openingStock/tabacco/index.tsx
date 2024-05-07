@@ -17,6 +17,7 @@ const Tabacco = () => {
   const concernTabaccoStock = tabaccoStocks.filter(
     (item) => item.garageId === garage?.id
   );
+  const shop = useAppSelector((store) => store.typeOfShop.item);
   if (!session) return null;
   return (
     <>
@@ -59,7 +60,7 @@ const Tabacco = () => {
                   <td>{item.tin}</td>
                   <td>{item.pyi}</td>
                   <td>{item.bag}</td>
-                  <td>{item.shop}</td>
+                  <td>{shop.find((s) => s.id === item.shopId)?.name}</td>
                   <td>{<EditIcon />}</td>
                   <td>{<DeleteIcon />}</td>
                 </tr>

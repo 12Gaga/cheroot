@@ -34,8 +34,7 @@ const TabaccoAdd = () => {
   const concernStock = concernTabaccoStock.filter((item) =>
     tabaccoAddStockConcernDate.includes(item.date)
   );
-  console.log("fdjhk", tabaccoAddStockConcern);
-  console.log("concernTabacco", concernStock);
+  const shop = useAppSelector((store) => store.typeOfShop.item);
   return (
     <>
       <AdminLayout>
@@ -88,7 +87,7 @@ const TabaccoAdd = () => {
                         <td>{i.tin}</td>
                         <td>{i.pyi}</td>
                         <td>{i.bag}</td>
-                        <td>{i.shop}</td>
+                        <td>{shop.find((s) => s.id === i.shopId)?.name}</td>
                       </>
                     )
                 )}

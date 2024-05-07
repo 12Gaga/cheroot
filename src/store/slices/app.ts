@@ -26,6 +26,10 @@ import { setReturnCheroot } from "./returnCheroot";
 import { setLeafDeduction } from "./leafDeduction";
 import { setOtherDeduction } from "./otherDeduction";
 import { setExtraPurchase } from "./extraPurchase";
+import { setShop } from "./typeOfShop";
+import { setPlastic } from "./typeOfPlastic";
+import { setStore } from "./typeOfStore";
+import { setBanquet } from "./typeOfBanquet";
 
 const initialState: appSlice = {
   init: false,
@@ -66,6 +70,10 @@ export const fetchApp = createAsyncThunk(
         leafDeduction,
         otherDeduction,
         extraPurchase,
+        shop,
+        plastic,
+        store,
+        banquet,
       } = dataFromServer;
       thunkApi.dispatch(setInit(true));
       thunkApi.dispatch(setIndustry(industry));
@@ -76,6 +84,10 @@ export const fetchApp = createAsyncThunk(
       thunkApi.dispatch(setTabacco(tabacco));
       thunkApi.dispatch(setLabel(label));
       thunkApi.dispatch(setCheroot(cheroot));
+      thunkApi.dispatch(setShop(shop));
+      thunkApi.dispatch(setPlastic(plastic));
+      thunkApi.dispatch(setStore(store));
+      thunkApi.dispatch(setBanquet(banquet));
       thunkApi.dispatch(setTypeOfPacking(typeOfPacking));
       thunkApi.dispatch(setFormOfPacking(formOfPacking));
       thunkApi.dispatch(setConveyLocation(conveyLocation));

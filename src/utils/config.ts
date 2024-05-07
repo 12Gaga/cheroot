@@ -1,3 +1,5 @@
+import { useAppSelector } from "@/store/hooks";
+
 interface config {
   apiBaseUrl: string;
   googleClientId: string;

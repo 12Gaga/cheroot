@@ -1,5 +1,4 @@
 import { useAppSelector, useAppDispatch } from "@/store/hooks";
-import { setIsLoading } from "@/store/slices/workShop";
 import {
   Box,
   Button,
@@ -13,6 +12,8 @@ import {
 import { useState } from "react";
 import { LoadingButton } from "@mui/lab";
 import { CreateNewShop } from "@/types/shopType";
+import { CreateShop, setIsLoading } from "@/store/slices/typeOfShop";
+import { setOpenSnackbar } from "@/store/slices/snackBar";
 interface Props {
   open: boolean;
   setOpen: (value: boolean) => void;
@@ -24,21 +25,21 @@ const defaultValue: CreateNewShop = {
 
 const NewShop = ({ open, setOpen }: Props) => {
   const [newShop, setNewShop] = useState<CreateNewShop>(defaultValue);
-  const { isLoading } = useAppSelector((store) => store.typeOfCheroot);
+  const { isLoading } = useAppSelector((store) => store.typeOfShop);
   const dispatch = useAppDispatch();
   const handleClick = () => {
     dispatch(setIsLoading(true));
-    // dispatch(
-    //   CreateCheroot({
-    //     ...newPlastic,
-    //     onSuccess: () => {
-    //       setOpen(false);
-    //       setNewPlastic(defaultValue);
-    //       dispatch(setOpenSnackbar({ message: "Create new cheroot success" }));
-    //       dispatch(setIsLoading(false));
-    //     },
-    //   })
-    // );
+    dispatch(
+      CreateShop({
+        ...newShop,
+        onSuccess: () => {
+          setOpen(false);
+          setNewShop(defaultValue);
+          dispatch(setOpenSnackbar({ message: "Create new shop success" }));
+          dispatch(setIsLoading(false));
+        },
+      })
+    );
   };
 
   return (

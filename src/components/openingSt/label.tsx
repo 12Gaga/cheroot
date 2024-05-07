@@ -30,7 +30,7 @@ const defaultValue: createNewLabelStock = {
   date: "",
   typeOfLabelId: undefined,
   bandle: 0,
-  shop: "",
+  shopId: 0,
   garageId: undefined,
 };
 
@@ -45,6 +45,8 @@ const LabelOpen = ({ open, setOpen }: Props) => {
   const concernGarage = garages.filter(
     (item) => item.workShopId === workShop?.id
   );
+  const shops = useAppSelector((store) => store.typeOfShop.item);
+  const concernShop = shops.filter((item) => item.workShopId === workShop?.id);
   const labels = useAppSelector((store) => store.typeOfLabel.item);
   const concernLabel = labels.filter(
     (item) => item.workShopId === workShop?.id
@@ -118,20 +120,30 @@ const LabelOpen = ({ open, setOpen }: Props) => {
               mt: 4,
             }}
           >
-            <Box sx={{}}>
-              <Typography sx={{ fontWeight: "bold" }}>
-                ဝယ်ယူခဲ့သည့်ဆိုင်အမည်
+            <Box sx={{ mt: 2, display: "flex", alignItems: "center" }}>
+              <Typography sx={{ fontWeight: "bold", width: 150 }}>
+                ဝယ်ယူခဲ့သည့်ဆိုင်
               </Typography>
-              <TextField
-                placeholder="ဝယ်ယူခဲ့သည့်ဆိုင်အမည်"
-                sx={{ bgcolor: "#EEE8CF", width: 350 }}
-                onChange={(evt) => {
-                  setNewLabelStock({
-                    ...newLabelStock,
-                    shop: evt.target.value,
-                  });
-                }}
-              />
+              <FormControl variant="filled" sx={{ width: 225 }}>
+                <Select
+                  labelId="demo-simple-select-filled-label"
+                  id="demo-simple-select-filled"
+                  value={newLabelStock.shopId}
+                  onChange={(evt) => {
+                    setNewLabelStock({
+                      ...newLabelStock,
+                      shopId: Number(evt.target.value),
+                    });
+                  }}
+                  sx={{ bgcolor: "#EEE8CF" }}
+                >
+                  {concernShop.map((item) => (
+                    <MenuItem key={item.id} value={item.id}>
+                      <ListItemText primary={item.name} />
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
             </Box>
 
             <Box sx={{}}>
@@ -191,7 +203,7 @@ const LabelOpen = ({ open, setOpen }: Props) => {
               !newLabelStock.typeOfLabelId ||
               !newLabelStock.bandle ||
               !newLabelStock.garageId ||
-              !newLabelStock.shop
+              !newLabelStock.shopId
             }
             onClick={handleClick}
             loading={isLoading}

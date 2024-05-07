@@ -11,14 +11,14 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import AddPlastic from "@/components/addSt/addPlastic";
 const PlasticAdd = () => {
   const [open, setOpen] = useState<boolean>(false);
-  const labels = useAppSelector((store) => store.typeOfLabel.item);
-  const labelStocks = useAppSelector((store) => store.labelStock.item);
+  const plastics = useAppSelector((store) => store.typeOfPlastic.item);
+  const plasticStocks = useAppSelector((store) => store.plasticStock.item);
   const garage = useAppSelector((store) => store.garage.selectedGarage);
-  const concernLeafStock = labelStocks.filter(
+  const concernPlasticStock = plasticStocks.filter(
     (item) => item.garageId === garage?.id
   );
-  const concernLabelStockIds = concernLeafStock.map(
-    (item) => item.typeOfLabelId
+  const concernPlasticStockIds = concernPlasticStock.map(
+    (item) => item.plasticId
   );
 
   const addStock = useAppSelector((store) => store.addStock.item);
@@ -26,17 +26,17 @@ const PlasticAdd = () => {
     (item) => item.garageId === garage?.id
   );
 
-  const labelAddStockConcern = concernAddStocks.filter((item) =>
-    concernLabelStockIds.includes(item.typeOfLabelId as number)
+  const plasticAddStockConcern = concernAddStocks.filter((item) =>
+    concernPlasticStockIds.includes(item.typeOfPlasticId as number)
   );
-  const labelAddStockConcernDate = labelAddStockConcern.map(
+  const plasticAddStockConcernDate = plasticAddStockConcern.map(
     (item) => item.date
   );
 
-  const concernStock = concernLeafStock.filter((item) =>
-    labelAddStockConcernDate.includes(item.date)
+  const concernStock = concernPlasticStock.filter((item) =>
+    plasticAddStockConcernDate.includes(item.date)
   );
-
+  const shop = useAppSelector((store) => store.typeOfShop.item);
   return (
     <>
       <AdminLayout>
@@ -57,10 +57,10 @@ const PlasticAdd = () => {
         </Box>
         <AddPlastic open={open} setOpen={setOpen} />
 
-        {/* <table border={1}>
+        <table border={1}>
           <thead>
             <tr style={{ border: "1px solid" }}>
-             
+              <th>နေ့စွဲ</th>
               <th>ဘောက်ချာနံပါတ်</th>
               <th>ကားနံပါတ်</th>
               <th>တံဆိပ်အမျိုးအစား</th>
@@ -68,21 +68,23 @@ const PlasticAdd = () => {
               <th>ဝယ်ယူခဲ့သည့်ဆိုင်အမည်</th>
             </tr>
           </thead>
-          {labelAddStockConcern.map((item) => (
+          {plasticAddStockConcern.map((item) => (
             <thead key={item.id}>
               <tr style={{ border: "1px solid" }}>
+                <td>{item.date}</td>
                 <td>{item.invNo}</td>
                 <td>{item.carNo}</td>
                 {concernStock.map(
                   (i) =>
                     item.date === i.date &&
-                    item.typeOfLeafId === i.typeOfLabelId && (
+                    item.typeOfPlasticId === i.plasticId && (
                       <>
                         <td>
-                          {labels.find((l) => l.id === i.typeOfLabelId)?.name}
+                          {plastics.find((l) => l.id === i.plasticId)?.name}
                         </td>
-                        <td>{i.bandle}</td>
-                        <td>{i.shop}</td>
+                        <td>{i.quantity}</td>
+                        <td>{i.bag}</td>
+                        <td>{shop.find((s) => s.id === i.shopId)?.name}</td>
                       </>
                     )
                 )}
@@ -91,7 +93,7 @@ const PlasticAdd = () => {
               </tr>
             </thead>
           ))}
-        </table> */}
+        </table>
       </AdminLayout>
     </>
   );

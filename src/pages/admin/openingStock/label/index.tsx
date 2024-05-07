@@ -16,6 +16,7 @@ const FilterSize = () => {
   const concernLabelStock = labelStocks.filter(
     (item) => item.garageId === garage?.id
   );
+  const shop = useAppSelector((store) => store.typeOfShop.item);
   if (!session) return null;
   return (
     <>
@@ -55,7 +56,7 @@ const FilterSize = () => {
                     {labels.find((f) => f.id === item.typeOfLabelId)?.name}
                   </td>
                   <td>{item.bandle}</td>
-                  <td>{item.shop}</td>
+                  <td>{shop.find((s) => s.id === item.shopId)?.name}</td>
                   <td>{<EditIcon />}</td>
                   <td>{<DeleteIcon />}</td>
                 </tr>

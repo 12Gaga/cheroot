@@ -23,7 +23,7 @@ export const CreateLeafStock = createAsyncThunk(
       batchNo,
       viss,
       garageId,
-      shop,
+      shopId,
       onSuccess,
       onError,
     } = option;
@@ -39,7 +39,7 @@ export const CreateLeafStock = createAsyncThunk(
           batchNo,
           viss,
           garageId,
-          shop,
+          shopId,
         }),
       });
       const { newleafStock } = await response.json();
@@ -62,7 +62,7 @@ export const CreateLeafAddStock = createAsyncThunk(
       batchNo,
       viss,
       garageId,
-      shop,
+      shopId,
       onSuccess,
       onError,
     } = option;
@@ -82,7 +82,7 @@ export const CreateLeafAddStock = createAsyncThunk(
             batchNo,
             viss,
             garageId,
-            shop,
+            shopId,
           }),
         }
       );

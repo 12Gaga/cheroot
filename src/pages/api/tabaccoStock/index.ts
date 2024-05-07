@@ -9,7 +9,8 @@ export default async function handler(
   if (method === "POST") {
     const invNo = Number(req.query.invNo);
     if (!invNo) {
-      const { date, typeOfTabaccoId, tin, pyi, bag, garageId, shop } = req.body;
+      const { date, typeOfTabaccoId, tin, pyi, bag, garageId, shopId } =
+        req.body;
       const isValid =
         date &&
         typeOfTabaccoId &&
@@ -17,11 +18,11 @@ export default async function handler(
         pyi != undefined &&
         bag != undefined &&
         garageId &&
-        shop;
+        shopId;
       if (!isValid) return res.status(405).send("bad request");
 
       const newTabaccoStock = await prisma.tabacco.create({
-        data: { date, typeOfTabaccoId, tin, pyi, bag, garageId, shop },
+        data: { date, typeOfTabaccoId, tin, pyi, bag, garageId, shopId },
       });
       return res.status(200).json({ newTabaccoStock });
     } else {
@@ -34,7 +35,7 @@ export default async function handler(
         pyi,
         bag,
         garageId,
-        shop,
+        shopId,
       } = req.body;
       const isValid =
         date &&
@@ -45,11 +46,11 @@ export default async function handler(
         pyi != undefined &&
         bag != undefined &&
         garageId &&
-        shop;
+        shopId;
       if (!isValid) return res.status(405).send("bad request");
 
       const newTabaccoAddStock = await prisma.tabacco.create({
-        data: { date, typeOfTabaccoId, tin, pyi, bag, garageId, shop },
+        data: { date, typeOfTabaccoId, tin, pyi, bag, garageId, shopId },
       });
       const newAddStock = await prisma.addStock.create({
         data: { date, invNo, carNo, typeOfTabaccoId, garageId },

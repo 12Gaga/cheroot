@@ -26,6 +26,11 @@ import returnCherootReducer from "./slices/returnCheroot";
 import leafDeductionReducer from "./slices/leafDeduction";
 import otherDeductionReducer from "./slices/otherDeduction";
 import extraPurchaseReducer from "./slices/extraPurchase";
+import shopReducer from "./slices/typeOfShop";
+import plasticReducer from "./slices/typeOfPlastic";
+import banquetReducer from "./slices/typeOfBanquet";
+import storeReducer from "./slices/typeOfStore";
+import plasticStockReducer from "./slices/plasticStock";
 
 export const store = configureStore({
   reducer: {
@@ -56,6 +61,11 @@ export const store = configureStore({
     leafDeduction: leafDeductionReducer,
     otherDeduction: otherDeductionReducer,
     extraPurchase: extraPurchaseReducer,
+    typeOfShop: shopReducer,
+    typeOfPlastic: plasticReducer,
+    typeOfBanquet: banquetReducer,
+    typeOfStore: storeReducer,
+    plasticStock: plasticStockReducer,
   },
 });
 

@@ -18,6 +18,7 @@ const FilterSize = () => {
   const concernFilterSizeStock = filterSizeStocks.filter(
     (item) => item.garageId === garage?.id
   );
+  const shop = useAppSelector((store) => store.typeOfShop.item);
   if (!session) return null;
   return (
     <>
@@ -62,7 +63,7 @@ const FilterSize = () => {
                   </td>
                   <td>{item.quantity}</td>
                   <td>{item.bag}</td>
-                  <td>{item.shop}</td>
+                  <td>{shop.find((s) => s.id === item.shopId)?.name}</td>
                   <td>{<EditIcon />}</td>
                   <td>{<DeleteIcon />}</td>
                 </tr>

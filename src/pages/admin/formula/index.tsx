@@ -3,10 +3,11 @@ import { useSession } from "next-auth/react";
 import { useState } from "react";
 import AddBoxIcon from "@mui/icons-material/AddBox";
 import { useAppSelector } from "@/store/hooks";
-
+import HomeIcon from "@mui/icons-material/Home";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { NewFormula } from "@/components/formula/newFormula";
+import { useRouter } from "next/router";
 const Formula = () => {
   const { data: session } = useSession();
   const [open, setOpen] = useState<boolean>(false);
@@ -26,6 +27,7 @@ const Formula = () => {
     (store) => store.garage
   );
   const gar = garages.find((item) => item.id === selectedGarage?.id);
+  const router = useRouter();
   if (!session) return null;
   return (
     <>
@@ -49,6 +51,12 @@ const Formula = () => {
           <Typography sx={{ color: "white", fontWeight: "bold", mt: 1 }}>
             {gar?.name}
           </Typography>
+        </Box>
+        <Box sx={{ position: "absolute", right: 10, top: 25, color: "white" }}>
+          <HomeIcon
+            onClick={() => router.push("/admin/home")}
+            sx={{ fontSize: 40 }}
+          />
         </Box>
       </Box>
       <Box sx={{ display: "flex", justifyContent: "flex-end" }}>

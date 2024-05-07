@@ -23,7 +23,7 @@ export const CreateFilterSizeStock = createAsyncThunk(
       quantity,
       bag,
       garageId,
-      shop,
+      shopId,
       onSuccess,
       onError,
     } = option;
@@ -39,7 +39,7 @@ export const CreateFilterSizeStock = createAsyncThunk(
           quantity,
           bag,
           garageId,
-          shop,
+          shopId,
         }),
       });
       const { newFilterSizeStock } = await response.json();
@@ -62,7 +62,7 @@ export const CreateFilterSizeAddStock = createAsyncThunk(
       quantity,
       bag,
       garageId,
-      shop,
+      shopId,
       onSuccess,
       onError,
     } = option;
@@ -82,7 +82,7 @@ export const CreateFilterSizeAddStock = createAsyncThunk(
             quantity,
             bag,
             garageId,
-            shop,
+            shopId,
           }),
         }
       );

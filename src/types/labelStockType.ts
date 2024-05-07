@@ -12,7 +12,7 @@ export interface createNewLabelStock extends BasicOption {
   date: string;
   typeOfLabelId: number | undefined;
   bandle: number;
-  shop: string;
+  shopId: number;
   garageId: number | undefined;
 }
 
@@ -22,6 +22,6 @@ export interface createNewLabelAddStock extends BasicOption {
   carNo: string;
   typeOfLabelId: number | undefined;
   bandle: number;
-  shop: string;
+  shopId: number;
   garageId: number | undefined;
 }

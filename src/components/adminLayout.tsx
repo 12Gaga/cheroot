@@ -224,8 +224,11 @@ const AdminLayout = ({ children }: Props) => {
           </Typography>
         </Box>
       </Box>
-      <Box sx={{ position: "absolute", right: 10, top: 30, color: "white" }}>
-        <HomeIcon onClick={() => router.push("/admin/home")} />
+      <Box sx={{ position: "absolute", right: 10, top: 25, color: "white" }}>
+        <HomeIcon
+          onClick={() => router.push("/admin/home")}
+          sx={{ fontSize: 40 }}
+        />
       </Box>
       <Box sx={{ display: "flex", position: "relative", zIndex: 5, flex: 1 }}>
         <Box

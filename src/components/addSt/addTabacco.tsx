@@ -36,7 +36,7 @@ const defaultValue: createNewTabaccoAddStock = {
   tin: 0,
   pyi: 0,
   bag: 0,
-  shop: "",
+  shopId: 0,
   garageId: undefined,
 };
 
@@ -51,6 +51,8 @@ const AddTabacco = ({ open, setOpen }: Props) => {
   const concernGarage = garages.filter(
     (item) => item.workShopId === workShop?.id
   );
+  const shops = useAppSelector((store) => store.typeOfShop.item);
+  const concernShop = shops.filter((item) => item.workShopId === workShop?.id);
   const tabacco = useAppSelector((store) => store.typeOfTabacco.item);
   const concernTabacco = tabacco.filter(
     (item) => item.workShopId === workShop?.id
@@ -131,20 +133,30 @@ const AddTabacco = ({ open, setOpen }: Props) => {
               />
             </Box>
 
-            <Box sx={{ mt: 2, width: 150 }}>
-              <Typography sx={{ fontWeight: "bold" }}>
+            <Box sx={{ mt: 2, display: "flex", alignItems: "center" }}>
+              <Typography sx={{ fontWeight: "bold", width: 150 }}>
                 ဝယ်ယူခဲ့သည့်ဆိုင်
               </Typography>
-              <TextField
-                placeholder="ဝယ်ယူခဲ့သည့်ဆိုင်"
-                sx={{ bgcolor: "#EEE8CF" }}
-                onChange={(evt) => {
-                  setNewTabaccoAddStock({
-                    ...newTabaccoAddStock,
-                    shop: evt.target.value,
-                  });
-                }}
-              />
+              <FormControl variant="filled" sx={{ width: 225 }}>
+                <Select
+                  labelId="demo-simple-select-filled-label"
+                  id="demo-simple-select-filled"
+                  value={newTabaccoAddStock.shopId}
+                  onChange={(evt) => {
+                    setNewTabaccoAddStock({
+                      ...newTabaccoAddStock,
+                      shopId: Number(evt.target.value),
+                    });
+                  }}
+                  sx={{ bgcolor: "#EEE8CF" }}
+                >
+                  {concernShop.map((item) => (
+                    <MenuItem key={item.id} value={item.id}>
+                      <ListItemText primary={item.name} />
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
             </Box>
           </Box>
 
@@ -278,7 +290,7 @@ const AddTabacco = ({ open, setOpen }: Props) => {
               !newTabaccoAddStock.pyi ||
               !newTabaccoAddStock.bag ||
               !newTabaccoAddStock.garageId ||
-              !newTabaccoAddStock.shop
+              !newTabaccoAddStock.shopId
             }
             onClick={handleClick}
             loading={isLoading}

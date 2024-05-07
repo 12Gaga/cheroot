@@ -1,6 +1,5 @@
 import { Leaf } from "@prisma/client";
 import { BasicOption } from "./appType";
-import { DateTime } from "next-auth/providers/kakao";
 
 export interface leafStockSlice {
   item: Leaf[];
@@ -13,7 +12,7 @@ export interface createNewLeafStock extends BasicOption {
   typeOfLeafId: number | undefined;
   batchNo: number;
   viss: number;
-  shop: string;
+  shopId: number;
   garageId: number | undefined;
 }
 
@@ -24,6 +23,6 @@ export interface createNewLeafAddStock extends BasicOption {
   typeOfLeafId: number | undefined;
   batchNo: number;
   viss: number;
-  shop: string;
+  shopId: number;
   garageId: number | undefined;
 }

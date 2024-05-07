@@ -65,7 +65,27 @@ export default async function handler(
     const newCheroot = await prisma.typeOfCheroot.create({
       data: { name: newCherootName, workShopId: newWorkShop.id },
     });
-    //10. crate typeOfPacking
+    //10. create shop
+    const newShopName = "ဆေးလိပ်၁";
+    const newShop = await prisma.typeOfShop.create({
+      data: { name: newShopName, workShopId: newWorkShop.id },
+    });
+    //11. create plastic
+    const newPlasticName = "ဆေးလိပ်၁";
+    const newPlastic = await prisma.typeOfPlastic.create({
+      data: { name: newPlasticName, workShopId: newWorkShop.id },
+    });
+    // 12. create store
+    const newStoreName = "ဆေးလိပ်၁";
+    const newStore = await prisma.store.create({
+      data: { name: newStoreName, cigratteIndustryId: newIndustry.id },
+    });
+    //13. create banquet
+    const newBanquetName = "ဆေးလိပ်၁";
+    const newBanquet = await prisma.banquet.create({
+      data: { name: newBanquetName, cigratteIndustryId: newIndustry.id },
+    });
+    //14. create typeOfPacking
     const newTypeOfPackingName = "ပါကင်၁";
     const newTypeOfPacking = await prisma.typeOfPacking.create({
       data: {
@@ -74,18 +94,21 @@ export default async function handler(
         workShopId: newWorkShop.id,
       },
     });
-    //11. create formOfPacking
+    //15. create formOfPacking
     const newFormOfPackingName = "ထုပ်ပိုးမှု၁";
     const newFormOfPacking = await prisma.formOfPacking.create({
       data: {
         name: newFormOfPackingName,
         typeOfCherootId: newCheroot.id,
         typeOfPackingId: newTypeOfPacking.id,
-        quantity: 0,
+        cherootQty: 0,
+        packingPlasticId: newPlastic.id,
+        warpingPlasticId: newPlastic.id,
+        coverPlasticId: newPlastic.id,
         workShopId: newWorkShop.id,
       },
     });
-    //12. create conveyLocation
+    //16. create conveyLocation
     const newConveyLocationName = "နေရာ၁";
     const newConveyLocation = await prisma.conveyLocation.create({
       data: { name: newConveyLocationName, workShopId: newWorkShop.id },
@@ -102,6 +125,10 @@ export default async function handler(
       typeOfPacking: newTypeOfPacking,
       formOfPacking: newFormOfPacking,
       conveyLocation: newConveyLocation,
+      shop: newShop,
+      plastic: newPlastic,
+      store: newStore,
+      banquet: newBanquet,
     });
   } else {
     //get cigratteIndustry Id from dbuser
@@ -178,6 +205,10 @@ export default async function handler(
     const labelStock = await prisma.label.findMany({
       where: { garageId: { in: garageIds }, isArchived: false },
     });
+    //17. find plasticStock
+    const plasticStock = await prisma.plastic.findMany({
+      where: { garageId: { in: garageIds }, isArchived: false },
+    });
     //18. find addStock
     const addStock = await prisma.addStock.findMany({
       where: { garageId: { in: garageIds }, isArchived: false },
@@ -210,6 +241,22 @@ export default async function handler(
     const extraPurchase = await prisma.extraPurchase.findMany({
       where: { workShopId: { in: workShopIds }, isArchived: false },
     });
+    //26. find shop
+    const shop = await prisma.typeOfShop.findMany({
+      where: { workShopId: { in: workShopIds }, isArchived: false },
+    });
+    //27. find plastic
+    const plastic = await prisma.typeOfPlastic.findMany({
+      where: { workShopId: { in: workShopIds }, isArchived: false },
+    });
+    //28. find store
+    const store = await prisma.store.findMany({
+      where: { cigratteIndustryId, isArchived: false },
+    });
+    //29. find banquet
+    const banquet = await prisma.banquet.findMany({
+      where: { cigratteIndustryId, isArchived: false },
+    });
     return res.json({
       industry,
       workShop,
@@ -228,6 +275,7 @@ export default async function handler(
       filterSizeStock,
       tabaccoStock,
       labelStock,
+      plasticStock,
       addStock,
       formula,
       payLeaf,
@@ -236,6 +284,10 @@ export default async function handler(
       leafDeduction,
       otherDeduction,
       extraPurchase,
+      shop,
+      plastic,
+      store,
+      banquet,
     });
   }
 }

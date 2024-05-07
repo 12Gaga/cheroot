@@ -1,5 +1,4 @@
 import { useAppSelector, useAppDispatch } from "@/store/hooks";
-import { setIsLoading } from "@/store/slices/workShop";
 import {
   Box,
   Button,
@@ -13,6 +12,8 @@ import {
 import { useState } from "react";
 import { LoadingButton } from "@mui/lab";
 import { CreateNewPlastic } from "@/types/plasticType";
+import { CreatePlastic, setIsLoading } from "@/store/slices/typeOfPlastic";
+import { setOpenSnackbar } from "@/store/slices/snackBar";
 interface Props {
   open: boolean;
   setOpen: (value: boolean) => void;
@@ -24,21 +25,21 @@ const defaultValue: CreateNewPlastic = {
 
 const NewPlastic = ({ open, setOpen }: Props) => {
   const [newPlastic, setNewPlastic] = useState<CreateNewPlastic>(defaultValue);
-  const { isLoading } = useAppSelector((store) => store.typeOfCheroot);
+  const { isLoading } = useAppSelector((store) => store.typeOfPlastic);
   const dispatch = useAppDispatch();
   const handleClick = () => {
     dispatch(setIsLoading(true));
-    // dispatch(
-    //   CreateCheroot({
-    //     ...newPlastic,
-    //     onSuccess: () => {
-    //       setOpen(false);
-    //       setNewPlastic(defaultValue);
-    //       dispatch(setOpenSnackbar({ message: "Create new cheroot success" }));
-    //       dispatch(setIsLoading(false));
-    //     },
-    //   })
-    // );
+    dispatch(
+      CreatePlastic({
+        ...newPlastic,
+        onSuccess: () => {
+          setOpen(false);
+          setNewPlastic(defaultValue);
+          dispatch(setOpenSnackbar({ message: "Create new plastic success" }));
+          dispatch(setIsLoading(false));
+        },
+      })
+    );
   };
 
   return (

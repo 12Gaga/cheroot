@@ -15,24 +15,22 @@ import {
 import DatePicker from "react-datepicker";
 import { useEffect, useState } from "react";
 import "react-datepicker/dist/react-datepicker.css";
-import { createNewLabelStock } from "@/types/labelStockType";
 import { useAppSelector, useAppDispatch } from "@/store/hooks";
-import { setSelectedGarage } from "@/store/slices/garage";
 import { setOpenSnackbar } from "@/store/slices/snackBar";
-import { CreateTabaccoStock } from "@/store/slices/tabaccoStock";
-import { setIsLoading } from "@/store/slices/workShop";
-import { CreateLabelStock } from "@/store/slices/labelStock";
 import { LoadingButton } from "@mui/lab";
+import { createNewPlasticStock } from "@/types/plasticStockType";
+import { CreatePlasticStock, setIsLoading } from "@/store/slices/plasticStock";
 interface Props {
   open: boolean;
   setOpen: (value: boolean) => void;
 }
 
-const defaultValue: createNewLabelStock = {
+const defaultValue: createNewPlasticStock = {
   date: "",
-  typeOfLabelId: undefined,
-  bandle: 0,
-  shop: "",
+  typeOfPlasticId: undefined,
+  quantity: 0,
+  bag: 0,
+  shopId: 0,
   garageId: undefined,
 };
 
@@ -47,35 +45,38 @@ const PlasticOpen = ({ open, setOpen }: Props) => {
   const concernGarage = garages.filter(
     (item) => item.workShopId === workShop?.id
   );
-  const labels = useAppSelector((store) => store.typeOfLabel.item);
-  const concernLabel = labels.filter(
+  const plastic = useAppSelector((store) => store.typeOfPlastic.item);
+  const concernPlastic = plastic.filter(
     (item) => item.workShopId === workShop?.id
   );
-  const [newLabelStock, setNewLabelStock] =
-    useState<createNewLabelStock>(defaultValue);
-  const { isLoading } = useAppSelector((store) => store.labelStock);
+  const [newPlasticStock, setNewPlasticStock] =
+    useState<createNewPlasticStock>(defaultValue);
+  const { isLoading } = useAppSelector((store) => store.plasticStock);
   const dispatch = useAppDispatch();
-
+  const shops = useAppSelector((store) => store.typeOfShop.item);
+  const concernShop = shops.filter((item) => item.workShopId === workShop?.id);
   useEffect(() => {
-    setNewLabelStock({ ...newLabelStock, date: selecteddate });
+    setNewPlasticStock({ ...newPlasticStock, date: selecteddate });
   }, [selecteddate]);
 
   const handleClick = () => {
     dispatch(setIsLoading(true));
     dispatch(
-      CreateLabelStock({
-        ...newLabelStock,
+      CreatePlasticStock({
+        ...newPlasticStock,
         onSuccess: () => {
           setOpen(false);
-          setNewLabelStock(defaultValue);
+          setNewPlasticStock(defaultValue);
           dispatch(
-            setOpenSnackbar({ message: "Create new label Stock success" })
+            setOpenSnackbar({ message: "Create new plastic Stock success" })
           );
           dispatch(setIsLoading(false));
         },
       })
     );
   };
+
+  console.log("date", newPlasticStock);
   return (
     <>
       <Dialog open={open} onClose={() => setOpen(false)}>
@@ -94,10 +95,10 @@ const PlasticOpen = ({ open, setOpen }: Props) => {
               <Select
                 labelId="demo-simple-select-filled-label"
                 id="demo-simple-select-filled"
-                value={newLabelStock.garageId}
+                value={newPlasticStock.garageId}
                 onChange={(evt) => {
-                  setNewLabelStock({
-                    ...newLabelStock,
+                  setNewPlasticStock({
+                    ...newPlasticStock,
                     garageId: Number(evt.target.value),
                   });
                 }}
@@ -120,20 +121,30 @@ const PlasticOpen = ({ open, setOpen }: Props) => {
               mt: 4,
             }}
           >
-            <Box sx={{}}>
-              <Typography sx={{ fontWeight: "bold" }}>
-                ဝယ်ယူခဲ့သည့်ဆိုင်အမည်
+            <Box sx={{ mt: 2, display: "flex", alignItems: "center" }}>
+              <Typography sx={{ fontWeight: "bold", width: 150 }}>
+                ဝယ်ယူခဲ့သည့်ဆိုင်
               </Typography>
-              <TextField
-                placeholder="ဝယ်ယူခဲ့သည့်ဆိုင်အမည်"
-                sx={{ bgcolor: "#EEE8CF", width: 350 }}
-                onChange={(evt) => {
-                  setNewLabelStock({
-                    ...newLabelStock,
-                    shop: evt.target.value,
-                  });
-                }}
-              />
+              <FormControl variant="filled" sx={{ width: 225 }}>
+                <Select
+                  labelId="demo-simple-select-filled-label"
+                  id="demo-simple-select-filled"
+                  value={newPlasticStock.shopId}
+                  onChange={(evt) => {
+                    setNewPlasticStock({
+                      ...newPlasticStock,
+                      shopId: Number(evt.target.value),
+                    });
+                  }}
+                  sx={{ bgcolor: "#EEE8CF" }}
+                >
+                  {concernShop.map((item) => (
+                    <MenuItem key={item.id} value={item.id}>
+                      <ListItemText primary={item.name} />
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
             </Box>
 
             <Box sx={{}}>
@@ -144,16 +155,16 @@ const PlasticOpen = ({ open, setOpen }: Props) => {
                 <Select
                   labelId="demo-simple-select-filled-label"
                   id="demo-simple-select-filled"
-                  value={newLabelStock.typeOfLabelId}
+                  value={newPlasticStock.typeOfPlasticId}
                   onChange={(evt) => {
-                    setNewLabelStock({
-                      ...newLabelStock,
-                      typeOfLabelId: Number(evt.target.value),
+                    setNewPlasticStock({
+                      ...newPlasticStock,
+                      typeOfPlasticId: Number(evt.target.value),
                     });
                   }}
                   sx={{ bgcolor: "#EEE8CF" }}
                 >
-                  {concernLabel.map((item) => (
+                  {concernPlastic.map((item) => (
                     <MenuItem key={item.id} value={item.id}>
                       <ListItemText primary={item.name} />
                     </MenuItem>
@@ -163,14 +174,28 @@ const PlasticOpen = ({ open, setOpen }: Props) => {
             </Box>
 
             <Box sx={{}}>
-              <Typography sx={{ fontWeight: "bold" }}>လိပ်</Typography>
+              <Typography sx={{ fontWeight: "bold" }}>အရေအတွက်</Typography>
               <TextField
-                placeholder="လိပ်"
+                placeholder="အရေအတွက်"
                 sx={{ bgcolor: "#EEE8CF", width: 350 }}
                 onChange={(evt) => {
-                  setNewLabelStock({
-                    ...newLabelStock,
-                    bandle: Number(evt.target.value),
+                  setNewPlasticStock({
+                    ...newPlasticStock,
+                    quantity: Number(evt.target.value),
+                  });
+                }}
+              />
+            </Box>
+
+            <Box sx={{}}>
+              <Typography sx={{ fontWeight: "bold" }}>အိတ်</Typography>
+              <TextField
+                placeholder="အိတ်"
+                sx={{ bgcolor: "#EEE8CF", width: 350 }}
+                onChange={(evt) => {
+                  setNewPlasticStock({
+                    ...newPlasticStock,
+                    bag: Number(evt.target.value),
                   });
                 }}
               />
@@ -182,7 +207,7 @@ const PlasticOpen = ({ open, setOpen }: Props) => {
             variant="contained"
             onClick={() => {
               setOpen(false);
-              setNewLabelStock(defaultValue);
+              setNewPlasticStock(defaultValue);
             }}
           >
             မလုပ်တော့ပါ
@@ -190,10 +215,11 @@ const PlasticOpen = ({ open, setOpen }: Props) => {
           <LoadingButton
             variant="contained"
             disabled={
-              !newLabelStock.typeOfLabelId ||
-              !newLabelStock.bandle ||
-              !newLabelStock.garageId ||
-              !newLabelStock.shop
+              !newPlasticStock.typeOfPlasticId ||
+              !newPlasticStock.quantity ||
+              !newPlasticStock.bag ||
+              !newPlasticStock.garageId ||
+              !newPlasticStock.shopId
             }
             onClick={handleClick}
             loading={isLoading}

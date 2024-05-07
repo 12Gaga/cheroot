@@ -13,7 +13,7 @@ export interface createNewFilterSizeStock extends BasicOption {
   typeOfFilterSizeId: number | undefined;
   quantity: number;
   bag: number;
-  shop: string;
+  shopId: number;
   garageId: number | undefined;
 }
 
@@ -24,6 +24,6 @@ export interface createNewFilterSizeAddStock extends BasicOption {
   typeOfFilterSizeId: number | undefined;
   quantity: number;
   bag: number;
-  shop: string;
+  shopId: number;
   garageId: number | undefined;
 }

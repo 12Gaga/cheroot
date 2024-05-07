@@ -1,11 +1,14 @@
 import AdminLayout from "@/components/adminLayout";
-import NewLeaf from "@/components/asign/newLeaf";
+import HouseSidingIcon from "@mui/icons-material/HouseSiding";
+import ItemCard from "@/components/itemCard";
 import NewStore from "@/components/taungyi/newStore";
+import { useAppSelector } from "@/store/hooks";
 import { Box, Button, Typography } from "@mui/material";
 import { useState } from "react";
+import NewBanquet from "@/components/taungyi/newBanquet";
 const Banquet = () => {
   const [open, setOpen] = useState<boolean>(false);
-
+  const banquets = useAppSelector((store) => store.typeOfBanquet.item);
   return (
     <>
       <AdminLayout>
@@ -38,18 +41,19 @@ const Banquet = () => {
           </Button>
         </Box>
 
-        {/* <Box sx={{ display: "flex", flexWrap: "wrap" }}>
-          {leaves.map((item) => {
-            const workShopId = localStorage.getItem("selectedWorkShopId");
-            const exit = item.workShopId === Number(workShopId);
-            if (!exit) return null;
+        <Box sx={{ display: "flex", flexWrap: "wrap" }}>
+          {banquets.map((item) => {
             return (
-              <ItemCard key={item.id} icon={<SpaIcon />} title={item.name} />
+              <ItemCard
+                key={item.id}
+                icon={<HouseSidingIcon />}
+                title={item.name}
+              />
             );
           })}
-        </Box> */}
+        </Box>
 
-        <NewStore open={open} setOpen={setOpen} />
+        <NewBanquet open={open} setOpen={setOpen} />
       </AdminLayout>
     </>
   );

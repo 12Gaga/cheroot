@@ -6,6 +6,8 @@ import { useSession } from "next-auth/react";
 import React, { useState } from "react";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
+import { useRouter } from "next/router";
+import HomeIcon from "@mui/icons-material/Home";
 const AgentLeafVissPage = () => {
   const { data: session } = useSession();
   const [open, setOpen] = useState<boolean>(false);
@@ -29,6 +31,7 @@ const AgentLeafVissPage = () => {
     (store) => store.garage
   );
   const gar = garages.find((item) => item.id === selectedGarage?.id);
+  const router = useRouter();
   if (!session) return;
   return (
     <>
@@ -43,7 +46,7 @@ const AgentLeafVissPage = () => {
         }}
       >
         <Typography variant="h4" sx={{ color: "white", fontWeight: "bold" }}>
-          ဖက်လက်ကျန်ထည့်ခြင်း
+          ကိုယ်စားလှယ်ဖက်လက်ကျန်ထည့်ခြင်း
         </Typography>
         <Box sx={{ display: "flex" }}>
           <Typography sx={{ color: "white", fontWeight: "bold", mt: 1 }}>
@@ -52,6 +55,12 @@ const AgentLeafVissPage = () => {
           <Typography sx={{ color: "white", fontWeight: "bold", mt: 1 }}>
             {gar?.name}
           </Typography>
+        </Box>
+        <Box sx={{ position: "absolute", right: 10, top: 25, color: "white" }}>
+          <HomeIcon
+            onClick={() => router.push("/admin/home")}
+            sx={{ fontSize: 40 }}
+          />
         </Box>
       </Box>
       <Box sx={{ display: "flex", justifyContent: "flex-end" }}>
