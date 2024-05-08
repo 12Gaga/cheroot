@@ -1,4 +1,8 @@
-import { CreateNewBanquet, typeOfBanquetSlice } from "@/types/banquetType";
+import {
+  CreateNewBanquet,
+  typeOfBanquetSlice,
+  updateBanquet,
+} from "@/types/banquetType";
 import { CreateNewPlastic, typeOfPlasticSlice } from "@/types/plasticType";
 import Config from "@/utils/config";
 import { Banquet, TypeOfPlastic, TypeOfShop } from "@prisma/client";
@@ -16,6 +20,7 @@ export const CreateBanquet = createAsyncThunk(
   "banquet/CreateBanquet",
   async (option: CreateNewBanquet, thunkApi) => {
     const { name, cigratteIndustryId, onSuccess, onError } = option;
+    console.log("id2", cigratteIndustryId);
     try {
       const response = await fetch(
         `${Config.apiBaseUrl}/banquet?cigratteIndustryId=${cigratteIndustryId}`,
@@ -36,6 +41,27 @@ export const CreateBanquet = createAsyncThunk(
   }
 );
 
+export const UpdatedBanquet = createAsyncThunk(
+  "banquet/UpdateBanquet",
+  async (option: updateBanquet, thunkApi) => {
+    const { name, id, onSuccess, onError } = option;
+    try {
+      const response = await fetch(`${Config.apiBaseUrl}/banquet`, {
+        method: "PUT",
+        headers: {
+          "content-type": "application/json",
+        },
+        body: JSON.stringify({ name, id }),
+      });
+      const { updateBanquet } = await response.json();
+      thunkApi.dispatch(updatedBanquet(updateBanquet));
+      onSuccess && onSuccess();
+    } catch (err) {
+      onError && onError();
+    }
+  }
+);
+
 const TypeOfBanquetSlice = createSlice({
   name: "banquet",
   initialState,
@@ -49,9 +75,14 @@ const TypeOfBanquetSlice = createSlice({
     addBanquet: (state, action: PayloadAction<Banquet>) => {
       state.item = [...state.item, action.payload];
     },
+    updatedBanquet: (state, action: PayloadAction<Banquet>) => {
+      state.item = state.item.map((item) =>
+        item.id === action.payload.id ? action.payload : item
+      );
+    },
   },
 });
 
-export const { setBanquet, setIsLoading, addBanquet } =
+export const { setBanquet, setIsLoading, addBanquet, updatedBanquet } =
   TypeOfBanquetSlice.actions;
 export default TypeOfBanquetSlice.reducer;

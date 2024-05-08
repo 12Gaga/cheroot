@@ -1,15 +1,19 @@
 import AdminLayout from "@/components/adminLayout";
-import SmokingRoomsIcon from "@mui/icons-material/SmokingRooms";
 import ItemCard from "@/components/itemCard";
 import { useAppSelector } from "@/store/hooks";
 import { Box, Button, Typography } from "@mui/material";
 import { useState } from "react";
 import HomeWorkIcon from "@mui/icons-material/HomeWork";
 import NewShop from "@/components/asign/newShop";
+import UpdateShop from "@/components/asign/updateShop";
+import DeleteShop from "@/components/asign/deleteShop";
 
 const Shop = () => {
   const [open, setOpen] = useState<boolean>(false);
   const shops = useAppSelector((store) => store.typeOfShop.item);
+  const [updateOpen, setUpdateOpen] = useState<boolean>(false);
+  const [deleteOpen, setDeleteOpen] = useState<boolean>(false);
+  const [selectId, setSelectId] = useState<number>(0);
   return (
     <>
       <AdminLayout>
@@ -52,12 +56,30 @@ const Shop = () => {
                 key={item.id}
                 icon={<HomeWorkIcon />}
                 title={item.name}
+                onUpdateClcik={() => {
+                  setUpdateOpen(true);
+                  setSelectId(item.id);
+                }}
+                onDeleteClcik={() => {
+                  setDeleteOpen(true);
+                  setSelectId(item.id);
+                }}
               />
             );
           })}
         </Box>
 
         <NewShop open={open} setOpen={setOpen} />
+        <UpdateShop
+          updateOpen={updateOpen}
+          setUpdateOpen={setUpdateOpen}
+          selectedId={selectId}
+        />
+        <DeleteShop
+          deleteOpen={deleteOpen}
+          setDeleteOpen={setDeleteOpen}
+          selectedId={selectId}
+        />
       </AdminLayout>
     </>
   );

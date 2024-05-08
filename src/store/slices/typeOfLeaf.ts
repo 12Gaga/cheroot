@@ -1,4 +1,4 @@
-import { CreateNewLeaf, typeOfLeafSlice } from "@/types/LeafType";
+import { CreateNewLeaf, typeOfLeafSlice, updateLeaf } from "@/types/LeafType";
 import Config from "@/utils/config";
 import { TypeOfLeaf } from "@prisma/client";
 import { PayloadAction, createAsyncThunk, createSlice } from "@reduxjs/toolkit";
@@ -34,6 +34,31 @@ export const CreateLeaf = createAsyncThunk(
   }
 );
 
+export const UpdatedLeaf = createAsyncThunk(
+  "leaf/UpdateLeaf",
+  async (option: updateLeaf, thunkApi) => {
+    const { name, price, id, onSuccess, onError } = option;
+    const workShopId = localStorage.getItem("selectedWorkShopId");
+    try {
+      const response = await fetch(
+        `${Config.apiBaseUrl}/leaf?workShopId=${workShopId}`,
+        {
+          method: "PUT",
+          headers: {
+            "content-type": "application/json",
+          },
+          body: JSON.stringify({ name, price, id }),
+        }
+      );
+      const { updateLeaf } = await response.json();
+      thunkApi.dispatch(updatedLeaf(updateLeaf));
+      onSuccess && onSuccess();
+    } catch (err) {
+      onError && onError();
+    }
+  }
+);
+
 const TypeOfLeafSlice = createSlice({
   name: "leaf",
   initialState,
@@ -47,8 +72,14 @@ const TypeOfLeafSlice = createSlice({
     addleaf: (state, action: PayloadAction<TypeOfLeaf>) => {
       state.item = [...state.item, action.payload];
     },
+    updatedLeaf: (state, action: PayloadAction<TypeOfLeaf>) => {
+      state.item = state.item.map((item) =>
+        item.id === action.payload.id ? action.payload : item
+      );
+    },
   },
 });
 
-export const { setLeaf, setIsLoading, addleaf } = TypeOfLeafSlice.actions;
+export const { setLeaf, setIsLoading, addleaf, updatedLeaf } =
+  TypeOfLeafSlice.actions;
 export default TypeOfLeafSlice.reducer;

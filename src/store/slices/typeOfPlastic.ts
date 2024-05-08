@@ -1,4 +1,8 @@
-import { CreateNewPlastic, typeOfPlasticSlice } from "@/types/plasticType";
+import {
+  CreateNewPlastic,
+  typeOfPlasticSlice,
+  updatePlastic,
+} from "@/types/plasticType";
 import Config from "@/utils/config";
 import { TypeOfPlastic, TypeOfShop } from "@prisma/client";
 import { PayloadAction, createAsyncThunk, createSlice } from "@reduxjs/toolkit";
@@ -34,6 +38,31 @@ export const CreatePlastic = createAsyncThunk(
   }
 );
 
+export const UpdatedPlastic = createAsyncThunk(
+  "plastic/UpdatedPlastic",
+  async (option: updatePlastic, thunkApi) => {
+    const { name, id, onSuccess, onError } = option;
+    const workShopId = localStorage.getItem("selectedWorkShopId");
+    try {
+      const response = await fetch(
+        `${Config.apiBaseUrl}/plastic?workShopId=${workShopId}`,
+        {
+          method: "PUT",
+          headers: {
+            "content-type": "application/json",
+          },
+          body: JSON.stringify({ name, id }),
+        }
+      );
+      const { updatePlastic } = await response.json();
+      thunkApi.dispatch(updatedPlastic(updatePlastic));
+      onSuccess && onSuccess();
+    } catch (err) {
+      onError && onError();
+    }
+  }
+);
+
 const TypeOfPlasticSlice = createSlice({
   name: "plastic",
   initialState,
@@ -47,9 +76,14 @@ const TypeOfPlasticSlice = createSlice({
     addPlastic: (state, action: PayloadAction<TypeOfPlastic>) => {
       state.item = [...state.item, action.payload];
     },
+    updatedPlastic: (state, action: PayloadAction<TypeOfPlastic>) => {
+      state.item = state.item.map((item) =>
+        item.id === action.payload.id ? action.payload : item
+      );
+    },
   },
 });
 
-export const { setPlastic, setIsLoading, addPlastic } =
+export const { setPlastic, setIsLoading, addPlastic, updatedPlastic } =
   TypeOfPlasticSlice.actions;
 export default TypeOfPlasticSlice.reducer;

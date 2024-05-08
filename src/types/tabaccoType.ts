@@ -11,3 +11,9 @@ export interface createNewTabacco extends BasicOption {
   name: string;
   price: number;
 }
+
+export interface updateTabacco extends BasicOption {
+  id: number | null;
+  name: string;
+  price: number;
+}

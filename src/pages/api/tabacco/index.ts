@@ -17,6 +17,15 @@ export default async function handler(
       data: { name, price, workShopId },
     });
     return res.status(200).json({ newTabacco });
+  } else if (method === "PUT") {
+    const { name, price, id } = req.body;
+    const isValid = name && price != undefined && id;
+    if (!isValid) return res.status(405).send("bad request");
+    const updateTabacco = await prisma.typeOfTabacco.update({
+      where: { id },
+      data: { name, price },
+    });
+    return res.status(200).json({ updateTabacco });
   }
   res.status(200).json("bad request");
 }

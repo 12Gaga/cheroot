@@ -1,4 +1,8 @@
-import { createNewWorkShop, workShopSlice } from "@/types/workShopType";
+import {
+  createNewWorkShop,
+  updateWorkShop,
+  workShopSlice,
+} from "@/types/workShopType";
 import Config from "@/utils/config";
 import { WorkShop } from "@prisma/client";
 import { PayloadAction, createAsyncThunk, createSlice } from "@reduxjs/toolkit";
@@ -35,6 +39,28 @@ export const CreateWorkShop = createAsyncThunk(
   }
 );
 
+export const UpdatedWorkShop = createAsyncThunk(
+  "workShop/UpdateWorkShop",
+  async (option: updateWorkShop, thunkApi) => {
+    const { name, id, onSuccess, onError } = option;
+
+    try {
+      const response = await fetch(`${Config.apiBaseUrl}/workShop`, {
+        method: "PUT",
+        headers: {
+          "content-type": "application/json",
+        },
+        body: JSON.stringify({ name, id }),
+      });
+      const { updateWorkShop } = await response.json();
+      thunkApi.dispatch(updatedWorkShop(updateWorkShop));
+      onSuccess && onSuccess();
+    } catch (err) {
+      onError && onError();
+    }
+  }
+);
+
 const WorkShopSlice = createSlice({
   name: "workShop",
   initialState,
@@ -64,9 +90,19 @@ const WorkShopSlice = createSlice({
     addWorkShop: (state, action: PayloadAction<WorkShop>) => {
       state.item = [...state.item, action.payload];
     },
+    updatedWorkShop: (state, action: PayloadAction<WorkShop>) => {
+      state.item = state.item.map((item) =>
+        item.id === action.payload.id ? action.payload : item
+      );
+    },
   },
 });
 
-export const { setWorkShop, setSelectedWorkShop, setIsLoading, addWorkShop } =
-  WorkShopSlice.actions;
+export const {
+  setWorkShop,
+  setSelectedWorkShop,
+  setIsLoading,
+  addWorkShop,
+  updatedWorkShop,
+} = WorkShopSlice.actions;
 export default WorkShopSlice.reducer;

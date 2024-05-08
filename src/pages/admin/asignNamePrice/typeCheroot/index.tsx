@@ -5,10 +5,15 @@ import ItemCard from "@/components/itemCard";
 import { useAppSelector } from "@/store/hooks";
 import { Box, Button, Typography } from "@mui/material";
 import { useState } from "react";
+import UpdateCheroot from "@/components/asign/updateCheroot";
+import DeleteCheroot from "@/components/asign/deleteCheroot";
 
 const TypeCheroot = () => {
   const [open, setOpen] = useState<boolean>(false);
   const cheroots = useAppSelector((store) => store.typeOfCheroot.item);
+  const [updateOpen, setUpdateOpen] = useState<boolean>(false);
+  const [deleteOpen, setDeleteOpen] = useState<boolean>(false);
+  const [selectId, setSelectId] = useState<number>(0);
   return (
     <>
       <AdminLayout>
@@ -51,12 +56,30 @@ const TypeCheroot = () => {
                 key={item.id}
                 icon={<SmokingRoomsIcon />}
                 title={item.name}
+                onUpdateClcik={() => {
+                  setUpdateOpen(true);
+                  setSelectId(item.id);
+                }}
+                onDeleteClcik={() => {
+                  setDeleteOpen(true);
+                  setSelectId(item.id);
+                }}
               />
             );
           })}
         </Box>
 
         <NewCheroot open={open} setOpen={setOpen} />
+        <UpdateCheroot
+          updateOpen={updateOpen}
+          setUpdateOpen={setUpdateOpen}
+          selectedId={selectId}
+        />
+        <DeleteCheroot
+          deleteOpen={deleteOpen}
+          setDeleteOpen={setDeleteOpen}
+          selectedId={selectId}
+        />
       </AdminLayout>
     </>
   );

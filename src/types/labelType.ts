@@ -11,3 +11,9 @@ export interface createNewLabel extends BasicOption {
   name: string;
   price: number;
 }
+
+export interface updateLabel extends BasicOption {
+  id: number | null;
+  name: string;
+  price: number;
+}

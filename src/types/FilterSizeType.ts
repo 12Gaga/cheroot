@@ -11,3 +11,9 @@ export interface createNewFilterSize extends BasicOption {
   name: string;
   price: number;
 }
+
+export interface updateFilterSize extends BasicOption {
+  id: number | null;
+  name: string;
+  price: number;
+}

@@ -5,9 +5,14 @@ import { useAppSelector } from "@/store/hooks";
 import { Box, Button, Typography } from "@mui/material";
 import { useState } from "react";
 import FiberManualRecordIcon from "@mui/icons-material/FiberManualRecord";
+import UpdateFilterSize from "@/components/asign/updateFilterSize";
+import DeleteFilterSize from "@/components/asign/deleteFilterSize";
 const TypeFilterSize = () => {
   const [open, setOpen] = useState<boolean>(false);
   const filterSizes = useAppSelector((store) => store.typeOfFilterSize.item);
+  const [updateOpen, setUpdateOpen] = useState<boolean>(false);
+  const [deleteOpen, setDeleteOpen] = useState<boolean>(false);
+  const [selectId, setSelectId] = useState<number>(0);
   return (
     <>
       <AdminLayout>
@@ -49,11 +54,29 @@ const TypeFilterSize = () => {
                 key={item.id}
                 icon={<FiberManualRecordIcon />}
                 title={item.name}
+                onUpdateClcik={() => {
+                  setUpdateOpen(true);
+                  setSelectId(item.id);
+                }}
+                onDeleteClcik={() => {
+                  setDeleteOpen(true);
+                  setSelectId(item.id);
+                }}
               />
             );
           })}
         </Box>
         <NewFilterSize open={open} setOpen={setOpen} />
+        <UpdateFilterSize
+          updateOpen={updateOpen}
+          setUpdateOpen={setUpdateOpen}
+          selectedId={selectId}
+        />
+        <DeleteFilterSize
+          deleteOpen={deleteOpen}
+          setDeleteOpen={setDeleteOpen}
+          selectedId={selectId}
+        />
       </AdminLayout>
     </>
   );

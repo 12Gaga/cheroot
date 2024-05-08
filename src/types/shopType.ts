@@ -10,3 +10,8 @@ export interface typeOfShopSlice {
 export interface CreateNewShop extends BasicOption {
   name: string;
 }
+
+export interface updateShop extends BasicOption {
+  id: number | null;
+  name: string;
+}

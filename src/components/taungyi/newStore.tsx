@@ -28,6 +28,8 @@ const NewStore = ({ open, setOpen }: Props) => {
   const [newStore, setNewStore] = useState<CreateNewStore>(defaultValue);
   const cigratteIndustryId = useAppSelector((store) => store.industry.item)
     ?.id as number;
+  console.log("id", cigratteIndustryId);
+  console.log("id", newStore);
   const { isLoading } = useAppSelector((store) => store.typeOfStore);
   const dispatch = useAppDispatch();
   const handleClick = () => {
@@ -46,7 +48,7 @@ const NewStore = ({ open, setOpen }: Props) => {
   };
   useEffect(() => {
     setNewStore({ ...newStore, cigratteIndustryId });
-  }, []);
+  }, [open]);
   return (
     <Dialog open={open} onClose={() => setOpen(false)}>
       <DialogTitle>သိုလှောင်ရုံအသစ်ထည့်ခြင်း</DialogTitle>

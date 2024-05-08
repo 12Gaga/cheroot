@@ -5,10 +5,15 @@ import { useAppSelector } from "@/store/hooks";
 import { Box, Button, Typography } from "@mui/material";
 import { useState } from "react";
 import NewPlastic from "@/components/asign/newPlastic";
+import UpdatePlastic from "@/components/asign/updatePlastic";
+import DeletePlastic from "@/components/asign/deletePlastic";
 
 const Plastic = () => {
   const [open, setOpen] = useState<boolean>(false);
   const plastics = useAppSelector((store) => store.typeOfPlastic.item);
+  const [updateOpen, setUpdateOpen] = useState<boolean>(false);
+  const [deleteOpen, setDeleteOpen] = useState<boolean>(false);
+  const [selectId, setSelectId] = useState<number>(0);
   return (
     <>
       <AdminLayout>
@@ -51,12 +56,30 @@ const Plastic = () => {
                 key={item.id}
                 icon={<LocalMallIcon />}
                 title={item.name}
+                onUpdateClcik={() => {
+                  setUpdateOpen(true);
+                  setSelectId(item.id);
+                }}
+                onDeleteClcik={() => {
+                  setDeleteOpen(true);
+                  setSelectId(item.id);
+                }}
               />
             );
           })}
         </Box>
 
         <NewPlastic open={open} setOpen={setOpen} />
+        <UpdatePlastic
+          updateOpen={updateOpen}
+          setUpdateOpen={setUpdateOpen}
+          selectedId={selectId}
+        />
+        <DeletePlastic
+          deleteOpen={deleteOpen}
+          setDeleteOpen={setDeleteOpen}
+          selectedId={selectId}
+        />
       </AdminLayout>
     </>
   );

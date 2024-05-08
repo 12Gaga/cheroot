@@ -11,3 +11,9 @@ export interface CreateNewLeaf extends BasicOption {
   name: string;
   price: number;
 }
+
+export interface updateLeaf extends BasicOption {
+  id: number | null;
+  name: string;
+  price: number;
+}

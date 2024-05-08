@@ -5,10 +5,15 @@ import { useAppSelector } from "@/store/hooks";
 import { Box, Button, Typography } from "@mui/material";
 import { useState } from "react";
 import SpaIcon from "@mui/icons-material/Spa";
+import UpdateLeaf from "@/components/asign/updateLeaf";
+import DeleteLeaf from "@/components/asign/deleteLeaf";
 const AsignNamePrice = () => {
   const [open, setOpen] = useState<boolean>(false);
   const leaves = useAppSelector((store) => store.typeOfLeaf.item);
-
+  const [updateOpen, setUpdateOpen] = useState<boolean>(false);
+  const [deleteOpen, setDeleteOpen] = useState<boolean>(false);
+  const [selectId, setSelectId] = useState<number>(0);
+  console.log("id", selectId);
   return (
     <>
       <AdminLayout>
@@ -47,12 +52,36 @@ const AsignNamePrice = () => {
             const exit = item.workShopId === Number(workShopId);
             if (!exit) return null;
             return (
-              <ItemCard key={item.id} icon={<SpaIcon />} title={item.name} />
+              <>
+                <ItemCard
+                  key={item.id}
+                  icon={<SpaIcon />}
+                  title={item.name}
+                  onUpdateClcik={() => {
+                    setUpdateOpen(true);
+                    setSelectId(item.id);
+                  }}
+                  onDeleteClcik={() => {
+                    setDeleteOpen(true);
+                    setSelectId(item.id);
+                  }}
+                />
+              </>
             );
           })}
         </Box>
 
         <NewLeaf open={open} setOpen={setOpen} />
+        <UpdateLeaf
+          updateOpen={updateOpen}
+          setUpdateOpen={setUpdateOpen}
+          selectedId={selectId}
+        />
+        <DeleteLeaf
+          deleteOpen={deleteOpen}
+          setDeleteOpen={setDeleteOpen}
+          selectedId={selectId}
+        />
       </AdminLayout>
     </>
   );

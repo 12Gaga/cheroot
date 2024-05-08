@@ -1,4 +1,4 @@
-import { CreateNewShop, typeOfShopSlice } from "@/types/shopType";
+import { CreateNewShop, typeOfShopSlice, updateShop } from "@/types/shopType";
 import Config from "@/utils/config";
 import { TypeOfShop } from "@prisma/client";
 import { PayloadAction, createAsyncThunk, createSlice } from "@reduxjs/toolkit";
@@ -34,6 +34,31 @@ export const CreateShop = createAsyncThunk(
   }
 );
 
+export const UpdatedShop = createAsyncThunk(
+  "shop/UpdatedShop",
+  async (option: updateShop, thunkApi) => {
+    const { name, id, onSuccess, onError } = option;
+    const workShopId = localStorage.getItem("selectedWorkShopId");
+    try {
+      const response = await fetch(
+        `${Config.apiBaseUrl}/shop?workShopId=${workShopId}`,
+        {
+          method: "PUT",
+          headers: {
+            "content-type": "application/json",
+          },
+          body: JSON.stringify({ name, id }),
+        }
+      );
+      const { updateShop } = await response.json();
+      thunkApi.dispatch(updatedShop(updateShop));
+      onSuccess && onSuccess();
+    } catch (err) {
+      onError && onError();
+    }
+  }
+);
+
 const TypeOfShopSlice = createSlice({
   name: "shop",
   initialState,
@@ -47,8 +72,14 @@ const TypeOfShopSlice = createSlice({
     addShop: (state, action: PayloadAction<TypeOfShop>) => {
       state.item = [...state.item, action.payload];
     },
+    updatedShop: (state, action: PayloadAction<TypeOfShop>) => {
+      state.item = state.item.map((item) =>
+        item.id === action.payload.id ? action.payload : item
+      );
+    },
   },
 });
 
-export const { setShop, setIsLoading, addShop } = TypeOfShopSlice.actions;
+export const { setShop, setIsLoading, addShop, updatedShop } =
+  TypeOfShopSlice.actions;
 export default TypeOfShopSlice.reducer;

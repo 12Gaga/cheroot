@@ -1,6 +1,7 @@
 import {
   conveyLocationSlice,
   createNewConveyLocation,
+  updateConveyLocation,
 } from "@/types/conveyLocationType";
 import { createNewGarage, garageSlice } from "@/types/garageType";
 import Config from "@/utils/config";
@@ -37,6 +38,31 @@ export const CreateConveyLocation = createAsyncThunk(
   }
 );
 
+export const UpdatedConveyLocation = createAsyncThunk(
+  "conveyLocation/UpdateConveyLocation",
+  async (option: updateConveyLocation, thunkApi) => {
+    const { name, id, onSuccess, onError } = option;
+    const workShopId = localStorage.getItem("selectedWorkShopId");
+    try {
+      const response = await fetch(
+        `${Config.apiBaseUrl}/conveyLocation?workShopId=${workShopId}`,
+        {
+          method: "PUT",
+          headers: {
+            "content-type": "application/json",
+          },
+          body: JSON.stringify({ name, id }),
+        }
+      );
+      const { updateLocation } = await response.json();
+      thunkApi.dispatch(updatedConveyLocation(updateLocation));
+      onSuccess && onSuccess();
+    } catch (err) {
+      onError && onError();
+    }
+  }
+);
+
 const ConveyLocationSlice = createSlice({
   name: "conveyLocation",
   initialState,
@@ -50,9 +76,18 @@ const ConveyLocationSlice = createSlice({
     addConveyLocation: (state, action: PayloadAction<ConveyLocation>) => {
       state.item = [...state.item, action.payload];
     },
+    updatedConveyLocation: (state, action: PayloadAction<ConveyLocation>) => {
+      state.item = state.item.map((item) =>
+        item.id === action.payload.id ? action.payload : item
+      );
+    },
   },
 });
 
-export const { setConveyLocation, setIsLoading, addConveyLocation } =
-  ConveyLocationSlice.actions;
+export const {
+  setConveyLocation,
+  setIsLoading,
+  addConveyLocation,
+  updatedConveyLocation,
+} = ConveyLocationSlice.actions;
 export default ConveyLocationSlice.reducer;

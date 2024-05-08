@@ -5,10 +5,15 @@ import LocationOnIcon from "@mui/icons-material/LocationOn";
 import { useAppSelector } from "@/store/hooks";
 import { Typography, Box, Button } from "@mui/material";
 import { useState } from "react";
+import UpdateLocation from "@/components/cherootTransferring/updateLocation";
+import DeleteLocation from "@/components/cherootTransferring/deleteLocation";
 
 const TransferCheroot = () => {
   const [open, setOpen] = useState<boolean>(false);
   const locations = useAppSelector((store) => store.conveyLocation.item);
+  const [updateOpen, setUpdateOpen] = useState<boolean>(false);
+  const [deleteOpen, setDeleteOpen] = useState<boolean>(false);
+  const [selectId, setSelectId] = useState<number>(0);
   return (
     <>
       <AdminLayout>
@@ -50,12 +55,30 @@ const TransferCheroot = () => {
                 key={item.id}
                 icon={<LocationOnIcon />}
                 title={item.name}
+                onUpdateClcik={() => {
+                  setUpdateOpen(true);
+                  setSelectId(item.id);
+                }}
+                onDeleteClcik={() => {
+                  setDeleteOpen(true);
+                  setSelectId(item.id);
+                }}
               />
             );
           })}
         </Box>
 
         <NewLocation open={open} setOpen={setOpen} />
+        <UpdateLocation
+          updateOpen={updateOpen}
+          setUpdateOpen={setUpdateOpen}
+          selectedId={selectId}
+        />
+        <DeleteLocation
+          deleteOpen={deleteOpen}
+          setDeleteOpen={setDeleteOpen}
+          selectedId={selectId}
+        />
       </AdminLayout>
     </>
   );

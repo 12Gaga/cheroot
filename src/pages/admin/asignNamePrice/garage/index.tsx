@@ -7,11 +7,16 @@ import { useState } from "react";
 import WarehouseIcon from "@mui/icons-material/Warehouse";
 import { useDispatch } from "react-redux";
 import { setSelectedGarage } from "@/store/slices/garage";
+import UpdateGarage from "@/components/asign/updateGarage";
+import DeleteGarage from "@/components/asign/deleteGarage";
 const Garage = () => {
   const [open, setOpen] = useState<boolean>(false);
   const garages = useAppSelector((store) => store.garage.item);
   const { selectedGarage } = useAppSelector((store) => store.garage);
   const dispatch = useDispatch();
+  const [updateOpen, setUpdateOpen] = useState<boolean>(false);
+  const [deleteOpen, setDeleteOpen] = useState<boolean>(false);
+  const [selectId, setSelectId] = useState<number>(0);
   return (
     <>
       <AdminLayout>
@@ -58,9 +63,17 @@ const Garage = () => {
                 title={item.name}
                 selected={selected}
                 isAvailable={isAvailable}
-                onClcik={() => {
+                onclick={() => {
                   dispatch(setSelectedGarage(item));
                   localStorage.setItem("selectedGarageId", String(item.id));
+                }}
+                onUpdateClcik={() => {
+                  setUpdateOpen(true);
+                  setSelectId(item.id);
+                }}
+                onDeleteClcik={() => {
+                  setDeleteOpen(true);
+                  setSelectId(item.id);
                 }}
               />
             );
@@ -68,6 +81,16 @@ const Garage = () => {
         </Box>
 
         <NewGarage open={open} setOpen={setOpen} />
+        <UpdateGarage
+          updateOpen={updateOpen}
+          setUpdateOpen={setUpdateOpen}
+          selectedId={selectId}
+        />
+        <DeleteGarage
+          deleteOpen={deleteOpen}
+          setDeleteOpen={setDeleteOpen}
+          selectedId={selectId}
+        />
       </AdminLayout>
     </>
   );

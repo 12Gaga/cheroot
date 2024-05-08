@@ -5,9 +5,14 @@ import { useAppSelector } from "@/store/hooks";
 import { Box, Button, Typography } from "@mui/material";
 import { useState } from "react";
 import WorkspacesIcon from "@mui/icons-material/Workspaces";
+import UpdateTabacco from "@/components/asign/updateTabacco";
+import DeleteTabacco from "@/components/asign/deleteTabacco";
 const TypeTabacco = () => {
   const [open, setOpen] = useState<boolean>(false);
   const tabacco = useAppSelector((store) => store.typeOfTabacco.item);
+  const [updateOpen, setUpdateOpen] = useState<boolean>(false);
+  const [deleteOpen, setDeleteOpen] = useState<boolean>(false);
+  const [selectId, setSelectId] = useState<number>(0);
   return (
     <>
       <AdminLayout>
@@ -50,12 +55,30 @@ const TypeTabacco = () => {
                 key={item.id}
                 icon={<WorkspacesIcon />}
                 title={item.name}
+                onUpdateClcik={() => {
+                  setUpdateOpen(true);
+                  setSelectId(item.id);
+                }}
+                onDeleteClcik={() => {
+                  setDeleteOpen(true);
+                  setSelectId(item.id);
+                }}
               />
             );
           })}
         </Box>
 
         <NewTabacco open={open} setOpen={setOpen} />
+        <UpdateTabacco
+          updateOpen={updateOpen}
+          setUpdateOpen={setUpdateOpen}
+          selectedId={selectId}
+        />
+        <DeleteTabacco
+          deleteOpen={deleteOpen}
+          setDeleteOpen={setDeleteOpen}
+          selectedId={selectId}
+        />
       </AdminLayout>
     </>
   );

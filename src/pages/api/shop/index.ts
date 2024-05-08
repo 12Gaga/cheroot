@@ -17,6 +17,15 @@ export default async function handler(
       data: { name, workShopId },
     });
     return res.status(200).json({ newShop });
+  } else if (method === "PUT") {
+    const { name, id } = req.body;
+    const isValid = name && id;
+    if (!isValid) return res.status(405).send("bad request");
+    const updateShop = await prisma.typeOfShop.update({
+      where: { id },
+      data: { name },
+    });
+    return res.status(200).json({ updateShop });
   }
   res.status(200).json("bad request");
 }

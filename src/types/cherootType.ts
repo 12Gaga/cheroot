@@ -11,3 +11,9 @@ export interface createNewCheroot extends BasicOption {
   name: string;
   price: number;
 }
+
+export interface updateCheroot extends BasicOption {
+  id: number | null;
+  name: string;
+  price: number;
+}

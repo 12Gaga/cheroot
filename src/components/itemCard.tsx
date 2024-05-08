@@ -1,4 +1,4 @@
-import { Box, Paper, Typography } from "@mui/material";
+import { Box, Button, Paper, Typography } from "@mui/material";
 import Link from "next/link";
 import { ReactNode } from "react";
 import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
@@ -9,7 +9,9 @@ interface Props {
   subtitle?: string;
   isAvailable?: boolean;
   selected?: boolean;
-  onClcik?: () => void;
+  onUpdateClcik?: () => void;
+  onDeleteClcik?: () => void;
+  onclick?: () => void;
 }
 
 const ItemCard = ({
@@ -19,7 +21,9 @@ const ItemCard = ({
   subtitle,
   isAvailable,
   selected,
-  onClcik,
+  onclick,
+  onUpdateClcik,
+  onDeleteClcik,
 }: Props) => {
   if (href) {
     return (
@@ -39,7 +43,7 @@ const ItemCard = ({
             opacity: isAvailable === false ? 0.6 : 1,
             position: "relative",
           }}
-          onClick={onClcik && onClcik}
+          onClick={onclick && onclick}
         >
           {selected && (
             <Box
@@ -90,7 +94,7 @@ const ItemCard = ({
         opacity: isAvailable === false ? 0.6 : 1,
         position: "relative",
       }}
-      onClick={onClcik && onClcik}
+      onClick={onclick && onclick}
     >
       {selected && (
         <Box
@@ -119,6 +123,8 @@ const ItemCard = ({
           {subtitle}
         </Typography>
       )}
+      <Button onClick={onUpdateClcik && onUpdateClcik}>update</Button>
+      <Button onClick={onDeleteClcik && onDeleteClcik}>delete</Button>
     </Paper>
   );
 };

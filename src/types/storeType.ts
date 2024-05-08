@@ -11,3 +11,8 @@ export interface CreateNewStore extends BasicOption {
   name: string;
   cigratteIndustryId: number | undefined;
 }
+
+export interface updateStore extends BasicOption {
+  id: number | null;
+  name: string;
+}

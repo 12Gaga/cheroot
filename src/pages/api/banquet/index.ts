@@ -17,6 +17,15 @@ export default async function handler(
       data: { name, cigratteIndustryId },
     });
     return res.status(200).json({ newBanquet });
+  } else if (method === "PUT") {
+    const { name, id } = req.body;
+    const isValid = name && id;
+    if (!isValid) return res.status(405).send("bad request");
+    const updateBanquet = await prisma.banquet.update({
+      where: { id },
+      data: { name },
+    });
+    return res.status(200).json({ updateBanquet });
   }
   res.status(200).json("bad request");
 }

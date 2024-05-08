@@ -28,6 +28,8 @@ const NewBanquet = ({ open, setOpen }: Props) => {
   const [newBanquet, setNewBanquet] = useState<CreateNewBanquet>(defaultValue);
   const cigratteIndustryId = useAppSelector((store) => store.industry.item)
     ?.id as number;
+  console.log("id", cigratteIndustryId);
+  console.log("id", newBanquet);
   const { isLoading } = useAppSelector((store) => store.typeOfBanquet);
   const dispatch = useAppDispatch();
   const handleClick = () => {
@@ -45,8 +47,8 @@ const NewBanquet = ({ open, setOpen }: Props) => {
     );
   };
   useEffect(() => {
-    setNewBanquet({ ...newBanquet, cigratteIndustryId });
-  }, []);
+    setNewBanquet({ ...newBanquet, cigratteIndustryId: cigratteIndustryId });
+  }, [open]);
   return (
     <Dialog open={open} onClose={() => setOpen(false)}>
       <DialogTitle>ပွဲရုံအသစ်ထည့်ခြင်း</DialogTitle>

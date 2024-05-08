@@ -17,6 +17,15 @@ export default async function handler(
       data: { name, workShopId },
     });
     return res.status(200).json({ newConveyLocation });
+  } else if (method === "PUT") {
+    const { name, id } = req.body;
+    const isValid = name && id;
+    if (!isValid) return res.status(405).send("bad request");
+    const updateLocation = await prisma.conveyLocation.update({
+      where: { id },
+      data: { name },
+    });
+    return res.status(200).json({ updateLocation });
   }
   res.status(200).json("bad request");
 }

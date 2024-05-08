@@ -10,3 +10,8 @@ export interface typeOfPlasticSlice {
 export interface CreateNewPlastic extends BasicOption {
   name: string;
 }
+
+export interface updatePlastic extends BasicOption {
+  id: number | null;
+  name: string;
+}

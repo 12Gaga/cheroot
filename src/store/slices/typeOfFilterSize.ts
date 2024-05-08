@@ -5,6 +5,7 @@ import { addleaf } from "./typeOfLeaf";
 import {
   createNewFilterSize,
   typeOfFilterSizeSlice,
+  updateFilterSize,
 } from "@/types/FilterSizeType";
 
 const initialState: typeOfFilterSizeSlice = {
@@ -38,6 +39,31 @@ export const CreateNewFilterSize = createAsyncThunk(
   }
 );
 
+export const UpdatedFilterSize = createAsyncThunk(
+  "filterSize/UpdatedFilterSize",
+  async (option: updateFilterSize, thunkApi) => {
+    const { name, price, id, onSuccess, onError } = option;
+    const workShopId = localStorage.getItem("selectedWorkShopId");
+    try {
+      const response = await fetch(
+        `${Config.apiBaseUrl}/filterSize?workShopId=${workShopId}`,
+        {
+          method: "PUT",
+          headers: {
+            "content-type": "application/json",
+          },
+          body: JSON.stringify({ name, price, id }),
+        }
+      );
+      const { updateFilterSize } = await response.json();
+      thunkApi.dispatch(updatedFilterSize(updateFilterSize));
+      onSuccess && onSuccess();
+    } catch (err) {
+      onError && onError();
+    }
+  }
+);
+
 const TypeOfFilterSizeSlice = createSlice({
   name: "filterSize",
   initialState,
@@ -51,9 +77,14 @@ const TypeOfFilterSizeSlice = createSlice({
     setIsLoading: (state, action: PayloadAction<boolean>) => {
       state.isLoading = action.payload;
     },
+    updatedFilterSize: (state, action: PayloadAction<TypeOfFilterSize>) => {
+      state.item = state.item.map((item) =>
+        item.id === action.payload.id ? action.payload : item
+      );
+    },
   },
 });
 
-export const { setFilterSize, addFilterSize, setIsLoading } =
+export const { setFilterSize, addFilterSize, setIsLoading, updatedFilterSize } =
   TypeOfFilterSizeSlice.actions;
 export default TypeOfFilterSizeSlice.reducer;

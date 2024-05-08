@@ -1,4 +1,8 @@
-import { createNewLabel, typeOfLabelSlice } from "@/types/labelType";
+import {
+  createNewLabel,
+  typeOfLabelSlice,
+  updateLabel,
+} from "@/types/labelType";
 import Config from "@/utils/config";
 import { TypeOfLabel } from "@prisma/client";
 import { PayloadAction, createAsyncThunk, createSlice } from "@reduxjs/toolkit";
@@ -34,6 +38,31 @@ export const CreateLabel = createAsyncThunk(
   }
 );
 
+export const UpdatedLabel = createAsyncThunk(
+  "label/UpdatedLabel",
+  async (option: updateLabel, thunkApi) => {
+    const { name, price, id, onSuccess, onError } = option;
+    const workShopId = localStorage.getItem("selectedWorkShopId");
+    try {
+      const response = await fetch(
+        `${Config.apiBaseUrl}/label?workShopId=${workShopId}`,
+        {
+          method: "PUT",
+          headers: {
+            "content-type": "application/json",
+          },
+          body: JSON.stringify({ name, price, id }),
+        }
+      );
+      const { updateLabel } = await response.json();
+      thunkApi.dispatch(updatedLabel(updateLabel));
+      onSuccess && onSuccess();
+    } catch (err) {
+      onError && onError();
+    }
+  }
+);
+
 const TypeOfLabelSlice = createSlice({
   name: "label",
   initialState,
@@ -47,8 +76,14 @@ const TypeOfLabelSlice = createSlice({
     addLabel: (state, action: PayloadAction<TypeOfLabel>) => {
       state.item = [...state.item, action.payload];
     },
+    updatedLabel: (state, action: PayloadAction<TypeOfLabel>) => {
+      state.item = state.item.map((item) =>
+        item.id === action.payload.id ? action.payload : item
+      );
+    },
   },
 });
 
-export const { setLabel, addLabel, setIsLoading } = TypeOfLabelSlice.actions;
+export const { setLabel, addLabel, setIsLoading, updatedLabel } =
+  TypeOfLabelSlice.actions;
 export default TypeOfLabelSlice.reducer;

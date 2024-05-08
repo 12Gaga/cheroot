@@ -257,6 +257,10 @@ export default async function handler(
     const banquet = await prisma.banquet.findMany({
       where: { cigratteIndustryId, isArchived: false },
     });
+    //30. find expensiveLabel
+    const expensiveLabel = await prisma.expensiveLabel.findMany({
+      where: { workShopId: { in: workShopIds }, isArchived: false },
+    });
     return res.json({
       industry,
       workShop,
@@ -288,6 +292,7 @@ export default async function handler(
       plastic,
       store,
       banquet,
+      expensiveLabel,
     });
   }
 }

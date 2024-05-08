@@ -1,4 +1,4 @@
-import { createNewGarage, garageSlice } from "@/types/garageType";
+import { createNewGarage, garageSlice, updateGarage } from "@/types/garageType";
 import Config from "@/utils/config";
 import { Garage } from "@prisma/client";
 import { PayloadAction, createAsyncThunk, createSlice } from "@reduxjs/toolkit";
@@ -25,6 +25,28 @@ export const CreateGarage = createAsyncThunk(
       });
       const { newGarage } = await response.json();
       thunkApi.dispatch(addGarage(newGarage));
+      onSuccess && onSuccess();
+    } catch (err) {
+      onError && onError();
+    }
+  }
+);
+
+export const UpdatedGarage = createAsyncThunk(
+  "garage/UpdateGarage",
+  async (option: updateGarage, thunkApi) => {
+    const { name, id, onSuccess, onError } = option;
+
+    try {
+      const response = await fetch(`${Config.apiBaseUrl}/garage`, {
+        method: "PUT",
+        headers: {
+          "content-type": "application/json",
+        },
+        body: JSON.stringify({ name, id }),
+      });
+      const { updateGarage } = await response.json();
+      thunkApi.dispatch(updatedGarage(updateGarage));
       onSuccess && onSuccess();
     } catch (err) {
       onError && onError();
@@ -59,9 +81,19 @@ const GarageSlice = createSlice({
     addGarage: (state, action: PayloadAction<Garage>) => {
       state.item = [...state.item, action.payload];
     },
+    updatedGarage: (state, action: PayloadAction<Garage>) => {
+      state.item = state.item.map((item) =>
+        item.id === action.payload.id ? action.payload : item
+      );
+    },
   },
 });
 
-export const { setGarage, setSelectedGarage, setIsLoading, addGarage } =
-  GarageSlice.actions;
+export const {
+  setGarage,
+  setSelectedGarage,
+  setIsLoading,
+  addGarage,
+  updatedGarage,
+} = GarageSlice.actions;
 export default GarageSlice.reducer;

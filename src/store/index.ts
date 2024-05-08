@@ -31,6 +31,7 @@ import plasticReducer from "./slices/typeOfPlastic";
 import banquetReducer from "./slices/typeOfBanquet";
 import storeReducer from "./slices/typeOfStore";
 import plasticStockReducer from "./slices/plasticStock";
+import expensiveLabelReducer from "./slices/moneyTitle";
 
 export const store = configureStore({
   reducer: {
@@ -66,6 +67,7 @@ export const store = configureStore({
     typeOfBanquet: banquetReducer,
     typeOfStore: storeReducer,
     plasticStock: plasticStockReducer,
+    expensiveLabel: expensiveLabelReducer,
   },
 });
 

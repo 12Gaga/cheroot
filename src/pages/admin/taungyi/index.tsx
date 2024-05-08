@@ -5,9 +5,14 @@ import NewStore from "@/components/taungyi/newStore";
 import { useAppSelector } from "@/store/hooks";
 import { Box, Button, Typography } from "@mui/material";
 import { useState } from "react";
+import UpdateStore from "@/components/taungyi/updateStore";
+import DeleteStore from "@/components/taungyi/deleteStore";
 const Store = () => {
   const [open, setOpen] = useState<boolean>(false);
   const stores = useAppSelector((store) => store.typeOfStore.item);
+  const [updateOpen, setUpdateOpen] = useState<boolean>(false);
+  const [deleteOpen, setDeleteOpen] = useState<boolean>(false);
+  const [selectId, setSelectId] = useState<number>(0);
   return (
     <>
       <AdminLayout>
@@ -43,12 +48,34 @@ const Store = () => {
         <Box sx={{ display: "flex", flexWrap: "wrap" }}>
           {stores.map((item) => {
             return (
-              <ItemCard key={item.id} icon={<StoreIcon />} title={item.name} />
+              <ItemCard
+                key={item.id}
+                icon={<StoreIcon />}
+                title={item.name}
+                onUpdateClcik={() => {
+                  setUpdateOpen(true);
+                  setSelectId(item.id);
+                }}
+                onDeleteClcik={() => {
+                  setDeleteOpen(true);
+                  setSelectId(item.id);
+                }}
+              />
             );
           })}
         </Box>
 
         <NewStore open={open} setOpen={setOpen} />
+        <UpdateStore
+          updateOpen={updateOpen}
+          setUpdateOpen={setUpdateOpen}
+          selectedId={selectId}
+        />
+        <DeleteStore
+          deleteOpen={deleteOpen}
+          setDeleteOpen={setDeleteOpen}
+          selectedId={selectId}
+        />
       </AdminLayout>
     </>
   );

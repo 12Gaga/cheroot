@@ -12,3 +12,8 @@ export interface createNewWorkShop extends BasicOption {
   name: string;
   industryId: number | null;
 }
+
+export interface updateWorkShop extends BasicOption {
+  id: number | null;
+  name: string;
+}

@@ -6,9 +6,14 @@ import { useAppSelector } from "@/store/hooks";
 import { Box, Button, Typography } from "@mui/material";
 import { useState } from "react";
 import NewBanquet from "@/components/taungyi/newBanquet";
+import UpdateBanquet from "@/components/taungyi/updateBanquet";
+import DeleteBanquet from "@/components/taungyi/deleteBanquet";
 const Banquet = () => {
   const [open, setOpen] = useState<boolean>(false);
   const banquets = useAppSelector((store) => store.typeOfBanquet.item);
+  const [updateOpen, setUpdateOpen] = useState<boolean>(false);
+  const [deleteOpen, setDeleteOpen] = useState<boolean>(false);
+  const [selectId, setSelectId] = useState<number>(0);
   return (
     <>
       <AdminLayout>
@@ -48,12 +53,30 @@ const Banquet = () => {
                 key={item.id}
                 icon={<HouseSidingIcon />}
                 title={item.name}
+                onUpdateClcik={() => {
+                  setUpdateOpen(true);
+                  setSelectId(item.id);
+                }}
+                onDeleteClcik={() => {
+                  setDeleteOpen(true);
+                  setSelectId(item.id);
+                }}
               />
             );
           })}
         </Box>
 
         <NewBanquet open={open} setOpen={setOpen} />
+        <UpdateBanquet
+          updateOpen={updateOpen}
+          setUpdateOpen={setUpdateOpen}
+          selectedId={selectId}
+        />
+        <DeleteBanquet
+          deleteOpen={deleteOpen}
+          setDeleteOpen={setDeleteOpen}
+          selectedId={selectId}
+        />
       </AdminLayout>
     </>
   );

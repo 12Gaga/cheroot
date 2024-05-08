@@ -17,6 +17,15 @@ export default async function handler(
       data: { name, price, workShopId },
     });
     return res.status(200).json({ newCheroot });
+  } else if (method === "PUT") {
+    const { name, price, id } = req.body;
+    const isValid = name && price != undefined && id;
+    if (!isValid) return res.status(405).send("bad request");
+    const updateCheroot = await prisma.typeOfCheroot.update({
+      where: { id },
+      data: { name, price },
+    });
+    return res.status(200).json({ updateCheroot });
   }
   res.status(200).json("bad request");
 }

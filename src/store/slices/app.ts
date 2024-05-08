@@ -30,6 +30,7 @@ import { setShop } from "./typeOfShop";
 import { setPlastic } from "./typeOfPlastic";
 import { setStore } from "./typeOfStore";
 import { setBanquet } from "./typeOfBanquet";
+import { setTitle } from "./moneyTitle";
 
 const initialState: appSlice = {
   init: false,
@@ -74,6 +75,7 @@ export const fetchApp = createAsyncThunk(
         plastic,
         store,
         banquet,
+        expensiveLabel,
       } = dataFromServer;
       thunkApi.dispatch(setInit(true));
       thunkApi.dispatch(setIndustry(industry));
@@ -105,6 +107,7 @@ export const fetchApp = createAsyncThunk(
       thunkApi.dispatch(setLeafDeduction(leafDeduction));
       thunkApi.dispatch(setOtherDeduction(otherDeduction));
       thunkApi.dispatch(setExtraPurchase(extraPurchase));
+      thunkApi.dispatch(setTitle(expensiveLabel));
       onSuccess && onSuccess();
     } catch (err) {
       onError && onError(err);

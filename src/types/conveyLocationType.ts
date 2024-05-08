@@ -10,3 +10,8 @@ export interface conveyLocationSlice {
 export interface createNewConveyLocation extends BasicOption {
   name: string;
 }
+
+export interface updateConveyLocation extends BasicOption {
+  id: number | null;
+  name: string;
+}

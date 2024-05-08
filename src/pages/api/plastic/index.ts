@@ -17,6 +17,15 @@ export default async function handler(
       data: { name, workShopId },
     });
     return res.status(200).json({ newPlastic });
+  } else if (method === "PUT") {
+    const { name, id } = req.body;
+    const isValid = name && id;
+    if (!isValid) return res.status(405).send("bad request");
+    const updatePlastic = await prisma.typeOfPlastic.update({
+      where: { id },
+      data: { name },
+    });
+    return res.status(200).json({ updatePlastic });
   }
   res.status(200).json("bad request");
 }

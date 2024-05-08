@@ -1,11 +1,18 @@
 import AdminLayout from "@/components/adminLayout";
+import ItemCard from "@/components/itemCard";
 import NewMoneyTitle from "@/components/money/newMoneyTitle";
+import { useAppSelector } from "@/store/hooks";
 import { Box, Button, Typography } from "@mui/material";
 import { useState } from "react";
-
+import HomeWorkIcon from "@mui/icons-material/HomeWork";
+import UpdateTitle from "@/components/money/updateTitle";
+import DeleteTitle from "@/components/money/deleteTitle";
 const MoneyData = () => {
   const [open, setOpen] = useState<boolean>(false);
-
+  const titles = useAppSelector((store) => store.expensiveLabel.item);
+  const [updateOpen, setUpdateOpen] = useState<boolean>(false);
+  const [deleteOpen, setDeleteOpen] = useState<boolean>(false);
+  const [selectId, setSelectId] = useState<number>(0);
   return (
     <>
       <AdminLayout>
@@ -36,7 +43,40 @@ const MoneyData = () => {
             ငွေစာရင်းခေါင်းစဉ်အသစ်ထည့်ခြင်း
           </Button>
         </Box>
+        <Box sx={{ display: "flex", flexWrap: "wrap" }}>
+          {titles.map((item) => {
+            const workShopId = localStorage.getItem("selectedWorkShopId");
+            const exit = item.workShopId === Number(workShopId);
+            if (!exit) return null;
+            return (
+              <ItemCard
+                key={item.id}
+                icon={<HomeWorkIcon />}
+                title={item.name}
+                onUpdateClcik={() => {
+                  setUpdateOpen(true);
+                  setSelectId(item.id);
+                }}
+                onDeleteClcik={() => {
+                  setDeleteOpen(true);
+                  setSelectId(item.id);
+                }}
+              />
+            );
+          })}
+        </Box>
+
         <NewMoneyTitle open={open} setOpen={setOpen} />
+        <UpdateTitle
+          updateOpen={updateOpen}
+          setUpdateOpen={setUpdateOpen}
+          selectedId={selectId}
+        />
+        <DeleteTitle
+          deleteOpen={deleteOpen}
+          setDeleteOpen={setDeleteOpen}
+          selectedId={selectId}
+        />
       </AdminLayout>
     </>
   );
