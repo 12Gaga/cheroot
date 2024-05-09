@@ -84,7 +84,7 @@ const LabelOpen = ({ open, setOpen }: Props) => {
             <Typography sx={{ mr: 2, fontWeight: "bold" }}>ရက်စွဲ</Typography>
             <DatePicker
               selected={selecteddate}
-              onChange={(date) => setSelectedDate(date)}
+              onChange={(date) => setSelectedDate(date?.toLocaleDateString())}
             />
           </Box>
 

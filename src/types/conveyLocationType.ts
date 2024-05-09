@@ -15,3 +15,7 @@ export interface updateConveyLocation extends BasicOption {
   id: number | null;
   name: string;
 }
+
+export interface deleteConveyLocation extends BasicOption {
+  id: number;
+}

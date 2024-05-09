@@ -17,3 +17,7 @@ export interface updateTabacco extends BasicOption {
   name: string;
   price: number;
 }
+
+export interface deleteTabacco extends BasicOption {
+  id: number;
+}

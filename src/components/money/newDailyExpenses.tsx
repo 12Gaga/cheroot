@@ -20,7 +20,9 @@ interface Props {
 }
 
 const NewDailyExpenses = ({ open, setOpen }: Props) => {
-  const [selecteddate, setSelectedDate] = useState<any>(new Date());
+  const [selecteddate, setSelectedDate] = useState<any>(
+    new Date().toLocaleDateString()
+  );
   const [selectedTitle, setSelectedTitle] = useState<number>(1);
   return (
     <Dialog open={open} onClose={() => setOpen(false)}>
@@ -38,7 +40,7 @@ const NewDailyExpenses = ({ open, setOpen }: Props) => {
             <Typography sx={{ mr: 2, fontWeight: "bold" }}>ရက်စွဲ</Typography>
             <DatePicker
               selected={selecteddate}
-              onChange={(date) => setSelectedDate(date)}
+              onChange={(date) => setSelectedDate(date?.toLocaleDateString())}
             />
           </Box>
 

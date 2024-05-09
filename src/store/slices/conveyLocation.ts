@@ -1,6 +1,7 @@
 import {
   conveyLocationSlice,
   createNewConveyLocation,
+  deleteConveyLocation,
   updateConveyLocation,
 } from "@/types/conveyLocationType";
 import { createNewGarage, garageSlice } from "@/types/garageType";
@@ -63,6 +64,25 @@ export const UpdatedConveyLocation = createAsyncThunk(
   }
 );
 
+export const DeletedConveyLocation = createAsyncThunk(
+  "location/DeletedConveyLocation",
+  async (option: deleteConveyLocation, thunkApi) => {
+    const { id, onSuccess, onError } = option;
+    try {
+      const response = await fetch(
+        `${Config.apiBaseUrl}/conveyLocation?id=${id}`,
+        {
+          method: "DELETE",
+        }
+      );
+      thunkApi.dispatch(deletedConveyLocation(id));
+      onSuccess && onSuccess();
+    } catch (err) {
+      onError && onError();
+    }
+  }
+);
+
 const ConveyLocationSlice = createSlice({
   name: "conveyLocation",
   initialState,
@@ -81,6 +101,9 @@ const ConveyLocationSlice = createSlice({
         item.id === action.payload.id ? action.payload : item
       );
     },
+    deletedConveyLocation: (state, action: PayloadAction<number>) => {
+      state.item = state.item.filter((item) => item.id != action.payload);
+    },
   },
 });
 
@@ -89,5 +112,6 @@ export const {
   setIsLoading,
   addConveyLocation,
   updatedConveyLocation,
+  deletedConveyLocation,
 } = ConveyLocationSlice.actions;
 export default ConveyLocationSlice.reducer;

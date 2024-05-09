@@ -20,7 +20,9 @@ interface Props {
   setOpen: (value: boolean) => void;
 }
 const NewTaungyiLeaf = ({ open, setOpen }: Props) => {
-  const [selecteddate, setSelectedDate] = useState<any>(new Date());
+  const [selecteddate, setSelectedDate] = useState<any>(
+    new Date().toLocaleDateString()
+  );
 
   return (
     <>
@@ -30,7 +32,7 @@ const NewTaungyiLeaf = ({ open, setOpen }: Props) => {
             <Typography sx={{ mr: 2, fontWeight: "bold" }}>ရက်စွဲ</Typography>
             <DatePicker
               selected={selecteddate}
-              onChange={(date) => setSelectedDate(date)}
+              onChange={(date) => setSelectedDate(date?.toLocaleDateString())}
             />
           </Box>
 

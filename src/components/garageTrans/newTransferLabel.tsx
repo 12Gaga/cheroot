@@ -19,7 +19,9 @@ interface Props {
   setOpen: (Value: boolean) => void;
 }
 const NewTransferLabel = ({ open, setOpen }: Props) => {
-  const [selecteddate, setSelectedDate] = useState<any>(new Date());
+  const [selecteddate, setSelectedDate] = useState<any>(
+    new Date().toLocaleDateString()
+  );
   const [selectedExitGarage, setSelectedExitGarage] = useState<number>(1);
   const [selectedEnterenceGarage, setSelectedEnterenceGarage] =
     useState<number>(1);
@@ -43,7 +45,7 @@ const NewTransferLabel = ({ open, setOpen }: Props) => {
             <Typography sx={{ mr: 2, fontWeight: "bold" }}>ရက်စွဲ</Typography>
             <DatePicker
               selected={selecteddate}
-              onChange={(date) => setSelectedDate(date)}
+              onChange={(date) => setSelectedDate(date?.toLocaleDateString())}
             />
           </Box>
 

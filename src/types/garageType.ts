@@ -17,3 +17,7 @@ export interface updateGarage extends BasicOption {
   id: number | null;
   name: string;
 }
+
+export interface deleteGarage extends BasicOption {
+  id: number;
+}

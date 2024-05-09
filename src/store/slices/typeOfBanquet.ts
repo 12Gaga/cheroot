@@ -1,5 +1,6 @@
 import {
   CreateNewBanquet,
+  deleteBanquet,
   typeOfBanquetSlice,
   updateBanquet,
 } from "@/types/banquetType";
@@ -62,6 +63,22 @@ export const UpdatedBanquet = createAsyncThunk(
   }
 );
 
+export const DeletedBanquet = createAsyncThunk(
+  "banquet/DeletedBanquet",
+  async (option: deleteBanquet, thunkApi) => {
+    const { id, onSuccess, onError } = option;
+    try {
+      const response = await fetch(`${Config.apiBaseUrl}/banquet?id=${id}`, {
+        method: "DELETE",
+      });
+      thunkApi.dispatch(deletedBanquet(id));
+      onSuccess && onSuccess();
+    } catch (err) {
+      onError && onError();
+    }
+  }
+);
+
 const TypeOfBanquetSlice = createSlice({
   name: "banquet",
   initialState,
@@ -80,9 +97,17 @@ const TypeOfBanquetSlice = createSlice({
         item.id === action.payload.id ? action.payload : item
       );
     },
+    deletedBanquet: (state, action: PayloadAction<number>) => {
+      state.item = state.item.filter((item) => item.id != action.payload);
+    },
   },
 });
 
-export const { setBanquet, setIsLoading, addBanquet, updatedBanquet } =
-  TypeOfBanquetSlice.actions;
+export const {
+  setBanquet,
+  setIsLoading,
+  addBanquet,
+  updatedBanquet,
+  deletedBanquet,
+} = TypeOfBanquetSlice.actions;
 export default TypeOfBanquetSlice.reducer;

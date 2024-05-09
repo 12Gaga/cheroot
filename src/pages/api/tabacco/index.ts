@@ -26,6 +26,15 @@ export default async function handler(
       data: { name, price },
     });
     return res.status(200).json({ updateTabacco });
+  } else if (method === "DELETE") {
+    const id = Number(req.query.id);
+    const isValid = id;
+    if (!isValid) return res.status(405).send("bad request");
+    await prisma.typeOfTabacco.update({
+      data: { isArchived: true },
+      where: { id },
+    });
+    return res.status(200).send("ok");
   }
-  res.status(200).json("bad request");
+  res.status(400).json("bad request");
 }

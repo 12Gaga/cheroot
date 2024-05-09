@@ -7,15 +7,21 @@ import {
   ListItemText,
   TextField,
 } from "@mui/material";
-import { createNewFormOfPacking } from "@/types/formOfPackingType";
+import { updateFormOfPacking } from "@/types/formOfPackingType";
 import { useAppSelector } from "@/store/hooks";
+import { FormOfPacking } from "@prisma/client";
 interface Props {
-  newFormOfPacking: createNewFormOfPacking;
-  setNewFormOfPacking: (value: createNewFormOfPacking) => void;
+  selectFormOfPacking: FormOfPacking;
+  updateFormOfPacking: updateFormOfPacking;
+  setUpdateFormOfPacking: (value: updateFormOfPacking) => void;
 }
-const PlasticData = ({ newFormOfPacking, setNewFormOfPacking }: Props) => {
-  const plastics = useAppSelector((store) => store.typeOfPlastic.item);
+const UpdatePlasticData = ({
+  updateFormOfPacking,
+  setUpdateFormOfPacking,
+  selectFormOfPacking,
+}: Props) => {
   const workShop = useAppSelector((store) => store.workShop.selectedWorkShop);
+  const plastics = useAppSelector((store) => store.typeOfPlastic.item);
   const concernPlastic = plastics.filter(
     (item) => item.workShopId === workShop?.id
   );
@@ -28,10 +34,11 @@ const PlasticData = ({ newFormOfPacking, setNewFormOfPacking }: Props) => {
             <Select
               labelId="demo-simple-select-filled-label"
               id="demo-simple-select-filled"
-              value={newFormOfPacking.packingPlasticId}
+              defaultValue={selectFormOfPacking.packingPlasticId}
+              value={updateFormOfPacking.packingPlasticId}
               onChange={(evt) => {
-                setNewFormOfPacking({
-                  ...newFormOfPacking,
+                setUpdateFormOfPacking({
+                  ...updateFormOfPacking,
                   packingPlasticId: Number(evt.target.value),
                 });
               }}
@@ -49,11 +56,12 @@ const PlasticData = ({ newFormOfPacking, setNewFormOfPacking }: Props) => {
         <Box sx={{ mt: 2, ml: 2 }}>
           <Typography sx={{ fontWeight: "bold" }}>အရေအတွက်</Typography>
           <TextField
+            defaultValue={selectFormOfPacking.packingPlasticQty}
             placeholder="အရေအတွက်"
             sx={{ bgcolor: "#EEE8CF", width: 130 }}
             onChange={(evt) =>
-              setNewFormOfPacking({
-                ...newFormOfPacking,
+              setUpdateFormOfPacking({
+                ...updateFormOfPacking,
                 packingQty: Number(evt.target.value),
               })
             }
@@ -68,10 +76,11 @@ const PlasticData = ({ newFormOfPacking, setNewFormOfPacking }: Props) => {
             <Select
               labelId="demo-simple-select-filled-label"
               id="demo-simple-select-filled"
-              value={newFormOfPacking.warppingPlasticId}
+              defaultValue={selectFormOfPacking.warpingPlasticId}
+              value={updateFormOfPacking.warppingPlasticId}
               onChange={(evt) => {
-                setNewFormOfPacking({
-                  ...newFormOfPacking,
+                setUpdateFormOfPacking({
+                  ...updateFormOfPacking,
                   warppingPlasticId: Number(evt.target.value),
                 });
               }}
@@ -89,11 +98,12 @@ const PlasticData = ({ newFormOfPacking, setNewFormOfPacking }: Props) => {
         <Box sx={{ mt: 2, ml: 2 }}>
           <Typography sx={{ fontWeight: "bold" }}>အရေအတွက်</Typography>
           <TextField
+            defaultValue={selectFormOfPacking.warpingPlasticQty}
             placeholder="အရေအတွက်"
             sx={{ bgcolor: "#EEE8CF", width: 130 }}
             onChange={(evt) =>
-              setNewFormOfPacking({
-                ...newFormOfPacking,
+              setUpdateFormOfPacking({
+                ...updateFormOfPacking,
                 warppingQty: Number(evt.target.value),
               })
             }
@@ -108,10 +118,11 @@ const PlasticData = ({ newFormOfPacking, setNewFormOfPacking }: Props) => {
             <Select
               labelId="demo-simple-select-filled-label"
               id="demo-simple-select-filled"
-              value={newFormOfPacking.coverPlasticId}
+              defaultValue={selectFormOfPacking.coverPlasticId}
+              value={updateFormOfPacking.coverPlasticId}
               onChange={(evt) => {
-                setNewFormOfPacking({
-                  ...newFormOfPacking,
+                setUpdateFormOfPacking({
+                  ...updateFormOfPacking,
                   coverPlasticId: Number(evt.target.value),
                 });
               }}
@@ -129,11 +140,12 @@ const PlasticData = ({ newFormOfPacking, setNewFormOfPacking }: Props) => {
         <Box sx={{ mt: 2, ml: 2 }}>
           <Typography sx={{ fontWeight: "bold" }}>အရေအတွက်</Typography>
           <TextField
+            defaultValue={selectFormOfPacking.coverPlasticQty}
             placeholder="အရေအတွက်"
             sx={{ bgcolor: "#EEE8CF", width: 130 }}
             onChange={(evt) =>
-              setNewFormOfPacking({
-                ...newFormOfPacking,
+              setUpdateFormOfPacking({
+                ...updateFormOfPacking,
                 coverQty: Number(evt.target.value),
               })
             }
@@ -143,4 +155,4 @@ const PlasticData = ({ newFormOfPacking, setNewFormOfPacking }: Props) => {
     </>
   );
 };
-export default PlasticData;
+export default UpdatePlasticData;

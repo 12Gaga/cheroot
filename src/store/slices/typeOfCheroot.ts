@@ -1,5 +1,6 @@
 import {
   createNewCheroot,
+  deleteCheroot,
   typeOfCherootSlice,
   updateCheroot,
 } from "@/types/cherootType";
@@ -31,6 +32,22 @@ export const CreateCheroot = createAsyncThunk(
       );
       const { newCheroot } = await response.json();
       thunkApi.dispatch(addCheroot(newCheroot));
+      onSuccess && onSuccess();
+    } catch (err) {
+      onError && onError();
+    }
+  }
+);
+
+export const DeletedCheroot = createAsyncThunk(
+  "cheroot/DeletedCheroot",
+  async (option: deleteCheroot, thunkApi) => {
+    const { id, onSuccess, onError } = option;
+    try {
+      const response = await fetch(`${Config.apiBaseUrl}/cheroot?id=${id}`, {
+        method: "DELETE",
+      });
+      thunkApi.dispatch(deletedCheroot(id));
       onSuccess && onSuccess();
     } catch (err) {
       onError && onError();
@@ -81,9 +98,17 @@ const TypeOfCherootSlice = createSlice({
         item.id === action.payload.id ? action.payload : item
       );
     },
+    deletedCheroot: (state, action: PayloadAction<number>) => {
+      state.item = state.item.filter((item) => item.id != action.payload);
+    },
   },
 });
 
-export const { setCheroot, setIsLoading, addCheroot, updatedCheroot } =
-  TypeOfCherootSlice.actions;
+export const {
+  setCheroot,
+  setIsLoading,
+  addCheroot,
+  updatedCheroot,
+  deletedCheroot,
+} = TypeOfCherootSlice.actions;
 export default TypeOfCherootSlice.reducer;

@@ -15,3 +15,7 @@ export interface updateTitle extends BasicOption {
   id: number | null;
   name: string;
 }
+
+export interface deleteTitle extends BasicOption {
+  id: number;
+}

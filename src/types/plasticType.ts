@@ -15,3 +15,7 @@ export interface updatePlastic extends BasicOption {
   id: number | null;
   name: string;
 }
+
+export interface deletePlastic extends BasicOption {
+  id: number;
+}

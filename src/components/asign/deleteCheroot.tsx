@@ -7,6 +7,8 @@ import {
 } from "@mui/material";
 import { LoadingButton } from "@mui/lab";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
+import { DeletedCheroot, setIsLoading } from "@/store/slices/typeOfCheroot";
+import { setOpenSnackbar } from "@/store/slices/snackBar";
 
 interface Props {
   deleteOpen: boolean;
@@ -20,13 +22,23 @@ const DeleteCheroot = ({ deleteOpen, setDeleteOpen, selectedId }: Props) => {
   const { isLoading } = useAppSelector((store) => store.typeOfCheroot);
   const dispatch = useAppDispatch();
   const handleClick = () => {
-    // dispatch(setIsLoading(true));
+    dispatch(setIsLoading(true));
+    dispatch(
+      DeletedCheroot({
+        id: selectedId,
+        onSuccess: () => {
+          setDeleteOpen(false),
+            dispatch(setOpenSnackbar({ message: "Delete cheroot success" }));
+          dispatch(setIsLoading(false));
+        },
+      })
+    );
   };
   if (!selectCheroot) return null;
   return (
     <Dialog open={deleteOpen} onClose={() => setDeleteOpen(false)}>
       <DialogContent>
-        <Typography>{selectCheroot.name}ကိုဖျက်မှာသေချာသလား?</Typography>
+        <Typography>{selectCheroot.name}ကိုဖျက်မှာသေချာပါသလား?</Typography>
       </DialogContent>
       <DialogActions>
         <Button

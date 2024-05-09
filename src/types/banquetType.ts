@@ -16,3 +16,7 @@ export interface updateBanquet extends BasicOption {
   id: number | null;
   name: string;
 }
+
+export interface deleteBanquet extends BasicOption {
+  id: number;
+}

@@ -1,5 +1,9 @@
 import { createNewFilterSize } from "@/types/FilterSizeType";
-import { typeOfTabaccoSlice, updateTabacco } from "@/types/tabaccoType";
+import {
+  deleteTabacco,
+  typeOfTabaccoSlice,
+  updateTabacco,
+} from "@/types/tabaccoType";
 import Config from "@/utils/config";
 import { TypeOfTabacco } from "@prisma/client";
 import { PayloadAction, createAsyncThunk, createSlice } from "@reduxjs/toolkit";
@@ -60,6 +64,22 @@ export const UpdatedTabacco = createAsyncThunk(
   }
 );
 
+export const DeletedTabacco = createAsyncThunk(
+  "tabacco/DeletedTabacco",
+  async (option: deleteTabacco, thunkApi) => {
+    const { id, onSuccess, onError } = option;
+    try {
+      const response = await fetch(`${Config.apiBaseUrl}/tabacco?id=${id}`, {
+        method: "DELETE",
+      });
+      thunkApi.dispatch(deletedTabacco(id));
+      onSuccess && onSuccess();
+    } catch (err) {
+      onError && onError();
+    }
+  }
+);
+
 const TypeOfTabaccoSlice = createSlice({
   name: "tabacco",
   initialState,
@@ -78,9 +98,17 @@ const TypeOfTabaccoSlice = createSlice({
         item.id === action.payload.id ? action.payload : item
       );
     },
+    deletedTabacco: (state, action: PayloadAction<number>) => {
+      state.item = state.item.filter((item) => item.id != action.payload);
+    },
   },
 });
 
-export const { setTabacco, addTabacco, setIsLoading, updatedTabacco } =
-  TypeOfTabaccoSlice.actions;
+export const {
+  setTabacco,
+  addTabacco,
+  setIsLoading,
+  updatedTabacco,
+  deletedTabacco,
+} = TypeOfTabaccoSlice.actions;
 export default TypeOfTabaccoSlice.reducer;

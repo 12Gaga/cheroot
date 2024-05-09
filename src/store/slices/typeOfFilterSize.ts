@@ -4,6 +4,7 @@ import { PayloadAction, createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { addleaf } from "./typeOfLeaf";
 import {
   createNewFilterSize,
+  deleteFilterSize,
   typeOfFilterSizeSlice,
   updateFilterSize,
 } from "@/types/FilterSizeType";
@@ -64,6 +65,22 @@ export const UpdatedFilterSize = createAsyncThunk(
   }
 );
 
+export const DeletedFilterSize = createAsyncThunk(
+  "filterSize/DeletedFilterSize",
+  async (option: deleteFilterSize, thunkApi) => {
+    const { id, onSuccess, onError } = option;
+    try {
+      const response = await fetch(`${Config.apiBaseUrl}/filterSize?id=${id}`, {
+        method: "DELETE",
+      });
+      thunkApi.dispatch(deletedFilterSize(id));
+      onSuccess && onSuccess();
+    } catch (err) {
+      onError && onError();
+    }
+  }
+);
+
 const TypeOfFilterSizeSlice = createSlice({
   name: "filterSize",
   initialState,
@@ -82,9 +99,17 @@ const TypeOfFilterSizeSlice = createSlice({
         item.id === action.payload.id ? action.payload : item
       );
     },
+    deletedFilterSize: (state, action: PayloadAction<number>) => {
+      state.item = state.item.filter((item) => item.id != action.payload);
+    },
   },
 });
 
-export const { setFilterSize, addFilterSize, setIsLoading, updatedFilterSize } =
-  TypeOfFilterSizeSlice.actions;
+export const {
+  setFilterSize,
+  addFilterSize,
+  setIsLoading,
+  updatedFilterSize,
+  deletedFilterSize,
+} = TypeOfFilterSizeSlice.actions;
 export default TypeOfFilterSizeSlice.reducer;

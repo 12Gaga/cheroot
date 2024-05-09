@@ -7,17 +7,105 @@ export default async function handler(
 ) {
   const method = req.method;
   if (method === "POST") {
-    const { name, typeOfCherootId, typeOfPackingId, quantity } = req.body;
+    const {
+      name,
+      typeOfCherootId,
+      typeOfPackingId,
+      packingPlasticId,
+      packingQty,
+      warppingPlasticId,
+      warppingQty,
+      coverPlasticId,
+      coverQty,
+      quantity,
+    } = req.body;
     const workShopId = Number(req.query.workShopId);
     console.log("workShopId", workShopId);
     const isValid =
-      name && typeOfCherootId && typeOfPackingId && quantity != undefined;
+      name &&
+      typeOfCherootId &&
+      typeOfPackingId &&
+      packingPlasticId &&
+      packingQty != undefined &&
+      warppingPlasticId &&
+      warppingQty != undefined &&
+      coverPlasticId &&
+      coverQty != undefined &&
+      quantity != undefined;
     if (!isValid) return res.status(405).send("bad requestsss");
 
     const newFormOfPacking = await prisma.formOfPacking.create({
-      data: { name, typeOfCherootId, typeOfPackingId, workShopId, quantity },
+      data: {
+        name,
+        typeOfCherootId,
+        typeOfPackingId,
+        packingPlasticId,
+        packingPlasticQty: packingQty,
+        warpingPlasticId: warppingPlasticId,
+        warpingPlasticQty: warppingQty,
+        coverPlasticId,
+        coverPlasticQty: coverQty,
+        cherootQty: quantity,
+        workShopId,
+      },
     });
     return res.status(200).json({ newFormOfPacking });
+  } else if (method === "PUT") {
+    const {
+      id,
+      name,
+      typeOfCherootId,
+      typeOfPackingId,
+      packingPlasticId,
+      packingQty,
+      warppingPlasticId,
+      warppingQty,
+      coverPlasticId,
+      coverQty,
+      quantity,
+    } = req.body;
+    const workShopId = Number(req.query.workShopId);
+    console.log("workShopId", workShopId);
+    const isValid =
+      id &&
+      name &&
+      typeOfCherootId &&
+      typeOfPackingId &&
+      packingPlasticId &&
+      packingQty != undefined &&
+      warppingPlasticId &&
+      warppingQty != undefined &&
+      coverPlasticId &&
+      coverQty != undefined &&
+      quantity != undefined;
+    if (!isValid) return res.status(405).send("bad requestsss");
+
+    const updateFormOfPacking = await prisma.formOfPacking.update({
+      where: { id },
+      data: {
+        name,
+        typeOfCherootId,
+        typeOfPackingId,
+        packingPlasticId,
+        packingPlasticQty: packingQty,
+        warpingPlasticId: warppingPlasticId,
+        warpingPlasticQty: warppingQty,
+        coverPlasticId,
+        coverPlasticQty: coverQty,
+        cherootQty: quantity,
+        workShopId,
+      },
+    });
+    return res.status(200).json({ updateFormOfPacking });
+  } else if (method === "DELETE") {
+    const id = Number(req.query.id);
+    const isValid = id;
+    if (!isValid) return res.status(405).send("bad request");
+    await prisma.formOfPacking.update({
+      data: { isArchived: true },
+      where: { id },
+    });
+    return res.status(200).send("ok");
   }
-  res.status(200).json("bad request");
+  res.status(400).json("bad request");
 }

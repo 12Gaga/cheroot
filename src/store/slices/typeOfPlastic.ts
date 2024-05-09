@@ -1,5 +1,6 @@
 import {
   CreateNewPlastic,
+  deletePlastic,
   typeOfPlasticSlice,
   updatePlastic,
 } from "@/types/plasticType";
@@ -63,6 +64,22 @@ export const UpdatedPlastic = createAsyncThunk(
   }
 );
 
+export const DeletedPlastic = createAsyncThunk(
+  "plastic/DeletedPlastic",
+  async (option: deletePlastic, thunkApi) => {
+    const { id, onSuccess, onError } = option;
+    try {
+      const response = await fetch(`${Config.apiBaseUrl}/plastic?id=${id}`, {
+        method: "DELETE",
+      });
+      thunkApi.dispatch(deletedPlastic(id));
+      onSuccess && onSuccess();
+    } catch (err) {
+      onError && onError();
+    }
+  }
+);
+
 const TypeOfPlasticSlice = createSlice({
   name: "plastic",
   initialState,
@@ -81,9 +98,17 @@ const TypeOfPlasticSlice = createSlice({
         item.id === action.payload.id ? action.payload : item
       );
     },
+    deletedPlastic: (state, action: PayloadAction<number>) => {
+      state.item = state.item.filter((item) => item.id != action.payload);
+    },
   },
 });
 
-export const { setPlastic, setIsLoading, addPlastic, updatedPlastic } =
-  TypeOfPlasticSlice.actions;
+export const {
+  setPlastic,
+  setIsLoading,
+  addPlastic,
+  updatedPlastic,
+  deletedPlastic,
+} = TypeOfPlasticSlice.actions;
 export default TypeOfPlasticSlice.reducer;

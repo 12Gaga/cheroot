@@ -17,3 +17,7 @@ export interface updateLeaf extends BasicOption {
   name: string;
   price: number;
 }
+
+export interface deleteLeaf extends BasicOption {
+  id: number;
+}

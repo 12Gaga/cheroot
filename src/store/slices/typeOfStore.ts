@@ -2,6 +2,7 @@ import { CreateNewBanquet, typeOfBanquetSlice } from "@/types/banquetType";
 import { CreateNewPlastic, typeOfPlasticSlice } from "@/types/plasticType";
 import {
   CreateNewStore,
+  deleteStore,
   typeOfStoreSlice,
   updateStore,
 } from "@/types/storeType";
@@ -65,6 +66,22 @@ export const UpdatedStore = createAsyncThunk(
   }
 );
 
+export const DeletedStore = createAsyncThunk(
+  "store/DeletedStore",
+  async (option: deleteStore, thunkApi) => {
+    const { id, onSuccess, onError } = option;
+    try {
+      const response = await fetch(`${Config.apiBaseUrl}/store?id=${id}`, {
+        method: "DELETE",
+      });
+      thunkApi.dispatch(deletedStore(id));
+      onSuccess && onSuccess();
+    } catch (err) {
+      onError && onError();
+    }
+  }
+);
+
 const TypeOfStoreSlice = createSlice({
   name: "store",
   initialState,
@@ -83,9 +100,12 @@ const TypeOfStoreSlice = createSlice({
         item.id === action.payload.id ? action.payload : item
       );
     },
+    deletedStore: (state, action: PayloadAction<number>) => {
+      state.item = state.item.filter((item) => item.id != action.payload);
+    },
   },
 });
 
-export const { setStore, setIsLoading, addStore, updatedStore } =
+export const { setStore, setIsLoading, addStore, updatedStore, deletedStore } =
   TypeOfStoreSlice.actions;
 export default TypeOfStoreSlice.reducer;

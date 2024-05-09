@@ -1,5 +1,6 @@
 import {
   createNewWorkShop,
+  deleteWorkshop,
   updateWorkShop,
   workShopSlice,
 } from "@/types/workShopType";
@@ -61,6 +62,22 @@ export const UpdatedWorkShop = createAsyncThunk(
   }
 );
 
+export const DeletedWorkShop = createAsyncThunk(
+  "workShop/DeletedWorkShop",
+  async (option: deleteWorkshop, thunkApi) => {
+    const { id, onSuccess, onError } = option;
+    try {
+      const response = await fetch(`${Config.apiBaseUrl}/workShop?id=${id}`, {
+        method: "DELETE",
+      });
+      thunkApi.dispatch(deletedWorkShop(id));
+      onSuccess && onSuccess();
+    } catch (err) {
+      onError && onError();
+    }
+  }
+);
+
 const WorkShopSlice = createSlice({
   name: "workShop",
   initialState,
@@ -95,6 +112,9 @@ const WorkShopSlice = createSlice({
         item.id === action.payload.id ? action.payload : item
       );
     },
+    deletedWorkShop: (state, action: PayloadAction<number>) => {
+      state.item = state.item.filter((item) => item.id != action.payload);
+    },
   },
 });
 
@@ -104,5 +124,6 @@ export const {
   setIsLoading,
   addWorkShop,
   updatedWorkShop,
+  deletedWorkShop,
 } = WorkShopSlice.actions;
 export default WorkShopSlice.reducer;

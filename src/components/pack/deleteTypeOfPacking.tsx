@@ -7,11 +7,9 @@ import {
 } from "@mui/material";
 import { LoadingButton } from "@mui/lab";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
-import {
-  DeletedFilterSize,
-  setIsLoading,
-} from "@/store/slices/typeOfFilterSize";
+import { DeletedLeaf, setIsLoading } from "@/store/slices/typeOfLeaf";
 import { setOpenSnackbar } from "@/store/slices/snackBar";
+import { DeletedTypeOfPacking } from "@/store/slices/typeOfPacking";
 
 interface Props {
   deleteOpen: boolean;
@@ -19,31 +17,39 @@ interface Props {
   selectedId: number;
 }
 
-const DeleteFilterSize = ({ deleteOpen, setDeleteOpen, selectedId }: Props) => {
-  const filterSize = useAppSelector((store) => store.typeOfFilterSize.item);
-  const selectFilterSize = filterSize.find((item) => item.id === selectedId);
-  const { isLoading } = useAppSelector((store) => store.typeOfFilterSize);
+const DeleteTypeOfPacking = ({
+  deleteOpen,
+  setDeleteOpen,
+  selectedId,
+}: Props) => {
+  const typeOfPacking = useAppSelector((store) => store.typeOfPacking.item);
+  const selectTypeOfPacking = typeOfPacking.find(
+    (item) => item.id === selectedId
+  );
+  const { isLoading } = useAppSelector((store) => store.typeOfPacking);
   const dispatch = useAppDispatch();
   const handleClick = () => {
     dispatch(setIsLoading(true));
     dispatch(
-      DeletedFilterSize({
+      DeletedTypeOfPacking({
         id: selectedId,
         onSuccess: () => {
           setDeleteOpen(false),
             dispatch(
-              setOpenSnackbar({ message: "Delete filter size success" })
+              setOpenSnackbar({ message: "Delete type of packing success" })
             );
           dispatch(setIsLoading(false));
         },
       })
     );
   };
-  if (!selectFilterSize) return null;
+  if (!selectTypeOfPacking) return null;
   return (
     <Dialog open={deleteOpen} onClose={() => setDeleteOpen(false)}>
       <DialogContent>
-        <Typography>{selectFilterSize.name}ကိုဖျက်မှာသေချာပါသလား?</Typography>
+        <Typography>
+          {selectTypeOfPacking.name}ကိုဖျက်မှာသေချာပါသလား?
+        </Typography>
       </DialogContent>
       <DialogActions>
         <Button
@@ -66,4 +72,4 @@ const DeleteFilterSize = ({ deleteOpen, setDeleteOpen, selectedId }: Props) => {
   );
 };
 
-export default DeleteFilterSize;
+export default DeleteTypeOfPacking;

@@ -106,7 +106,7 @@ const ExtraPurTop = ({
           <Typography sx={{ mr: 2 }}>ရက်စွဲ</Typography>
           <DatePicker
             selected={selecteddate}
-            onChange={(date) => setSelectedDate(date)}
+            onChange={(date) => setSelectedDate(date?.toLocaleDateString())}
           />
         </Box>
       </Box>

@@ -1,5 +1,6 @@
 import {
   createNewLabel,
+  deleteLabel,
   typeOfLabelSlice,
   updateLabel,
 } from "@/types/labelType";
@@ -63,6 +64,22 @@ export const UpdatedLabel = createAsyncThunk(
   }
 );
 
+export const DeletedLabel = createAsyncThunk(
+  "label/DeletedLabel",
+  async (option: deleteLabel, thunkApi) => {
+    const { id, onSuccess, onError } = option;
+    try {
+      const response = await fetch(`${Config.apiBaseUrl}/label?id=${id}`, {
+        method: "DELETE",
+      });
+      thunkApi.dispatch(deletedLabel(id));
+      onSuccess && onSuccess();
+    } catch (err) {
+      onError && onError();
+    }
+  }
+);
+
 const TypeOfLabelSlice = createSlice({
   name: "label",
   initialState,
@@ -81,9 +98,12 @@ const TypeOfLabelSlice = createSlice({
         item.id === action.payload.id ? action.payload : item
       );
     },
+    deletedLabel: (state, action: PayloadAction<number>) => {
+      state.item = state.item.filter((item) => item.id != action.payload);
+    },
   },
 });
 
-export const { setLabel, addLabel, setIsLoading, updatedLabel } =
+export const { setLabel, addLabel, setIsLoading, updatedLabel, deletedLabel } =
   TypeOfLabelSlice.actions;
 export default TypeOfLabelSlice.reducer;

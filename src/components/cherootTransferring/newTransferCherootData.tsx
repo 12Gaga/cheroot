@@ -23,7 +23,9 @@ const NewTransferCherootData = ({ open, setOpen }: Props) => {
   const [selectedCheroot, setSelectedCheroot] = useState<number>(1);
   const [selectedTypeOfPacking, setSelectedTypeOfPacking] = useState<number>(1);
   const [selectedFormOfPacking, setSelectedFormOfPacking] = useState<number>(1);
-  const [selecteddate, setSelectedDate] = useState<any>(new Date());
+  const [selecteddate, setSelectedDate] = useState<any>(
+    new Date().toLocaleDateString()
+  );
   const [selectedLocation, setSelectedLocation] = useState<number>(1);
 
   return (
@@ -42,7 +44,7 @@ const NewTransferCherootData = ({ open, setOpen }: Props) => {
             <Typography sx={{ mr: 2, fontWeight: "bold" }}>ရက်စွဲ</Typography>
             <DatePicker
               selected={selecteddate}
-              onChange={(date) => setSelectedDate(date)}
+              onChange={(date) => setSelectedDate(date?.toLocaleDateString())}
             />
           </Box>
 

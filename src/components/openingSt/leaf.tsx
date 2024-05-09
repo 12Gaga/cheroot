@@ -87,11 +87,7 @@ const LeafOpen = ({ open, setOpen }: Props) => {
             <DatePicker
               selected={selecteddate}
               onChange={(date) => {
-                setSelectedDate(date);
-                setNewLeafStock({
-                  ...newLeafStock,
-                  date: selecteddate,
-                });
+                setSelectedDate(date?.toLocaleDateString());
                 console.log("date", date);
               }}
             />

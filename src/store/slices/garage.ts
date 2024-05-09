@@ -1,4 +1,9 @@
-import { createNewGarage, garageSlice, updateGarage } from "@/types/garageType";
+import {
+  createNewGarage,
+  deleteGarage,
+  garageSlice,
+  updateGarage,
+} from "@/types/garageType";
 import Config from "@/utils/config";
 import { Garage } from "@prisma/client";
 import { PayloadAction, createAsyncThunk, createSlice } from "@reduxjs/toolkit";
@@ -54,6 +59,22 @@ export const UpdatedGarage = createAsyncThunk(
   }
 );
 
+export const DeletedGarage = createAsyncThunk(
+  "garage/DeletedGarage",
+  async (option: deleteGarage, thunkApi) => {
+    const { id, onSuccess, onError } = option;
+    try {
+      const response = await fetch(`${Config.apiBaseUrl}/garage?id=${id}`, {
+        method: "DELETE",
+      });
+      thunkApi.dispatch(deletedGarage(id));
+      onSuccess && onSuccess();
+    } catch (err) {
+      onError && onError();
+    }
+  }
+);
+
 const GarageSlice = createSlice({
   name: "garage",
   initialState,
@@ -86,6 +107,9 @@ const GarageSlice = createSlice({
         item.id === action.payload.id ? action.payload : item
       );
     },
+    deletedGarage: (state, action: PayloadAction<number>) => {
+      state.item = state.item.filter((item) => item.id != action.payload);
+    },
   },
 });
 
@@ -95,5 +119,6 @@ export const {
   setIsLoading,
   addGarage,
   updatedGarage,
+  deletedGarage,
 } = GarageSlice.actions;
 export default GarageSlice.reducer;

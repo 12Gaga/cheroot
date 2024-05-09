@@ -7,6 +7,8 @@ import {
 } from "@mui/material";
 import { LoadingButton } from "@mui/lab";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
+import { DeletedPlastic, setIsLoading } from "@/store/slices/typeOfPlastic";
+import { setOpenSnackbar } from "@/store/slices/snackBar";
 
 interface Props {
   deleteOpen: boolean;
@@ -20,13 +22,23 @@ const DeletePlastic = ({ deleteOpen, setDeleteOpen, selectedId }: Props) => {
   const { isLoading } = useAppSelector((store) => store.typeOfPlastic);
   const dispatch = useAppDispatch();
   const handleClick = () => {
-    // dispatch(setIsLoading(true));
+    dispatch(setIsLoading(true));
+    dispatch(
+      DeletedPlastic({
+        id: selectedId,
+        onSuccess: () => {
+          setDeleteOpen(false),
+            dispatch(setOpenSnackbar({ message: "Delete plastic success" }));
+          dispatch(setIsLoading(false));
+        },
+      })
+    );
   };
   if (!selectPlastic) return null;
   return (
     <Dialog open={deleteOpen} onClose={() => setDeleteOpen(false)}>
       <DialogContent>
-        <Typography>{selectPlastic.name}ကိုဖျက်မှာသေချာသလား?</Typography>
+        <Typography>{selectPlastic.name}ကိုဖျက်မှာသေချာပါသလား?</Typography>
       </DialogContent>
       <DialogActions>
         <Button

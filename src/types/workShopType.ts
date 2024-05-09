@@ -17,3 +17,7 @@ export interface updateWorkShop extends BasicOption {
   id: number | null;
   name: string;
 }
+
+export interface deleteWorkshop extends BasicOption {
+  id: number;
+}

@@ -7,6 +7,8 @@ import {
 } from "@mui/material";
 import { LoadingButton } from "@mui/lab";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
+import { DeletedGarage, setIsLoading } from "@/store/slices/garage";
+import { setOpenSnackbar } from "@/store/slices/snackBar";
 
 interface Props {
   deleteOpen: boolean;
@@ -20,13 +22,23 @@ const DeleteGarage = ({ deleteOpen, setDeleteOpen, selectedId }: Props) => {
   const { isLoading } = useAppSelector((store) => store.garage);
   const dispatch = useAppDispatch();
   const handleClick = () => {
-    // dispatch(setIsLoading(true));
+    dispatch(setIsLoading(true));
+    dispatch(
+      DeletedGarage({
+        id: selectedId,
+        onSuccess: () => {
+          setDeleteOpen(false),
+            dispatch(setOpenSnackbar({ message: "Delete garage success" }));
+          dispatch(setIsLoading(false));
+        },
+      })
+    );
   };
   if (!selectGarage) return null;
   return (
     <Dialog open={deleteOpen} onClose={() => setDeleteOpen(false)}>
       <DialogContent>
-        <Typography>{selectGarage.name}ကိုဖျက်မှာသေချာသလား?</Typography>
+        <Typography>{selectGarage.name}ကိုဖျက်မှာသေချာပါသလား?</Typography>
       </DialogContent>
       <DialogActions>
         <Button

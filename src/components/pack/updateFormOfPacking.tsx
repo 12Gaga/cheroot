@@ -14,21 +14,23 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { LoadingButton } from "@mui/lab";
-import { createNewFormOfPacking } from "@/types/formOfPackingType";
+import { updateFormOfPacking } from "@/types/formOfPackingType";
 import {
-  CreateFormOfPacking,
+  UpdatedFormOfPacking,
   setIsLoading,
 } from "@/store/slices/formOfPacking";
-import PlasticData from "./plasticData";
-
+import UpdatePlasticData from "./updateplasticData";
+import { FormOfPacking } from "@prisma/client";
 interface Props {
-  open: boolean;
-  setOpen: (value: boolean) => void;
+  updateOpen: boolean;
+  setUpdateOpen: (value: boolean) => void;
+  selectedId: number;
 }
 
-const defaultValue: createNewFormOfPacking = {
+const defaultValue: updateFormOfPacking = {
+  id: null,
   name: "",
   typeOfCherootId: undefined,
   typeOfPackingId: undefined,
@@ -41,43 +43,78 @@ const defaultValue: createNewFormOfPacking = {
   quantity: 0,
 };
 
-const NewFormOfPacking = ({ open, setOpen }: Props) => {
+const UpdateFormOfPacking = ({
+  updateOpen,
+  setUpdateOpen,
+  selectedId,
+}: Props) => {
+  const formOfPacking = useAppSelector((store) => store.formOfPacking.item);
+  const selectFormOfPacking = formOfPacking.find(
+    (item) => item.id === selectedId
+  );
+  const workShop = useAppSelector((store) => store.workShop.selectedWorkShop);
   const dispatch = useAppDispatch();
-  const [newFormOfPacking, setNewFormOfPacking] =
-    useState<createNewFormOfPacking>(defaultValue);
+  const [updateFormOfPacking, setUpdateFormOfPacking] =
+    useState<updateFormOfPacking>(defaultValue);
   const { isLoading } = useAppSelector((store) => store.formOfPacking);
   const typeOfPackings = useAppSelector((store) => store.typeOfPacking.item);
+  const concernTypeOfPacking = typeOfPackings.filter(
+    (item) => item.workShopId === workShop?.id
+  );
   const cheroots = useAppSelector((store) => store.typeOfCheroot.item);
-
+  const concernCheroot = cheroots.filter(
+    (item) => item.workShopId === workShop?.id
+  );
+  console.log("select", selectFormOfPacking);
   const handleClick = () => {
     dispatch(setIsLoading(true));
     dispatch(
-      CreateFormOfPacking({
-        ...newFormOfPacking,
+      UpdatedFormOfPacking({
+        ...updateFormOfPacking,
         onSuccess: () => {
-          setOpen(false);
-          setNewFormOfPacking(defaultValue);
+          setUpdateOpen(false);
+          setUpdateFormOfPacking(defaultValue);
           dispatch(
-            setOpenSnackbar({ message: "Create new formOfPacking success" })
+            setOpenSnackbar({ message: "Update formOfPacking success" })
           );
           dispatch(setIsLoading(false));
         },
       })
     );
   };
+  useEffect(() => {
+    if (selectFormOfPacking) {
+      setUpdateFormOfPacking({
+        ...updateFormOfPacking,
+        id: selectedId,
+        name: selectFormOfPacking.name,
+        typeOfCherootId: selectFormOfPacking.typeOfCherootId,
+        typeOfPackingId: selectFormOfPacking.typeOfPackingId,
+        packingPlasticId: selectFormOfPacking.packingPlasticId,
+        packingQty: selectFormOfPacking.packingPlasticQty,
+        warppingPlasticId: selectFormOfPacking.warpingPlasticId,
+        warppingQty: selectFormOfPacking.warpingPlasticQty,
+        coverPlasticId: selectFormOfPacking.coverPlasticId,
+        coverQty: selectFormOfPacking.coverPlasticQty,
+        quantity: selectFormOfPacking.cherootQty,
+      });
+    }
+  }, [updateOpen, selectFormOfPacking]);
+  if (!selectFormOfPacking) return null;
   return (
-    <Dialog open={open} onClose={() => setOpen(false)}>
-      <DialogTitle> ထုပ်ပိုးမှုအမျိုးအစားအသစ်ထည့်ခြင်း</DialogTitle>
+    <Dialog open={updateOpen} onClose={() => setUpdateOpen(false)}>
+      <DialogTitle> ပြင်ဆင်ခြင်း</DialogTitle>
       <DialogContent>
         <Box>
           <Box sx={{ mt: 2 }}>
             <Typography sx={{ fontWeight: "bold" }}>ထုပ်ပိုးမှုအမည်</Typography>
             <TextField
+              defaultValue={selectFormOfPacking.name}
               placeholder="ထုပ်ပိုးမှုအမည်"
               sx={{ bgcolor: "#EEE8CF", width: 300 }}
               onChange={(evt) =>
-                setNewFormOfPacking({
-                  ...newFormOfPacking,
+                setUpdateFormOfPacking({
+                  ...updateFormOfPacking,
                   name: evt.target.value,
                 })
               }
@@ -92,16 +129,17 @@ const NewFormOfPacking = ({ open, setOpen }: Props) => {
               <Select
                 labelId="demo-simple-select-filled-label"
                 id="demo-simple-select-filled"
-                value={newFormOfPacking.typeOfCherootId}
+                defaultValue={selectFormOfPacking.typeOfCherootId}
+                value={updateFormOfPacking.typeOfCherootId}
                 onChange={(evt) => {
-                  setNewFormOfPacking({
-                    ...newFormOfPacking,
+                  setUpdateFormOfPacking({
+                    ...updateFormOfPacking,
                     typeOfCherootId: Number(evt.target.value),
                   });
                 }}
                 sx={{ bgcolor: "#EEE8CF" }}
               >
-                {cheroots.map((item) => (
+                {concernCheroot.map((item) => (
                   <MenuItem key={item.id} value={item.id}>
                     <ListItemText primary={item.name} />
                   </MenuItem>
@@ -116,16 +154,17 @@ const NewFormOfPacking = ({ open, setOpen }: Props) => {
               <Select
                 labelId="demo-simple-select-filled-label"
                 id="demo-simple-select-filled"
-                value={newFormOfPacking.typeOfPackingId}
+                defaultValue={selectFormOfPacking.typeOfPackingId}
+                value={updateFormOfPacking.typeOfPackingId}
                 onChange={(evt) => {
-                  setNewFormOfPacking({
-                    ...newFormOfPacking,
+                  setUpdateFormOfPacking({
+                    ...updateFormOfPacking,
                     typeOfPackingId: Number(evt.target.value),
                   });
                 }}
                 sx={{ bgcolor: "#EEE8CF" }}
               >
-                {typeOfPackings.map((item) => (
+                {concernTypeOfPacking.map((item) => (
                   <MenuItem key={item.id} value={item.id}>
                     <ListItemText primary={item.name} />
                   </MenuItem>
@@ -134,19 +173,21 @@ const NewFormOfPacking = ({ open, setOpen }: Props) => {
             </FormControl>
           </Box>
 
-          <PlasticData
-            newFormOfPacking={newFormOfPacking}
-            setNewFormOfPacking={setNewFormOfPacking}
+          <UpdatePlasticData
+            selectFormOfPacking={selectFormOfPacking}
+            updateFormOfPacking={updateFormOfPacking}
+            setUpdateFormOfPacking={setUpdateFormOfPacking}
           />
 
           <Box sx={{ mt: 2 }}>
             <Typography sx={{ fontWeight: "bold" }}>ဆေးလိပ်အရေအတွက်</Typography>
             <TextField
+              defaultValue={selectFormOfPacking.cherootQty}
               placeholder="ဆေးလိပ်အရေအတွက်"
               sx={{ bgcolor: "#EEE8CF", width: 300 }}
               onChange={(evt) =>
-                setNewFormOfPacking({
-                  ...newFormOfPacking,
+                setUpdateFormOfPacking({
+                  ...updateFormOfPacking,
                   quantity: Number(evt.target.value),
                 })
               }
@@ -158,34 +199,22 @@ const NewFormOfPacking = ({ open, setOpen }: Props) => {
         <Button
           variant="contained"
           onClick={() => {
-            setOpen(false);
-            setNewFormOfPacking(defaultValue);
+            setUpdateOpen(false);
+            setUpdateFormOfPacking(defaultValue);
           }}
         >
           မလုပ်တော့ပါ
         </Button>
         <LoadingButton
           variant="contained"
-          disabled={
-            !newFormOfPacking.name ||
-            !newFormOfPacking.typeOfCherootId ||
-            !newFormOfPacking.typeOfPackingId ||
-            !newFormOfPacking.packingPlasticId ||
-            !newFormOfPacking.packingQty ||
-            !newFormOfPacking.warppingPlasticId ||
-            !newFormOfPacking.warppingQty ||
-            !newFormOfPacking.coverPlasticId ||
-            !newFormOfPacking.coverQty ||
-            !newFormOfPacking.quantity
-          }
           onClick={handleClick}
           loading={isLoading}
         >
-          အိုကေ
+          ပြင်မည်
         </LoadingButton>
       </DialogActions>
     </Dialog>
   );
 };
 
-export default NewFormOfPacking;
+export default UpdateFormOfPacking;

@@ -1,5 +1,6 @@
 import {
   createNewTitle,
+  deleteTitle,
   typeOfMoneyTitle,
   updateTitle,
 } from "@/types/moneyTitleType";
@@ -63,6 +64,25 @@ export const UpdatedTitle = createAsyncThunk(
   }
 );
 
+export const DeletedTitle = createAsyncThunk(
+  "tilte/DeletedTitle",
+  async (option: deleteTitle, thunkApi) => {
+    const { id, onSuccess, onError } = option;
+    try {
+      const response = await fetch(
+        `${Config.apiBaseUrl}/expensiveLabel?id=${id}`,
+        {
+          method: "DELETE",
+        }
+      );
+      thunkApi.dispatch(deletedTitle(id));
+      onSuccess && onSuccess();
+    } catch (err) {
+      onError && onError();
+    }
+  }
+);
+
 const ExpensiveLabelSlice = createSlice({
   name: "title",
   initialState,
@@ -81,9 +101,12 @@ const ExpensiveLabelSlice = createSlice({
         item.id === action.payload.id ? action.payload : item
       );
     },
+    deletedTitle: (state, action: PayloadAction<number>) => {
+      state.item = state.item.filter((item) => item.id != action.payload);
+    },
   },
 });
 
-export const { setTitle, setIsLoading, addTitle, updatedTitle } =
+export const { setTitle, setIsLoading, addTitle, updatedTitle, deletedTitle } =
   ExpensiveLabelSlice.actions;
 export default ExpensiveLabelSlice.reducer;

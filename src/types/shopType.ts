@@ -15,3 +15,7 @@ export interface updateShop extends BasicOption {
   id: number | null;
   name: string;
 }
+
+export interface deleteShop extends BasicOption {
+  id: number;
+}

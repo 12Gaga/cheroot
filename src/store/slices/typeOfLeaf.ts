@@ -1,4 +1,9 @@
-import { CreateNewLeaf, typeOfLeafSlice, updateLeaf } from "@/types/LeafType";
+import {
+  CreateNewLeaf,
+  deleteLeaf,
+  typeOfLeafSlice,
+  updateLeaf,
+} from "@/types/LeafType";
 import Config from "@/utils/config";
 import { TypeOfLeaf } from "@prisma/client";
 import { PayloadAction, createAsyncThunk, createSlice } from "@reduxjs/toolkit";
@@ -59,6 +64,22 @@ export const UpdatedLeaf = createAsyncThunk(
   }
 );
 
+export const DeletedLeaf = createAsyncThunk(
+  "leaf/DeletedLeaf",
+  async (option: deleteLeaf, thunkApi) => {
+    const { id, onSuccess, onError } = option;
+    try {
+      const response = await fetch(`${Config.apiBaseUrl}/leaf?id=${id}`, {
+        method: "DELETE",
+      });
+      thunkApi.dispatch(deletedLeaf(id));
+      onSuccess && onSuccess();
+    } catch (err) {
+      onError && onError();
+    }
+  }
+);
+
 const TypeOfLeafSlice = createSlice({
   name: "leaf",
   initialState,
@@ -77,9 +98,12 @@ const TypeOfLeafSlice = createSlice({
         item.id === action.payload.id ? action.payload : item
       );
     },
+    deletedLeaf: (state, action: PayloadAction<number>) => {
+      state.item = state.item.filter((item) => item.id != action.payload);
+    },
   },
 });
 
-export const { setLeaf, setIsLoading, addleaf, updatedLeaf } =
+export const { setLeaf, setIsLoading, addleaf, updatedLeaf, deletedLeaf } =
   TypeOfLeafSlice.actions;
 export default TypeOfLeafSlice.reducer;

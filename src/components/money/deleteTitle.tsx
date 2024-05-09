@@ -7,6 +7,8 @@ import {
 } from "@mui/material";
 import { LoadingButton } from "@mui/lab";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
+import { DeletedTitle, setIsLoading } from "@/store/slices/moneyTitle";
+import { setOpenSnackbar } from "@/store/slices/snackBar";
 
 interface Props {
   deleteOpen: boolean;
@@ -20,13 +22,23 @@ const DeleteTitle = ({ deleteOpen, setDeleteOpen, selectedId }: Props) => {
   const { isLoading } = useAppSelector((store) => store.expensiveLabel);
   const dispatch = useAppDispatch();
   const handleClick = () => {
-    // dispatch(setIsLoading(true));
+    dispatch(setIsLoading(true));
+    dispatch(
+      DeletedTitle({
+        id: selectedId,
+        onSuccess: () => {
+          setDeleteOpen(false),
+            dispatch(setOpenSnackbar({ message: "Delete tilte success" }));
+          dispatch(setIsLoading(false));
+        },
+      })
+    );
   };
   if (!selectTitle) return null;
   return (
     <Dialog open={deleteOpen} onClose={() => setDeleteOpen(false)}>
       <DialogContent>
-        <Typography>{selectTitle.name}ကိုဖျက်မှာသေချာသလား?</Typography>
+        <Typography>{selectTitle.name}ကိုဖျက်မှာသေချာပါသလား?</Typography>
       </DialogContent>
       <DialogActions>
         <Button

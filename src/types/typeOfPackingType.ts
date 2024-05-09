@@ -11,3 +11,13 @@ export interface createNewTypeOfPacking extends BasicOption {
   name: string;
   typeOfCherootId: number | undefined;
 }
+
+export interface updateTypeOfPacking extends BasicOption {
+  id: number | null;
+  name: string;
+  typeOfCherootId: number | undefined;
+}
+
+export interface deleteTypeOfPacking extends BasicOption {
+  id: number;
+}

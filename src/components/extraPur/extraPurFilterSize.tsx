@@ -88,7 +88,7 @@ const FilterSizeExtra = ({
             <Select
               labelId="demo-simple-select-filled-label"
               id="demo-simple-select-filled"
-              value={3}
+              value={newExtraPurchase.typeOfFilterSizeId}
               onChange={(evt) => {
                 handelChange(Number(evt.target.value));
               }}

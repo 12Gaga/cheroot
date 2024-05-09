@@ -17,3 +17,7 @@ export interface updateLabel extends BasicOption {
   name: string;
   price: number;
 }
+
+export interface deleteLabel extends BasicOption {
+  id: number;
+}
