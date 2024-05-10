@@ -31,6 +31,12 @@ import { setPlastic } from "./typeOfPlastic";
 import { setStore } from "./typeOfStore";
 import { setBanquet } from "./typeOfBanquet";
 import { setTitle } from "./moneyTitle";
+import { setDailyExpensive } from "./dailyExpensive";
+import { setMainMoney } from "./mainMoney";
+import { setDirectPayment } from "./directPayment";
+import { setReplenishment } from "./replenishment";
+import { setMainClosing } from "./mainClosing";
+import { setDailyClosing } from "./dailyClosing";
 
 const initialState: appSlice = {
   init: false,
@@ -76,6 +82,12 @@ export const fetchApp = createAsyncThunk(
         store,
         banquet,
         expensiveLabel,
+        dailyExpensive,
+        mainMoney,
+        directPayment,
+        replenishment,
+        mainClosing,
+        dailyClosing,
       } = dataFromServer;
       thunkApi.dispatch(setInit(true));
       thunkApi.dispatch(setIndustry(industry));
@@ -108,6 +120,12 @@ export const fetchApp = createAsyncThunk(
       thunkApi.dispatch(setOtherDeduction(otherDeduction));
       thunkApi.dispatch(setExtraPurchase(extraPurchase));
       thunkApi.dispatch(setTitle(expensiveLabel));
+      thunkApi.dispatch(setDailyExpensive(dailyExpensive));
+      thunkApi.dispatch(setMainMoney(mainMoney));
+      thunkApi.dispatch(setDirectPayment(directPayment));
+      thunkApi.dispatch(setReplenishment(replenishment));
+      thunkApi.dispatch(setMainClosing(mainClosing));
+      thunkApi.dispatch(setDailyClosing(dailyClosing));
       onSuccess && onSuccess();
     } catch (err) {
       onError && onError(err);

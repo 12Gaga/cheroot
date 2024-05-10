@@ -15,24 +15,37 @@ import {
 import "react-datepicker/dist/react-datepicker.css";
 import DatePicker from "react-datepicker";
 import { useEffect, useState } from "react";
-import { addDailyExpensive } from "@/types/dailyExpensiveType";
+import { updateDailyExpensive } from "@/types/dailyExpensiveType";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { LoadingButton } from "@mui/lab";
-import { AddDailyExpensive, setIsLoading } from "@/store/slices/dailyExpensive";
+import {
+  UpdatedDailyExpensive,
+  setIsLoading,
+} from "@/store/slices/dailyExpensive";
 import { setOpenSnackbar } from "@/store/slices/snackBar";
 interface Props {
-  open: boolean;
-  setOpen: (value: boolean) => void;
+  updateOpen: boolean;
+  setUpdateOpen: (value: boolean) => void;
+  selectedId: number;
 }
 
-const defaultValue: addDailyExpensive = {
+const defaultValue: updateDailyExpensive = {
+  id: null,
   date: "",
   expensiveLabelId: null,
   content: "",
   amount: 0,
 };
 
-const NewDailyExpenses = ({ open, setOpen }: Props) => {
+const UpdateDailyExpenses = ({
+  updateOpen,
+  setUpdateOpen,
+  selectedId,
+}: Props) => {
+  const dailyExpensive = useAppSelector((store) => store.dailyExpensive.item);
+  const selectDailyExpensive = dailyExpensive.find(
+    (item) => item.id === selectedId
+  );
   const dispatch = useAppDispatch();
   const workShop = useAppSelector((store) => store.workShop.selectedWorkShop);
   const { isLoading } = useAppSelector((store) => store.dailyExpensive);
@@ -43,29 +56,52 @@ const NewDailyExpenses = ({ open, setOpen }: Props) => {
   const [selecteddate, setSelectedDate] = useState<any>(
     new Date().toLocaleDateString()
   );
-  const [addDailyExpense, setAddDailyExpense] =
-    useState<addDailyExpensive>(defaultValue);
+  const [updateDailyExpense, setUpdateDailyExpense] =
+    useState<updateDailyExpensive>(defaultValue);
   useEffect(() => {
-    setAddDailyExpense({ ...addDailyExpense, date: selecteddate });
-  }, [open, selecteddate]);
+    if (selectDailyExpensive) {
+      setSelectedDate(selectDailyExpensive.date);
+      setUpdateDailyExpense({
+        ...updateDailyExpense,
+        id: selectedId,
+        date: selecteddate,
+        expensiveLabelId: selectDailyExpensive.expensiveLabelId,
+        content: selectDailyExpensive.content,
+        amount: selectDailyExpensive.amount,
+      });
+    }
+  }, [selectDailyExpensive, updateOpen]);
+
+  useEffect(() => {
+    setUpdateDailyExpense({
+      ...updateDailyExpense,
+      date: selecteddate,
+    });
+  }, [selecteddate]);
 
   const handleClick = () => {
     dispatch(setIsLoading(true));
     dispatch(
-      AddDailyExpensive({
-        ...addDailyExpense,
+      UpdatedDailyExpensive({
+        ...updateDailyExpense,
         onSuccess: () => {
-          setOpen(false);
-          setAddDailyExpense(defaultValue);
-          dispatch(setOpenSnackbar({ message: "Add Daily Expensive success" }));
+          setUpdateOpen(false);
+          setUpdateDailyExpense(defaultValue);
+          dispatch(
+            setOpenSnackbar({ message: "Update Daily Expensive success" })
+          );
           dispatch(setIsLoading(false));
         },
       })
     );
   };
+  console.log("dailyExpensive22", updateDailyExpense);
+  console.log("selectedId", selectedId);
+  console.log("selectedDate", selecteddate);
+  if (!selectDailyExpensive) return null;
   return (
-    <Dialog open={open} onClose={() => setOpen(false)}>
-      <DialogTitle> နေ့စဉ်အသုံးစာရိတ်ထည့်ခြင်း</DialogTitle>
+    <Dialog open={updateOpen} onClose={() => setUpdateOpen(false)}>
+      <DialogTitle> ပြင်ဆင်မည်</DialogTitle>
       <DialogContent sx={{}}>
         <Box>
           <Box
@@ -89,10 +125,11 @@ const NewDailyExpenses = ({ open, setOpen }: Props) => {
               <Select
                 labelId="demo-simple-select-filled-label"
                 id="demo-simple-select-filled"
-                value={addDailyExpense.expensiveLabelId}
+                defaultValue={selectDailyExpensive.expensiveLabelId}
+                value={updateDailyExpense.expensiveLabelId}
                 onChange={(evt) => {
-                  setAddDailyExpense({
-                    ...addDailyExpense,
+                  setUpdateDailyExpense({
+                    ...updateDailyExpense,
                     expensiveLabelId: Number(evt.target.value),
                   });
                 }}
@@ -110,11 +147,12 @@ const NewDailyExpenses = ({ open, setOpen }: Props) => {
           <Box sx={{ mt: 2 }}>
             <Typography sx={{ fontWeight: "bold" }}>အကြောင်းအရာ</Typography>
             <TextField
+              defaultValue={selectDailyExpensive.content}
               placeholder="အကြောင်းအရာ"
               sx={{ bgcolor: "#EEE8CF", width: 300 }}
               onChange={(evt) => {
-                setAddDailyExpense({
-                  ...addDailyExpense,
+                setUpdateDailyExpense({
+                  ...updateDailyExpense,
                   content: evt.target.value,
                 });
               }}
@@ -124,11 +162,12 @@ const NewDailyExpenses = ({ open, setOpen }: Props) => {
           <Box sx={{ mt: 2 }}>
             <Typography sx={{ fontWeight: "bold" }}>ငွေပမာဏ</Typography>
             <TextField
+              defaultValue={selectDailyExpensive.amount}
               placeholder="ငွေပမာဏ"
               sx={{ bgcolor: "#EEE8CF", width: 300 }}
               onChange={(evt) => {
-                setAddDailyExpense({
-                  ...addDailyExpense,
+                setUpdateDailyExpense({
+                  ...updateDailyExpense,
                   amount: Number(evt.target.value),
                 });
               }}
@@ -140,28 +179,22 @@ const NewDailyExpenses = ({ open, setOpen }: Props) => {
         <Button
           variant="contained"
           onClick={() => {
-            setOpen(false);
-            setAddDailyExpense(defaultValue);
+            setUpdateOpen(false);
+            setUpdateDailyExpense(defaultValue);
           }}
         >
           မလုပ်တော့ပါ
         </Button>
         <LoadingButton
           variant="contained"
-          disabled={
-            !addDailyExpense.date ||
-            !addDailyExpense.expensiveLabelId ||
-            !addDailyExpense.content ||
-            !addDailyExpense.amount
-          }
           onClick={handleClick}
           loading={isLoading}
         >
-          အိုကေ
+          ပြင်မည်
         </LoadingButton>
       </DialogActions>
     </Dialog>
   );
 };
 
-export default NewDailyExpenses;
+export default UpdateDailyExpenses;

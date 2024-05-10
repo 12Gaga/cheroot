@@ -32,6 +32,12 @@ import banquetReducer from "./slices/typeOfBanquet";
 import storeReducer from "./slices/typeOfStore";
 import plasticStockReducer from "./slices/plasticStock";
 import expensiveLabelReducer from "./slices/moneyTitle";
+import dailyExpensiveReducer from "./slices/dailyExpensive";
+import mainMoneyReducer from "./slices/mainMoney";
+import directPaymentReducer from "./slices/directPayment";
+import replenishmentReducer from "./slices/replenishment";
+import mainClosingReducer from "./slices/mainClosing";
+import dailyClosingReducer from "./slices/dailyClosing";
 
 export const store = configureStore({
   reducer: {
@@ -68,6 +74,12 @@ export const store = configureStore({
     typeOfStore: storeReducer,
     plasticStock: plasticStockReducer,
     expensiveLabel: expensiveLabelReducer,
+    dailyExpensive: dailyExpensiveReducer,
+    mainMoney: mainMoneyReducer,
+    directPayment: directPaymentReducer,
+    replenishment: replenishmentReducer,
+    mainClosing: mainClosingReducer,
+    dailyClosing: dailyClosingReducer,
   },
 });
 

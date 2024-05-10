@@ -11,52 +11,75 @@ import {
 import "react-datepicker/dist/react-datepicker.css";
 import DatePicker from "react-datepicker";
 import { useEffect, useState } from "react";
-import { addReplenishment } from "@/types/replenishmentType";
+import { updateReplenishment } from "@/types/replenishmentType";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
-import { AddReplenishment, setIsLoading } from "@/store/slices/replenishment";
+import {
+  UpdatedReplenishment,
+  setIsLoading,
+} from "@/store/slices/replenishment";
 import { setOpenSnackbar } from "@/store/slices/snackBar";
 import { LoadingButton } from "@mui/lab";
 interface Props {
-  open: boolean;
-  setOpen: (value: boolean) => void;
+  updateOpen: boolean;
+  setUpdateOpen: (value: boolean) => void;
+  selectedId: number;
 }
 
-const defaultValue: addReplenishment = {
+const defaultValue: updateReplenishment = {
+  id: null,
   date: "",
   amount: 0,
 };
 
-const NewAddMoney = ({ open, setOpen }: Props) => {
+const UpdateAddMoney = ({ updateOpen, setUpdateOpen, selectedId }: Props) => {
+  const replenishment = useAppSelector((store) => store.replenishment.item);
+  const selectReplenishment = replenishment.find(
+    (item) => item.id === selectedId
+  );
   const dispatch = useAppDispatch();
   const { isLoading } = useAppSelector((store) => store.replenishment);
   const [selecteddate, setSelectedDate] = useState<any>(
     new Date().toLocaleDateString()
   );
-  const [addReplenishment, setAddReplenishment] =
-    useState<addReplenishment>(defaultValue);
+  const [updateReplenishment, setUpdateReplenishment] =
+    useState<updateReplenishment>(defaultValue);
+  useEffect(() => {
+    if (selectReplenishment) {
+      setSelectedDate(selectReplenishment.date);
+      setUpdateReplenishment({
+        ...updateReplenishment,
+        id: selectedId,
+        date: selecteddate,
+        amount: selectReplenishment.amount,
+      });
+    }
+  }, [selectReplenishment, updateOpen]);
 
   useEffect(() => {
-    setAddReplenishment({ ...addReplenishment, date: selecteddate });
-  }, [open, selecteddate]);
+    setUpdateReplenishment({ ...updateReplenishment, date: selecteddate });
+  }, [selecteddate]);
 
   const handleClick = () => {
     dispatch(setIsLoading(true));
     dispatch(
-      AddReplenishment({
-        ...addReplenishment,
+      UpdatedReplenishment({
+        ...updateReplenishment,
         onSuccess: () => {
-          setOpen(false);
-          setAddReplenishment(defaultValue);
-          dispatch(setOpenSnackbar({ message: "Add Replenishment success" }));
+          setUpdateOpen(false);
+          setUpdateReplenishment(defaultValue);
+          dispatch(
+            setOpenSnackbar({ message: "Update Replenishment success" })
+          );
           dispatch(setIsLoading(false));
         },
       })
     );
   };
-  console.log("replenishment", addReplenishment);
+  console.log("replenishment", updateReplenishment);
+  if (!selectReplenishment) return null;
   return (
-    <Dialog open={open} onClose={() => setOpen(false)}>
-      <DialogTitle> ဖြည့်တင်းငွေစာရင်း</DialogTitle>
+    <Dialog open={updateOpen} onClose={() => setUpdateOpen(false)}>
+      <DialogTitle> ပြင်ဆင်မည်</DialogTitle>
       <DialogContent sx={{ height: 210 }}>
         <Box sx={{ display: "flex", flexDirection: "column", gap: 5 }}>
           <Box
@@ -77,11 +100,12 @@ const NewAddMoney = ({ open, setOpen }: Props) => {
           <Box sx={{ mt: 2 }}>
             <Typography sx={{ fontWeight: "bold" }}>ဖြည့်တင်းငွေ</Typography>
             <TextField
+              defaultValue={selectReplenishment.amount}
               placeholder="ဖြည့်တင်းငွေ"
               sx={{ bgcolor: "#EEE8CF", width: 300 }}
               onChange={(evt) => {
-                setAddReplenishment({
-                  ...addReplenishment,
+                setUpdateReplenishment({
+                  ...updateReplenishment,
                   amount: Number(evt.target.value),
                 });
               }}
@@ -93,22 +117,21 @@ const NewAddMoney = ({ open, setOpen }: Props) => {
         <Button
           variant="contained"
           onClick={() => {
-            setOpen(false), setAddReplenishment(defaultValue);
+            setUpdateOpen(false), setUpdateReplenishment(defaultValue);
           }}
         >
           မလုပ်တော့ပါ
         </Button>
         <LoadingButton
           variant="contained"
-          disabled={!addReplenishment.date || !addReplenishment.amount}
           onClick={handleClick}
           loading={isLoading}
         >
-          အိုကေ
+          ပြင်မည်
         </LoadingButton>
       </DialogActions>
     </Dialog>
   );
 };
 
-export default NewAddMoney;
+export default UpdateAddMoney;

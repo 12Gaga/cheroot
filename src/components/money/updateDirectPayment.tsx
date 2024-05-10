@@ -1,4 +1,7 @@
-import { addDirectPayment } from "@/types/directPaymentType";
+import {
+  addDirectPayment,
+  updateDirectPayment,
+} from "@/types/directPaymentType";
 import "react-datepicker/dist/react-datepicker.css";
 import DatePicker from "react-datepicker";
 import {
@@ -14,51 +17,80 @@ import {
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { setOpenSnackbar } from "@/store/slices/snackBar";
 import { useEffect, useState } from "react";
-import { AddDirectPayment, setIsLoading } from "@/store/slices/directPayment";
+import {
+  AddDirectPayment,
+  UpdatedDirectPayment,
+  setIsLoading,
+} from "@/store/slices/directPayment";
 import { LoadingButton } from "@mui/lab";
 interface Props {
-  open: boolean;
-  setOpen: (value: boolean) => void;
+  updateOpen: boolean;
+  setUpdateOpen: (value: boolean) => void;
+  selectedId: number;
 }
 
-const defaultValue: addDirectPayment = {
+const defaultValue: updateDirectPayment = {
+  id: null,
   date: "",
   tilte: "",
   amount: 0,
 };
 
-const NewDirectPayment = ({ open, setOpen }: Props) => {
+const UpdateDirectPayment = ({
+  updateOpen,
+  setUpdateOpen,
+  selectedId,
+}: Props) => {
+  const directPayment = useAppSelector((store) => store.directPayment.item);
+  const selectDirectPayment = directPayment.find(
+    (item) => item.id === selectedId
+  );
   const dispatch = useAppDispatch();
   const { isLoading } = useAppSelector((store) => store.directPayment);
   const [selecteddate, setSelectedDate] = useState<any>(
     new Date().toLocaleDateString()
   );
-  const [addDirectPayment, setAddDirectPayment] =
-    useState<addDirectPayment>(defaultValue);
+  const [updateDirectPayment, setUpdateDirectPayment] =
+    useState<updateDirectPayment>(defaultValue);
+  useEffect(() => {
+    if (selectDirectPayment) {
+      setSelectedDate(selectDirectPayment.date);
+      setUpdateDirectPayment({
+        ...updateDirectPayment,
+        id: selectedId,
+        date: selecteddate,
+        tilte: selectDirectPayment.tilte,
+        amount: selectDirectPayment.amount,
+      });
+    }
+  }, [selectDirectPayment, updateOpen]);
 
   useEffect(() => {
-    setAddDirectPayment({ ...addDirectPayment, date: selecteddate });
-  }, [open, selecteddate]);
+    setUpdateDirectPayment({ ...updateDirectPayment, date: selecteddate });
+  }, [selecteddate]);
 
   const handleClick = () => {
     dispatch(setIsLoading(true));
     dispatch(
-      AddDirectPayment({
-        ...addDirectPayment,
+      UpdatedDirectPayment({
+        ...updateDirectPayment,
         onSuccess: () => {
-          setOpen(false);
-          setAddDirectPayment(defaultValue);
-          dispatch(setOpenSnackbar({ message: "Add Direct Payment success" }));
+          setUpdateOpen(false);
+          setUpdateDirectPayment(defaultValue);
+          dispatch(
+            setOpenSnackbar({ message: "Update Direct Payment success" })
+          );
           dispatch(setIsLoading(false));
         },
       })
     );
   };
-  console.log("directPayment", addDirectPayment);
+  console.log("directPayment", updateDirectPayment);
+  if (!selectDirectPayment) return null;
   return (
     <>
-      <Dialog open={open} onClose={() => setOpen(false)}>
-        <DialogTitle> ပင်မငွေစာရင်းမှတိုက်ရိုက်ထုတ်ယူခြင်း</DialogTitle>
+      <Dialog open={updateOpen} onClose={() => setUpdateOpen(false)}>
+        <DialogTitle> ပြင်ဆင်မည်</DialogTitle>
         <DialogContent sx={{ height: 210 }}>
           <Box sx={{ display: "flex", flexDirection: "column", gap: 5 }}>
             <Box
@@ -78,11 +110,12 @@ const NewDirectPayment = ({ open, setOpen }: Props) => {
             <Box sx={{ mt: 2 }}>
               <Typography sx={{ fontWeight: "bold" }}>ခေါင်းစဉ်</Typography>
               <TextField
+                defaultValue={selectDirectPayment?.tilte}
                 placeholder="ခေါင်းစဉ်"
                 sx={{ bgcolor: "#EEE8CF", width: 300 }}
                 onChange={(evt) => {
-                  setAddDirectPayment({
-                    ...addDirectPayment,
+                  setUpdateDirectPayment({
+                    ...updateDirectPayment,
                     tilte: evt.target.value,
                   });
                 }}
@@ -91,11 +124,12 @@ const NewDirectPayment = ({ open, setOpen }: Props) => {
             <Box sx={{ mb: 2 }}>
               <Typography sx={{ fontWeight: "bold" }}>ငွေပမာဏ</Typography>
               <TextField
+                defaultValue={selectDirectPayment.amount}
                 placeholder="ငွေပမာဏ"
                 sx={{ bgcolor: "#EEE8CF", width: 300 }}
                 onChange={(evt) => {
-                  setAddDirectPayment({
-                    ...addDirectPayment,
+                  setUpdateDirectPayment({
+                    ...updateDirectPayment,
                     amount: Number(evt.target.value),
                   });
                 }}
@@ -107,27 +141,22 @@ const NewDirectPayment = ({ open, setOpen }: Props) => {
           <Button
             variant="contained"
             onClick={() => {
-              setOpen(false);
-              setAddDirectPayment(defaultValue);
+              setUpdateOpen(false);
+              setUpdateDirectPayment(defaultValue);
             }}
           >
             မလုပ်တော့ပါ
           </Button>
           <LoadingButton
             variant="contained"
-            disabled={
-              !addDirectPayment.date ||
-              !addDirectPayment.tilte ||
-              !addDirectPayment.amount
-            }
             onClick={handleClick}
             loading={isLoading}
           >
-            အိုကေ
+            ပြင်မည်
           </LoadingButton>
         </DialogActions>
       </Dialog>
     </>
   );
 };
-export default NewDirectPayment;
+export default UpdateDirectPayment;

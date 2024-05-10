@@ -15,23 +15,27 @@ import {
 import "react-datepicker/dist/react-datepicker.css";
 import DatePicker from "react-datepicker";
 import { useEffect, useState } from "react";
-import { addMainMoney } from "@/types/mainMoneyType";
+import { updateMainMoney } from "@/types/mainMoneyType";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
-import { AddMainMoney, setIsLoading } from "@/store/slices/mainMoney";
+import { UpdatedMainMoney, setIsLoading } from "@/store/slices/mainMoney";
 import { setOpenSnackbar } from "@/store/slices/snackBar";
 import { LoadingButton } from "@mui/lab";
 interface Props {
-  open: boolean;
-  setOpen: (value: boolean) => void;
+  updateOpen: boolean;
+  setUpdateOpen: (value: boolean) => void;
+  selectedId: number;
 }
 
-const defaultValue: addMainMoney = {
+const defaultValue: updateMainMoney = {
+  id: null,
   date: "",
   locationId: null,
   amount: 0,
 };
 
-const NewMainMoney = ({ open, setOpen }: Props) => {
+const UpdateMainMoney = ({ updateOpen, setUpdateOpen, selectedId }: Props) => {
+  const mainMoney = useAppSelector((store) => store.mainMoney.item);
+  const selectMainMoney = mainMoney.find((item) => item.id === selectedId);
   const dispatch = useAppDispatch();
   const workShop = useAppSelector((store) => store.workShop.selectedWorkShop);
   const { isLoading } = useAppSelector((store) => store.mainMoney);
@@ -42,31 +46,42 @@ const NewMainMoney = ({ open, setOpen }: Props) => {
   const [selecteddate, setSelectedDate] = useState<any>(
     new Date().toLocaleDateString()
   );
-  const [addMainMoney, setAddMainMoney] = useState<addMainMoney>(defaultValue);
-
+  const [updateMainMoney, setUpdateMainMoney] =
+    useState<updateMainMoney>(defaultValue);
   useEffect(() => {
-    setAddMainMoney({ ...addMainMoney, date: selecteddate });
-  }, [open, selecteddate]);
+    if (selectMainMoney) {
+      setSelectedDate(selectMainMoney.date);
+      setUpdateMainMoney({
+        ...updateMainMoney,
+        id: selectedId,
+        date: selecteddate,
+        locationId: selectMainMoney.locationId,
+        amount: selectMainMoney.amount,
+      });
+    }
+  }, [selectMainMoney, updateOpen]);
+  useEffect(() => {
+    setUpdateMainMoney({ ...updateMainMoney, date: selecteddate });
+  }, [selecteddate]);
 
   const handleClick = () => {
     dispatch(setIsLoading(true));
     dispatch(
-      AddMainMoney({
-        ...addMainMoney,
+      UpdatedMainMoney({
+        ...updateMainMoney,
         onSuccess: () => {
-          setOpen(false);
-          setAddMainMoney(defaultValue);
-          dispatch(setOpenSnackbar({ message: "Add Main Money success" }));
+          setUpdateOpen(false);
+          setUpdateMainMoney(defaultValue);
+          dispatch(setOpenSnackbar({ message: "Update Main Money success" }));
           dispatch(setIsLoading(false));
         },
       })
     );
   };
-  console.log("mainMoney", addMainMoney);
-
+  if (!selectMainMoney) return null;
   return (
-    <Dialog open={open} onClose={() => setOpen(false)}>
-      <DialogTitle> ပင်မငွေစာရင်း</DialogTitle>
+    <Dialog open={updateOpen} onClose={() => setUpdateOpen(false)}>
+      <DialogTitle> ပြင်ဆင်မည်</DialogTitle>
       <DialogContent sx={{ height: 210 }}>
         <Box sx={{ display: "flex", flexDirection: "column", gap: 5 }}>
           <Box
@@ -90,10 +105,11 @@ const NewMainMoney = ({ open, setOpen }: Props) => {
               <Select
                 labelId="demo-simple-select-filled-label"
                 id="demo-simple-select-filled"
-                value={addMainMoney.locationId}
+                defaultValue={selectMainMoney?.locationId}
+                value={updateMainMoney.locationId}
                 onChange={(evt) => {
-                  setAddMainMoney({
-                    ...addMainMoney,
+                  setUpdateMainMoney({
+                    ...updateMainMoney,
                     locationId: Number(evt.target.value),
                   });
                 }}
@@ -111,11 +127,12 @@ const NewMainMoney = ({ open, setOpen }: Props) => {
           <Box sx={{}}>
             <Typography sx={{ fontWeight: "bold" }}>ငွေပမာဏ</Typography>
             <TextField
+              defaultValue={selectMainMoney.amount}
               placeholder="ငွေပမာဏ"
               sx={{ bgcolor: "#EEE8CF", width: 300 }}
               onChange={(evt) => {
-                setAddMainMoney({
-                  ...addMainMoney,
+                setUpdateMainMoney({
+                  ...updateMainMoney,
                   amount: Number(evt.target.value),
                 });
               }}
@@ -127,27 +144,22 @@ const NewMainMoney = ({ open, setOpen }: Props) => {
         <Button
           variant="contained"
           onClick={() => {
-            setOpen(false);
-            setAddMainMoney(defaultValue);
+            setUpdateOpen(false);
+            setUpdateMainMoney(defaultValue);
           }}
         >
           မလုပ်တော့ပါ
         </Button>
         <LoadingButton
           variant="contained"
-          disabled={
-            !addMainMoney.date ||
-            !addMainMoney.locationId ||
-            !addMainMoney.amount
-          }
           onClick={handleClick}
           loading={isLoading}
         >
-          အိုကေ
+          ပြင်မည်
         </LoadingButton>
       </DialogActions>
     </Dialog>
   );
 };
 
-export default NewMainMoney;
+export default UpdateMainMoney;

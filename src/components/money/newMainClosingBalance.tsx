@@ -11,9 +11,9 @@ import {
 import "react-datepicker/dist/react-datepicker.css";
 import DatePicker from "react-datepicker";
 import { useEffect, useState } from "react";
-import { addReplenishment } from "@/types/replenishmentType";
+import { addMainClosing } from "@/types/mainClosingType";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
-import { AddReplenishment, setIsLoading } from "@/store/slices/replenishment";
+import { AddMainClosing, setIsLoading } from "@/store/slices/mainClosing";
 import { setOpenSnackbar } from "@/store/slices/snackBar";
 import { LoadingButton } from "@mui/lab";
 interface Props {
@@ -21,42 +21,41 @@ interface Props {
   setOpen: (value: boolean) => void;
 }
 
-const defaultValue: addReplenishment = {
+const defaultValue: addMainClosing = {
   date: "",
   amount: 0,
 };
 
-const NewAddMoney = ({ open, setOpen }: Props) => {
+const NewMainClosingBalance = ({ open, setOpen }: Props) => {
   const dispatch = useAppDispatch();
-  const { isLoading } = useAppSelector((store) => store.replenishment);
+  const { isLoading } = useAppSelector((store) => store.mainClosing);
   const [selecteddate, setSelectedDate] = useState<any>(
     new Date().toLocaleDateString()
   );
-  const [addReplenishment, setAddReplenishment] =
-    useState<addReplenishment>(defaultValue);
-
+  const [addMainClosing, setAddMainClosing] =
+    useState<addMainClosing>(defaultValue);
   useEffect(() => {
-    setAddReplenishment({ ...addReplenishment, date: selecteddate });
+    setAddMainClosing({ ...addMainClosing, date: selecteddate });
   }, [open, selecteddate]);
 
   const handleClick = () => {
     dispatch(setIsLoading(true));
     dispatch(
-      AddReplenishment({
-        ...addReplenishment,
+      AddMainClosing({
+        ...addMainClosing,
         onSuccess: () => {
           setOpen(false);
-          setAddReplenishment(defaultValue);
-          dispatch(setOpenSnackbar({ message: "Add Replenishment success" }));
+          setAddMainClosing(defaultValue);
+          dispatch(setOpenSnackbar({ message: "Add Main Closing success" }));
           dispatch(setIsLoading(false));
         },
       })
     );
   };
-  console.log("replenishment", addReplenishment);
+  console.log("mainClosing", addMainClosing);
   return (
     <Dialog open={open} onClose={() => setOpen(false)}>
-      <DialogTitle> ဖြည့်တင်းငွေစာရင်း</DialogTitle>
+      <DialogTitle> လက်ကျန်ငွေစာရင်း</DialogTitle>
       <DialogContent sx={{ height: 210 }}>
         <Box sx={{ display: "flex", flexDirection: "column", gap: 5 }}>
           <Box
@@ -75,13 +74,13 @@ const NewAddMoney = ({ open, setOpen }: Props) => {
           </Box>
 
           <Box sx={{ mt: 2 }}>
-            <Typography sx={{ fontWeight: "bold" }}>ဖြည့်တင်းငွေ</Typography>
+            <Typography sx={{ fontWeight: "bold" }}>လက်ကျန်ငွေ</Typography>
             <TextField
-              placeholder="ဖြည့်တင်းငွေ"
+              placeholder="လက်ကျန်ငွေ"
               sx={{ bgcolor: "#EEE8CF", width: 300 }}
               onChange={(evt) => {
-                setAddReplenishment({
-                  ...addReplenishment,
+                setAddMainClosing({
+                  ...addMainClosing,
                   amount: Number(evt.target.value),
                 });
               }}
@@ -93,14 +92,14 @@ const NewAddMoney = ({ open, setOpen }: Props) => {
         <Button
           variant="contained"
           onClick={() => {
-            setOpen(false), setAddReplenishment(defaultValue);
+            setOpen(false), setAddMainClosing(defaultValue);
           }}
         >
           မလုပ်တော့ပါ
         </Button>
         <LoadingButton
           variant="contained"
-          disabled={!addReplenishment.date || !addReplenishment.amount}
+          disabled={!addMainClosing.date || !addMainClosing.amount}
           onClick={handleClick}
           loading={isLoading}
         >
@@ -111,4 +110,4 @@ const NewAddMoney = ({ open, setOpen }: Props) => {
   );
 };
 
-export default NewAddMoney;
+export default NewMainClosingBalance;

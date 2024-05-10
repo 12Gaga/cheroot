@@ -261,6 +261,30 @@ export default async function handler(
     const expensiveLabel = await prisma.expensiveLabel.findMany({
       where: { workShopId: { in: workShopIds }, isArchived: false },
     });
+    //31. find dailyExpensive
+    const dailyExpensive = await prisma.dailyExpensive.findMany({
+      where: { workShopId: { in: workShopIds }, isArchived: false },
+    });
+    //32. find mainMoney
+    const mainMoney = await prisma.mainMoney.findMany({
+      where: { workShopId: { in: workShopIds }, isArchived: false },
+    });
+    //33. find directPayment
+    const directPayment = await prisma.mainDirectPayment.findMany({
+      where: { workShopId: { in: workShopIds }, isArchived: false },
+    });
+    //34. find replenishment
+    const replenishment = await prisma.replenishmentMoney.findMany({
+      where: { workShopId: { in: workShopIds }, isArchived: false },
+    });
+    //35. find mainClosing
+    const mainClosing = await prisma.closingMainBalance.findMany({
+      where: { workShopId: { in: workShopIds }, isArchived: false },
+    });
+    //36. find dailyClosing
+    const dailyClosing = await prisma.closingDailyBalance.findMany({
+      where: { workShopId: { in: workShopIds }, isArchived: false },
+    });
     return res.json({
       industry,
       workShop,
@@ -293,6 +317,12 @@ export default async function handler(
       store,
       banquet,
       expensiveLabel,
+      dailyExpensive,
+      mainMoney,
+      directPayment,
+      replenishment,
+      mainClosing,
+      dailyClosing,
     });
   }
 }
