@@ -80,6 +80,10 @@ model WorkShop{
   bagoPlasticInstallment BagoPlasticInstallment[] 
   bagoLabelInstallment BagoLabelInstallment[]
   converycherootInstallment ConverycherootInstallment[]
+  leafTransferGarage LeafTransferGarage[]
+  filterSizeTransferGarage FilterSizeTransferGarage[]
+  tabaccoTransferGarage TabaccoTransferGarage[]
+  labelTransferGarage LabelTransferGarage[]
   isArchived Boolean @default(false)
 }
 
@@ -674,6 +678,9 @@ model LeafTransferGarage{
   typeOfLeaf TypeOfLeaf @relation(fields: [typeOfLeafId],references: [id])
   typeOfLeafId Int
   batchNo Int
+  totalViss Int @default(0)
+  workShop WorkShop @relation(fields: [workShopId],references: [id])
+  workShopId Int
   isArchived Boolean @default(false)
 }
 
@@ -684,7 +691,10 @@ model FilterSizeTransferGarage{
   enterenceGarageId Int
   typeOfFilterSize TypeOfFilterSize @relation(fields: [typeOfFilterSizeId],references: [id])
   typeOfFilterSizeId Int
-  batchNo Int
+  quantity Int
+  bag Int @default(0)
+  workShop WorkShop @relation(fields: [workShopId],references: [id])
+  workShopId Int
   isArchived Boolean @default(false)
 }
 
@@ -695,7 +705,11 @@ model TabaccoTransferGarage{
   enterenceGarageId Int
   typeOfTabacco TypeOfTabacco @relation(fields: [typeOfTabaccoId],references: [id])
   typeOfTabaccoId Int
-  batchNo Int
+  tin Int
+  pyi Int
+  bag Int
+  workShop WorkShop @relation(fields: [workShopId],references: [id])
+  workShopId Int
   isArchived Boolean @default(false)
 }
 
@@ -707,7 +721,9 @@ model LabelTransferGarage{
   enterenceGarageId Int
   typeOfLabel TypeOfLabel @relation(fields: [typeOfLabelId],references: [id])
   typeOfLabelId Int
-  batchNo Int
+  bandle Int
+  workShop WorkShop @relation(fields: [workShopId],references: [id])
+  workShopId Int
   isArchived Boolean @default(false)
 }
 

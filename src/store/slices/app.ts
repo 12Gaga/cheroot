@@ -37,6 +37,14 @@ import { setDirectPayment } from "./directPayment";
 import { setReplenishment } from "./replenishment";
 import { setMainClosing } from "./mainClosing";
 import { setDailyClosing } from "./dailyClosing";
+import { setLeafTransfer } from "./leafGarageTransfer";
+import { setFilterSizeTransfer } from "./filterSizeGarageTransfer";
+import { setTabaccoTransfer } from "./tabaccoGarageTransfer";
+import { setLabelTransfer } from "./labelGarageTransfer";
+import { setBagoLeaf } from "./bagoLeaf";
+import { setBagoFilterSize } from "./bagoFilterSize";
+import { setBagoLabel } from "./bagoLabel";
+import { setBagoPlastic } from "./bagoPLastic";
 
 const initialState: appSlice = {
   init: false,
@@ -88,6 +96,14 @@ export const fetchApp = createAsyncThunk(
         replenishment,
         mainClosing,
         dailyClosing,
+        leafTransfer,
+        filterSizeTransfer,
+        tabaccoTransfer,
+        labelTransfer,
+        bagoLeaf,
+        bagoFilterSize,
+        bagoLabel,
+        bagoPlastic,
       } = dataFromServer;
       thunkApi.dispatch(setInit(true));
       thunkApi.dispatch(setIndustry(industry));
@@ -126,6 +142,14 @@ export const fetchApp = createAsyncThunk(
       thunkApi.dispatch(setReplenishment(replenishment));
       thunkApi.dispatch(setMainClosing(mainClosing));
       thunkApi.dispatch(setDailyClosing(dailyClosing));
+      thunkApi.dispatch(setLeafTransfer(leafTransfer));
+      thunkApi.dispatch(setFilterSizeTransfer(filterSizeTransfer));
+      thunkApi.dispatch(setTabaccoTransfer(tabaccoTransfer));
+      thunkApi.dispatch(setLabelTransfer(labelTransfer));
+      thunkApi.dispatch(setBagoLeaf(bagoLeaf));
+      thunkApi.dispatch(setBagoFilterSize(bagoFilterSize));
+      thunkApi.dispatch(setBagoLabel(bagoLabel));
+      thunkApi.dispatch(setBagoPlastic(bagoPlastic));
       onSuccess && onSuccess();
     } catch (err) {
       onError && onError(err);

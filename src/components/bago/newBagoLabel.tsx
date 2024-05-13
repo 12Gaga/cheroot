@@ -1,3 +1,7 @@
+import { useAppDispatch, useAppSelector } from "@/store/hooks";
+import { CreateBagoLabel, setIsLoading } from "@/store/slices/bagoLabel";
+import { setOpenSnackbar } from "@/store/slices/snackBar";
+import { createNewBagoLabel } from "@/types/bagoLabelType";
 import { LoadingButton } from "@mui/lab";
 import {
   Dialog,
@@ -9,18 +13,57 @@ import {
   Select,
   DialogActions,
   Button,
+  ListItemText,
+  MenuItem,
 } from "@mui/material";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import DatePicker from "react-datepicker";
 interface Props {
   open: boolean;
   setOpen: (value: boolean) => void;
 }
+
+const defaultValue: createNewBagoLabel = {
+  date: "",
+  shopId: null,
+  typeOfLabelId: null,
+  bandle: 0,
+  totalPrice: 0,
+};
+
 const NewBagoLabel = ({ open, setOpen }: Props) => {
   const [selecteddate, setSelectedDate] = useState<any>(
     new Date().toLocaleDateString()
   );
+  const [newBagoLabel, setNewBagoLabel] =
+    useState<createNewBagoLabel>(defaultValue);
+  const dispatch = useAppDispatch();
+  const workShop = useAppSelector((store) => store.workShop.selectedWorkShop);
+  const labels = useAppSelector((store) => store.typeOfLabel.item);
+  const concernLabels = labels.filter(
+    (item) => item.workShopId === workShop?.id
+  );
+  const shops = useAppSelector((store) => store.typeOfShop.item);
+  const concernShop = shops.filter((item) => item.workShopId === workShop?.id);
+  const { isLoading } = useAppSelector((store) => store.bagoLabel);
+  const handleClick = () => {
+    dispatch(setIsLoading(true));
+    dispatch(
+      CreateBagoLabel({
+        ...newBagoLabel,
+        onSuccess: () => {
+          setOpen(false);
+          setNewBagoLabel(defaultValue);
+          dispatch(setOpenSnackbar({ message: "Add Label Purchase success" }));
+          dispatch(setIsLoading(false));
+        },
+      })
+    );
+  };
 
+  useEffect(() => {
+    setNewBagoLabel({ ...newBagoLabel, date: selecteddate });
+  }, [selecteddate, open]);
   return (
     <>
       <Dialog open={open} onClose={() => setOpen(false)}>
@@ -50,15 +93,20 @@ const NewBagoLabel = ({ open, setOpen }: Props) => {
                 <Select
                   labelId="demo-simple-select-filled-label"
                   id="demo-simple-select-filled"
-                  value={1}
-                  onChange={(evt) => {}}
+                  value={newBagoLabel.shopId}
+                  onChange={(evt) => {
+                    setNewBagoLabel({
+                      ...newBagoLabel,
+                      shopId: Number(evt.target.value),
+                    });
+                  }}
                   sx={{ bgcolor: "#EEE8CF" }}
                 >
-                  {/* {concernGarage.map((item) => (
+                  {concernShop.map((item) => (
                     <MenuItem key={item.id} value={item.id}>
                       <ListItemText primary={item.name} />
                     </MenuItem>
-                  ))} */}
+                  ))}
                 </Select>
               </FormControl>
             </Box>
@@ -71,38 +119,22 @@ const NewBagoLabel = ({ open, setOpen }: Props) => {
                 <Select
                   labelId="demo-simple-select-filled-label"
                   id="demo-simple-select-filled"
-                  value={1}
+                  value={newBagoLabel.typeOfLabelId}
                   onChange={(evt) => {
-                    // setNewFilterSizeAddStock({
-                    //   ...newFilterSizeAddStock,
-                    //   typeOfFilterSizeId: Number(evt.target.value),
-                    // });
+                    setNewBagoLabel({
+                      ...newBagoLabel,
+                      typeOfLabelId: Number(evt.target.value),
+                    });
                   }}
                   sx={{ bgcolor: "#EEE8CF" }}
                 >
-                  {/* {concernFilterSize.map((item) => (
+                  {concernLabels.map((item) => (
                     <MenuItem key={item.id} value={item.id}>
                       <ListItemText primary={item.name} />
                     </MenuItem>
-                  ))} */}
+                  ))}
                 </Select>
               </FormControl>
-            </Box>
-
-            <Box sx={{ display: "flex", alignItems: "center" }}>
-              <Typography sx={{ fontWeight: "bold", width: 150 }}>
-                အရေအတွက်
-              </Typography>
-              <TextField
-                placeholder="အရေအတွက်"
-                sx={{ bgcolor: "#EEE8CF" }}
-                onChange={(evt) => {
-                  //   setNewFilterSizeAddStock({
-                  //     ...newFilterSizeAddStock,
-                  //     quantity: Number(evt.target.value),
-                  //   });
-                }}
-              />
             </Box>
 
             <Box sx={{ display: "flex", alignItems: "center" }}>
@@ -113,10 +145,10 @@ const NewBagoLabel = ({ open, setOpen }: Props) => {
                 placeholder="လိပ်ပေါင်း"
                 sx={{ bgcolor: "#EEE8CF" }}
                 onChange={(evt) => {
-                  //   setNewFilterSizeAddStock({
-                  //     ...newFilterSizeAddStock,
-                  //     bag: Number(evt.target.value),
-                  //   });
+                  setNewBagoLabel({
+                    ...newBagoLabel,
+                    bandle: Number(evt.target.value),
+                  });
                 }}
               />
             </Box>
@@ -129,10 +161,10 @@ const NewBagoLabel = ({ open, setOpen }: Props) => {
                 placeholder="စုစုပေါင်းငွေ"
                 sx={{ bgcolor: "#EEE8CF" }}
                 onChange={(evt) => {
-                  //   setNewFilterSizeAddStock({
-                  //     ...newFilterSizeAddStock,
-                  //     bag: Number(evt.target.value),
-                  //   });
+                  setNewBagoLabel({
+                    ...newBagoLabel,
+                    totalPrice: Number(evt.target.value),
+                  });
                 }}
               />
             </Box>
@@ -143,24 +175,22 @@ const NewBagoLabel = ({ open, setOpen }: Props) => {
             variant="contained"
             onClick={() => {
               setOpen(false);
-              //   setNewFilterSizeAddStock(defaultValue);
+              setNewBagoLabel(defaultValue);
             }}
           >
             မလုပ်တော့ပါ
           </Button>
           <LoadingButton
             variant="contained"
-            // disabled={
-            //   !newFilterSizeAddStock.invNo ||
-            //   !newFilterSizeAddStock.carNo ||
-            //   !newFilterSizeAddStock.typeOfFilterSizeId ||
-            //   !newFilterSizeAddStock.quantity ||
-            //   !newFilterSizeAddStock.bag ||
-            //   !newFilterSizeAddStock.garageId ||
-            //   !newFilterSizeAddStock.shop
-            // }
-            // onClick={handleClick}
-            // loading={isLoading}
+            disabled={
+              !newBagoLabel.date ||
+              !newBagoLabel.shopId ||
+              !newBagoLabel.typeOfLabelId ||
+              !newBagoLabel.bandle ||
+              !newBagoLabel.totalPrice
+            }
+            onClick={handleClick}
+            loading={isLoading}
           >
             သိမ်းမည်
           </LoadingButton>

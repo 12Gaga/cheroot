@@ -38,6 +38,15 @@ import directPaymentReducer from "./slices/directPayment";
 import replenishmentReducer from "./slices/replenishment";
 import mainClosingReducer from "./slices/mainClosing";
 import dailyClosingReducer from "./slices/dailyClosing";
+import leafTranferReducer from "./slices/leafGarageTransfer";
+import filterSizeTransferReducer from "./slices/filterSizeGarageTransfer";
+import tabaccoTransferReducer from "./slices/tabaccoGarageTransfer";
+import labelTransferReducer from "./slices/labelGarageTransfer";
+import bagoLeafReducer from "./slices/bagoLeaf";
+import bagoFilterSizeReducer from "./slices/bagoFilterSize";
+import bagoLabelReducer from "./slices/bagoLabel";
+import bagoPlasticReducer from "./slices/bagoPLastic";
+import bagoLabel from "./slices/bagoLabel";
 
 export const store = configureStore({
   reducer: {
@@ -80,6 +89,14 @@ export const store = configureStore({
     replenishment: replenishmentReducer,
     mainClosing: mainClosingReducer,
     dailyClosing: dailyClosingReducer,
+    leafTransfer: leafTranferReducer,
+    filterSizeTransfer: filterSizeTransferReducer,
+    tabaccoTransfer: tabaccoTransferReducer,
+    labelTransfer: labelTransferReducer,
+    bagoLeaf: bagoLeafReducer,
+    bagoFilterSize: bagoFilterSizeReducer,
+    bagoLabel: bagoLabelReducer,
+    bagoPlastic: bagoPlasticReducer,
   },
 });
 

@@ -15,20 +15,26 @@ import {
 import "react-datepicker/dist/react-datepicker.css";
 import DatePicker from "react-datepicker";
 import { useEffect, useState } from "react";
-import { createNewLabelTransfer } from "@/types/labelTransferGarageType";
+import {
+  createNewLabelTransfer,
+  updateLabelTransfer,
+} from "@/types/labelTransferGarageType";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { setOpenSnackbar } from "@/store/slices/snackBar";
 import {
   CreateLabelTransfer,
+  UpdatedLabelTransfer,
   setIsLoading,
 } from "@/store/slices/labelGarageTransfer";
 import { LoadingButton } from "@mui/lab";
 interface Props {
-  open: boolean;
-  setOpen: (Value: boolean) => void;
+  updateOpen: boolean;
+  setUpdateOpen: (value: boolean) => void;
+  selectedId: number;
 }
 
-const defaultValue: createNewLabelTransfer = {
+const defaultValue: updateLabelTransfer = {
+  id: null,
   date: "",
   exitGarageId: null,
   enterenceGarageId: null,
@@ -36,14 +42,22 @@ const defaultValue: createNewLabelTransfer = {
   bandle: 0,
 };
 
-const NewTransferLabel = ({ open, setOpen }: Props) => {
+const UpdateTransferLabel = ({
+  updateOpen,
+  setUpdateOpen,
+  selectedId,
+}: Props) => {
+  const labelTransfer = useAppSelector((store) => store.labelTransfer.item);
+  const selectLabelTransfer = labelTransfer.find(
+    (item) => item.id === selectedId
+  );
   const dispatch = useAppDispatch();
   const workShop = useAppSelector((store) => store.workShop.selectedWorkShop);
   const [selecteddate, setSelectedDate] = useState<any>(
     new Date().toLocaleDateString()
   );
-  const [newLabelTransfer, setNewLabelTransfer] =
-    useState<createNewLabelTransfer>(defaultValue);
+  const [updateLabelTransfer, setUpdateLabelTransfer] =
+    useState<updateLabelTransfer>(defaultValue);
   const garages = useAppSelector((store) => store.garage.item);
   const concernGarages = garages.filter(
     (item) => item.workShopId === workShop?.id
@@ -53,29 +67,48 @@ const NewTransferLabel = ({ open, setOpen }: Props) => {
     (item) => item.workShopId === workShop?.id
   );
   const { isLoading } = useAppSelector((store) => store.labelTransfer);
+  useEffect(() => {
+    if (selectLabelTransfer) {
+      setSelectedDate(selectLabelTransfer.date);
+      setUpdateLabelTransfer({
+        ...updateLabelTransfer,
+        id: selectedId,
+        date: selecteddate,
+        exitGarageId: selectLabelTransfer.exitGarageId,
+        enterenceGarageId: selectLabelTransfer.enterenceGarageId,
+        typeOfLabelId: selectLabelTransfer.typeOfLabelId,
+        bandle: selectLabelTransfer.bandle,
+      });
+    }
+  }, [selectLabelTransfer, updateOpen]);
+
+  useEffect(() => {
+    setUpdateLabelTransfer({
+      ...updateLabelTransfer,
+      date: selecteddate,
+    });
+  }, [selecteddate]);
+
   const handleClick = () => {
     dispatch(setIsLoading(true));
     dispatch(
-      CreateLabelTransfer({
-        ...newLabelTransfer,
+      UpdatedLabelTransfer({
+        ...updateLabelTransfer,
         onSuccess: () => {
-          setOpen(false);
-          setNewLabelTransfer(defaultValue);
-          dispatch(setOpenSnackbar({ message: "Transferring success" }));
+          setUpdateOpen(false);
+          setUpdateLabelTransfer(defaultValue);
+          dispatch(setOpenSnackbar({ message: "Update transferring success" }));
           dispatch(setIsLoading(false));
         },
       })
     );
   };
-
-  useEffect(() => {
-    setNewLabelTransfer({ ...newLabelTransfer, date: selecteddate });
-  }, [selecteddate, open]);
-
+  console.log("data", updateLabelTransfer);
+  if (!selectLabelTransfer) return null;
   return (
     <>
-      <Dialog open={open} onClose={() => setOpen(false)}>
-        <DialogTitle></DialogTitle>
+      <Dialog open={updateOpen} onClose={() => setUpdateOpen(false)}>
+        <DialogTitle>ပြင်ဆင်ခြင်း</DialogTitle>
         <DialogContent>
           <Box
             sx={{
@@ -99,10 +132,11 @@ const NewTransferLabel = ({ open, setOpen }: Props) => {
                 <Select
                   labelId="demo-simple-select-filled-label"
                   id="demo-simple-select-filled"
-                  value={newLabelTransfer.exitGarageId}
+                  defaultValue={selectLabelTransfer.exitGarageId}
+                  value={updateLabelTransfer.exitGarageId}
                   onChange={(evt) => {
-                    setNewLabelTransfer({
-                      ...newLabelTransfer,
+                    setUpdateLabelTransfer({
+                      ...updateLabelTransfer,
                       exitGarageId: Number(evt.target.value),
                     });
                   }}
@@ -123,10 +157,11 @@ const NewTransferLabel = ({ open, setOpen }: Props) => {
                 <Select
                   labelId="demo-simple-select-filled-label"
                   id="demo-simple-select-filled"
-                  value={newLabelTransfer.enterenceGarageId}
+                  defaultValue={selectLabelTransfer.enterenceGarageId}
+                  value={updateLabelTransfer.enterenceGarageId}
                   onChange={(evt) => {
-                    setNewLabelTransfer({
-                      ...newLabelTransfer,
+                    setUpdateLabelTransfer({
+                      ...updateLabelTransfer,
                       enterenceGarageId: Number(evt.target.value),
                     });
                   }}
@@ -150,10 +185,11 @@ const NewTransferLabel = ({ open, setOpen }: Props) => {
               <Select
                 labelId="demo-simple-select-filled-label"
                 id="demo-simple-select-filled"
-                value={newLabelTransfer.typeOfLabelId}
+                defaultValue={selectLabelTransfer.typeOfLabelId}
+                value={updateLabelTransfer.typeOfLabelId}
                 onChange={(evt) => {
-                  setNewLabelTransfer({
-                    ...newLabelTransfer,
+                  setUpdateLabelTransfer({
+                    ...updateLabelTransfer,
                     typeOfLabelId: Number(evt.target.value),
                   });
                 }}
@@ -171,11 +207,12 @@ const NewTransferLabel = ({ open, setOpen }: Props) => {
           <Box sx={{ mt: 2 }}>
             <Typography sx={{ fontWeight: "bold" }}>လိပ်</Typography>
             <TextField
+              defaultValue={selectLabelTransfer.bandle}
               placeholder="လိပ်"
               sx={{ bgcolor: "#EEE8CF", width: 300 }}
               onChange={(evt) => {
-                setNewLabelTransfer({
-                  ...newLabelTransfer,
+                setUpdateLabelTransfer({
+                  ...updateLabelTransfer,
                   bandle: Number(evt.target.value),
                 });
               }}
@@ -186,29 +223,22 @@ const NewTransferLabel = ({ open, setOpen }: Props) => {
           <Button
             variant="contained"
             onClick={() => {
-              setOpen(false);
-              setNewLabelTransfer(defaultValue);
+              setUpdateOpen(false);
+              setUpdateLabelTransfer(defaultValue);
             }}
           >
             မလုပ်တော့ပါ
           </Button>
           <LoadingButton
             variant="contained"
-            disabled={
-              !newLabelTransfer.exitGarageId ||
-              !newLabelTransfer.enterenceGarageId ||
-              !newLabelTransfer.typeOfLabelId ||
-              !newLabelTransfer.bandle ||
-              !newLabelTransfer.date
-            }
             onClick={handleClick}
             loading={isLoading}
           >
-            ကူးပြောင်းမည်
+            ပြင်ဆင်မည်
           </LoadingButton>
         </DialogActions>
       </Dialog>
     </>
   );
 };
-export default NewTransferLabel;
+export default UpdateTransferLabel;

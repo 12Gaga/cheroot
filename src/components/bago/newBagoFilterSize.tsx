@@ -1,3 +1,10 @@
+import { useAppDispatch, useAppSelector } from "@/store/hooks";
+import {
+  CreateBagoFilterSize,
+  setIsLoading,
+} from "@/store/slices/bagoFilterSize";
+import { setOpenSnackbar } from "@/store/slices/snackBar";
+import { createNewBagoFilterSize } from "@/types/bagoFilterSizeType";
 import { LoadingButton } from "@mui/lab";
 import {
   Dialog,
@@ -9,17 +16,60 @@ import {
   Select,
   DialogActions,
   Button,
+  ListItemText,
+  MenuItem,
 } from "@mui/material";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import DatePicker from "react-datepicker";
 interface Props {
   open: boolean;
   setOpen: (value: boolean) => void;
 }
+
+const defaultValue: createNewBagoFilterSize = {
+  date: "",
+  shopId: null,
+  typeOfFilterSizeId: null,
+  quantity: 0,
+  bag: 0,
+  totalPrice: 0,
+};
+
 const NewBagoFilterSize = ({ open, setOpen }: Props) => {
   const [selecteddate, setSelectedDate] = useState<any>(
     new Date().toLocaleDateString()
   );
+  const [newBagoFilterSize, setNewBagoFilterSize] =
+    useState<createNewBagoFilterSize>(defaultValue);
+  const dispatch = useAppDispatch();
+  const workShop = useAppSelector((store) => store.workShop.selectedWorkShop);
+  const filterSizes = useAppSelector((store) => store.typeOfFilterSize.item);
+  const concernFilterSizes = filterSizes.filter(
+    (item) => item.workShopId === workShop?.id
+  );
+  const shops = useAppSelector((store) => store.typeOfShop.item);
+  const concernShop = shops.filter((item) => item.workShopId === workShop?.id);
+  const { isLoading } = useAppSelector((store) => store.bagoFilterSize);
+  const handleClick = () => {
+    dispatch(setIsLoading(true));
+    dispatch(
+      CreateBagoFilterSize({
+        ...newBagoFilterSize,
+        onSuccess: () => {
+          setOpen(false);
+          setNewBagoFilterSize(defaultValue);
+          dispatch(
+            setOpenSnackbar({ message: "Add Filter Size Purchase success" })
+          );
+          dispatch(setIsLoading(false));
+        },
+      })
+    );
+  };
+
+  useEffect(() => {
+    setNewBagoFilterSize({ ...newBagoFilterSize, date: selecteddate });
+  }, [selecteddate, open]);
 
   return (
     <>
@@ -50,15 +100,20 @@ const NewBagoFilterSize = ({ open, setOpen }: Props) => {
                 <Select
                   labelId="demo-simple-select-filled-label"
                   id="demo-simple-select-filled"
-                  value={1}
-                  onChange={(evt) => {}}
+                  value={newBagoFilterSize.shopId}
+                  onChange={(evt) => {
+                    setNewBagoFilterSize({
+                      ...newBagoFilterSize,
+                      shopId: Number(evt.target.value),
+                    });
+                  }}
                   sx={{ bgcolor: "#EEE8CF" }}
                 >
-                  {/* {concernGarage.map((item) => (
+                  {concernShop.map((item) => (
                     <MenuItem key={item.id} value={item.id}>
                       <ListItemText primary={item.name} />
                     </MenuItem>
-                  ))} */}
+                  ))}
                 </Select>
               </FormControl>
             </Box>
@@ -71,20 +126,20 @@ const NewBagoFilterSize = ({ open, setOpen }: Props) => {
                 <Select
                   labelId="demo-simple-select-filled-label"
                   id="demo-simple-select-filled"
-                  value={1}
+                  value={newBagoFilterSize.typeOfFilterSizeId}
                   onChange={(evt) => {
-                    // setNewFilterSizeAddStock({
-                    //   ...newFilterSizeAddStock,
-                    //   typeOfFilterSizeId: Number(evt.target.value),
-                    // });
+                    setNewBagoFilterSize({
+                      ...newBagoFilterSize,
+                      typeOfFilterSizeId: Number(evt.target.value),
+                    });
                   }}
                   sx={{ bgcolor: "#EEE8CF" }}
                 >
-                  {/* {concernFilterSize.map((item) => (
+                  {concernFilterSizes.map((item) => (
                     <MenuItem key={item.id} value={item.id}>
                       <ListItemText primary={item.name} />
                     </MenuItem>
-                  ))} */}
+                  ))}
                 </Select>
               </FormControl>
             </Box>
@@ -97,10 +152,10 @@ const NewBagoFilterSize = ({ open, setOpen }: Props) => {
                 placeholder="အရေအတွက်"
                 sx={{ bgcolor: "#EEE8CF" }}
                 onChange={(evt) => {
-                  //   setNewFilterSizeAddStock({
-                  //     ...newFilterSizeAddStock,
-                  //     quantity: Number(evt.target.value),
-                  //   });
+                  setNewBagoFilterSize({
+                    ...newBagoFilterSize,
+                    quantity: Number(evt.target.value),
+                  });
                 }}
               />
             </Box>
@@ -113,10 +168,10 @@ const NewBagoFilterSize = ({ open, setOpen }: Props) => {
                 placeholder="အိတ်ပေါင်း"
                 sx={{ bgcolor: "#EEE8CF" }}
                 onChange={(evt) => {
-                  //   setNewFilterSizeAddStock({
-                  //     ...newFilterSizeAddStock,
-                  //     bag: Number(evt.target.value),
-                  //   });
+                  setNewBagoFilterSize({
+                    ...newBagoFilterSize,
+                    bag: Number(evt.target.value),
+                  });
                 }}
               />
             </Box>
@@ -129,10 +184,10 @@ const NewBagoFilterSize = ({ open, setOpen }: Props) => {
                 placeholder="စုစုပေါင်းငွေ"
                 sx={{ bgcolor: "#EEE8CF" }}
                 onChange={(evt) => {
-                  //   setNewFilterSizeAddStock({
-                  //     ...newFilterSizeAddStock,
-                  //     bag: Number(evt.target.value),
-                  //   });
+                  setNewBagoFilterSize({
+                    ...newBagoFilterSize,
+                    totalPrice: Number(evt.target.value),
+                  });
                 }}
               />
             </Box>
@@ -143,24 +198,23 @@ const NewBagoFilterSize = ({ open, setOpen }: Props) => {
             variant="contained"
             onClick={() => {
               setOpen(false);
-              //   setNewFilterSizeAddStock(defaultValue);
+              setNewBagoFilterSize(defaultValue);
             }}
           >
             မလုပ်တော့ပါ
           </Button>
           <LoadingButton
             variant="contained"
-            // disabled={
-            //   !newFilterSizeAddStock.invNo ||
-            //   !newFilterSizeAddStock.carNo ||
-            //   !newFilterSizeAddStock.typeOfFilterSizeId ||
-            //   !newFilterSizeAddStock.quantity ||
-            //   !newFilterSizeAddStock.bag ||
-            //   !newFilterSizeAddStock.garageId ||
-            //   !newFilterSizeAddStock.shop
-            // }
-            // onClick={handleClick}
-            // loading={isLoading}
+            disabled={
+              !newBagoFilterSize.date ||
+              !newBagoFilterSize.shopId ||
+              !newBagoFilterSize.typeOfFilterSizeId ||
+              !newBagoFilterSize.quantity ||
+              !newBagoFilterSize.bag ||
+              !newBagoFilterSize.totalPrice
+            }
+            onClick={handleClick}
+            loading={isLoading}
           >
             သိမ်းမည်
           </LoadingButton>

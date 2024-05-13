@@ -6,76 +6,110 @@ import {
   DialogContent,
   DialogTitle,
   FormControl,
-  ListItemText,
   MenuItem,
   Select,
   TextField,
   Typography,
+  ListItemText,
 } from "@mui/material";
 import "react-datepicker/dist/react-datepicker.css";
 import DatePicker from "react-datepicker";
 import { useEffect, useState } from "react";
-import { createNewLabelTransfer } from "@/types/labelTransferGarageType";
+import { updateTabaccoTransfer } from "@/types/tabaccoTransferGarageType";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { setOpenSnackbar } from "@/store/slices/snackBar";
 import {
-  CreateLabelTransfer,
+  UpdatedTabaccoTransfer,
   setIsLoading,
-} from "@/store/slices/labelGarageTransfer";
+} from "@/store/slices/tabaccoGarageTransfer";
 import { LoadingButton } from "@mui/lab";
 interface Props {
-  open: boolean;
-  setOpen: (Value: boolean) => void;
+  updateOpen: boolean;
+  setUpdateOpen: (value: boolean) => void;
+  selectedId: number;
 }
 
-const defaultValue: createNewLabelTransfer = {
+const defaultValue: updateTabaccoTransfer = {
+  id: null,
   date: "",
   exitGarageId: null,
   enterenceGarageId: null,
-  typeOfLabelId: null,
-  bandle: 0,
+  typeOfTabaccoId: null,
+  tin: 0,
+  pyi: 0,
+  bag: 0,
 };
 
-const NewTransferLabel = ({ open, setOpen }: Props) => {
+const UpdateTransferTabacco = ({
+  updateOpen,
+  setUpdateOpen,
+  selectedId,
+}: Props) => {
+  const tabaccoTransfer = useAppSelector((store) => store.tabaccoTransfer.item);
+  const selectTabaccoTransfer = tabaccoTransfer.find(
+    (item) => item.id === selectedId
+  );
   const dispatch = useAppDispatch();
   const workShop = useAppSelector((store) => store.workShop.selectedWorkShop);
   const [selecteddate, setSelectedDate] = useState<any>(
     new Date().toLocaleDateString()
   );
-  const [newLabelTransfer, setNewLabelTransfer] =
-    useState<createNewLabelTransfer>(defaultValue);
+  const [updateTabaccoTransfer, setUpdateTabaccoTransfer] =
+    useState<updateTabaccoTransfer>(defaultValue);
   const garages = useAppSelector((store) => store.garage.item);
   const concernGarages = garages.filter(
     (item) => item.workShopId === workShop?.id
   );
-  const labels = useAppSelector((store) => store.typeOfLabel.item);
-  const concernLabels = labels.filter(
+  const tabacco = useAppSelector((store) => store.typeOfTabacco.item);
+  const concernTabacco = tabacco.filter(
     (item) => item.workShopId === workShop?.id
   );
-  const { isLoading } = useAppSelector((store) => store.labelTransfer);
+  const { isLoading } = useAppSelector((store) => store.tabaccoTransfer);
+  useEffect(() => {
+    if (selectTabaccoTransfer) {
+      setSelectedDate(selectTabaccoTransfer.date);
+      setUpdateTabaccoTransfer({
+        ...updateTabaccoTransfer,
+        id: selectedId,
+        date: selecteddate,
+        exitGarageId: selectTabaccoTransfer.exitGarageId,
+        enterenceGarageId: selectTabaccoTransfer.enterenceGarageId,
+        typeOfTabaccoId: selectTabaccoTransfer.typeOfTabaccoId,
+        tin: selectTabaccoTransfer.tin,
+        pyi: selectTabaccoTransfer.pyi,
+        bag: selectTabaccoTransfer.bag,
+      });
+    }
+  }, [selectTabaccoTransfer, updateOpen]);
+
+  useEffect(() => {
+    setUpdateTabaccoTransfer({
+      ...updateTabaccoTransfer,
+      date: selecteddate,
+    });
+  }, [selecteddate]);
   const handleClick = () => {
     dispatch(setIsLoading(true));
     dispatch(
-      CreateLabelTransfer({
-        ...newLabelTransfer,
+      UpdatedTabaccoTransfer({
+        ...updateTabaccoTransfer,
         onSuccess: () => {
-          setOpen(false);
-          setNewLabelTransfer(defaultValue);
-          dispatch(setOpenSnackbar({ message: "Transferring success" }));
+          setUpdateOpen(false);
+          setUpdateTabaccoTransfer(defaultValue);
+          dispatch(
+            setOpenSnackbar({ message: " Update transferring success" })
+          );
           dispatch(setIsLoading(false));
         },
       })
     );
   };
-
-  useEffect(() => {
-    setNewLabelTransfer({ ...newLabelTransfer, date: selecteddate });
-  }, [selecteddate, open]);
-
+  console.log("data", updateTabaccoTransfer);
+  if (!selectTabaccoTransfer) return null;
   return (
     <>
-      <Dialog open={open} onClose={() => setOpen(false)}>
-        <DialogTitle></DialogTitle>
+      <Dialog open={updateOpen} onClose={() => setUpdateOpen(false)}>
+        <DialogTitle>ပြင်ဆင်ခြင်း</DialogTitle>
         <DialogContent>
           <Box
             sx={{
@@ -99,10 +133,11 @@ const NewTransferLabel = ({ open, setOpen }: Props) => {
                 <Select
                   labelId="demo-simple-select-filled-label"
                   id="demo-simple-select-filled"
-                  value={newLabelTransfer.exitGarageId}
+                  defaultValue={selectTabaccoTransfer.exitGarageId}
+                  value={updateTabaccoTransfer.exitGarageId}
                   onChange={(evt) => {
-                    setNewLabelTransfer({
-                      ...newLabelTransfer,
+                    setUpdateTabaccoTransfer({
+                      ...updateTabaccoTransfer,
                       exitGarageId: Number(evt.target.value),
                     });
                   }}
@@ -123,10 +158,11 @@ const NewTransferLabel = ({ open, setOpen }: Props) => {
                 <Select
                   labelId="demo-simple-select-filled-label"
                   id="demo-simple-select-filled"
-                  value={newLabelTransfer.enterenceGarageId}
+                  defaultValue={selectTabaccoTransfer.enterenceGarageId}
+                  value={updateTabaccoTransfer.enterenceGarageId}
                   onChange={(evt) => {
-                    setNewLabelTransfer({
-                      ...newLabelTransfer,
+                    setUpdateTabaccoTransfer({
+                      ...updateTabaccoTransfer,
                       enterenceGarageId: Number(evt.target.value),
                     });
                   }}
@@ -144,22 +180,23 @@ const NewTransferLabel = ({ open, setOpen }: Props) => {
 
           <Box sx={{ mt: 2, mr: 3 }}>
             <Typography sx={{ fontWeight: "bold" }}>
-              တံဆိပ်အမျိုးအစား
+              ဆေးစပ်အမျိုးအစား
             </Typography>
             <FormControl variant="filled" sx={{ width: 300 }}>
               <Select
                 labelId="demo-simple-select-filled-label"
                 id="demo-simple-select-filled"
-                value={newLabelTransfer.typeOfLabelId}
+                defaultValue={selectTabaccoTransfer.typeOfTabaccoId}
+                value={updateTabaccoTransfer.typeOfTabaccoId}
                 onChange={(evt) => {
-                  setNewLabelTransfer({
-                    ...newLabelTransfer,
-                    typeOfLabelId: Number(evt.target.value),
+                  setUpdateTabaccoTransfer({
+                    ...updateTabaccoTransfer,
+                    typeOfTabaccoId: Number(evt.target.value),
                   });
                 }}
                 sx={{ bgcolor: "#EEE8CF" }}
               >
-                {concernLabels.map((item) => (
+                {concernTabacco.map((item) => (
                   <MenuItem key={item.id} value={item.id}>
                     <ListItemText primary={item.name} />
                   </MenuItem>
@@ -169,14 +206,45 @@ const NewTransferLabel = ({ open, setOpen }: Props) => {
           </Box>
 
           <Box sx={{ mt: 2 }}>
-            <Typography sx={{ fontWeight: "bold" }}>လိပ်</Typography>
+            <Typography sx={{ fontWeight: "bold" }}>တင်း</Typography>
             <TextField
-              placeholder="လိပ်"
+              defaultValue={selectTabaccoTransfer.tin}
+              placeholder="တင်း"
               sx={{ bgcolor: "#EEE8CF", width: 300 }}
               onChange={(evt) => {
-                setNewLabelTransfer({
-                  ...newLabelTransfer,
-                  bandle: Number(evt.target.value),
+                setUpdateTabaccoTransfer({
+                  ...updateTabaccoTransfer,
+                  tin: Number(evt.target.value),
+                });
+              }}
+            />
+          </Box>
+
+          <Box sx={{ mt: 2 }}>
+            <Typography sx={{ fontWeight: "bold" }}>ပြည်</Typography>
+            <TextField
+              defaultValue={selectTabaccoTransfer.pyi}
+              placeholder="ပြည်"
+              sx={{ bgcolor: "#EEE8CF", width: 300 }}
+              onChange={(evt) => {
+                setUpdateTabaccoTransfer({
+                  ...updateTabaccoTransfer,
+                  pyi: Number(evt.target.value),
+                });
+              }}
+            />
+          </Box>
+
+          <Box sx={{ mt: 2 }}>
+            <Typography sx={{ fontWeight: "bold" }}>အိတ်</Typography>
+            <TextField
+              defaultValue={selectTabaccoTransfer.bag}
+              placeholder="အိတ်"
+              sx={{ bgcolor: "#EEE8CF", width: 300 }}
+              onChange={(evt) => {
+                setUpdateTabaccoTransfer({
+                  ...updateTabaccoTransfer,
+                  bag: Number(evt.target.value),
                 });
               }}
             />
@@ -186,29 +254,22 @@ const NewTransferLabel = ({ open, setOpen }: Props) => {
           <Button
             variant="contained"
             onClick={() => {
-              setOpen(false);
-              setNewLabelTransfer(defaultValue);
+              setUpdateOpen(false);
+              setUpdateTabaccoTransfer(defaultValue);
             }}
           >
             မလုပ်တော့ပါ
           </Button>
           <LoadingButton
             variant="contained"
-            disabled={
-              !newLabelTransfer.exitGarageId ||
-              !newLabelTransfer.enterenceGarageId ||
-              !newLabelTransfer.typeOfLabelId ||
-              !newLabelTransfer.bandle ||
-              !newLabelTransfer.date
-            }
             onClick={handleClick}
             loading={isLoading}
           >
-            ကူးပြောင်းမည်
+            ပြင်ဆင်မည်
           </LoadingButton>
         </DialogActions>
       </Dialog>
     </>
   );
 };
-export default NewTransferLabel;
+export default UpdateTransferTabacco;

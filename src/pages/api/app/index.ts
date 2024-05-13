@@ -285,6 +285,38 @@ export default async function handler(
     const dailyClosing = await prisma.closingDailyBalance.findMany({
       where: { workShopId: { in: workShopIds }, isArchived: false },
     });
+    //37. find leafTransfer
+    const leafTransfer = await prisma.leafTransferGarage.findMany({
+      where: { workShopId: { in: workShopIds }, isArchived: false },
+    });
+    //38. find filterSizeTransfer
+    const filterSizeTransfer = await prisma.filterSizeTransferGarage.findMany({
+      where: { workShopId: { in: workShopIds }, isArchived: false },
+    });
+    //39. find tabaccoTransfer
+    const tabaccoTransfer = await prisma.tabaccoTransferGarage.findMany({
+      where: { workShopId: { in: workShopIds }, isArchived: false },
+    });
+    //40. find labelTransfer
+    const labelTransfer = await prisma.labelTransferGarage.findMany({
+      where: { workShopId: { in: workShopIds }, isArchived: false },
+    });
+    //41. find bagoLeaf
+    const bagoLeaf = await prisma.bagoLeafPurchase.findMany({
+      where: { workShopId: { in: workShopIds }, isArchived: false },
+    });
+    //42. find bagoFilterSize
+    const bagoFilterSize = await prisma.bagoFilterSizePurchase.findMany({
+      where: { workShopId: { in: workShopIds }, isArchived: false },
+    });
+    //43. find bagoLabel
+    const bagoLabel = await prisma.bagoLabelPurchase.findMany({
+      where: { workShopId: { in: workShopIds }, isArchived: false },
+    });
+    //44. find bagoPlastic
+    const bagoPlastic = await prisma.bagoPlasticPurchase.findMany({
+      where: { workShopId: { in: workShopIds }, isArchived: false },
+    });
     return res.json({
       industry,
       workShop,
@@ -323,6 +355,14 @@ export default async function handler(
       replenishment,
       mainClosing,
       dailyClosing,
+      leafTransfer,
+      filterSizeTransfer,
+      tabaccoTransfer,
+      labelTransfer,
+      bagoLeaf,
+      bagoFilterSize,
+      bagoLabel,
+      bagoPlastic,
     });
   }
 }

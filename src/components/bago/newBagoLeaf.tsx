@@ -12,17 +12,74 @@ import {
   DialogActions,
   Button,
 } from "@mui/material";
-import { defaultValue } from "../formula/newFormula";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import DatePicker from "react-datepicker";
+import { createNewBagoLeaf } from "@/types/bagoLeafType";
+import { useAppDispatch, useAppSelector } from "@/store/hooks";
+import { CreateBagoLeaf, setIsLoading } from "@/store/slices/bagoLeaf";
+import { setOpenSnackbar } from "@/store/slices/snackBar";
 interface Props {
   open: boolean;
   setOpen: (value: boolean) => void;
 }
+const defaultValue: createNewBagoLeaf = {
+  date: "",
+  shopId: null,
+  typeOfLeafId: null,
+  netWeight: 0,
+  netPrice: 0,
+  totalPrice: 0,
+};
+
 const NewBagoLeaf = ({ open, setOpen }: Props) => {
   const [selecteddate, setSelectedDate] = useState<any>(
     new Date().toLocaleDateString()
   );
+  const [newBagoLeaf, setNewBagoLeaf] =
+    useState<createNewBagoLeaf>(defaultValue);
+  const dispatch = useAppDispatch();
+  const workShop = useAppSelector((store) => store.workShop.selectedWorkShop);
+  const leaves = useAppSelector((store) => store.typeOfLeaf.item);
+  const concernLeaves = leaves.filter(
+    (item) => item.workShopId === workShop?.id
+  );
+  const shops = useAppSelector((store) => store.typeOfShop.item);
+  const concernShop = shops.filter((item) => item.workShopId === workShop?.id);
+  const { isLoading } = useAppSelector((store) => store.bagoLeaf);
+  const handleWeight = (weight: number) => {
+    const tolamount = weight * newBagoLeaf.netPrice;
+    setNewBagoLeaf({
+      ...newBagoLeaf,
+      netWeight: weight,
+      totalPrice: tolamount,
+    });
+  };
+  const handlePrice = (price: number) => {
+    const tolamount = newBagoLeaf.netWeight * price;
+    setNewBagoLeaf({
+      ...newBagoLeaf,
+      netPrice: price,
+      totalPrice: tolamount,
+    });
+  };
+  const handleClick = () => {
+    dispatch(setIsLoading(true));
+    dispatch(
+      CreateBagoLeaf({
+        ...newBagoLeaf,
+        onSuccess: () => {
+          setOpen(false);
+          setNewBagoLeaf(defaultValue);
+          dispatch(setOpenSnackbar({ message: "Add Leaf Purchase success" }));
+          dispatch(setIsLoading(false));
+        },
+      })
+    );
+  };
+
+  useEffect(() => {
+    setNewBagoLeaf({ ...newBagoLeaf, date: selecteddate });
+  }, [selecteddate, open]);
 
   return (
     <>
@@ -53,15 +110,20 @@ const NewBagoLeaf = ({ open, setOpen }: Props) => {
                 <Select
                   labelId="demo-simple-select-filled-label"
                   id="demo-simple-select-filled"
-                  value={1}
-                  onChange={(evt) => {}}
+                  value={newBagoLeaf.shopId}
+                  onChange={(evt) => {
+                    setNewBagoLeaf({
+                      ...newBagoLeaf,
+                      shopId: Number(evt.target.value),
+                    });
+                  }}
                   sx={{ bgcolor: "#EEE8CF" }}
                 >
-                  {/* {concernGarage.map((item) => (
+                  {concernShop.map((item) => (
                     <MenuItem key={item.id} value={item.id}>
                       <ListItemText primary={item.name} />
                     </MenuItem>
-                  ))} */}
+                  ))}
                 </Select>
               </FormControl>
             </Box>
@@ -74,20 +136,20 @@ const NewBagoLeaf = ({ open, setOpen }: Props) => {
                 <Select
                   labelId="demo-simple-select-filled-label"
                   id="demo-simple-select-filled"
-                  value={1}
+                  value={newBagoLeaf.typeOfLeafId}
                   onChange={(evt) => {
-                    // setNewFilterSizeAddStock({
-                    //   ...newFilterSizeAddStock,
-                    //   typeOfFilterSizeId: Number(evt.target.value),
-                    // });
+                    setNewBagoLeaf({
+                      ...newBagoLeaf,
+                      typeOfLeafId: Number(evt.target.value),
+                    });
                   }}
                   sx={{ bgcolor: "#EEE8CF" }}
                 >
-                  {/* {concernFilterSize.map((item) => (
+                  {concernLeaves.map((item) => (
                     <MenuItem key={item.id} value={item.id}>
                       <ListItemText primary={item.name} />
                     </MenuItem>
-                  ))} */}
+                  ))}
                 </Select>
               </FormControl>
             </Box>
@@ -100,10 +162,7 @@ const NewBagoLeaf = ({ open, setOpen }: Props) => {
                 placeholder="ကုန်ချိန်"
                 sx={{ bgcolor: "#EEE8CF" }}
                 onChange={(evt) => {
-                  //   setNewFilterSizeAddStock({
-                  //     ...newFilterSizeAddStock,
-                  //     quantity: Number(evt.target.value),
-                  //   });
+                  handleWeight(Number(evt.target.value));
                 }}
               />
             </Box>
@@ -116,10 +175,7 @@ const NewBagoLeaf = ({ open, setOpen }: Props) => {
                 placeholder="နှုန်း"
                 sx={{ bgcolor: "#EEE8CF" }}
                 onChange={(evt) => {
-                  //   setNewFilterSizeAddStock({
-                  //     ...newFilterSizeAddStock,
-                  //     bag: Number(evt.target.value),
-                  //   });
+                  handlePrice(Number(evt.target.value));
                 }}
               />
             </Box>
@@ -129,14 +185,10 @@ const NewBagoLeaf = ({ open, setOpen }: Props) => {
                 စုစုပေါင်းငွေ
               </Typography>
               <TextField
+                value={newBagoLeaf.totalPrice}
                 placeholder="စုစုပေါင်းငွေ"
                 sx={{ bgcolor: "#EEE8CF" }}
-                onChange={(evt) => {
-                  //   setNewFilterSizeAddStock({
-                  //     ...newFilterSizeAddStock,
-                  //     bag: Number(evt.target.value),
-                  //   });
-                }}
+                onChange={(evt) => {}}
               />
             </Box>
           </Box>
@@ -146,24 +198,23 @@ const NewBagoLeaf = ({ open, setOpen }: Props) => {
             variant="contained"
             onClick={() => {
               setOpen(false);
-              //   setNewFilterSizeAddStock(defaultValue);
+              setNewBagoLeaf(defaultValue);
             }}
           >
             မလုပ်တော့ပါ
           </Button>
           <LoadingButton
             variant="contained"
-            // disabled={
-            //   !newFilterSizeAddStock.invNo ||
-            //   !newFilterSizeAddStock.carNo ||
-            //   !newFilterSizeAddStock.typeOfFilterSizeId ||
-            //   !newFilterSizeAddStock.quantity ||
-            //   !newFilterSizeAddStock.bag ||
-            //   !newFilterSizeAddStock.garageId ||
-            //   !newFilterSizeAddStock.shop
-            // }
-            // onClick={handleClick}
-            // loading={isLoading}
+            disabled={
+              !newBagoLeaf.date ||
+              !newBagoLeaf.shopId ||
+              !newBagoLeaf.typeOfLeafId ||
+              !newBagoLeaf.netWeight ||
+              !newBagoLeaf.netPrice ||
+              !newBagoLeaf.totalPrice
+            }
+            onClick={handleClick}
+            loading={isLoading}
           >
             သိမ်းမည်
           </LoadingButton>

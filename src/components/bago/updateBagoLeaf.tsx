@@ -1,7 +1,3 @@
-import { useAppDispatch, useAppSelector } from "@/store/hooks";
-import { CreateBagoPlastic, setIsLoading } from "@/store/slices/bagoPLastic";
-import { setOpenSnackbar } from "@/store/slices/snackBar";
-import { createNewBagoPlastic } from "@/types/bagoPlasticType";
 import { LoadingButton } from "@mui/lab";
 import {
   Dialog,
@@ -11,65 +7,111 @@ import {
   TextField,
   FormControl,
   Select,
+  MenuItem,
+  ListItemText,
   DialogActions,
   Button,
-  ListItemText,
-  MenuItem,
+  DialogTitle,
 } from "@mui/material";
 import { useEffect, useState } from "react";
 import DatePicker from "react-datepicker";
+import { updateBagoLeaf } from "@/types/bagoLeafType";
+import { useAppDispatch, useAppSelector } from "@/store/hooks";
+import { UpdatedBagoLeaf, setIsLoading } from "@/store/slices/bagoLeaf";
+import { setOpenSnackbar } from "@/store/slices/snackBar";
 interface Props {
-  open: boolean;
-  setOpen: (value: boolean) => void;
+  updateOpen: boolean;
+  setUpdateOpen: (value: boolean) => void;
+  selectedId: number;
 }
-
-const defaultValue: createNewBagoPlastic = {
+const defaultValue: updateBagoLeaf = {
+  id: null,
   date: "",
   shopId: null,
-  plasticId: null,
-  quantity: 0,
-  bag: 0,
+  typeOfLeafId: null,
+  netWeight: 0,
+  netPrice: 0,
   totalPrice: 0,
 };
 
-const NewBagoPlastic = ({ open, setOpen }: Props) => {
+const UpdateBagoLeaf = ({ updateOpen, setUpdateOpen, selectedId }: Props) => {
+  const bagoLeaf = useAppSelector((store) => store.bagoLeaf.item);
+  const selectBagoLeaf = bagoLeaf.find((item) => item.id === selectedId);
   const [selecteddate, setSelectedDate] = useState<any>(
     new Date().toLocaleDateString()
   );
-  const [newBagoPlastic, setNewBagoPlastic] =
-    useState<createNewBagoPlastic>(defaultValue);
+  const [updateBagoLeaf, setUpdateBagoLeaf] =
+    useState<updateBagoLeaf>(defaultValue);
   const dispatch = useAppDispatch();
   const workShop = useAppSelector((store) => store.workShop.selectedWorkShop);
-  const plastics = useAppSelector((store) => store.typeOfPlastic.item);
-  const concernPlastic = plastics.filter(
+  const leaves = useAppSelector((store) => store.typeOfLeaf.item);
+  const concernLeaves = leaves.filter(
     (item) => item.workShopId === workShop?.id
   );
   const shops = useAppSelector((store) => store.typeOfShop.item);
   const concernShop = shops.filter((item) => item.workShopId === workShop?.id);
-  const { isLoading } = useAppSelector((store) => store.bagoPlastic);
+  const { isLoading } = useAppSelector((store) => store.bagoLeaf);
+
+  useEffect(() => {
+    if (selectBagoLeaf) {
+      setSelectedDate(selectBagoLeaf.date);
+      setUpdateBagoLeaf({
+        ...updateBagoLeaf,
+        id: selectedId,
+        date: selecteddate,
+        shopId: selectBagoLeaf.shopId,
+        typeOfLeafId: selectBagoLeaf.typeOfLeafId,
+        netWeight: selectBagoLeaf.netWeight,
+        netPrice: selectBagoLeaf.netPrice,
+        totalPrice: selectBagoLeaf.totalPrice,
+      });
+    }
+  }, [selectBagoLeaf, updateOpen]);
+
+  useEffect(() => {
+    setUpdateBagoLeaf({
+      ...updateBagoLeaf,
+      date: selecteddate,
+    });
+  }, [selecteddate]);
+
+  const handleWeight = (weight: number) => {
+    const tolamount = weight * updateBagoLeaf.netPrice;
+    setUpdateBagoLeaf({
+      ...updateBagoLeaf,
+      netWeight: weight,
+      totalPrice: tolamount,
+    });
+  };
+  const handlePrice = (price: number) => {
+    const tolamount = updateBagoLeaf.netWeight * price;
+    setUpdateBagoLeaf({
+      ...updateBagoLeaf,
+      netPrice: price,
+      totalPrice: tolamount,
+    });
+  };
   const handleClick = () => {
     dispatch(setIsLoading(true));
     dispatch(
-      CreateBagoPlastic({
-        ...newBagoPlastic,
+      UpdatedBagoLeaf({
+        ...updateBagoLeaf,
         onSuccess: () => {
-          setOpen(false);
-          setNewBagoPlastic(defaultValue);
+          setUpdateOpen(false);
+          setUpdateBagoLeaf(defaultValue);
           dispatch(
-            setOpenSnackbar({ message: "Add Plastic Purchase success" })
+            setOpenSnackbar({ message: "Update Leaf Purchase success" })
           );
           dispatch(setIsLoading(false));
         },
       })
     );
   };
-
-  useEffect(() => {
-    setNewBagoPlastic({ ...newBagoPlastic, date: selecteddate });
-  }, [selecteddate, open]);
+  if (!selectBagoLeaf) return null;
   return (
     <>
-      <Dialog open={open} onClose={() => setOpen(false)}>
+      <Dialog open={updateOpen} onClose={() => setUpdateOpen(false)}>
+        <DialogTitle>ပြင်ဆင်ခြင်း</DialogTitle>
         <DialogContent>
           <Box sx={{ display: "flex", justifyContent: "flex-end", mr: 2 }}>
             <Typography sx={{ mr: 2, fontWeight: "bold" }}>ရက်စွဲ</Typography>
@@ -96,10 +138,11 @@ const NewBagoPlastic = ({ open, setOpen }: Props) => {
                 <Select
                   labelId="demo-simple-select-filled-label"
                   id="demo-simple-select-filled"
-                  value={newBagoPlastic.shopId}
+                  defaultValue={selectBagoLeaf.shopId}
+                  value={updateBagoLeaf.shopId}
                   onChange={(evt) => {
-                    setNewBagoPlastic({
-                      ...newBagoPlastic,
+                    setUpdateBagoLeaf({
+                      ...updateBagoLeaf,
                       shopId: Number(evt.target.value),
                     });
                   }}
@@ -116,22 +159,23 @@ const NewBagoPlastic = ({ open, setOpen }: Props) => {
 
             <Box sx={{ display: "flex", alignItems: "center" }}>
               <Typography sx={{ fontWeight: "bold", width: 150 }}>
-                ပလပ်စတစ်အမျိုးအစား
+                ဖက်အမျိုးအစား
               </Typography>
               <FormControl variant="filled" sx={{ width: 225 }}>
                 <Select
                   labelId="demo-simple-select-filled-label"
                   id="demo-simple-select-filled"
-                  value={newBagoPlastic.plasticId}
+                  defaultValue={selectBagoLeaf.typeOfLeafId}
+                  value={updateBagoLeaf.typeOfLeafId}
                   onChange={(evt) => {
-                    setNewBagoPlastic({
-                      ...newBagoPlastic,
-                      plasticId: Number(evt.target.value),
+                    setUpdateBagoLeaf({
+                      ...updateBagoLeaf,
+                      typeOfLeafId: Number(evt.target.value),
                     });
                   }}
                   sx={{ bgcolor: "#EEE8CF" }}
                 >
-                  {concernPlastic.map((item) => (
+                  {concernLeaves.map((item) => (
                     <MenuItem key={item.id} value={item.id}>
                       <ListItemText primary={item.name} />
                     </MenuItem>
@@ -142,32 +186,28 @@ const NewBagoPlastic = ({ open, setOpen }: Props) => {
 
             <Box sx={{ display: "flex", alignItems: "center" }}>
               <Typography sx={{ fontWeight: "bold", width: 150 }}>
-                အရေအတွက်
+                ကုန်ချိန်
               </Typography>
               <TextField
-                placeholder="အရေအတွက်"
+                defaultValue={selectBagoLeaf.netWeight}
+                placeholder="ကုန်ချိန်"
                 sx={{ bgcolor: "#EEE8CF" }}
                 onChange={(evt) => {
-                  setNewBagoPlastic({
-                    ...newBagoPlastic,
-                    quantity: Number(evt.target.value),
-                  });
+                  handleWeight(Number(evt.target.value));
                 }}
               />
             </Box>
 
             <Box sx={{ display: "flex", alignItems: "center" }}>
               <Typography sx={{ fontWeight: "bold", width: 150 }}>
-                အိတ်ပေါင်း
+                နှုန်း
               </Typography>
               <TextField
-                placeholder="အိတ်ပေါင်း"
+                defaultValue={selectBagoLeaf.netPrice}
+                placeholder="နှုန်း"
                 sx={{ bgcolor: "#EEE8CF" }}
                 onChange={(evt) => {
-                  setNewBagoPlastic({
-                    ...newBagoPlastic,
-                    bag: Number(evt.target.value),
-                  });
+                  handlePrice(Number(evt.target.value));
                 }}
               />
             </Box>
@@ -177,14 +217,10 @@ const NewBagoPlastic = ({ open, setOpen }: Props) => {
                 စုစုပေါင်းငွေ
               </Typography>
               <TextField
+                value={updateBagoLeaf.totalPrice}
                 placeholder="စုစုပေါင်းငွေ"
                 sx={{ bgcolor: "#EEE8CF" }}
-                onChange={(evt) => {
-                  setNewBagoPlastic({
-                    ...newBagoPlastic,
-                    totalPrice: Number(evt.target.value),
-                  });
-                }}
+                onChange={(evt) => {}}
               />
             </Box>
           </Box>
@@ -193,30 +229,22 @@ const NewBagoPlastic = ({ open, setOpen }: Props) => {
           <Button
             variant="contained"
             onClick={() => {
-              setOpen(false);
-              setNewBagoPlastic(defaultValue);
+              setUpdateOpen(false);
+              setUpdateBagoLeaf(defaultValue);
             }}
           >
             မလုပ်တော့ပါ
           </Button>
           <LoadingButton
             variant="contained"
-            disabled={
-              !newBagoPlastic.date ||
-              !newBagoPlastic.shopId ||
-              !newBagoPlastic.plasticId ||
-              !newBagoPlastic.quantity ||
-              !newBagoPlastic.bag ||
-              !newBagoPlastic.totalPrice
-            }
             onClick={handleClick}
             loading={isLoading}
           >
-            သိမ်းမည်
+            ပြင်ဆင်မည်
           </LoadingButton>
         </DialogActions>
       </Dialog>
     </>
   );
 };
-export default NewBagoPlastic;
+export default UpdateBagoLeaf;

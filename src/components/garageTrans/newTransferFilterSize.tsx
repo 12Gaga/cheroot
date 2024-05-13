@@ -6,6 +6,7 @@ import {
   DialogContent,
   DialogTitle,
   FormControl,
+  ListItemText,
   MenuItem,
   Select,
   TextField,
@@ -13,21 +14,64 @@ import {
 } from "@mui/material";
 import "react-datepicker/dist/react-datepicker.css";
 import DatePicker from "react-datepicker";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { createNewFilterSizeTransfer } from "@/types/filterSizeTransferGarageType";
+import { useAppDispatch, useAppSelector } from "@/store/hooks";
+import { LoadingButton } from "@mui/lab";
+import {
+  CreateFilterSizeTransfer,
+  setIsLoading,
+} from "@/store/slices/filterSizeGarageTransfer";
+import { setOpenSnackbar } from "@/store/slices/snackBar";
 interface Props {
   open: boolean;
   setOpen: (Value: boolean) => void;
 }
+
+const defaultValue: createNewFilterSizeTransfer = {
+  date: "",
+  exitGarageId: null,
+  enterenceGarageId: null,
+  typeOfFilterSizeId: null,
+  quantity: 0,
+  bag: 0,
+};
+
 const NewTransferFilterSize = ({ open, setOpen }: Props) => {
+  const dispatch = useAppDispatch();
+  const workShop = useAppSelector((store) => store.workShop.selectedWorkShop);
   const [selecteddate, setSelectedDate] = useState<any>(
     new Date().toLocaleDateString()
   );
-  const [selectedExitGarage, setSelectedExitGarage] = useState<number>(1);
-  const [selectedEnterenceGarage, setSelectedEnterenceGarage] =
-    useState<number>(1);
-  const [selectedFilterSize, setSelectedFilterSize] = useState<number>(1);
+  const [newFilterSizeTransfer, setNewFilterSizeTransfer] =
+    useState<createNewFilterSizeTransfer>(defaultValue);
+  const garages = useAppSelector((store) => store.garage.item);
+  const concernGarages = garages.filter(
+    (item) => item.workShopId === workShop?.id
+  );
+  const filterSizes = useAppSelector((store) => store.typeOfFilterSize.item);
+  const concernFilterSize = filterSizes.filter(
+    (item) => item.workShopId === workShop?.id
+  );
+  const { isLoading } = useAppSelector((store) => store.filterSizeTransfer);
+  const handleClick = () => {
+    dispatch(setIsLoading(true));
+    dispatch(
+      CreateFilterSizeTransfer({
+        ...newFilterSizeTransfer,
+        onSuccess: () => {
+          setOpen(false);
+          setNewFilterSizeTransfer(defaultValue);
+          dispatch(setOpenSnackbar({ message: "Transferring success" }));
+          dispatch(setIsLoading(false));
+        },
+      })
+    );
+  };
 
-  useState<number>(1);
+  useEffect(() => {
+    setNewFilterSizeTransfer({ ...newFilterSizeTransfer, date: selecteddate });
+  }, [selecteddate, open]);
 
   return (
     <>
@@ -56,15 +100,20 @@ const NewTransferFilterSize = ({ open, setOpen }: Props) => {
                 <Select
                   labelId="demo-simple-select-filled-label"
                   id="demo-simple-select-filled"
-                  value={selectedExitGarage}
+                  value={newFilterSizeTransfer.exitGarageId}
                   onChange={(evt) => {
-                    setSelectedExitGarage(Number(evt.target.value));
+                    setNewFilterSizeTransfer({
+                      ...newFilterSizeTransfer,
+                      exitGarageId: Number(evt.target.value),
+                    });
                   }}
                   sx={{ bgcolor: "#EEE8CF" }}
                 >
-                  <MenuItem value={1}>ဂိုထောင် ၁</MenuItem>
-                  <MenuItem value={2}>ဂိုထောင် ၂</MenuItem>
-                  <MenuItem value={3}>ဂိုထောင် ၃</MenuItem>
+                  {concernGarages.map((item) => (
+                    <MenuItem key={item.id} value={item.id}>
+                      <ListItemText primary={item.name} />
+                    </MenuItem>
+                  ))}
                 </Select>
               </FormControl>
             </Box>
@@ -75,15 +124,20 @@ const NewTransferFilterSize = ({ open, setOpen }: Props) => {
                 <Select
                   labelId="demo-simple-select-filled-label"
                   id="demo-simple-select-filled"
-                  value={selectedEnterenceGarage}
+                  value={newFilterSizeTransfer.enterenceGarageId}
                   onChange={(evt) => {
-                    setSelectedEnterenceGarage(Number(evt.target.value));
+                    setNewFilterSizeTransfer({
+                      ...newFilterSizeTransfer,
+                      enterenceGarageId: Number(evt.target.value),
+                    });
                   }}
                   sx={{ bgcolor: "#EEE8CF" }}
                 >
-                  <MenuItem value={1}>ဂိုထောင် ၁</MenuItem>
-                  <MenuItem value={2}>ဂိုထောင် ၂</MenuItem>
-                  <MenuItem value={3}>ဂိုထောင် ၃</MenuItem>
+                  {concernGarages.map((item) => (
+                    <MenuItem key={item.id} value={item.id}>
+                      <ListItemText primary={item.name} />
+                    </MenuItem>
+                  ))}
                 </Select>
               </FormControl>
             </Box>
@@ -95,15 +149,20 @@ const NewTransferFilterSize = ({ open, setOpen }: Props) => {
               <Select
                 labelId="demo-simple-select-filled-label"
                 id="demo-simple-select-filled"
-                value={selectedFilterSize}
+                value={newFilterSizeTransfer.typeOfFilterSizeId}
                 onChange={(evt) => {
-                  setSelectedFilterSize(Number(evt.target.value));
+                  setNewFilterSizeTransfer({
+                    ...newFilterSizeTransfer,
+                    typeOfFilterSizeId: Number(evt.target.value),
+                  });
                 }}
                 sx={{ bgcolor: "#EEE8CF" }}
               >
-                <MenuItem value={1}>ရှယ်</MenuItem>
-                <MenuItem value={2}>ကြီး</MenuItem>
-                <MenuItem value={3}>လတ်</MenuItem>
+                {concernFilterSize.map((item) => (
+                  <MenuItem key={item.id} value={item.id}>
+                    <ListItemText primary={item.name} />
+                  </MenuItem>
+                ))}
               </Select>
             </FormControl>
           </Box>
@@ -113,7 +172,12 @@ const NewTransferFilterSize = ({ open, setOpen }: Props) => {
             <TextField
               placeholder="အရေအတွက်"
               sx={{ bgcolor: "#EEE8CF", width: 300 }}
-              onChange={() => {}}
+              onChange={(evt) => {
+                setNewFilterSizeTransfer({
+                  ...newFilterSizeTransfer,
+                  quantity: Number(evt.target.value),
+                });
+              }}
             />
           </Box>
 
@@ -122,15 +186,40 @@ const NewTransferFilterSize = ({ open, setOpen }: Props) => {
             <TextField
               placeholder="အိတ်"
               sx={{ bgcolor: "#EEE8CF", width: 300 }}
-              onChange={() => {}}
+              onChange={(evt) => {
+                setNewFilterSizeTransfer({
+                  ...newFilterSizeTransfer,
+                  bag: Number(evt.target.value),
+                });
+              }}
             />
           </Box>
         </DialogContent>
         <DialogActions>
-          <Button variant="contained" onClick={() => setOpen(false)}>
+          <Button
+            variant="contained"
+            onClick={() => {
+              setOpen(false);
+              setNewFilterSizeTransfer(defaultValue);
+            }}
+          >
             မလုပ်တော့ပါ
           </Button>
-          <Button variant="contained">ကူးပြောင်းမည်</Button>
+          <LoadingButton
+            variant="contained"
+            disabled={
+              !newFilterSizeTransfer.exitGarageId ||
+              !newFilterSizeTransfer.enterenceGarageId ||
+              !newFilterSizeTransfer.typeOfFilterSizeId ||
+              !newFilterSizeTransfer.quantity ||
+              !newFilterSizeTransfer.bag ||
+              !newFilterSizeTransfer.date
+            }
+            onClick={handleClick}
+            loading={isLoading}
+          >
+            ကူးပြောင်းမည်
+          </LoadingButton>
         </DialogActions>
       </Dialog>
     </>

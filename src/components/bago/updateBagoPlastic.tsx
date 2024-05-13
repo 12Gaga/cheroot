@@ -1,7 +1,7 @@
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
-import { CreateBagoPlastic, setIsLoading } from "@/store/slices/bagoPLastic";
+import { UpdatedBagoPlastic, setIsLoading } from "@/store/slices/bagoPLastic";
 import { setOpenSnackbar } from "@/store/slices/snackBar";
-import { createNewBagoPlastic } from "@/types/bagoPlasticType";
+import { updateBagoPlastic } from "@/types/bagoPlasticType";
 import { LoadingButton } from "@mui/lab";
 import {
   Dialog,
@@ -15,15 +15,18 @@ import {
   Button,
   ListItemText,
   MenuItem,
+  DialogTitle,
 } from "@mui/material";
 import { useEffect, useState } from "react";
 import DatePicker from "react-datepicker";
 interface Props {
-  open: boolean;
-  setOpen: (value: boolean) => void;
+  updateOpen: boolean;
+  setUpdateOpen: (value: boolean) => void;
+  selectedId: number;
 }
 
-const defaultValue: createNewBagoPlastic = {
+const defaultValue: updateBagoPlastic = {
+  id: null,
   date: "",
   shopId: null,
   plasticId: null,
@@ -32,12 +35,18 @@ const defaultValue: createNewBagoPlastic = {
   totalPrice: 0,
 };
 
-const NewBagoPlastic = ({ open, setOpen }: Props) => {
+const UpdateBagoPlastic = ({
+  updateOpen,
+  setUpdateOpen,
+  selectedId,
+}: Props) => {
+  const bagoPlastic = useAppSelector((store) => store.bagoPlastic.item);
+  const selectBagoPlastic = bagoPlastic.find((item) => item.id === selectedId);
   const [selecteddate, setSelectedDate] = useState<any>(
     new Date().toLocaleDateString()
   );
-  const [newBagoPlastic, setNewBagoPlastic] =
-    useState<createNewBagoPlastic>(defaultValue);
+  const [updateBagoPlastic, setUpdateBagoPlastic] =
+    useState<updateBagoPlastic>(defaultValue);
   const dispatch = useAppDispatch();
   const workShop = useAppSelector((store) => store.workShop.selectedWorkShop);
   const plastics = useAppSelector((store) => store.typeOfPlastic.item);
@@ -47,29 +56,50 @@ const NewBagoPlastic = ({ open, setOpen }: Props) => {
   const shops = useAppSelector((store) => store.typeOfShop.item);
   const concernShop = shops.filter((item) => item.workShopId === workShop?.id);
   const { isLoading } = useAppSelector((store) => store.bagoPlastic);
+  useEffect(() => {
+    if (selectBagoPlastic) {
+      setSelectedDate(selectBagoPlastic.date);
+      setUpdateBagoPlastic({
+        ...updateBagoPlastic,
+        id: selectedId,
+        date: selecteddate,
+        shopId: selectBagoPlastic.shopId,
+        plasticId: selectBagoPlastic.plasticId,
+        quantity: selectBagoPlastic.quantity,
+        bag: selectBagoPlastic.bag,
+        totalPrice: selectBagoPlastic.totalPrice,
+      });
+    }
+  }, [selectBagoPlastic, updateOpen]);
+
+  useEffect(() => {
+    setUpdateBagoPlastic({
+      ...updateBagoPlastic,
+      date: selecteddate,
+    });
+  }, [selecteddate]);
+
   const handleClick = () => {
     dispatch(setIsLoading(true));
     dispatch(
-      CreateBagoPlastic({
-        ...newBagoPlastic,
+      UpdatedBagoPlastic({
+        ...updateBagoPlastic,
         onSuccess: () => {
-          setOpen(false);
-          setNewBagoPlastic(defaultValue);
+          setUpdateOpen(false);
+          setUpdateBagoPlastic(defaultValue);
           dispatch(
-            setOpenSnackbar({ message: "Add Plastic Purchase success" })
+            setOpenSnackbar({ message: "Update Plastic Purchase success" })
           );
           dispatch(setIsLoading(false));
         },
       })
     );
   };
-
-  useEffect(() => {
-    setNewBagoPlastic({ ...newBagoPlastic, date: selecteddate });
-  }, [selecteddate, open]);
+  if (!selectBagoPlastic) return null;
   return (
     <>
-      <Dialog open={open} onClose={() => setOpen(false)}>
+      <Dialog open={updateOpen} onClose={() => setUpdateOpen(false)}>
+        <DialogTitle>ပြင်ဆင်ခြင်း</DialogTitle>
         <DialogContent>
           <Box sx={{ display: "flex", justifyContent: "flex-end", mr: 2 }}>
             <Typography sx={{ mr: 2, fontWeight: "bold" }}>ရက်စွဲ</Typography>
@@ -96,10 +126,11 @@ const NewBagoPlastic = ({ open, setOpen }: Props) => {
                 <Select
                   labelId="demo-simple-select-filled-label"
                   id="demo-simple-select-filled"
-                  value={newBagoPlastic.shopId}
+                  defaultValue={selectBagoPlastic.shopId}
+                  value={updateBagoPlastic.shopId}
                   onChange={(evt) => {
-                    setNewBagoPlastic({
-                      ...newBagoPlastic,
+                    setUpdateBagoPlastic({
+                      ...updateBagoPlastic,
                       shopId: Number(evt.target.value),
                     });
                   }}
@@ -122,10 +153,11 @@ const NewBagoPlastic = ({ open, setOpen }: Props) => {
                 <Select
                   labelId="demo-simple-select-filled-label"
                   id="demo-simple-select-filled"
-                  value={newBagoPlastic.plasticId}
+                  defaultValue={selectBagoPlastic.plasticId}
+                  value={updateBagoPlastic.plasticId}
                   onChange={(evt) => {
-                    setNewBagoPlastic({
-                      ...newBagoPlastic,
+                    setUpdateBagoPlastic({
+                      ...updateBagoPlastic,
                       plasticId: Number(evt.target.value),
                     });
                   }}
@@ -145,11 +177,12 @@ const NewBagoPlastic = ({ open, setOpen }: Props) => {
                 အရေအတွက်
               </Typography>
               <TextField
+                defaultValue={selectBagoPlastic.quantity}
                 placeholder="အရေအတွက်"
                 sx={{ bgcolor: "#EEE8CF" }}
                 onChange={(evt) => {
-                  setNewBagoPlastic({
-                    ...newBagoPlastic,
+                  setUpdateBagoPlastic({
+                    ...updateBagoPlastic,
                     quantity: Number(evt.target.value),
                   });
                 }}
@@ -161,11 +194,12 @@ const NewBagoPlastic = ({ open, setOpen }: Props) => {
                 အိတ်ပေါင်း
               </Typography>
               <TextField
+                defaultValue={selectBagoPlastic.bag}
                 placeholder="အိတ်ပေါင်း"
                 sx={{ bgcolor: "#EEE8CF" }}
                 onChange={(evt) => {
-                  setNewBagoPlastic({
-                    ...newBagoPlastic,
+                  setUpdateBagoPlastic({
+                    ...updateBagoPlastic,
                     bag: Number(evt.target.value),
                   });
                 }}
@@ -177,11 +211,12 @@ const NewBagoPlastic = ({ open, setOpen }: Props) => {
                 စုစုပေါင်းငွေ
               </Typography>
               <TextField
+                defaultValue={selectBagoPlastic.totalPrice}
                 placeholder="စုစုပေါင်းငွေ"
                 sx={{ bgcolor: "#EEE8CF" }}
                 onChange={(evt) => {
-                  setNewBagoPlastic({
-                    ...newBagoPlastic,
+                  setUpdateBagoPlastic({
+                    ...updateBagoPlastic,
                     totalPrice: Number(evt.target.value),
                   });
                 }}
@@ -193,30 +228,22 @@ const NewBagoPlastic = ({ open, setOpen }: Props) => {
           <Button
             variant="contained"
             onClick={() => {
-              setOpen(false);
-              setNewBagoPlastic(defaultValue);
+              setUpdateOpen(false);
+              setUpdateBagoPlastic(defaultValue);
             }}
           >
             မလုပ်တော့ပါ
           </Button>
           <LoadingButton
             variant="contained"
-            disabled={
-              !newBagoPlastic.date ||
-              !newBagoPlastic.shopId ||
-              !newBagoPlastic.plasticId ||
-              !newBagoPlastic.quantity ||
-              !newBagoPlastic.bag ||
-              !newBagoPlastic.totalPrice
-            }
             onClick={handleClick}
             loading={isLoading}
           >
-            သိမ်းမည်
+            ပြင်ဆင်မည်
           </LoadingButton>
         </DialogActions>
       </Dialog>
     </>
   );
 };
-export default NewBagoPlastic;
+export default UpdateBagoPlastic;

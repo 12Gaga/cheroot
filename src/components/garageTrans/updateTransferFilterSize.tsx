@@ -15,67 +15,99 @@ import {
 import "react-datepicker/dist/react-datepicker.css";
 import DatePicker from "react-datepicker";
 import { useEffect, useState } from "react";
-import { createNewLabelTransfer } from "@/types/labelTransferGarageType";
+import { updateFilterSizeTransfer } from "@/types/filterSizeTransferGarageType";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
-import { setOpenSnackbar } from "@/store/slices/snackBar";
-import {
-  CreateLabelTransfer,
-  setIsLoading,
-} from "@/store/slices/labelGarageTransfer";
 import { LoadingButton } from "@mui/lab";
+import {
+  UpdatedFilterSizeTransfer,
+  setIsLoading,
+} from "@/store/slices/filterSizeGarageTransfer";
+import { setOpenSnackbar } from "@/store/slices/snackBar";
 interface Props {
-  open: boolean;
-  setOpen: (Value: boolean) => void;
+  updateOpen: boolean;
+  setUpdateOpen: (value: boolean) => void;
+  selectedId: number;
 }
 
-const defaultValue: createNewLabelTransfer = {
+const defaultValue: updateFilterSizeTransfer = {
+  id: null,
   date: "",
   exitGarageId: null,
   enterenceGarageId: null,
-  typeOfLabelId: null,
-  bandle: 0,
+  typeOfFilterSizeId: null,
+  quantity: 0,
+  bag: 0,
 };
 
-const NewTransferLabel = ({ open, setOpen }: Props) => {
+const UpdateTransferFilterSize = ({
+  updateOpen,
+  setUpdateOpen,
+  selectedId,
+}: Props) => {
+  const filterSizeTransfer = useAppSelector(
+    (store) => store.filterSizeTransfer.item
+  );
+  const selectFilterSizeTransfer = filterSizeTransfer.find(
+    (item) => item.id === selectedId
+  );
   const dispatch = useAppDispatch();
   const workShop = useAppSelector((store) => store.workShop.selectedWorkShop);
   const [selecteddate, setSelectedDate] = useState<any>(
     new Date().toLocaleDateString()
   );
-  const [newLabelTransfer, setNewLabelTransfer] =
-    useState<createNewLabelTransfer>(defaultValue);
+  const [updateFilterSizeTransfer, setUpdateNewFilterSizeTransfer] =
+    useState<updateFilterSizeTransfer>(defaultValue);
   const garages = useAppSelector((store) => store.garage.item);
   const concernGarages = garages.filter(
     (item) => item.workShopId === workShop?.id
   );
-  const labels = useAppSelector((store) => store.typeOfLabel.item);
-  const concernLabels = labels.filter(
+  const filterSizes = useAppSelector((store) => store.typeOfFilterSize.item);
+  const concernFilterSize = filterSizes.filter(
     (item) => item.workShopId === workShop?.id
   );
-  const { isLoading } = useAppSelector((store) => store.labelTransfer);
+  const { isLoading } = useAppSelector((store) => store.filterSizeTransfer);
+  useEffect(() => {
+    if (selectFilterSizeTransfer) {
+      setSelectedDate(selectFilterSizeTransfer.date);
+      setUpdateNewFilterSizeTransfer({
+        ...updateFilterSizeTransfer,
+        id: selectedId,
+        date: selecteddate,
+        exitGarageId: selectFilterSizeTransfer.exitGarageId,
+        enterenceGarageId: selectFilterSizeTransfer.enterenceGarageId,
+        typeOfFilterSizeId: selectFilterSizeTransfer.typeOfFilterSizeId,
+        quantity: selectFilterSizeTransfer.quantity,
+        bag: selectFilterSizeTransfer.bag,
+      });
+    }
+  }, [selectFilterSizeTransfer, updateOpen]);
+
+  useEffect(() => {
+    setUpdateNewFilterSizeTransfer({
+      ...updateFilterSizeTransfer,
+      date: selecteddate,
+    });
+  }, [selecteddate]);
   const handleClick = () => {
     dispatch(setIsLoading(true));
     dispatch(
-      CreateLabelTransfer({
-        ...newLabelTransfer,
+      UpdatedFilterSizeTransfer({
+        ...updateFilterSizeTransfer,
         onSuccess: () => {
-          setOpen(false);
-          setNewLabelTransfer(defaultValue);
-          dispatch(setOpenSnackbar({ message: "Transferring success" }));
+          setUpdateOpen(false);
+          setUpdateNewFilterSizeTransfer(defaultValue);
+          dispatch(setOpenSnackbar({ message: "Update transferring success" }));
           dispatch(setIsLoading(false));
         },
       })
     );
   };
-
-  useEffect(() => {
-    setNewLabelTransfer({ ...newLabelTransfer, date: selecteddate });
-  }, [selecteddate, open]);
-
+  console.log("data", updateFilterSizeTransfer);
+  if (!selectFilterSizeTransfer) return null;
   return (
     <>
-      <Dialog open={open} onClose={() => setOpen(false)}>
-        <DialogTitle></DialogTitle>
+      <Dialog open={updateOpen} onClose={() => setUpdateOpen(false)}>
+        <DialogTitle>ပြင်ဆင်ခြင်း</DialogTitle>
         <DialogContent>
           <Box
             sx={{
@@ -99,10 +131,11 @@ const NewTransferLabel = ({ open, setOpen }: Props) => {
                 <Select
                   labelId="demo-simple-select-filled-label"
                   id="demo-simple-select-filled"
-                  value={newLabelTransfer.exitGarageId}
+                  defaultValue={selectFilterSizeTransfer.exitGarageId}
+                  value={updateFilterSizeTransfer.exitGarageId}
                   onChange={(evt) => {
-                    setNewLabelTransfer({
-                      ...newLabelTransfer,
+                    setUpdateNewFilterSizeTransfer({
+                      ...updateFilterSizeTransfer,
                       exitGarageId: Number(evt.target.value),
                     });
                   }}
@@ -123,10 +156,11 @@ const NewTransferLabel = ({ open, setOpen }: Props) => {
                 <Select
                   labelId="demo-simple-select-filled-label"
                   id="demo-simple-select-filled"
-                  value={newLabelTransfer.enterenceGarageId}
+                  defaultValue={selectFilterSizeTransfer.enterenceGarageId}
+                  value={updateFilterSizeTransfer.enterenceGarageId}
                   onChange={(evt) => {
-                    setNewLabelTransfer({
-                      ...newLabelTransfer,
+                    setUpdateNewFilterSizeTransfer({
+                      ...updateFilterSizeTransfer,
                       enterenceGarageId: Number(evt.target.value),
                     });
                   }}
@@ -143,23 +177,22 @@ const NewTransferLabel = ({ open, setOpen }: Props) => {
           </Box>
 
           <Box sx={{ mt: 2, mr: 3 }}>
-            <Typography sx={{ fontWeight: "bold" }}>
-              တံဆိပ်အမျိုးအစား
-            </Typography>
+            <Typography sx={{ fontWeight: "bold" }}>အဆီခံအမျိုးအစား</Typography>
             <FormControl variant="filled" sx={{ width: 300 }}>
               <Select
                 labelId="demo-simple-select-filled-label"
                 id="demo-simple-select-filled"
-                value={newLabelTransfer.typeOfLabelId}
+                defaultValue={selectFilterSizeTransfer.typeOfFilterSizeId}
+                value={updateFilterSizeTransfer.typeOfFilterSizeId}
                 onChange={(evt) => {
-                  setNewLabelTransfer({
-                    ...newLabelTransfer,
-                    typeOfLabelId: Number(evt.target.value),
+                  setUpdateNewFilterSizeTransfer({
+                    ...updateFilterSizeTransfer,
+                    typeOfFilterSizeId: Number(evt.target.value),
                   });
                 }}
                 sx={{ bgcolor: "#EEE8CF" }}
               >
-                {concernLabels.map((item) => (
+                {concernFilterSize.map((item) => (
                   <MenuItem key={item.id} value={item.id}>
                     <ListItemText primary={item.name} />
                   </MenuItem>
@@ -169,14 +202,30 @@ const NewTransferLabel = ({ open, setOpen }: Props) => {
           </Box>
 
           <Box sx={{ mt: 2 }}>
-            <Typography sx={{ fontWeight: "bold" }}>လိပ်</Typography>
+            <Typography sx={{ fontWeight: "bold" }}>အရေအတွက်</Typography>
             <TextField
-              placeholder="လိပ်"
+              defaultValue={selectFilterSizeTransfer.quantity}
+              placeholder="အရေအတွက်"
               sx={{ bgcolor: "#EEE8CF", width: 300 }}
               onChange={(evt) => {
-                setNewLabelTransfer({
-                  ...newLabelTransfer,
-                  bandle: Number(evt.target.value),
+                setUpdateNewFilterSizeTransfer({
+                  ...updateFilterSizeTransfer,
+                  quantity: Number(evt.target.value),
+                });
+              }}
+            />
+          </Box>
+
+          <Box sx={{ mt: 2 }}>
+            <Typography sx={{ fontWeight: "bold" }}>အိတ်</Typography>
+            <TextField
+              defaultValue={selectFilterSizeTransfer.bag}
+              placeholder="အိတ်"
+              sx={{ bgcolor: "#EEE8CF", width: 300 }}
+              onChange={(evt) => {
+                setUpdateNewFilterSizeTransfer({
+                  ...updateFilterSizeTransfer,
+                  bag: Number(evt.target.value),
                 });
               }}
             />
@@ -186,29 +235,22 @@ const NewTransferLabel = ({ open, setOpen }: Props) => {
           <Button
             variant="contained"
             onClick={() => {
-              setOpen(false);
-              setNewLabelTransfer(defaultValue);
+              setUpdateOpen(false);
+              setUpdateNewFilterSizeTransfer(defaultValue);
             }}
           >
             မလုပ်တော့ပါ
           </Button>
           <LoadingButton
             variant="contained"
-            disabled={
-              !newLabelTransfer.exitGarageId ||
-              !newLabelTransfer.enterenceGarageId ||
-              !newLabelTransfer.typeOfLabelId ||
-              !newLabelTransfer.bandle ||
-              !newLabelTransfer.date
-            }
             onClick={handleClick}
             loading={isLoading}
           >
-            ကူးပြောင်းမည်
+            ပြင်ဆင်မည်
           </LoadingButton>
         </DialogActions>
       </Dialog>
     </>
   );
 };
-export default NewTransferLabel;
+export default UpdateTransferFilterSize;

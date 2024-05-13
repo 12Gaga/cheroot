@@ -10,24 +10,69 @@ import {
   Select,
   TextField,
   Typography,
+  ListItemText,
 } from "@mui/material";
 import "react-datepicker/dist/react-datepicker.css";
 import DatePicker from "react-datepicker";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { createNewTabaccoTransfer } from "@/types/tabaccoTransferGarageType";
+import { useAppDispatch, useAppSelector } from "@/store/hooks";
+import { setOpenSnackbar } from "@/store/slices/snackBar";
+import {
+  CreateTabaccoTransfer,
+  setIsLoading,
+} from "@/store/slices/tabaccoGarageTransfer";
+import { LoadingButton } from "@mui/lab";
 interface Props {
   open: boolean;
   setOpen: (Value: boolean) => void;
 }
+
+const defaultValue: createNewTabaccoTransfer = {
+  date: "",
+  exitGarageId: null,
+  enterenceGarageId: null,
+  typeOfTabaccoId: null,
+  tin: 0,
+  pyi: 0,
+  bag: 0,
+};
+
 const NewTransferTabacco = ({ open, setOpen }: Props) => {
+  const dispatch = useAppDispatch();
+  const workShop = useAppSelector((store) => store.workShop.selectedWorkShop);
   const [selecteddate, setSelectedDate] = useState<any>(
     new Date().toLocaleDateString()
   );
-  const [selectedExitGarage, setSelectedExitGarage] = useState<number>(1);
-  const [selectedEnterenceGarage, setSelectedEnterenceGarage] =
-    useState<number>(1);
-  const [selectedTabacco, setSelectedTabacco] = useState<number>(1);
+  const [newTabaccoTransfer, setNewTabaccoTransfer] =
+    useState<createNewTabaccoTransfer>(defaultValue);
+  const garages = useAppSelector((store) => store.garage.item);
+  const concernGarages = garages.filter(
+    (item) => item.workShopId === workShop?.id
+  );
+  const tabacco = useAppSelector((store) => store.typeOfTabacco.item);
+  const concernTabacco = tabacco.filter(
+    (item) => item.workShopId === workShop?.id
+  );
+  const { isLoading } = useAppSelector((store) => store.tabaccoTransfer);
+  const handleClick = () => {
+    dispatch(setIsLoading(true));
+    dispatch(
+      CreateTabaccoTransfer({
+        ...newTabaccoTransfer,
+        onSuccess: () => {
+          setOpen(false);
+          setNewTabaccoTransfer(defaultValue);
+          dispatch(setOpenSnackbar({ message: "Transferring success" }));
+          dispatch(setIsLoading(false));
+        },
+      })
+    );
+  };
 
-  useState<number>(1);
+  useEffect(() => {
+    setNewTabaccoTransfer({ ...newTabaccoTransfer, date: selecteddate });
+  }, [selecteddate, open]);
 
   return (
     <>
@@ -56,15 +101,20 @@ const NewTransferTabacco = ({ open, setOpen }: Props) => {
                 <Select
                   labelId="demo-simple-select-filled-label"
                   id="demo-simple-select-filled"
-                  value={selectedExitGarage}
+                  value={newTabaccoTransfer.exitGarageId}
                   onChange={(evt) => {
-                    setSelectedExitGarage(Number(evt.target.value));
+                    setNewTabaccoTransfer({
+                      ...newTabaccoTransfer,
+                      exitGarageId: Number(evt.target.value),
+                    });
                   }}
                   sx={{ bgcolor: "#EEE8CF" }}
                 >
-                  <MenuItem value={1}>ဂိုထောင် ၁</MenuItem>
-                  <MenuItem value={2}>ဂိုထောင် ၂</MenuItem>
-                  <MenuItem value={3}>ဂိုထောင် ၃</MenuItem>
+                  {concernGarages.map((item) => (
+                    <MenuItem key={item.id} value={item.id}>
+                      <ListItemText primary={item.name} />
+                    </MenuItem>
+                  ))}
                 </Select>
               </FormControl>
             </Box>
@@ -75,15 +125,20 @@ const NewTransferTabacco = ({ open, setOpen }: Props) => {
                 <Select
                   labelId="demo-simple-select-filled-label"
                   id="demo-simple-select-filled"
-                  value={selectedEnterenceGarage}
+                  value={newTabaccoTransfer.enterenceGarageId}
                   onChange={(evt) => {
-                    setSelectedEnterenceGarage(Number(evt.target.value));
+                    setNewTabaccoTransfer({
+                      ...newTabaccoTransfer,
+                      enterenceGarageId: Number(evt.target.value),
+                    });
                   }}
                   sx={{ bgcolor: "#EEE8CF" }}
                 >
-                  <MenuItem value={1}>ဂိုထောင် ၁</MenuItem>
-                  <MenuItem value={2}>ဂိုထောင် ၂</MenuItem>
-                  <MenuItem value={3}>ဂိုထောင် ၃</MenuItem>
+                  {concernGarages.map((item) => (
+                    <MenuItem key={item.id} value={item.id}>
+                      <ListItemText primary={item.name} />
+                    </MenuItem>
+                  ))}
                 </Select>
               </FormControl>
             </Box>
@@ -97,15 +152,20 @@ const NewTransferTabacco = ({ open, setOpen }: Props) => {
               <Select
                 labelId="demo-simple-select-filled-label"
                 id="demo-simple-select-filled"
-                value={selectedTabacco}
+                value={newTabaccoTransfer.typeOfTabaccoId}
                 onChange={(evt) => {
-                  setSelectedTabacco(Number(evt.target.value));
+                  setNewTabaccoTransfer({
+                    ...newTabaccoTransfer,
+                    typeOfTabaccoId: Number(evt.target.value),
+                  });
                 }}
                 sx={{ bgcolor: "#EEE8CF" }}
               >
-                <MenuItem value={1}>ရှယ်</MenuItem>
-                <MenuItem value={2}>ကြီး</MenuItem>
-                <MenuItem value={3}>လတ်</MenuItem>
+                {concernTabacco.map((item) => (
+                  <MenuItem key={item.id} value={item.id}>
+                    <ListItemText primary={item.name} />
+                  </MenuItem>
+                ))}
               </Select>
             </FormControl>
           </Box>
@@ -115,7 +175,12 @@ const NewTransferTabacco = ({ open, setOpen }: Props) => {
             <TextField
               placeholder="တင်း"
               sx={{ bgcolor: "#EEE8CF", width: 300 }}
-              onChange={() => {}}
+              onChange={(evt) => {
+                setNewTabaccoTransfer({
+                  ...newTabaccoTransfer,
+                  tin: Number(evt.target.value),
+                });
+              }}
             />
           </Box>
 
@@ -124,7 +189,12 @@ const NewTransferTabacco = ({ open, setOpen }: Props) => {
             <TextField
               placeholder="ပြည်"
               sx={{ bgcolor: "#EEE8CF", width: 300 }}
-              onChange={() => {}}
+              onChange={(evt) => {
+                setNewTabaccoTransfer({
+                  ...newTabaccoTransfer,
+                  pyi: Number(evt.target.value),
+                });
+              }}
             />
           </Box>
 
@@ -133,15 +203,41 @@ const NewTransferTabacco = ({ open, setOpen }: Props) => {
             <TextField
               placeholder="အိတ်"
               sx={{ bgcolor: "#EEE8CF", width: 300 }}
-              onChange={() => {}}
+              onChange={(evt) => {
+                setNewTabaccoTransfer({
+                  ...newTabaccoTransfer,
+                  bag: Number(evt.target.value),
+                });
+              }}
             />
           </Box>
         </DialogContent>
         <DialogActions>
-          <Button variant="contained" onClick={() => setOpen(false)}>
+          <Button
+            variant="contained"
+            onClick={() => {
+              setOpen(false);
+              setNewTabaccoTransfer(defaultValue);
+            }}
+          >
             မလုပ်တော့ပါ
           </Button>
-          <Button variant="contained">ကူးပြောင်းမည်</Button>
+          <LoadingButton
+            variant="contained"
+            disabled={
+              !newTabaccoTransfer.exitGarageId ||
+              !newTabaccoTransfer.enterenceGarageId ||
+              !newTabaccoTransfer.typeOfTabaccoId ||
+              !newTabaccoTransfer.tin ||
+              !newTabaccoTransfer.pyi ||
+              !newTabaccoTransfer.bag ||
+              !newTabaccoTransfer.date
+            }
+            onClick={handleClick}
+            loading={isLoading}
+          >
+            ကူးပြောင်းမည်
+          </LoadingButton>
         </DialogActions>
       </Dialog>
     </>
