@@ -62,6 +62,11 @@ const btns = [
     title: "ပစ္စည်းထုပ်ပေးစာရင်း",
     url: "/admin/payLeaf/payStock",
   },
+  {
+    id: 12,
+    title: "ဂိုထောင်အကူးအပြောင်းစာရင်း",
+    url: "/admin/garageTransfer",
+  },
 ];
 
 const Admin = () => {
