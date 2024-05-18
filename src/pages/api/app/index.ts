@@ -66,22 +66,22 @@ export default async function handler(
       data: { name: newCherootName, workShopId: newWorkShop.id },
     });
     //10. create shop
-    const newShopName = "ဆေးလိပ်၁";
+    const newShopName = "ဆိုင်၁";
     const newShop = await prisma.typeOfShop.create({
       data: { name: newShopName, workShopId: newWorkShop.id },
     });
     //11. create plastic
-    const newPlasticName = "ဆေးလိပ်၁";
+    const newPlasticName = "ပလပ်စတစ်၁";
     const newPlastic = await prisma.typeOfPlastic.create({
       data: { name: newPlasticName, workShopId: newWorkShop.id },
     });
     // 12. create store
-    const newStoreName = "ဆေးလိပ်၁";
+    const newStoreName = "သိုလှောင်ရုံ၁";
     const newStore = await prisma.store.create({
       data: { name: newStoreName, cigratteIndustryId: newIndustry.id },
     });
     //13. create banquet
-    const newBanquetName = "ဆေးလိပ်၁";
+    const newBanquetName = "ပွဲရုံ၁";
     const newBanquet = await prisma.banquet.create({
       data: { name: newBanquetName, cigratteIndustryId: newIndustry.id },
     });
