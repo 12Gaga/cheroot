@@ -67,6 +67,11 @@ const btns = [
     title: "ဂိုထောင်အကူးအပြောင်းစာရင်း",
     url: "/admin/garageTransfer",
   },
+  {
+    id: 12,
+    title: "ဆေးလိပ်ပို့ခြင်း",
+    url: "/admin/transferCheroot",
+  },
 ];
 
 const Admin = () => {
