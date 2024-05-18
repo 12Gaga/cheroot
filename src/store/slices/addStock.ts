@@ -8,34 +8,6 @@ const initialState: addStockSlice = {
   error: null,
 };
 
-// export const CreateLeafStock = createAsyncThunk(
-//   "leafStock/CreateLeafStock",
-//   async (option: createNewLeafStock, thunkApi) => {
-//     const { typeOfLeafId, batchNo, viss, garageId, shop, onSuccess, onError } =
-//       option;
-//     try {
-//       const response = await fetch(`${Config.apiBaseUrl}/leafStock`, {
-//         method: "POST",
-//         headers: {
-//           "content-type": "application/json",
-//         },
-//         body: JSON.stringify({
-//           typeOfLeafId,
-//           batchNo,
-//           viss,
-//           garageId,
-//           shop,
-//         }),
-//       });
-//       const { newLeafStock } = await response.json();
-//       thunkApi.dispatch(addLeafStock(newLeafStock));
-//       onSuccess && onSuccess();
-//     } catch (err) {
-//       onError && onError();
-//     }
-//   }
-// );
-
 const AddStockSlice = createSlice({
   name: "addStock",
   initialState,
@@ -49,8 +21,22 @@ const AddStockSlice = createSlice({
     addAddStock: (state, action: PayloadAction<AddStock>) => {
       state.item = [...state.item, action.payload];
     },
+    updatedAddStock: (state, action: PayloadAction<AddStock>) => {
+      state.item = state.item.map((item) =>
+        item.stockSeq === action.payload.stockSeq ? action.payload : item
+      );
+    },
+    deletedAddStock: (state, action: PayloadAction<string>) => {
+      state.item = state.item.filter((item) => item.stockSeq != action.payload);
+    },
   },
 });
 
-export const { setAddStock, setIsLoading, addAddStock } = AddStockSlice.actions;
+export const {
+  setAddStock,
+  setIsLoading,
+  addAddStock,
+  updatedAddStock,
+  deletedAddStock,
+} = AddStockSlice.actions;
 export default AddStockSlice.reducer;

@@ -7,6 +7,8 @@ import { useAppSelector } from "@/store/hooks";
 import AddFilterSize from "@/components/addSt/addFilterSize";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
+import UpdateAddFilterSize from "@/components/addSt/updateFilterSize";
+import DeleteAddFilterSize from "@/components/addSt/deleteAddFilterSize";
 const FilterSizeAdd = () => {
   const [open, setOpen] = useState<boolean>(false);
   const filterSizes = useAppSelector((store) => store.typeOfFilterSize.item);
@@ -29,14 +31,17 @@ const FilterSizeAdd = () => {
   const filterSizeAddStockConcern = concernAddStocks.filter((item) =>
     concernFilterSizeStockIds.includes(item.typeOfFilterSizeId as number)
   );
-  const filterSizeAddStockConcernDate = filterSizeAddStockConcern.map(
-    (item) => item.date
+  const filterSizeAddStockConcernStockSeq = filterSizeAddStockConcern.map(
+    (item) => item.stockSeq
   );
 
   const concernStock = concernFilterSizeStock.filter((item) =>
-    filterSizeAddStockConcernDate.includes(item.date)
+    filterSizeAddStockConcernStockSeq.includes(item.stockSeq)
   );
   const shop = useAppSelector((store) => store.typeOfShop.item);
+  const [updateOpen, setUpdateOpen] = useState<boolean>(false);
+  const [deleteOpen, setDeleteOpen] = useState<boolean>(false);
+  const [selectStockSeq, setSelectStockSeq] = useState<string>("");
   return (
     <>
       <AdminLayout>
@@ -55,7 +60,7 @@ const FilterSizeAdd = () => {
             sx={{ fontSize: 50 }}
           />
         </Box>
-        <AddFilterSize open={open} setOpen={setOpen} />
+
         <table border={1}>
           <thead>
             <tr style={{ border: "1px solid" }}>
@@ -77,7 +82,8 @@ const FilterSizeAdd = () => {
                 {concernStock.map(
                   (i) =>
                     item.date === i.date &&
-                    item.typeOfFilterSizeId === i.typeOfFilterSizeId && (
+                    item.typeOfFilterSizeId === i.typeOfFilterSizeId &&
+                    item.stockSeq === i.stockSeq && (
                       <>
                         <td>
                           {
@@ -89,15 +95,40 @@ const FilterSizeAdd = () => {
                         <td>{i.quantity}</td>
                         <td>{i.bag}</td>
                         <td>{shop.find((s) => s.id === i.shopId)?.name}</td>
+                        <td
+                          onClick={() => {
+                            setUpdateOpen(true),
+                              setSelectStockSeq(item.stockSeq);
+                          }}
+                        >
+                          {<EditIcon />}
+                        </td>
+                        <td
+                          onClick={() => {
+                            setDeleteOpen(true),
+                              setSelectStockSeq(item.stockSeq);
+                          }}
+                        >
+                          {<DeleteIcon />}
+                        </td>
                       </>
                     )
                 )}
-                <td>{<EditIcon />}</td>
-                <td>{<DeleteIcon />}</td>
               </tr>
             </thead>
           ))}
         </table>
+        <AddFilterSize open={open} setOpen={setOpen} />
+        <UpdateAddFilterSize
+          updateOpen={updateOpen}
+          setUpdateOpen={setUpdateOpen}
+          selectedStockSeq={selectStockSeq}
+        />
+        <DeleteAddFilterSize
+          deleteOpen={deleteOpen}
+          setDeleteOpen={setDeleteOpen}
+          selectedStockSeq={selectStockSeq}
+        />
       </AdminLayout>
     </>
   );

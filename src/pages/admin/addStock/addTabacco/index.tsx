@@ -7,6 +7,8 @@ import "react-datepicker/dist/react-datepicker.css";
 import AddBoxIcon from "@mui/icons-material/AddBox";
 import { useAppSelector } from "@/store/hooks";
 import AddTabacco from "@/components/addSt/addTabacco";
+import UpdateAddTabacco from "@/components/addSt/updateTabacco";
+import DeleteAddTabacco from "@/components/addSt/deleteAddTabacco";
 const TabaccoAdd = () => {
   const [open, setOpen] = useState<boolean>(false);
   const tabaccos = useAppSelector((store) => store.typeOfTabacco.item);
@@ -27,14 +29,17 @@ const TabaccoAdd = () => {
   const tabaccoAddStockConcern = concernAddStocks.filter((item) =>
     concernTabaccoStockIds.includes(item.typeOfTabaccoId as number)
   );
-  const tabaccoAddStockConcernDate = tabaccoAddStockConcern.map(
-    (item) => item.date
+  const tabaccoAddStockConcernStockSeq = tabaccoAddStockConcern.map(
+    (item) => item.stockSeq
   );
 
   const concernStock = concernTabaccoStock.filter((item) =>
-    tabaccoAddStockConcernDate.includes(item.date)
+    tabaccoAddStockConcernStockSeq.includes(item.stockSeq)
   );
   const shop = useAppSelector((store) => store.typeOfShop.item);
+  const [updateOpen, setUpdateOpen] = useState<boolean>(false);
+  const [deleteOpen, setDeleteOpen] = useState<boolean>(false);
+  const [selectStockSeq, setSelectStockSeq] = useState<string>("");
   return (
     <>
       <AdminLayout>
@@ -53,7 +58,7 @@ const TabaccoAdd = () => {
             sx={{ fontSize: 50 }}
           />
         </Box>
-        <AddTabacco open={open} setOpen={setOpen} />
+
         <table border={1}>
           <thead>
             <tr style={{ border: "1px solid" }}>
@@ -76,7 +81,8 @@ const TabaccoAdd = () => {
                 {concernStock.map(
                   (i) =>
                     item.date === i.date &&
-                    item.typeOfTabaccoId === i.typeOfTabaccoId && (
+                    item.typeOfTabaccoId === i.typeOfTabaccoId &&
+                    item.stockSeq === i.stockSeq && (
                       <>
                         <td>
                           {
@@ -88,15 +94,40 @@ const TabaccoAdd = () => {
                         <td>{i.pyi}</td>
                         <td>{i.bag}</td>
                         <td>{shop.find((s) => s.id === i.shopId)?.name}</td>
+                        <td
+                          onClick={() => {
+                            setUpdateOpen(true),
+                              setSelectStockSeq(item.stockSeq);
+                          }}
+                        >
+                          {<EditIcon />}
+                        </td>
+                        <td
+                          onClick={() => {
+                            setDeleteOpen(true),
+                              setSelectStockSeq(item.stockSeq);
+                          }}
+                        >
+                          {<DeleteIcon />}
+                        </td>
                       </>
                     )
                 )}
-                <td>{<EditIcon />}</td>
-                <td>{<DeleteIcon />}</td>
               </tr>
             </thead>
           ))}
         </table>
+        <AddTabacco open={open} setOpen={setOpen} />
+        <UpdateAddTabacco
+          updateOpen={updateOpen}
+          setUpdateOpen={setUpdateOpen}
+          selectedStockSeq={selectStockSeq}
+        />
+        <DeleteAddTabacco
+          deleteOpen={deleteOpen}
+          setDeleteOpen={setDeleteOpen}
+          selectedStockSeq={selectStockSeq}
+        />
       </AdminLayout>
     </>
   );

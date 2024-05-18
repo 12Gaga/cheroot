@@ -17,6 +17,20 @@ export interface createNewFilterSizeStock extends BasicOption {
   garageId: number | undefined;
 }
 
+export interface updateFilterSizeStock extends BasicOption {
+  id: number | null;
+  date: string;
+  typeOfFilterSizeId: number | undefined;
+  quantity: number;
+  bag: number;
+  shopId: number;
+  garageId: number | undefined;
+}
+
+export interface deleteFilterSizeStock extends BasicOption {
+  id: number;
+}
+
 export interface createNewFilterSizeAddStock extends BasicOption {
   date: string;
   invNo: number;
@@ -26,4 +40,20 @@ export interface createNewFilterSizeAddStock extends BasicOption {
   bag: number;
   shopId: number;
   garageId: number | undefined;
+}
+
+export interface updateFilterSizeAddStock extends BasicOption {
+  stockSeq: string;
+  date: string;
+  invNo: number;
+  carNo: string;
+  typeOfFilterSizeId: number | undefined;
+  quantity: number;
+  bag: number;
+  shopId: number;
+  garageId: number | undefined;
+}
+
+export interface deleteFilterSizeAddStock extends BasicOption {
+  stockSeq: string;
 }

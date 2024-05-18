@@ -45,6 +45,13 @@ import { setBagoLeaf } from "./bagoLeaf";
 import { setBagoFilterSize } from "./bagoFilterSize";
 import { setBagoLabel } from "./bagoLabel";
 import { setBagoPlastic } from "./bagoPLastic";
+import { setTaungyiEnterStock } from "./taungyiEnterStock";
+import { setTaungyiExitStock } from "./taungyiExitStock";
+import { setPlasticStock } from "./plasticStock";
+import { setBagoInstallment } from "./bagoInstallment";
+import { setTaungyiInstllment } from "./taungyiInstallment";
+import { setCherootInstallment } from "./cherootInstallment";
+import { setCherootTransfer } from "./cherootTransfer";
 
 const initialState: appSlice = {
   init: false,
@@ -77,6 +84,7 @@ export const fetchApp = createAsyncThunk(
         filterSizeStock,
         tabaccoStock,
         labelStock,
+        plasticStock,
         addStock,
         formula,
         payLeaf,
@@ -104,6 +112,12 @@ export const fetchApp = createAsyncThunk(
         bagoFilterSize,
         bagoLabel,
         bagoPlastic,
+        taungyiEnterStock,
+        taungyiExitStock,
+        bagoInstallment,
+        taungyiInstallment,
+        cherootInstallment,
+        cherootTransfer,
       } = dataFromServer;
       thunkApi.dispatch(setInit(true));
       thunkApi.dispatch(setIndustry(industry));
@@ -127,6 +141,7 @@ export const fetchApp = createAsyncThunk(
       thunkApi.dispatch(setFilterSizeStock(filterSizeStock));
       thunkApi.dispatch(setTabaccoStock(tabaccoStock));
       thunkApi.dispatch(setLabelStock(labelStock));
+      thunkApi.dispatch(setPlasticStock(plasticStock));
       thunkApi.dispatch(setAddStock(addStock));
       thunkApi.dispatch(setFormula(formula));
       thunkApi.dispatch(setPayLeaf(payLeaf));
@@ -150,6 +165,12 @@ export const fetchApp = createAsyncThunk(
       thunkApi.dispatch(setBagoFilterSize(bagoFilterSize));
       thunkApi.dispatch(setBagoLabel(bagoLabel));
       thunkApi.dispatch(setBagoPlastic(bagoPlastic));
+      thunkApi.dispatch(setTaungyiEnterStock(taungyiEnterStock));
+      thunkApi.dispatch(setTaungyiExitStock(taungyiExitStock));
+      thunkApi.dispatch(setBagoInstallment(bagoInstallment));
+      thunkApi.dispatch(setTaungyiInstllment(taungyiInstallment));
+      thunkApi.dispatch(setCherootInstallment(cherootInstallment));
+      thunkApi.dispatch(setCherootTransfer(cherootTransfer));
       onSuccess && onSuccess();
     } catch (err) {
       onError && onError(err);

@@ -6,27 +6,98 @@ import {
   DialogContent,
   DialogTitle,
   FormControl,
+  ListItemText,
   MenuItem,
   Select,
   TextField,
   Typography,
 } from "@mui/material";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import "react-datepicker/dist/react-datepicker.css";
 import DatePicker from "react-datepicker";
+import { addCherootTransfer } from "@/types/bagoInstallment copy";
+import { useAppDispatch, useAppSelector } from "@/store/hooks";
+import { FormOfPacking, TypeOfPacking } from "@prisma/client";
+import {
+  AddCherootTransfer,
+  setIsLoading,
+} from "@/store/slices/cherootTransfer";
+import { setOpenSnackbar } from "@/store/slices/snackBar";
+import { LoadingButton } from "@mui/lab";
 interface Props {
   open: boolean;
   setOpen: (value: boolean) => void;
 }
 
+const defaultValue: addCherootTransfer = {
+  date: "",
+  conveyLocationId: null,
+  typeOfCherootId: null,
+  typeOfPackingId: null,
+  formOfPackingId: null,
+  quantity: 0,
+  totalPrice: 0,
+};
+
 const NewTransferCherootData = ({ open, setOpen }: Props) => {
-  const [selectedCheroot, setSelectedCheroot] = useState<number>(1);
-  const [selectedTypeOfPacking, setSelectedTypeOfPacking] = useState<number>(1);
-  const [selectedFormOfPacking, setSelectedFormOfPacking] = useState<number>(1);
+  const dispatch = useAppDispatch();
+  const { isLoading } = useAppSelector((store) => store.cherootTransfer);
   const [selecteddate, setSelectedDate] = useState<any>(
     new Date().toLocaleDateString()
   );
-  const [selectedLocation, setSelectedLocation] = useState<number>(1);
+  const [cherootTransfer, setCherootTransfer] =
+    useState<addCherootTransfer>(defaultValue);
+  const workshop = useAppSelector((store) => store.workShop.selectedWorkShop);
+  const locations = useAppSelector((store) => store.conveyLocation.item);
+  const concernLocations = locations.filter(
+    (item) => item.workShopId === workshop?.id
+  );
+  const concernCheroots = useAppSelector(
+    (store) => store.typeOfCheroot.item
+  ).filter((item) => item.workShopId === workshop?.id);
+  const typeOfPacking = useAppSelector((store) => store.typeOfPacking.item);
+  const formOfPacking = useAppSelector((store) => store.formOfPacking.item);
+  const [concernPackingType, setConcernPackingType] = useState<TypeOfPacking[]>(
+    []
+  );
+  const [concernPackingForm, setConcernPackingForm] = useState<FormOfPacking[]>(
+    []
+  );
+  const handleCheroot = (cherootId: number) => {
+    const packingType = typeOfPacking.filter(
+      (item) => item.typeOfCherootId === cherootId
+    );
+    setConcernPackingType(packingType);
+    setCherootTransfer({ ...cherootTransfer, typeOfCherootId: cherootId });
+  };
+  const handlePackingType = (packingTypeId: number) => {
+    const packingForm = formOfPacking.filter(
+      (item) => item.typeOfPackingId === packingTypeId
+    );
+    setConcernPackingForm(packingForm);
+    setCherootTransfer({ ...cherootTransfer, typeOfPackingId: packingTypeId });
+  };
+
+  const handleClick = () => {
+    dispatch(setIsLoading(true));
+    dispatch(
+      AddCherootTransfer({
+        ...cherootTransfer,
+        onSuccess: () => {
+          setOpen(false);
+          setCherootTransfer(defaultValue);
+          dispatch(
+            setOpenSnackbar({ message: "Add cheroot transfer success" })
+          );
+          dispatch(setIsLoading(false));
+        },
+      })
+    );
+  };
+
+  useEffect(() => {
+    setCherootTransfer({ ...cherootTransfer, date: selecteddate });
+  }, [selecteddate, open]);
 
   return (
     <Dialog open={open} onClose={() => setOpen(false)}>
@@ -54,14 +125,20 @@ const NewTransferCherootData = ({ open, setOpen }: Props) => {
               <Select
                 labelId="demo-simple-select-filled-label"
                 id="demo-simple-select-filled"
-                value={selectedLocation}
+                value={cherootTransfer.conveyLocationId}
                 onChange={(evt) => {
-                  setSelectedLocation(Number(evt.target.value));
+                  setCherootTransfer({
+                    ...cherootTransfer,
+                    conveyLocationId: Number(evt.target.value),
+                  });
                 }}
                 sx={{ bgcolor: "#EEE8CF" }}
               >
-                <MenuItem value={1}>ဉီးမောင်မောင်(ရန်ကုန်)</MenuItem>
-                <MenuItem value={2}>ဉီးမြ(ရွှေဘို)</MenuItem>
+                {concernLocations.map((item) => (
+                  <MenuItem key={item.id} value={item.id}>
+                    <ListItemText primary={item.name} />
+                  </MenuItem>
+                ))}
               </Select>
             </FormControl>
           </Box>
@@ -74,14 +151,17 @@ const NewTransferCherootData = ({ open, setOpen }: Props) => {
               <Select
                 labelId="demo-simple-select-filled-label"
                 id="demo-simple-select-filled"
-                value={selectedCheroot}
+                value={cherootTransfer.typeOfCherootId}
                 onChange={(evt) => {
-                  setSelectedCheroot(Number(evt.target.value));
+                  handleCheroot(Number(evt.target.value));
                 }}
                 sx={{ bgcolor: "#EEE8CF" }}
               >
-                <MenuItem value={1}>ငါးတုတ်</MenuItem>
-                <MenuItem value={2}>၄ ၁/၂ ရှယ်</MenuItem>
+                {concernCheroots.map((item) => (
+                  <MenuItem key={item.id} value={item.id}>
+                    <ListItemText primary={item.name} />
+                  </MenuItem>
+                ))}
               </Select>
             </FormControl>
           </Box>
@@ -92,14 +172,17 @@ const NewTransferCherootData = ({ open, setOpen }: Props) => {
               <Select
                 labelId="demo-simple-select-filled-label"
                 id="demo-simple-select-filled"
-                value={selectedTypeOfPacking}
+                value={cherootTransfer.typeOfPackingId}
                 onChange={(evt) => {
-                  setSelectedTypeOfPacking(Number(evt.target.value));
+                  handlePackingType(Number(evt.target.value));
                 }}
                 sx={{ bgcolor: "#EEE8CF" }}
               >
-                <MenuItem value={1}>၅၀ စီး</MenuItem>
-                <MenuItem value={2}>၄ လိပ်</MenuItem>
+                {concernPackingType.map((item) => (
+                  <MenuItem key={item.id} value={item.id}>
+                    <ListItemText primary={item.name} />
+                  </MenuItem>
+                ))}
               </Select>
             </FormControl>
           </Box>
@@ -112,14 +195,20 @@ const NewTransferCherootData = ({ open, setOpen }: Props) => {
               <Select
                 labelId="demo-simple-select-filled-label"
                 id="demo-simple-select-filled"
-                value={selectedFormOfPacking}
+                value={cherootTransfer.formOfPackingId}
                 onChange={(evt) => {
-                  setSelectedFormOfPacking(Number(evt.target.value));
+                  setCherootTransfer({
+                    ...cherootTransfer,
+                    formOfPackingId: Number(evt.target.value),
+                  });
                 }}
                 sx={{ bgcolor: "#EEE8CF" }}
               >
-                <MenuItem value={1}>ဖာကြီး</MenuItem>
-                <MenuItem value={2}>ဖာသေး</MenuItem>
+                {concernPackingForm.map((item) => (
+                  <MenuItem key={item.id} value={item.id}>
+                    <ListItemText primary={item.name} />
+                  </MenuItem>
+                ))}
               </Select>
             </FormControl>
           </Box>
@@ -129,7 +218,12 @@ const NewTransferCherootData = ({ open, setOpen }: Props) => {
             <TextField
               placeholder="အရေအတွက်"
               sx={{ bgcolor: "#EEE8CF", width: 300 }}
-              onChange={() => {}}
+              onChange={(evt) => {
+                setCherootTransfer({
+                  ...cherootTransfer,
+                  quantity: Number(evt.target.value),
+                });
+              }}
             />
           </Box>
 
@@ -138,16 +232,42 @@ const NewTransferCherootData = ({ open, setOpen }: Props) => {
             <TextField
               placeholder="ဆေးလိပ်တန်ဖိုး"
               sx={{ bgcolor: "#EEE8CF", width: 300 }}
-              onChange={() => {}}
+              onChange={(evt) => {
+                setCherootTransfer({
+                  ...cherootTransfer,
+                  totalPrice: Number(evt.target.value),
+                });
+              }}
             />
           </Box>
         </Box>
       </DialogContent>
       <DialogActions>
-        <Button variant="contained" onClick={() => setOpen(false)}>
+        <Button
+          variant="contained"
+          onClick={() => {
+            setOpen(false);
+            setCherootTransfer(defaultValue);
+          }}
+        >
           မလုပ်တော့ပါ
         </Button>
-        <Button variant="contained">အိုကေ</Button>
+        <LoadingButton
+          variant="contained"
+          disabled={
+            !cherootTransfer.date ||
+            !cherootTransfer.conveyLocationId ||
+            !cherootTransfer.typeOfCherootId ||
+            !cherootTransfer.typeOfPackingId ||
+            !cherootTransfer.formOfPackingId ||
+            !cherootTransfer.quantity ||
+            !cherootTransfer.totalPrice
+          }
+          onClick={handleClick}
+          loading={isLoading}
+        >
+          သိမ်းမည်
+        </LoadingButton>
       </DialogActions>
     </Dialog>
   );

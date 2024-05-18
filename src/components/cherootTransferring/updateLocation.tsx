@@ -13,12 +13,8 @@ import { useEffect, useState } from "react";
 import { LoadingButton } from "@mui/lab";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { setOpenSnackbar } from "@/store/slices/snackBar";
+import { updateConveyLocation } from "@/types/conveyLocationType";
 import {
-  createNewConveyLocation,
-  updateConveyLocation,
-} from "@/types/conveyLocationType";
-import {
-  CreateConveyLocation,
   UpdatedConveyLocation,
   setIsLoading,
 } from "@/store/slices/conveyLocation";

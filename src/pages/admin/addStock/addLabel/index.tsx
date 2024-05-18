@@ -1,5 +1,4 @@
 import { Box, Typography } from "@mui/material";
-
 import { useState } from "react";
 import AdminLayout from "@/components/adminLayout";
 import "react-datepicker/dist/react-datepicker.css";
@@ -8,6 +7,8 @@ import { useAppSelector } from "@/store/hooks";
 import AddLabel from "@/components/addSt/addLabel";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
+import UpdateAddLabel from "@/components/addSt/updateAddLabel";
+import DeleteAddLabel from "@/components/addSt/deleteAddLabel";
 const LabelAdd = () => {
   const [open, setOpen] = useState<boolean>(false);
   const labels = useAppSelector((store) => store.typeOfLabel.item);
@@ -28,14 +29,17 @@ const LabelAdd = () => {
   const labelAddStockConcern = concernAddStocks.filter((item) =>
     concernLabelStockIds.includes(item.typeOfLabelId as number)
   );
-  const labelAddStockConcernDate = labelAddStockConcern.map(
-    (item) => item.date
+  const labelAddStockConcernStockSeq = labelAddStockConcern.map(
+    (item) => item.stockSeq
   );
 
   const concernStock = concernLeafStock.filter((item) =>
-    labelAddStockConcernDate.includes(item.date)
+    labelAddStockConcernStockSeq.includes(item.stockSeq)
   );
   const shop = useAppSelector((store) => store.typeOfShop.item);
+  const [updateOpen, setUpdateOpen] = useState<boolean>(false);
+  const [deleteOpen, setDeleteOpen] = useState<boolean>(false);
+  const [selectStockSeq, setSelectStockSeq] = useState<string>("");
   return (
     <>
       <AdminLayout>
@@ -54,7 +58,7 @@ const LabelAdd = () => {
             sx={{ fontSize: 50 }}
           />
         </Box>
-        <AddLabel open={open} setOpen={setOpen} />
+
         <table border={1}>
           <thead>
             <tr style={{ border: "1px solid" }}>
@@ -75,22 +79,48 @@ const LabelAdd = () => {
                 {concernStock.map(
                   (i) =>
                     item.date === i.date &&
-                    item.typeOfLabelId === i.typeOfLabelId && (
+                    item.typeOfLabelId === i.typeOfLabelId &&
+                    item.stockSeq === i.stockSeq && (
                       <>
                         <td>
                           {labels.find((l) => l.id === i.typeOfLabelId)?.name}
                         </td>
                         <td>{i.bandle}</td>
                         <td>{shop.find((s) => s.id === i.shopId)?.name}</td>
+                        <td
+                          onClick={() => {
+                            setUpdateOpen(true),
+                              setSelectStockSeq(item.stockSeq);
+                          }}
+                        >
+                          {<EditIcon />}
+                        </td>
+                        <td
+                          onClick={() => {
+                            setDeleteOpen(true),
+                              setSelectStockSeq(item.stockSeq);
+                          }}
+                        >
+                          {<DeleteIcon />}
+                        </td>
                       </>
                     )
                 )}
-                <td>{<EditIcon />}</td>
-                <td>{<DeleteIcon />}</td>
               </tr>
             </thead>
           ))}
         </table>
+        <AddLabel open={open} setOpen={setOpen} />
+        <UpdateAddLabel
+          updateOpen={updateOpen}
+          setUpdateOpen={setUpdateOpen}
+          selectedStockSeq={selectStockSeq}
+        />
+        <DeleteAddLabel
+          deleteOpen={deleteOpen}
+          setDeleteOpen={setDeleteOpen}
+          selectedStockSeq={selectStockSeq}
+        />
       </AdminLayout>
     </>
   );

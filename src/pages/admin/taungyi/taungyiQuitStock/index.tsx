@@ -1,13 +1,25 @@
 import AdminLayout from "@/components/adminLayout";
-import NewLeaf from "@/components/asign/newLeaf";
-import NewStore from "@/components/taungyi/newStore";
-import NewTaungyiLeaf from "@/components/taungyi/newTaungyiLeaf";
 import NewTaungyiQuitStock from "@/components/taungyi/newTaungyiQuit";
+import { useAppSelector } from "@/store/hooks";
 import { Box, Button, Typography } from "@mui/material";
 import { useState } from "react";
+import EditIcon from "@mui/icons-material/Edit";
+import DeleteIcon from "@mui/icons-material/Delete";
+import UpdateTaungyiQuitStock from "@/components/taungyi/updateTaungyiQuit";
+import DeleteTaungyiExitStock from "@/components/taungyi/deleteTaungyiExitStock";
 const TaungyiQuitStock = () => {
   const [open, setOpen] = useState<boolean>(false);
-
+  const cigratteIndustryId = useAppSelector((store) => store.industry.item)?.id;
+  const taungyiExitStock = useAppSelector(
+    (store) => store.taungyiExitStock.item
+  );
+  const concernTaungyiExitStock = taungyiExitStock.filter(
+    (item) => item.cigratteIndustryId === cigratteIndustryId
+  );
+  const stores = useAppSelector((store) => store.typeOfStore.item);
+  const [updateOpen, setUpdateOpen] = useState<boolean>(false);
+  const [deleteOpen, setDeleteOpen] = useState<boolean>(false);
+  const [selectId, setSelectId] = useState<number>(0);
   return (
     <>
       <AdminLayout>
@@ -40,18 +52,56 @@ const TaungyiQuitStock = () => {
           </Button>
         </Box>
 
-        {/* <Box sx={{ display: "flex", flexWrap: "wrap" }}>
-          {leaves.map((item) => {
-            const workShopId = localStorage.getItem("selectedWorkShopId");
-            const exit = item.workShopId === Number(workShopId);
-            if (!exit) return null;
+        <table border={1}>
+          <thead>
+            <tr style={{ border: "1px solid" }}>
+              <th>နေ့စွဲ</th>
+              <th>ထုတ်ပေးသောသိုလှောင်ရုံ</th>
+              <th>လုံးရေ</th>
+              <th>ကုန်ချိန်</th>
+            </tr>
+          </thead>
+          {concernTaungyiExitStock.map((item) => {
             return (
-              <ItemCard key={item.id} icon={<SpaIcon />} title={item.name} />
+              <>
+                <thead key={item.id}>
+                  <tr style={{ border: "1px solid" }}>
+                    <td>{item.date}</td>
+                    <td>{stores.find((s) => s.id === item.storeId)?.name}</td>
+                    <td>{item.tolBatchNo}</td>
+                    <td>{item.netWeight}</td>
+                    <td
+                      onClick={() => {
+                        setUpdateOpen(true), setSelectId(item.id);
+                      }}
+                    >
+                      {<EditIcon />}
+                    </td>
+                    <td
+                      onClick={() => {
+                        setDeleteOpen(true), setSelectId(item.id);
+                      }}
+                    >
+                      {<DeleteIcon />}
+                    </td>
+                  </tr>
+                </thead>
+              </>
             );
           })}
-        </Box> */}
+        </table>
 
         <NewTaungyiQuitStock open={open} setOpen={setOpen} />
+        <UpdateTaungyiQuitStock
+          updateOpen={updateOpen}
+          setUpdateOpen={setUpdateOpen}
+          selectedId={selectId}
+        />
+        <DeleteTaungyiExitStock
+          deleteOpen={deleteOpen}
+          setDeleteOpen={setDeleteOpen}
+          selectedId={selectId}
+        />
       </AdminLayout>
     </>
   );

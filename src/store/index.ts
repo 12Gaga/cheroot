@@ -46,7 +46,12 @@ import bagoLeafReducer from "./slices/bagoLeaf";
 import bagoFilterSizeReducer from "./slices/bagoFilterSize";
 import bagoLabelReducer from "./slices/bagoLabel";
 import bagoPlasticReducer from "./slices/bagoPLastic";
-import bagoLabel from "./slices/bagoLabel";
+import taungyiEnterStockReducer from "./slices/taungyiEnterStock";
+import taungyiExitStockReducer from "./slices/taungyiExitStock";
+import bagoInstallmentReducer from "./slices/bagoInstallment";
+import taungyiInstallmentReducer from "./slices/taungyiInstallment";
+import cherootTransferReducer from "./slices/cherootTransfer";
+import cherootInstallmentReducer from "./slices/cherootInstallment";
 
 export const store = configureStore({
   reducer: {
@@ -97,6 +102,12 @@ export const store = configureStore({
     bagoFilterSize: bagoFilterSizeReducer,
     bagoLabel: bagoLabelReducer,
     bagoPlastic: bagoPlasticReducer,
+    taungyiEnterStock: taungyiEnterStockReducer,
+    taungyiExitStock: taungyiExitStockReducer,
+    bagoInstallment: bagoInstallmentReducer,
+    taungyiInstallment: taungyiInstallmentReducer,
+    cherootTransfer: cherootTransferReducer,
+    cherootInstallment: cherootInstallmentReducer,
   },
 });
 

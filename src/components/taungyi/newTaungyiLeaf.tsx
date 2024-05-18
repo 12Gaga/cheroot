@@ -1,3 +1,10 @@
+import { useAppDispatch, useAppSelector } from "@/store/hooks";
+import { setOpenSnackbar } from "@/store/slices/snackBar";
+import {
+  AddTaungyiEnterStock,
+  setIsLoading,
+} from "@/store/slices/taungyiEnterStock";
+import { addNewTaungyiEnterStock } from "@/types/taungyiEnterStock";
 import { LoadingButton } from "@mui/lab";
 import {
   Dialog,
@@ -7,23 +14,107 @@ import {
   TextField,
   FormControl,
   Select,
-  MenuItem,
-  ListItemText,
   DialogActions,
   Button,
+  MenuItem,
+  ListItemText,
 } from "@mui/material";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 interface Props {
   open: boolean;
   setOpen: (value: boolean) => void;
 }
+
+const defaultValue: addNewTaungyiEnterStock = {
+  date: "",
+  storeId: null,
+  banquetId: null,
+  tolBatchNo: 0,
+  netWeight: 0,
+  netPrice: 0,
+  tolNetPrice: 0,
+  packingFees: 0,
+  tolPackingFees: 0,
+  totalPrice: 0,
+  cigratteIndustryId: null,
+};
+
 const NewTaungyiLeaf = ({ open, setOpen }: Props) => {
   const [selecteddate, setSelectedDate] = useState<any>(
     new Date().toLocaleDateString()
   );
-
+  const { isLoading } = useAppSelector((store) => store.taungyiEnterStock);
+  const dispatch = useAppDispatch();
+  const cigratteIndustryId = useAppSelector((store) => store.industry.item)?.id;
+  const stores = useAppSelector((store) => store.typeOfStore.item);
+  const concernStores = stores.filter(
+    (item) => item.cigratteIndustryId === cigratteIndustryId
+  );
+  const banquets = useAppSelector((store) => store.typeOfBanquet.item);
+  const concernBanquet = banquets.filter(
+    (item) => item.cigratteIndustryId === cigratteIndustryId
+  );
+  const [newTaungyiEnterStock, setTaungyiEnterStock] =
+    useState<addNewTaungyiEnterStock>(defaultValue);
+  const handleClick = () => {
+    dispatch(setIsLoading(true));
+    dispatch(
+      AddTaungyiEnterStock({
+        ...newTaungyiEnterStock,
+        onSuccess: () => {
+          setOpen(false);
+          setTaungyiEnterStock(defaultValue);
+          dispatch(setOpenSnackbar({ message: "Add taungyi stock success" }));
+          dispatch(setIsLoading(false));
+        },
+      })
+    );
+  };
+  const handleBatch = (batch: number) => {
+    const netWeight = batch * 20;
+    const tolNetPrice = netWeight * newTaungyiEnterStock.netPrice;
+    const tolPackprice = batch * newTaungyiEnterStock.packingFees;
+    const tolPrice = tolNetPrice + tolPackprice;
+    setTaungyiEnterStock({
+      ...newTaungyiEnterStock,
+      tolBatchNo: batch,
+      netWeight,
+      tolNetPrice,
+      tolPackingFees: tolPackprice,
+      totalPrice: tolPrice,
+    });
+  };
+  const handlePrice = (price: number) => {
+    const tolNetPrice = newTaungyiEnterStock.netWeight * price;
+    const tolPrice = tolNetPrice + newTaungyiEnterStock.tolPackingFees;
+    setTaungyiEnterStock({
+      ...newTaungyiEnterStock,
+      netPrice: price,
+      tolNetPrice,
+      totalPrice: tolPrice,
+    });
+  };
+  const handlePack = (packPrice: number) => {
+    const tolPackprice = packPrice * newTaungyiEnterStock.tolBatchNo;
+    const tolPrice = newTaungyiEnterStock.tolNetPrice + tolPackprice;
+    setTaungyiEnterStock({
+      ...newTaungyiEnterStock,
+      packingFees: packPrice,
+      tolPackingFees: tolPackprice,
+      totalPrice: tolPrice,
+    });
+  };
+  useEffect(() => {
+    if (cigratteIndustryId) {
+      setTaungyiEnterStock({
+        ...newTaungyiEnterStock,
+        date: selecteddate,
+        cigratteIndustryId,
+      });
+    }
+  }, [selecteddate, open, cigratteIndustryId]);
   return (
     <>
       <Dialog open={open} onClose={() => setOpen(false)}>
@@ -47,21 +138,52 @@ const NewTaungyiLeaf = ({ open, setOpen }: Props) => {
           >
             <Box sx={{ mt: 2, display: "flex", alignItems: "center" }}>
               <Typography sx={{ fontWeight: "bold", width: 150 }}>
+                သိုလှောင်ရုံနာမည်
+              </Typography>
+              <FormControl variant="filled" sx={{ width: 225 }}>
+                <Select
+                  labelId="demo-simple-select-filled-label"
+                  id="demo-simple-select-filled"
+                  value={newTaungyiEnterStock.storeId}
+                  onChange={(evt) => {
+                    setTaungyiEnterStock({
+                      ...newTaungyiEnterStock,
+                      storeId: Number(evt.target.value),
+                    });
+                  }}
+                  sx={{ bgcolor: "#EEE8CF" }}
+                >
+                  {concernStores.map((item) => (
+                    <MenuItem key={item.id} value={item.id}>
+                      <ListItemText primary={item.name} />
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+            </Box>
+
+            <Box sx={{ mt: 2, display: "flex", alignItems: "center" }}>
+              <Typography sx={{ fontWeight: "bold", width: 150 }}>
                 ပွဲရုံနာမည်
               </Typography>
               <FormControl variant="filled" sx={{ width: 225 }}>
                 <Select
                   labelId="demo-simple-select-filled-label"
                   id="demo-simple-select-filled"
-                  value={1}
-                  onChange={(evt) => {}}
+                  value={newTaungyiEnterStock.banquetId}
+                  onChange={(evt) => {
+                    setTaungyiEnterStock({
+                      ...newTaungyiEnterStock,
+                      banquetId: Number(evt.target.value),
+                    });
+                  }}
                   sx={{ bgcolor: "#EEE8CF" }}
                 >
-                  {/* {concernGarage.map((item) => (
+                  {concernBanquet.map((item) => (
                     <MenuItem key={item.id} value={item.id}>
                       <ListItemText primary={item.name} />
                     </MenuItem>
-                  ))} */}
+                  ))}
                 </Select>
               </FormControl>
             </Box>
@@ -74,10 +196,7 @@ const NewTaungyiLeaf = ({ open, setOpen }: Props) => {
                 placeholder="လုံးရေ"
                 sx={{ bgcolor: "#EEE8CF" }}
                 onChange={(evt) => {
-                  //   setNewFilterSizeAddStock({
-                  //     ...newFilterSizeAddStock,
-                  //     quantity: Number(evt.target.value),
-                  //   });
+                  handleBatch(Number(evt.target.value));
                 }}
               />
             </Box>
@@ -87,14 +206,10 @@ const NewTaungyiLeaf = ({ open, setOpen }: Props) => {
                 ကုန်ချိန်
               </Typography>
               <TextField
+                value={newTaungyiEnterStock.netWeight}
                 placeholder="ကုန်ချိန်"
                 sx={{ bgcolor: "#EEE8CF" }}
-                onChange={(evt) => {
-                  //   setNewFilterSizeAddStock({
-                  //     ...newFilterSizeAddStock,
-                  //     bag: Number(evt.target.value),
-                  //   });
-                }}
+                onChange={(evt) => {}}
               />
             </Box>
             <Box sx={{ display: "flex", alignItems: "center" }}>
@@ -105,10 +220,7 @@ const NewTaungyiLeaf = ({ open, setOpen }: Props) => {
                 placeholder="ကုန်ချိန်နှုန်း"
                 sx={{ bgcolor: "#EEE8CF" }}
                 onChange={(evt) => {
-                  //   setNewFilterSizeAddStock({
-                  //     ...newFilterSizeAddStock,
-                  //     bag: Number(evt.target.value),
-                  //   });
+                  handlePrice(Number(evt.target.value));
                 }}
               />
             </Box>
@@ -117,14 +229,10 @@ const NewTaungyiLeaf = ({ open, setOpen }: Props) => {
                 ကုန်ချိန်သင့်ငွေ
               </Typography>
               <TextField
+                value={newTaungyiEnterStock.tolNetPrice}
                 placeholder="ကုန်ချိန်သင့်ငွေ"
                 sx={{ bgcolor: "#EEE8CF" }}
-                onChange={(evt) => {
-                  //   setNewFilterSizeAddStock({
-                  //     ...newFilterSizeAddStock,
-                  //     bag: Number(evt.target.value),
-                  //   });
-                }}
+                onChange={(evt) => {}}
               />
             </Box>
 
@@ -136,10 +244,7 @@ const NewTaungyiLeaf = ({ open, setOpen }: Props) => {
                 placeholder="ထုတ်ပိုးခနှုန်း"
                 sx={{ bgcolor: "#EEE8CF" }}
                 onChange={(evt) => {
-                  //   setNewFilterSizeAddStock({
-                  //     ...newFilterSizeAddStock,
-                  //     bag: Number(evt.target.value),
-                  //   });
+                  handlePack(Number(evt.target.value));
                 }}
               />
             </Box>
@@ -148,14 +253,10 @@ const NewTaungyiLeaf = ({ open, setOpen }: Props) => {
                 ထုတ်ပိုးခသင့်ငွေ
               </Typography>
               <TextField
+                value={newTaungyiEnterStock.tolPackingFees}
                 placeholder="ထုတ်ပိုးခသင့်ငွေ"
                 sx={{ bgcolor: "#EEE8CF" }}
-                onChange={(evt) => {
-                  //   setNewFilterSizeAddStock({
-                  //     ...newFilterSizeAddStock,
-                  //     bag: Number(evt.target.value),
-                  //   });
-                }}
+                onChange={(evt) => {}}
               />
             </Box>
 
@@ -164,14 +265,10 @@ const NewTaungyiLeaf = ({ open, setOpen }: Props) => {
                 စုစုပေါင်းသင့်ငွေ
               </Typography>
               <TextField
+                value={newTaungyiEnterStock.totalPrice}
                 placeholder="စုစုပေါင်းသင့်ငွေ"
                 sx={{ bgcolor: "#EEE8CF" }}
-                onChange={(evt) => {
-                  //   setNewFilterSizeAddStock({
-                  //     ...newFilterSizeAddStock,
-                  //     bag: Number(evt.target.value),
-                  //   });
-                }}
+                onChange={(evt) => {}}
               />
             </Box>
           </Box>
@@ -181,24 +278,27 @@ const NewTaungyiLeaf = ({ open, setOpen }: Props) => {
             variant="contained"
             onClick={() => {
               setOpen(false);
-              //   setNewFilterSizeAddStock(defaultValue);
+              setTaungyiEnterStock(defaultValue);
             }}
           >
             မလုပ်တော့ပါ
           </Button>
           <LoadingButton
             variant="contained"
-            // disabled={
-            //   !newFilterSizeAddStock.invNo ||
-            //   !newFilterSizeAddStock.carNo ||
-            //   !newFilterSizeAddStock.typeOfFilterSizeId ||
-            //   !newFilterSizeAddStock.quantity ||
-            //   !newFilterSizeAddStock.bag ||
-            //   !newFilterSizeAddStock.garageId ||
-            //   !newFilterSizeAddStock.shop
-            // }
-            // onClick={handleClick}
-            // loading={isLoading}
+            disabled={
+              !newTaungyiEnterStock.date ||
+              !newTaungyiEnterStock.storeId ||
+              !newTaungyiEnterStock.banquetId ||
+              !newTaungyiEnterStock.netWeight ||
+              !newTaungyiEnterStock.netPrice ||
+              !newTaungyiEnterStock.tolNetPrice ||
+              !newTaungyiEnterStock.packingFees ||
+              !newTaungyiEnterStock.tolPackingFees ||
+              !newTaungyiEnterStock.tolBatchNo ||
+              !newTaungyiEnterStock.totalPrice
+            }
+            onClick={handleClick}
+            loading={isLoading}
           >
             သိမ်းမည်
           </LoadingButton>

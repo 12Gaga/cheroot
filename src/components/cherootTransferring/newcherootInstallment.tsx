@@ -1,3 +1,10 @@
+import { useAppDispatch, useAppSelector } from "@/store/hooks";
+import {
+  AddCherootInstallment,
+  setIsLoading,
+} from "@/store/slices/cherootInstallment";
+import { setOpenSnackbar } from "@/store/slices/snackBar";
+import { addCherootInstallment } from "@/types/cherootInstallment";
 import { LoadingButton } from "@mui/lab";
 import {
   Dialog,
@@ -9,18 +16,77 @@ import {
   Select,
   DialogActions,
   Button,
+  ListItemText,
+  MenuItem,
 } from "@mui/material";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 interface Props {
   open: boolean;
   setOpen: (value: boolean) => void;
 }
+
+const defaultValue: addCherootInstallment = {
+  date: "",
+  conveyLocationId: null,
+  cashBalance: 0,
+  payBalance: 0,
+};
+
 const NewCherootInstallment = ({ open, setOpen }: Props) => {
   const [selecteddate, setSelectedDate] = useState<any>(
     new Date().toLocaleDateString()
   );
+  const dispatch = useAppDispatch();
+  const { isLoading } = useAppSelector((store) => store.cherootInstallment);
+  const workShop = useAppSelector((store) => store.workShop.selectedWorkShop);
+  const locations = useAppSelector((store) => store.conveyLocation.item);
+  const concernLocation = locations.filter(
+    (item) => item.workShopId === workShop?.id
+  );
+  const cherootTransfer = useAppSelector((store) => store.cherootTransfer.item);
+  const installment = useAppSelector((store) => store.cherootInstallment.item);
+  const [cherootInstallment, setCherootInstallment] =
+    useState<addCherootInstallment>(defaultValue);
+
+  const handleChange = (locationId: number) => {
+    const Cherootamount = cherootTransfer
+      .filter((item) => item.conveyLocationId === locationId)
+      .reduce((total, cheroot) => {
+        return (total += cheroot.totalPrice);
+      }, 0);
+    const installmentAmount = installment
+      .filter((item) => item.conveyLocationId === locationId)
+      .reduce((total, cheroot) => {
+        return (total += cheroot.payBalance);
+      }, 0);
+    const amount = Cherootamount - installmentAmount;
+    setCherootInstallment({
+      ...cherootInstallment,
+      conveyLocationId: locationId,
+      cashBalance: amount,
+    });
+  };
+
+  const handleClick = () => {
+    dispatch(setIsLoading(true));
+    dispatch(
+      AddCherootInstallment({
+        ...cherootInstallment,
+        onSuccess: () => {
+          setOpen(false);
+          setCherootInstallment(defaultValue);
+          dispatch(setOpenSnackbar({ message: "Add installment success" }));
+          dispatch(setIsLoading(false));
+        },
+      })
+    );
+  };
+
+  useEffect(() => {
+    setCherootInstallment({ ...cherootInstallment, date: selecteddate });
+  }, [selecteddate, open]);
 
   return (
     <>
@@ -51,20 +117,22 @@ const NewCherootInstallment = ({ open, setOpen }: Props) => {
                 <Select
                   labelId="demo-simple-select-filled-label"
                   id="demo-simple-select-filled"
-                  value={1}
-                  onChange={(evt) => {}}
+                  value={cherootInstallment.conveyLocationId}
+                  onChange={(evt) => {
+                    handleChange(Number(evt.target.value));
+                  }}
                   sx={{ bgcolor: "#EEE8CF" }}
                 >
-                  {/* {concernGarage.map((item) => (
+                  {concernLocation.map((item) => (
                     <MenuItem key={item.id} value={item.id}>
                       <ListItemText primary={item.name} />
                     </MenuItem>
-                  ))} */}
+                  ))}
                 </Select>
               </FormControl>
             </Box>
 
-            <Box sx={{ display: "flex", alignItems: "center" }}>
+            {/* <Box sx={{ display: "flex", alignItems: "center" }}>
               <Typography sx={{ fontWeight: "bold", width: 150 }}>
                 ဖက်အမျိုးအစား
               </Typography>
@@ -74,35 +142,31 @@ const NewCherootInstallment = ({ open, setOpen }: Props) => {
                   id="demo-simple-select-filled"
                   value={1}
                   onChange={(evt) => {
-                    // setNewFilterSizeAddStock({
-                    //   ...newFilterSizeAddStock,
-                    //   typeOfFilterSizeId: Number(evt.target.value),
-                    // });
+                    setNewFilterSizeAddStock({
+                      ...newFilterSizeAddStock,
+                      typeOfFilterSizeId: Number(evt.target.value),
+                    });
                   }}
                   sx={{ bgcolor: "#EEE8CF" }}
                 >
-                  {/* {concernFilterSize.map((item) => (
+                  {concernFilterSize.map((item) => (
                     <MenuItem key={item.id} value={item.id}>
                       <ListItemText primary={item.name} />
                     </MenuItem>
-                  ))} */}
+                  ))}
                 </Select>
               </FormControl>
-            </Box>
+            </Box> */}
 
             <Box sx={{ display: "flex", alignItems: "center" }}>
               <Typography sx={{ fontWeight: "bold", width: 150 }}>
-                ကျန်ငွေ
+                ရရန်ကျန်ငွေ
               </Typography>
               <TextField
+                value={cherootInstallment.cashBalance}
                 placeholder="ကျန်ငွေ"
                 sx={{ bgcolor: "#EEE8CF" }}
-                onChange={(evt) => {
-                  //   setNewFilterSizeAddStock({
-                  //     ...newFilterSizeAddStock,
-                  //     quantity: Number(evt.target.value),
-                  //   });
-                }}
+                onChange={(evt) => {}}
               />
             </Box>
 
@@ -114,10 +178,10 @@ const NewCherootInstallment = ({ open, setOpen }: Props) => {
                 placeholder="သွင်းငွေ"
                 sx={{ bgcolor: "#EEE8CF" }}
                 onChange={(evt) => {
-                  //   setNewFilterSizeAddStock({
-                  //     ...newFilterSizeAddStock,
-                  //     bag: Number(evt.target.value),
-                  //   });
+                  setCherootInstallment({
+                    ...cherootInstallment,
+                    payBalance: Number(evt.target.value),
+                  });
                 }}
               />
             </Box>
@@ -128,24 +192,21 @@ const NewCherootInstallment = ({ open, setOpen }: Props) => {
             variant="contained"
             onClick={() => {
               setOpen(false);
-              //   setNewFilterSizeAddStock(defaultValue);
+              setCherootInstallment(defaultValue);
             }}
           >
             မလုပ်တော့ပါ
           </Button>
           <LoadingButton
             variant="contained"
-            // disabled={
-            //   !newFilterSizeAddStock.invNo ||
-            //   !newFilterSizeAddStock.carNo ||
-            //   !newFilterSizeAddStock.typeOfFilterSizeId ||
-            //   !newFilterSizeAddStock.quantity ||
-            //   !newFilterSizeAddStock.bag ||
-            //   !newFilterSizeAddStock.garageId ||
-            //   !newFilterSizeAddStock.shop
-            // }
-            // onClick={handleClick}
-            // loading={isLoading}
+            disabled={
+              !cherootInstallment.date ||
+              !cherootInstallment.conveyLocationId ||
+              !cherootInstallment.cashBalance ||
+              !cherootInstallment.payBalance
+            }
+            onClick={handleClick}
+            loading={isLoading}
           >
             သိမ်းမည်
           </LoadingButton>

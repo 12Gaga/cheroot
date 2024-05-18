@@ -5,25 +5,81 @@ import {
   Box,
   Typography,
   TextField,
-  FormControl,
-  Select,
-  MenuItem,
-  ListItemText,
   DialogActions,
   Button,
+  FormControl,
+  ListItemText,
+  MenuItem,
+  Select,
 } from "@mui/material";
 import "react-datepicker/dist/react-datepicker.css";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import DatePicker from "react-datepicker";
+import { addNewTaungyiExitStock } from "@/types/taungyiExitStock";
+import { useAppDispatch, useAppSelector } from "@/store/hooks";
+import {
+  AddTaungyiExitStock,
+  setIsLoading,
+} from "@/store/slices/taungyiExitStock";
+import { setOpenSnackbar } from "@/store/slices/snackBar";
+import { setTaungyiEnterStock } from "@/store/slices/taungyiEnterStock";
 interface Props {
   open: boolean;
   setOpen: (value: boolean) => void;
 }
+
+const defaultValue: addNewTaungyiExitStock = {
+  date: "",
+  storeId: null,
+  tolBatchNo: 0,
+  netWeight: 0,
+  cigratteIndustryId: null,
+};
+
 const NewTaungyiQuitStock = ({ open, setOpen }: Props) => {
   const [selecteddate, setSelectedDate] = useState<any>(
     new Date().toLocaleDateString()
   );
-
+  const { isLoading } = useAppSelector((store) => store.taungyiExitStock);
+  const dispatch = useAppDispatch();
+  const cigratteIndustryId = useAppSelector((store) => store.industry.item)?.id;
+  const stores = useAppSelector((store) => store.typeOfStore.item);
+  const concernStores = stores.filter(
+    (item) => item.cigratteIndustryId === cigratteIndustryId
+  );
+  const [newTaungyiExitStock, setTaungyiExitStock] =
+    useState<addNewTaungyiExitStock>(defaultValue);
+  const handleClick = () => {
+    dispatch(setIsLoading(true));
+    dispatch(
+      AddTaungyiExitStock({
+        ...newTaungyiExitStock,
+        onSuccess: () => {
+          setOpen(false);
+          setTaungyiExitStock(defaultValue);
+          dispatch(setOpenSnackbar({ message: "Stock exiting success" }));
+          dispatch(setIsLoading(false));
+        },
+      })
+    );
+  };
+  const handleBatch = (batch: number) => {
+    const netWeight = batch * 20;
+    setTaungyiExitStock({
+      ...newTaungyiExitStock,
+      netWeight,
+      tolBatchNo: batch,
+    });
+  };
+  useEffect(() => {
+    if (cigratteIndustryId) {
+      setTaungyiExitStock({
+        ...newTaungyiExitStock,
+        date: selecteddate,
+        cigratteIndustryId,
+      });
+    }
+  }, [selecteddate, open, cigratteIndustryId]);
   return (
     <>
       <Dialog open={open} onClose={() => setOpen(false)}>
@@ -45,31 +101,31 @@ const NewTaungyiQuitStock = ({ open, setOpen }: Props) => {
               mt: 5,
             }}
           >
-            {/* <Box sx={{ display: "flex", alignItems: "center" }}>
+            <Box sx={{ mt: 2, display: "flex", alignItems: "center" }}>
               <Typography sx={{ fontWeight: "bold", width: 150 }}>
-                ဖက်အမျိုးအစား
+                သိုလှောင်ရုံနာမည်
               </Typography>
               <FormControl variant="filled" sx={{ width: 225 }}>
                 <Select
                   labelId="demo-simple-select-filled-label"
                   id="demo-simple-select-filled"
-                  value={1}
+                  value={newTaungyiExitStock.storeId}
                   onChange={(evt) => {
-                    setNewFilterSizeAddStock({
-                      ...newFilterSizeAddStock,
-                      typeOfFilterSizeId: Number(evt.target.value),
+                    setTaungyiExitStock({
+                      ...newTaungyiExitStock,
+                      storeId: Number(evt.target.value),
                     });
                   }}
                   sx={{ bgcolor: "#EEE8CF" }}
                 >
-                  {concernFilterSize.map((item) => (
+                  {concernStores.map((item) => (
                     <MenuItem key={item.id} value={item.id}>
                       <ListItemText primary={item.name} />
                     </MenuItem>
                   ))}
                 </Select>
               </FormControl>
-            </Box> */}
+            </Box>
 
             <Box sx={{ display: "flex", alignItems: "center" }}>
               <Typography sx={{ fontWeight: "bold", width: 150 }}>
@@ -79,10 +135,7 @@ const NewTaungyiQuitStock = ({ open, setOpen }: Props) => {
                 placeholder="ပိုအရေအတွက်"
                 sx={{ bgcolor: "#EEE8CF" }}
                 onChange={(evt) => {
-                  //   setNewFilterSizeAddStock({
-                  //     ...newFilterSizeAddStock,
-                  //     quantity: Number(evt.target.value),
-                  //   });
+                  handleBatch(Number(evt.target.value));
                 }}
               />
             </Box>
@@ -92,14 +145,10 @@ const NewTaungyiQuitStock = ({ open, setOpen }: Props) => {
                 ပိဿာချိန်ပေါင်း
               </Typography>
               <TextField
+                value={newTaungyiExitStock.netWeight}
                 placeholder="ပိဿာချိန်ပေါင်း"
                 sx={{ bgcolor: "#EEE8CF" }}
-                onChange={(evt) => {
-                  //   setNewFilterSizeAddStock({
-                  //     ...newFilterSizeAddStock,
-                  //     bag: Number(evt.target.value),
-                  //   });
-                }}
+                onChange={(evt) => {}}
               />
             </Box>
           </Box>
@@ -109,24 +158,21 @@ const NewTaungyiQuitStock = ({ open, setOpen }: Props) => {
             variant="contained"
             onClick={() => {
               setOpen(false);
-              //   setNewFilterSizeAddStock(defaultValue);
+              setTaungyiExitStock(defaultValue);
             }}
           >
             မလုပ်တော့ပါ
           </Button>
           <LoadingButton
             variant="contained"
-            // disabled={
-            //   !newFilterSizeAddStock.invNo ||
-            //   !newFilterSizeAddStock.carNo ||
-            //   !newFilterSizeAddStock.typeOfFilterSizeId ||
-            //   !newFilterSizeAddStock.quantity ||
-            //   !newFilterSizeAddStock.bag ||
-            //   !newFilterSizeAddStock.garageId ||
-            //   !newFilterSizeAddStock.shop
-            // }
-            // onClick={handleClick}
-            // loading={isLoading}
+            disabled={
+              !newTaungyiExitStock.date ||
+              !newTaungyiExitStock.storeId ||
+              !newTaungyiExitStock.tolBatchNo ||
+              !newTaungyiExitStock.netWeight
+            }
+            onClick={handleClick}
+            loading={isLoading}
           >
             သိမ်းမည်
           </LoadingButton>

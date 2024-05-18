@@ -6,29 +6,110 @@ import {
   DialogContent,
   DialogTitle,
   FormControl,
+  ListItemText,
   MenuItem,
   Select,
+  SelectChangeEvent,
+  TextField,
   Typography,
 } from "@mui/material";
 import "react-datepicker/dist/react-datepicker.css";
 import DatePicker from "react-datepicker";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { createNewLeafTransfer } from "@/types/leafTransferGarageType";
+import { Leaf } from "@prisma/client";
+import { useAppDispatch, useAppSelector } from "@/store/hooks";
+import { LoadingButton } from "@mui/lab";
+import {
+  CreateLeafTransfer,
+  setIsLoading,
+} from "@/store/slices/leafGarageTransfer";
+import { setOpenSnackbar } from "@/store/slices/snackBar";
 interface Props {
   open: boolean;
   setOpen: (Value: boolean) => void;
 }
+
+const defaultValue: createNewLeafTransfer = {
+  date: "",
+  exitGarageId: null,
+  enterenceGarageId: null,
+  typeOfLeafId: null,
+  batchNos: [],
+  tolViss: 0,
+};
+
 const NewTransferLeaf = ({ open, setOpen }: Props) => {
   const [selecteddate, setSelectedDate] = useState<any>(
     new Date().toLocaleDateString()
   );
-  const [selectedExitGarage, setSelectedExitGarage] = useState<number>(1);
-  const [selectedEnterenceGarage, setSelectedEnterenceGarage] =
-    useState<number>(1);
-  const [selectedLeaf, setSelectedLeaf] = useState<number>(1);
-  const [selectedBatchNo, setSelectedBatchNo] = useState<number[]>([]);
-
+  const [transferLeaf, setTransferLeaf] =
+    useState<createNewLeafTransfer>(defaultValue);
+  const workshop = useAppSelector((store) => store.workShop.selectedWorkShop);
+  const leafStock = useAppSelector((store) => store.leafStock.item);
+  const concernGarages = useAppSelector((store) => store.garage.item).filter(
+    (item) => item.workShopId === workshop?.id
+  );
+  const leaves = useAppSelector((store) => store.typeOfLeaf.item);
+  const concernLeaves = leaves.filter(
+    (item) => item.workShopId === workshop?.id
+  );
+  const [concernLeafStock, setConcernLeafStock] = useState<Leaf[]>([]);
+  const [concernBatchNos, setConcernBatchNos] = useState<Leaf[]>([]);
   useState<number>(1);
 
+  const handleExitGarage = (exitId: number) => {
+    const concernLeafStocks = leafStock.filter(
+      (item) => item.garageId === exitId
+    );
+    const concernBatch = concernLeafStocks.filter(
+      (item) => item.typeOfLeafId === transferLeaf.typeOfLeafId
+    );
+    setConcernLeafStock(concernLeafStocks);
+    setConcernBatchNos(concernBatch);
+    setTransferLeaf({ ...transferLeaf, exitGarageId: exitId });
+  };
+  const handleLeaf = (leafId: number) => {
+    const batchNos = concernLeafStock.filter(
+      (item) => item.typeOfLeafId === leafId
+    );
+    setConcernBatchNos(batchNos);
+    setTransferLeaf({ ...transferLeaf, typeOfLeafId: leafId });
+  };
+  const handleChange = (evt: SelectChangeEvent<number[]>) => {
+    const selectBatchNo = evt.target.value as number[];
+    const totalViss = concernLeafStock
+      .filter((item) => selectBatchNo.includes(item.id))
+      .reduce((totalViss, viss) => {
+        return (totalViss += viss.viss);
+      }, 0);
+    setTransferLeaf({
+      ...transferLeaf,
+      batchNos: selectBatchNo,
+      tolViss: totalViss,
+    });
+    console.log("batch", transferLeaf.batchNos);
+  };
+  const dispatch = useAppDispatch();
+  const { isLoading } = useAppSelector((store) => store.leafTransfer);
+  const handleClick = () => {
+    dispatch(setIsLoading(true));
+    dispatch(
+      CreateLeafTransfer({
+        ...transferLeaf,
+        onSuccess: () => {
+          setOpen(false);
+          setTransferLeaf(defaultValue);
+          dispatch(setOpenSnackbar({ message: "Transferring success" }));
+          dispatch(setIsLoading(false));
+        },
+      })
+    );
+  };
+
+  useEffect(() => {
+    setTransferLeaf({ ...transferLeaf, date: selecteddate });
+  }, [selecteddate, open]);
   return (
     <>
       <Dialog open={open} onClose={() => setOpen(false)}>
@@ -56,15 +137,17 @@ const NewTransferLeaf = ({ open, setOpen }: Props) => {
                 <Select
                   labelId="demo-simple-select-filled-label"
                   id="demo-simple-select-filled"
-                  value={selectedExitGarage}
+                  value={transferLeaf.exitGarageId}
                   onChange={(evt) => {
-                    setSelectedExitGarage(Number(evt.target.value));
+                    handleExitGarage(Number(evt.target.value));
                   }}
                   sx={{ bgcolor: "#EEE8CF" }}
                 >
-                  <MenuItem value={1}>ဂိုထောင် ၁</MenuItem>
-                  <MenuItem value={2}>ဂိုထောင် ၂</MenuItem>
-                  <MenuItem value={3}>ဂိုထောင် ၃</MenuItem>
+                  {concernGarages.map((item) => (
+                    <MenuItem key={item.id} value={item.id}>
+                      <ListItemText primary={item.name} />
+                    </MenuItem>
+                  ))}
                 </Select>
               </FormControl>
             </Box>
@@ -75,15 +158,20 @@ const NewTransferLeaf = ({ open, setOpen }: Props) => {
                 <Select
                   labelId="demo-simple-select-filled-label"
                   id="demo-simple-select-filled"
-                  value={selectedEnterenceGarage}
+                  value={transferLeaf.enterenceGarageId}
                   onChange={(evt) => {
-                    setSelectedEnterenceGarage(Number(evt.target.value));
+                    setTransferLeaf({
+                      ...transferLeaf,
+                      enterenceGarageId: Number(evt.target.value),
+                    });
                   }}
                   sx={{ bgcolor: "#EEE8CF" }}
                 >
-                  <MenuItem value={1}>ဂိုထောင် ၁</MenuItem>
-                  <MenuItem value={2}>ဂိုထောင် ၂</MenuItem>
-                  <MenuItem value={3}>ဂိုထောင် ၃</MenuItem>
+                  {concernGarages.map((item) => (
+                    <MenuItem key={item.id} value={item.id}>
+                      <ListItemText primary={item.name} />
+                    </MenuItem>
+                  ))}
                 </Select>
               </FormControl>
             </Box>
@@ -95,15 +183,17 @@ const NewTransferLeaf = ({ open, setOpen }: Props) => {
               <Select
                 labelId="demo-simple-select-filled-label"
                 id="demo-simple-select-filled"
-                value={selectedLeaf}
+                value={transferLeaf.typeOfLeafId}
                 onChange={(evt) => {
-                  setSelectedLeaf(Number(evt.target.value));
+                  handleLeaf(Number(evt.target.value));
                 }}
                 sx={{ bgcolor: "#EEE8CF" }}
               >
-                <MenuItem value={1}>၅တမတ်</MenuItem>
-                <MenuItem value={2}>၄ဝါ</MenuItem>
-                <MenuItem value={3}>၂လိပ်ဝါ</MenuItem>
+                {concernLeaves.map((item) => (
+                  <MenuItem key={item.id} value={item.id}>
+                    <ListItemText primary={item.name} />
+                  </MenuItem>
+                ))}
               </Select>
             </FormControl>
           </Box>
@@ -115,27 +205,72 @@ const NewTransferLeaf = ({ open, setOpen }: Props) => {
                 multiple
                 labelId="demo-simple-select-filled-label"
                 id="demo-simple-select-filled"
-                value={selectedBatchNo}
+                value={transferLeaf.batchNos}
                 onChange={(evt) => {
-                  setSelectedBatchNo([
-                    ...selectedBatchNo,
-                    Number(evt.target.value),
-                  ]);
+                  handleChange(evt);
                 }}
                 sx={{ bgcolor: "#EEE8CF" }}
+                renderValue={(selectedBatchNoIds) => {
+                  return selectedBatchNoIds
+                    .map((batchNoId) => {
+                      const batchNo = concernBatchNos.find(
+                        (item) => item.id === batchNoId
+                      ) as Leaf;
+                      return batchNo;
+                    })
+                    .map((item) => item.batchNo)
+                    .join(", ");
+                }}
+                MenuProps={{
+                  PaperProps: {
+                    style: {
+                      maxHeight: 48 * 4.5 + 8,
+                      width: 250,
+                    },
+                  },
+                }}
               >
-                <MenuItem value={1}> ၁ </MenuItem>
-                <MenuItem value={2}> ၂</MenuItem>
-                <MenuItem value={3}> ၃</MenuItem>
+                {concernBatchNos.map((item) => (
+                  <MenuItem key={item.id} value={item.id}>
+                    <ListItemText primary={item.batchNo} />
+                  </MenuItem>
+                ))}
               </Select>
             </FormControl>
           </Box>
+          <Box sx={{ width: 250, mt: 2 }}>
+            <Typography sx={{ fontWeight: "bold" }}>ပိဿာ</Typography>
+            <TextField
+              value={transferLeaf.tolViss}
+              placeholder="ပိဿာ"
+              sx={{ bgcolor: "#EEE8CF" }}
+            />
+          </Box>
         </DialogContent>
         <DialogActions>
-          <Button variant="contained" onClick={() => setOpen(false)}>
+          <Button
+            variant="contained"
+            onClick={() => {
+              setOpen(false);
+              setTransferLeaf(defaultValue);
+            }}
+          >
             မလုပ်တော့ပါ
           </Button>
-          <Button variant="contained">ကူးပြောင်းမည်</Button>
+          <LoadingButton
+            variant="contained"
+            disabled={
+              !transferLeaf.exitGarageId ||
+              !transferLeaf.enterenceGarageId ||
+              !transferLeaf.typeOfLeafId ||
+              !transferLeaf.batchNos.length ||
+              !transferLeaf.tolViss
+            }
+            onClick={handleClick}
+            loading={isLoading}
+          >
+            ကူးပြောင်းမည်
+          </LoadingButton>
         </DialogActions>
       </Dialog>
     </>

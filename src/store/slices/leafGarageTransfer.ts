@@ -7,6 +7,7 @@ import {
 import Config from "@/utils/config";
 import { LeafTransferGarage } from "@prisma/client";
 import { PayloadAction, createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { addStock, deletedLeafAddStock, updatedStock } from "./leafStock";
 
 const initialState: leafTransferSlice = {
   item: [],
@@ -46,8 +47,9 @@ export const CreateLeafTransfer = createAsyncThunk(
           }),
         }
       );
-      const { newLeafTransfer } = await response.json();
+      const { newLeafTransfer, newLeafStock } = await response.json();
       thunkApi.dispatch(addLeafTransfer(newLeafTransfer));
+      thunkApi.dispatch(addStock(newLeafStock));
       onSuccess && onSuccess();
     } catch (err) {
       onError && onError();
@@ -65,7 +67,7 @@ export const UpdatedLeafTransfer = createAsyncThunk(
       typeOfLeafId,
       batchNos,
       tolViss,
-      id,
+      transferSeq,
       onSuccess,
       onError,
     } = option;
@@ -85,12 +87,13 @@ export const UpdatedLeafTransfer = createAsyncThunk(
             typeOfLeafId,
             batchNos,
             tolViss,
-            id,
+            transferSeq,
           }),
         }
       );
-      const { updateLeafTransfer } = await response.json();
+      const { updateLeafTransfer, updateLeafStock } = await response.json();
       thunkApi.dispatch(updatedLeafTransfer(updateLeafTransfer));
+      thunkApi.dispatch(updatedStock(updateLeafStock));
       onSuccess && onSuccess();
     } catch (err) {
       onError && onError();
@@ -101,15 +104,16 @@ export const UpdatedLeafTransfer = createAsyncThunk(
 export const DeletedLeafTransfer = createAsyncThunk(
   "leafTransfer/DeletedLeafTransfer",
   async (option: deleteLeafTransfer, thunkApi) => {
-    const { id, onSuccess, onError } = option;
+    const { transferSeq, onSuccess, onError } = option;
     try {
       const response = await fetch(
-        `${Config.apiBaseUrl}/leafTransfer?id=${id}`,
+        `${Config.apiBaseUrl}/leafTransfer?transferSeq=${transferSeq}`,
         {
           method: "DELETE",
         }
       );
-      thunkApi.dispatch(deletedLeafTransfer(id));
+      thunkApi.dispatch(deletedLeafTransfer(transferSeq));
+      thunkApi.dispatch(deletedLeafAddStock(transferSeq));
       onSuccess && onSuccess();
     } catch (err) {
       onError && onError();
@@ -127,16 +131,18 @@ const LeafTransferSlice = createSlice({
     setIsLoading: (state, action: PayloadAction<boolean>) => {
       state.isLoading = action.payload;
     },
-    addLeafTransfer: (state, action: PayloadAction<LeafTransferGarage>) => {
-      state.item = [...state.item, action.payload];
+    addLeafTransfer: (state, action) => {
+      state.item = [...state.item, ...action.payload];
     },
     updatedLeafTransfer: (state, action: PayloadAction<LeafTransferGarage>) => {
       state.item = state.item.map((item) =>
-        item.id === action.payload.id ? action.payload : item
+        item.transferSeq === action.payload.transferSeq ? action.payload : item
       );
     },
-    deletedLeafTransfer: (state, action: PayloadAction<number>) => {
-      state.item = state.item.filter((item) => item.id != action.payload);
+    deletedLeafTransfer: (state, action: PayloadAction<string>) => {
+      state.item = state.item.filter(
+        (item) => item.transferSeq != action.payload
+      );
     },
   },
 });

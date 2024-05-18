@@ -1,14 +1,14 @@
 import { Box, Typography } from "@mui/material";
-
 import { useState } from "react";
 import AdminLayout from "@/components/adminLayout";
 import "react-datepicker/dist/react-datepicker.css";
 import AddBoxIcon from "@mui/icons-material/AddBox";
 import { useAppSelector } from "@/store/hooks";
-import AddLabel from "@/components/addSt/addLabel";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import AddPlastic from "@/components/addSt/addPlastic";
+import UpdateAddPlastic from "@/components/addSt/updateAddPlastic";
+import DeleteAddPlastic from "@/components/addSt/deleteAddPlastic";
 const PlasticAdd = () => {
   const [open, setOpen] = useState<boolean>(false);
   const plastics = useAppSelector((store) => store.typeOfPlastic.item);
@@ -29,14 +29,17 @@ const PlasticAdd = () => {
   const plasticAddStockConcern = concernAddStocks.filter((item) =>
     concernPlasticStockIds.includes(item.typeOfPlasticId as number)
   );
-  const plasticAddStockConcernDate = plasticAddStockConcern.map(
-    (item) => item.date
+  const plasticAddStockConcernStockSeq = plasticAddStockConcern.map(
+    (item) => item.stockSeq
   );
 
   const concernStock = concernPlasticStock.filter((item) =>
-    plasticAddStockConcernDate.includes(item.date)
+    plasticAddStockConcernStockSeq.includes(item.stockSeq)
   );
   const shop = useAppSelector((store) => store.typeOfShop.item);
+  const [updateOpen, setUpdateOpen] = useState<boolean>(false);
+  const [deleteOpen, setDeleteOpen] = useState<boolean>(false);
+  const [selectStockSeq, setSelectStockSeq] = useState<string>("");
   return (
     <>
       <AdminLayout>
@@ -55,7 +58,6 @@ const PlasticAdd = () => {
             sx={{ fontSize: 50 }}
           />
         </Box>
-        <AddPlastic open={open} setOpen={setOpen} />
 
         <table border={1}>
           <thead>
@@ -77,7 +79,8 @@ const PlasticAdd = () => {
                 {concernStock.map(
                   (i) =>
                     item.date === i.date &&
-                    item.typeOfPlasticId === i.plasticId && (
+                    item.typeOfPlasticId === i.plasticId &&
+                    item.stockSeq === i.stockSeq && (
                       <>
                         <td>
                           {plastics.find((l) => l.id === i.plasticId)?.name}
@@ -85,15 +88,40 @@ const PlasticAdd = () => {
                         <td>{i.quantity}</td>
                         <td>{i.bag}</td>
                         <td>{shop.find((s) => s.id === i.shopId)?.name}</td>
+                        <td
+                          onClick={() => {
+                            setUpdateOpen(true),
+                              setSelectStockSeq(item.stockSeq);
+                          }}
+                        >
+                          {<EditIcon />}
+                        </td>
+                        <td
+                          onClick={() => {
+                            setDeleteOpen(true),
+                              setSelectStockSeq(item.stockSeq);
+                          }}
+                        >
+                          {<DeleteIcon />}
+                        </td>
                       </>
                     )
                 )}
-                <td>{<EditIcon />}</td>
-                <td>{<DeleteIcon />}</td>
               </tr>
             </thead>
           ))}
         </table>
+        <AddPlastic open={open} setOpen={setOpen} />
+        <UpdateAddPlastic
+          updateOpen={updateOpen}
+          setUpdateOpen={setUpdateOpen}
+          selectedStockSeq={selectStockSeq}
+        />
+        <DeleteAddPlastic
+          deleteOpen={deleteOpen}
+          setDeleteOpen={setDeleteOpen}
+          selectedStockSeq={selectStockSeq}
+        />
       </AdminLayout>
     </>
   );

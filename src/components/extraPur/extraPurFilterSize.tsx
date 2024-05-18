@@ -65,7 +65,6 @@ const FilterSizeExtra = ({
       setNewExtraPurchase({
         ...newExtraPurchase,
         typeOfFilterSizeId: concernFilterSize[0].id,
-        filterSizePrice: concernFilterSize[0].price,
         typeOfTabaccoId: concernTabacco[0].id,
         typeOfLabelId: concernLabel[0].id,
       });

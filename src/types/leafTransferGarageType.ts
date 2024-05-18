@@ -12,20 +12,20 @@ export interface createNewLeafTransfer extends BasicOption {
   exitGarageId: number | null;
   enterenceGarageId: number | null;
   typeOfLeafId: number | null;
-  batchNos: [];
+  batchNos: number[];
   tolViss: number;
 }
 
 export interface updateLeafTransfer extends BasicOption {
-  id: number | null;
+  transferSeq: string;
   date: string;
   exitGarageId: number | null;
   enterenceGarageId: number | null;
   typeOfLeafId: number | null;
-  batchNos: [];
+  batchNos: number[];
   tolViss: number;
 }
 
 export interface deleteLeafTransfer extends BasicOption {
-  id: number;
+  transferSeq: string;
 }

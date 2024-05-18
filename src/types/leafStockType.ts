@@ -16,6 +16,20 @@ export interface createNewLeafStock extends BasicOption {
   garageId: number | undefined;
 }
 
+export interface updateLeafStock extends BasicOption {
+  id: number | null;
+  date: string;
+  typeOfLeafId: number | undefined;
+  batchNo: number;
+  viss: number;
+  shopId: number;
+  garageId: number | undefined;
+}
+
+export interface deleteLeafStock extends BasicOption {
+  id: number;
+}
+
 export interface createNewLeafAddStock extends BasicOption {
   date: string;
   invNo: number;
@@ -25,4 +39,20 @@ export interface createNewLeafAddStock extends BasicOption {
   viss: number;
   shopId: number;
   garageId: number | undefined;
+}
+
+export interface updateLeafAddStock extends BasicOption {
+  stockSeq: string;
+  date: string;
+  invNo: number;
+  carNo: string;
+  typeOfLeafId: number | undefined;
+  batchNo: number;
+  viss: number;
+  shopId: number;
+  garageId: number | undefined;
+}
+
+export interface deleteLeafAddStock extends BasicOption {
+  stockSeq: string;
 }

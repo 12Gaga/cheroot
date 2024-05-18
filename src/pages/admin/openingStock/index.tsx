@@ -7,13 +7,29 @@ import { useSession } from "next-auth/react";
 import { useAppSelector } from "@/store/hooks";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
+import UpdateLeafOpen from "@/components/openingSt/updateLeaf";
+import DeleteLeafOpen from "@/components/openingSt/deleteLeaf";
 const OpeningStock = () => {
   const [open, setOpen] = useState<boolean>(false);
   const { data: session } = useSession();
   const leaves = useAppSelector((store) => store.typeOfLeaf.item);
-  const leafStocks = useAppSelector((store) => store.leafStock.item);
   const garage = useAppSelector((store) => store.garage.selectedGarage);
   const shop = useAppSelector((store) => store.typeOfShop.item);
+  const leafStocks = useAppSelector((store) => store.leafStock.item);
+  const concernLeafStocks = leafStocks.filter(
+    (item) => item.garageId === garage?.id
+  );
+  const addStocks = useAppSelector((store) => store.addStock.item);
+  const concernAddStocks = addStocks.filter(
+    (item) => item.garageId === garage?.id
+  );
+  const addStockStockSeq = concernAddStocks.map((item) => item.stockSeq);
+  const concernLeaf = concernLeafStocks.filter(
+    (item) => !addStockStockSeq.includes(item.stockSeq)
+  );
+  const [updateOpen, setUpdateOpen] = useState<boolean>(false);
+  const [deleteOpen, setDeleteOpen] = useState<boolean>(false);
+  const [selectId, setSelectId] = useState<number>(0);
   if (!session) return null;
   return (
     <>
@@ -34,8 +50,6 @@ const OpeningStock = () => {
           />
         </Box>
 
-        <LeafOpen open={open} setOpen={setOpen} />
-
         <Box>
           <table border={1}>
             <thead>
@@ -47,9 +61,7 @@ const OpeningStock = () => {
                 <th>ဝယ်ယူခဲ့သည့်ဆိုင်အမည်</th>
               </tr>
             </thead>
-            {leafStocks.map((item) => {
-              const exit = item.garageId === garage?.id;
-              if (!exit) return null;
+            {concernLeaf.map((item) => {
               return (
                 <thead key={item.id}>
                   <tr style={{ border: "1px solid" }}>
@@ -61,14 +73,37 @@ const OpeningStock = () => {
                     <td>{item.batchNo}</td>
                     <td>{item.viss}</td>
                     <td>{shop.find((s) => s.id === item.shopId)?.name}</td>
-                    <td>{<EditIcon />}</td>
-                    <td>{<DeleteIcon />}</td>
+                    <td
+                      onClick={() => {
+                        setUpdateOpen(true), setSelectId(item.id);
+                      }}
+                    >
+                      {<EditIcon />}
+                    </td>
+                    <td
+                      onClick={() => {
+                        setDeleteOpen(true), setSelectId(item.id);
+                      }}
+                    >
+                      {<DeleteIcon />}
+                    </td>
                   </tr>
                 </thead>
               );
             })}
           </table>
         </Box>
+        <LeafOpen open={open} setOpen={setOpen} />
+        <UpdateLeafOpen
+          updateOpen={updateOpen}
+          setUpdateOpen={setUpdateOpen}
+          selectedId={selectId}
+        />
+        <DeleteLeafOpen
+          deleteOpen={deleteOpen}
+          setDeleteOpen={setDeleteOpen}
+          selectedId={selectId}
+        />
       </AdminLayout>
     </>
   );

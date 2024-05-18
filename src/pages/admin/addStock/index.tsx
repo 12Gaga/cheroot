@@ -7,6 +7,8 @@ import AddBoxIcon from "@mui/icons-material/AddBox";
 import { useAppSelector } from "@/store/hooks";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
+import UpdateAddLeaf from "@/components/addSt/updateAddLeaf";
+import DeleteAddLeaf from "@/components/addSt/deleteAddLeaf";
 const AddStock = () => {
   const [open, setOpen] = useState<boolean>(false);
   const leaves = useAppSelector((store) => store.typeOfLeaf.item);
@@ -25,12 +27,17 @@ const AddStock = () => {
   const leafAddStockConcern = concernAddStocks.filter((item) =>
     concernLeafStockIds.includes(item.typeOfLeafId as number)
   );
-  const leafAddStockConcernDate = leafAddStockConcern.map((item) => item.date);
+  const leafAddStockConcernStockSeq = leafAddStockConcern.map(
+    (item) => item.stockSeq
+  );
 
   const concernStock = concernLeafStock.filter((item) =>
-    leafAddStockConcernDate.includes(item.date)
+    leafAddStockConcernStockSeq.includes(item.stockSeq)
   );
   const shop = useAppSelector((store) => store.typeOfShop.item);
+  const [updateOpen, setUpdateOpen] = useState<boolean>(false);
+  const [deleteOpen, setDeleteOpen] = useState<boolean>(false);
+  const [selectStockSeq, setSelectStockSeq] = useState<string>("");
   console.log("concernLeaf", concernStock);
   return (
     <>
@@ -50,7 +57,7 @@ const AddStock = () => {
             sx={{ fontSize: 50 }}
           />
         </Box>
-        <AddLeaf open={open} setOpen={setOpen} />
+
         <table border={1}>
           <thead>
             <tr style={{ border: "1px solid" }}>
@@ -72,7 +79,8 @@ const AddStock = () => {
                 {concernStock.map((i) => {
                   if (
                     item.date === i.date &&
-                    item.typeOfLeafId === i.typeOfLeafId
+                    item.typeOfLeafId === i.typeOfLeafId &&
+                    item.stockSeq === i.stockSeq
                   ) {
                     return (
                       <>
@@ -82,8 +90,22 @@ const AddStock = () => {
                         <td>{i.batchNo}</td>
                         <td>{i.viss}</td>
                         <td>{shop.find((s) => s.id === i.shopId)?.name}</td>
-                        <td>{<EditIcon />}</td>
-                        <td>{<DeleteIcon />}</td>
+                        <td
+                          onClick={() => {
+                            setUpdateOpen(true),
+                              setSelectStockSeq(item.stockSeq);
+                          }}
+                        >
+                          {<EditIcon />}
+                        </td>
+                        <td
+                          onClick={() => {
+                            setDeleteOpen(true),
+                              setSelectStockSeq(item.stockSeq);
+                          }}
+                        >
+                          {<DeleteIcon />}
+                        </td>
                       </>
                     );
                   }
@@ -92,6 +114,17 @@ const AddStock = () => {
             </thead>
           ))}
         </table>
+        <AddLeaf open={open} setOpen={setOpen} />
+        <UpdateAddLeaf
+          updateOpen={updateOpen}
+          setUpdateOpen={setUpdateOpen}
+          selectedStockSeq={selectStockSeq}
+        />
+        <DeleteAddLeaf
+          deleteOpen={deleteOpen}
+          setDeleteOpen={setDeleteOpen}
+          selectedStockSeq={selectStockSeq}
+        />
       </AdminLayout>
     </>
   );

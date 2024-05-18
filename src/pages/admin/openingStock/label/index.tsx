@@ -7,6 +7,8 @@ import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { useAppSelector } from "@/store/hooks";
 import { useSession } from "next-auth/react";
+import UpdateLabelOpen from "@/components/openingSt/updateLabel";
+import DeleteLabelOpen from "@/components/openingSt/deleteLabel";
 const FilterSize = () => {
   const [open, setOpen] = useState<boolean>(false);
   const { data: session } = useSession();
@@ -16,7 +18,18 @@ const FilterSize = () => {
   const concernLabelStock = labelStocks.filter(
     (item) => item.garageId === garage?.id
   );
+  const addStocks = useAppSelector((store) => store.addStock.item);
+  const concernAddStocks = addStocks.filter(
+    (item) => item.garageId === garage?.id
+  );
+  const addStockStockSeq = concernAddStocks.map((item) => item.stockSeq);
+  const concernLabel = concernLabelStock.filter(
+    (item) => !addStockStockSeq.includes(item.stockSeq)
+  );
   const shop = useAppSelector((store) => store.typeOfShop.item);
+  const [updateOpen, setUpdateOpen] = useState<boolean>(false);
+  const [deleteOpen, setDeleteOpen] = useState<boolean>(false);
+  const [selectId, setSelectId] = useState<number>(0);
   if (!session) return null;
   return (
     <>
@@ -37,7 +50,6 @@ const FilterSize = () => {
           />
         </Box>
 
-        <LabelOpen open={open} setOpen={setOpen} />
         <Box>
           <table border={1}>
             <thead>
@@ -48,7 +60,7 @@ const FilterSize = () => {
                 <th>ဝယ်ယူခဲ့သည့်ဆိုင်အမည်</th>
               </tr>
             </thead>
-            {concernLabelStock.map((item) => (
+            {concernLabel.map((item) => (
               <thead key={item.id}>
                 <tr style={{ border: "1px solid" }}>
                   <td>{item.date.toString()}</td>
@@ -57,13 +69,36 @@ const FilterSize = () => {
                   </td>
                   <td>{item.bandle}</td>
                   <td>{shop.find((s) => s.id === item.shopId)?.name}</td>
-                  <td>{<EditIcon />}</td>
-                  <td>{<DeleteIcon />}</td>
+                  <td
+                    onClick={() => {
+                      setUpdateOpen(true), setSelectId(item.id);
+                    }}
+                  >
+                    {<EditIcon />}
+                  </td>
+                  <td
+                    onClick={() => {
+                      setDeleteOpen(true), setSelectId(item.id);
+                    }}
+                  >
+                    {<DeleteIcon />}
+                  </td>
                 </tr>
               </thead>
             ))}
           </table>
         </Box>
+        <LabelOpen open={open} setOpen={setOpen} />
+        <UpdateLabelOpen
+          updateOpen={updateOpen}
+          setUpdateOpen={setUpdateOpen}
+          selectedId={selectId}
+        />
+        <DeleteLabelOpen
+          deleteOpen={deleteOpen}
+          setDeleteOpen={setDeleteOpen}
+          selectedId={selectId}
+        />
       </AdminLayout>
     </>
   );

@@ -317,6 +317,30 @@ export default async function handler(
     const bagoPlastic = await prisma.bagoPlasticPurchase.findMany({
       where: { workShopId: { in: workShopIds }, isArchived: false },
     });
+    //45. find taungyiEnterStock
+    const taungyiEnterStock = await prisma.taungyiEnterStock.findMany({
+      where: { cigratteIndustryId, isArchived: false },
+    });
+    //46. find taungyiExitStock
+    const taungyiExitStock = await prisma.taungyiQuitStock.findMany({
+      where: { cigratteIndustryId, isArchived: false },
+    });
+    //47. find bagoInstallment
+    const bagoInstallment = await prisma.bagoInstallment.findMany({
+      where: { workShopId: { in: workShopIds }, isArchived: false },
+    });
+    //48. find taungyiInstallment
+    const taungyiInstallment = await prisma.taungyiInstallment.findMany({
+      where: { cigratteIndustryId, isArchived: false },
+    });
+    //49. find cherootInstallment
+    const cherootInstallment = await prisma.converycherootInstallment.findMany({
+      where: { workShopId: { in: workShopIds }, isArchived: false },
+    });
+    //50. find cherootTransfer
+    const cherootTransfer = await prisma.conveying.findMany({
+      where: { workShopId: { in: workShopIds }, isArchived: false },
+    });
     return res.json({
       industry,
       workShop,
@@ -363,6 +387,12 @@ export default async function handler(
       bagoFilterSize,
       bagoLabel,
       bagoPlastic,
+      taungyiEnterStock,
+      taungyiExitStock,
+      bagoInstallment,
+      taungyiInstallment,
+      cherootInstallment,
+      cherootTransfer,
     });
   }
 }

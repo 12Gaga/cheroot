@@ -84,6 +84,7 @@ model WorkShop{
   filterSizeTransferGarage FilterSizeTransferGarage[]
   tabaccoTransferGarage TabaccoTransferGarage[]
   labelTransferGarage LabelTransferGarage[]
+  bagoInstallment BagoInstallment[] 
   isArchived Boolean @default(false)
 }
 
@@ -146,6 +147,7 @@ model TypeOfShop{
   tabacco Tabacco[]
   label Label[]
   plastic Plastic[]
+  bagoInstallment BagoInstallment[]
   isArchived Boolean @default(false)
 }
 
@@ -241,6 +243,7 @@ model Leaf{
   shopId Int
   garage Garage @relation(fields: [garageId],references: [id])
   garageId Int
+  stockSeq String
   isArchived Boolean @default(false)
 }
 
@@ -255,6 +258,7 @@ model FilterSize{
   shopId Int
   garage Garage @relation(fields: [garageId],references: [id])
   garageId Int
+  stockSeq String
   isArchived Boolean @default(false)
 }
 
@@ -270,6 +274,7 @@ model Tabacco{
   shopId Int
   garage Garage @relation(fields: [garageId],references: [id])
   garageId Int
+  stockSeq String
   isArchived Boolean @default(false)
 }
 
@@ -283,6 +288,7 @@ model Label{
   shopId Int
   garage Garage @relation(fields: [garageId],references: [id])
   garageId Int
+  stockSeq String
   isArchived Boolean @default(false)
 }
 
@@ -297,6 +303,7 @@ model Plastic{
   shopId Int
   garage Garage @relation(fields: [garageId],references: [id])
   garageId Int
+  stockSeq String
   isArchived Boolean @default(false)
 }
 
@@ -324,7 +331,7 @@ model TypeOfCheroot{
   conveying Conveying[]
   payOtherItem PayOtherItem[]
   returnReadyCheroot ReturnReadyCheroot[]
-  converycherootInstallment ConverycherootInstallment[] 
+  // converycherootInstallment ConverycherootInstallment[] 
   formula Formula[]
   isArchived Boolean @default(false)
   isAvariabled Boolean @default(false)
@@ -420,8 +427,8 @@ model ConverycherootInstallment{
   date String
   conveyLocation ConveyLocation @relation(fields: [conveyLocationId],references: [id])
   conveyLocationId Int
-  typeOfCheroot TypeOfCheroot @relation(fields: [typeOfCherootId],references: [id])
-  typeOfCherootId Int
+  // typeOfCheroot TypeOfCheroot @relation(fields: [typeOfCherootId],references: [id])
+  // typeOfCherootId Int
   cashBalance Int
   payBalance Int
   workShop WorkShop @relation(fields: [workShopId],references: [id])
@@ -523,6 +530,7 @@ model AddStock{
   typeOfLabelId Int?
   typeOfPlastic TypeOfPlastic? @relation(fields: [typeOfPlasticId],references: [id])
   typeOfPlasticId Int?
+  stockSeq String 
   garage Garage @relation(fields: [garageId],references: [id])
   garageId Int
   isArchived Boolean @default(false)
@@ -679,6 +687,7 @@ model LeafTransferGarage{
   typeOfLeafId Int
   batchNo Int
   totalViss Int @default(0)
+  transferSeq String
   workShop WorkShop @relation(fields: [workShopId],references: [id])
   workShopId Int
   isArchived Boolean @default(false)
@@ -763,7 +772,7 @@ model Store{
   cigratteIndustryId Int
   taungyiEnterStock TaungyiEnterStock[]
   taungyiQuitStock TaungyiQuitStock[]
-  taungyiInstallment TaungyiInstallment[]
+  // taungyiInstallment TaungyiInstallment[]
   isArchived Boolean @default(false)
 }
 
@@ -802,8 +811,8 @@ model TaungyiQuitStock{
 model TaungyiInstallment{
   id Int @id @default(autoincrement())
   date String
-  store Store @relation(fields: [storeId],references: [id])
-  storeId Int
+  // store Store @relation(fields: [storeId],references: [id])
+  // storeId Int
   banquet Banquet @relation(fields: [banquetId],references: [id])
   banquetId Int
   cashBalance Int
@@ -925,6 +934,18 @@ model BagoLabelInstallment{
   shopId Int
   typeOfLabel TypeOfLabel @relation(fields: [typeOfLabelId],references: [id])
   typeOfLabelId Int
+  cashBalance Int
+  payBalance Int
+  workShop WorkShop @relation(fields: [workShopId],references: [id])
+  workShopId Int
+  isArchived Boolean @default(false)
+}
+
+model BagoInstallment{
+  id Int @id @default(autoincrement())
+  date String
+  shop TypeOfShop @relation(fields: [shopId],references: [id])
+  shopId Int
   cashBalance Int
   payBalance Int
   workShop WorkShop @relation(fields: [workShopId],references: [id])
