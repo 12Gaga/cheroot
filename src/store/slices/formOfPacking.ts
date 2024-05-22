@@ -26,6 +26,7 @@ export const CreateFormOfPacking = createAsyncThunk(
       warppingQty,
       coverPlasticId,
       coverQty,
+      amount,
       quantity,
       onSuccess,
       onError,
@@ -49,6 +50,7 @@ export const CreateFormOfPacking = createAsyncThunk(
             warppingQty,
             coverPlasticId,
             coverQty,
+            amount,
             quantity,
           }),
         }
@@ -76,6 +78,7 @@ export const UpdatedFormOfPacking = createAsyncThunk(
       warppingQty,
       coverPlasticId,
       coverQty,
+      amount,
       quantity,
       onSuccess,
       onError,
@@ -100,6 +103,7 @@ export const UpdatedFormOfPacking = createAsyncThunk(
             warppingQty,
             coverPlasticId,
             coverQty,
+            amount,
             quantity,
           }),
         }

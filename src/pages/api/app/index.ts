@@ -325,19 +325,34 @@ export default async function handler(
     const taungyiExitStock = await prisma.taungyiQuitStock.findMany({
       where: { cigratteIndustryId, isArchived: false },
     });
-    //47. find bagoInstallment
-    const bagoInstallment = await prisma.bagoInstallment.findMany({
+    //47. find bagoLeafInstallment
+    const bagoLeafInstallment = await prisma.bagoLeafInstallment.findMany({
       where: { workShopId: { in: workShopIds }, isArchived: false },
     });
-    //48. find taungyiInstallment
+    //48. find bagoFilterSizeInstallment
+    const bagoFilterSizeInstallment =
+      await prisma.bagoFilterSizeInstallment.findMany({
+        where: { workShopId: { in: workShopIds }, isArchived: false },
+      });
+    //49. find bagoLabelInstallment
+    const bagoLabelInstallment = await prisma.bagoLabelInstallment.findMany({
+      where: { workShopId: { in: workShopIds }, isArchived: false },
+    });
+    //50. find bagoPlasticInstallment
+    const bagoPlasticInstallment = await prisma.bagoPlasticInstallment.findMany(
+      {
+        where: { workShopId: { in: workShopIds }, isArchived: false },
+      }
+    );
+    //51. find taungyiInstallment
     const taungyiInstallment = await prisma.taungyiInstallment.findMany({
       where: { cigratteIndustryId, isArchived: false },
     });
-    //49. find cherootInstallment
+    //52. find cherootInstallment
     const cherootInstallment = await prisma.converycherootInstallment.findMany({
       where: { workShopId: { in: workShopIds }, isArchived: false },
     });
-    //50. find cherootTransfer
+    //53. find cherootTransfer
     const cherootTransfer = await prisma.conveying.findMany({
       where: { workShopId: { in: workShopIds }, isArchived: false },
     });
@@ -389,7 +404,10 @@ export default async function handler(
       bagoPlastic,
       taungyiEnterStock,
       taungyiExitStock,
-      bagoInstallment,
+      bagoLeafInstallment,
+      bagoFilterSizeInstallment,
+      bagoLabelInstallment,
+      bagoPlasticInstallment,
       taungyiInstallment,
       cherootInstallment,
       cherootTransfer,

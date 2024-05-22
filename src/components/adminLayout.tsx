@@ -82,7 +82,7 @@ const transferring = [
     url: "/admin/transferCheroot/transferCherootData",
   },
   {
-    label: "ဆေးလိပ်တန်ဖိုးအရစ်ကျသွင်းခြင်း",
+    label: "ဆေးလိပ်တန်ဖိုးအရစ်ကျပေးချေခြင်း",
     url: "/admin/transferCheroot/cherootInstallment",
   },
 ];
@@ -112,7 +112,22 @@ const Bago = [
   { label: "အစီခံ", url: "/admin/bago/bagoFilterSize" },
   { label: "တံဆိပ်", url: "/admin/bago/bagoLabel" },
   { label: "ပလပ်စတစ်", url: "/admin/bago/bagoPlastic" },
-  { label: "ပစ္စည်းတန်ဖိုးအရစ်ကျစာရင်း", url: "/admin/bago/bagoInstallment" },
+  {
+    label: "ဖက်အရစ်ကျစာရင်း",
+    url: "/admin/bago/bagoLeafInstallment",
+  },
+  {
+    label: "အစီခံအရစ်ကျစာရင်း",
+    url: "/admin/bago/bagoFilterSizeInstallment",
+  },
+  {
+    label: "တံဆိပ်အရစ်ကျစာရင်း",
+    url: "/admin/bago/bagoLabelInstallment",
+  },
+  {
+    label: "ပလပ်စတစ်အရစ်ကျစာရင်း",
+    url: "/admin/bago/bagoPlasticInstallment",
+  },
 ];
 const AdminLayout = ({ children }: Props) => {
   const { data: session } = useSession();

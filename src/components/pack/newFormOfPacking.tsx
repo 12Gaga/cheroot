@@ -38,6 +38,7 @@ const defaultValue: createNewFormOfPacking = {
   warppingQty: 0,
   coverPlasticId: undefined,
   coverQty: 0,
+  amount: 0,
   quantity: 0,
 };
 
@@ -138,7 +139,19 @@ const NewFormOfPacking = ({ open, setOpen }: Props) => {
             newFormOfPacking={newFormOfPacking}
             setNewFormOfPacking={setNewFormOfPacking}
           />
-
+          <Box sx={{ mt: 2 }}>
+            <Typography sx={{ fontWeight: "bold" }}>ဈေးနှုန်း</Typography>
+            <TextField
+              placeholder="ဈေးနှုန်း"
+              sx={{ bgcolor: "#EEE8CF", width: 300 }}
+              onChange={(evt) =>
+                setNewFormOfPacking({
+                  ...newFormOfPacking,
+                  amount: Number(evt.target.value),
+                })
+              }
+            />
+          </Box>
           <Box sx={{ mt: 2 }}>
             <Typography sx={{ fontWeight: "bold" }}>ဆေးလိပ်အရေအတွက်</Typography>
             <TextField
@@ -176,6 +189,7 @@ const NewFormOfPacking = ({ open, setOpen }: Props) => {
             !newFormOfPacking.warppingQty ||
             !newFormOfPacking.coverPlasticId ||
             !newFormOfPacking.coverQty ||
+            !newFormOfPacking.amount ||
             !newFormOfPacking.quantity
           }
           onClick={handleClick}

@@ -17,6 +17,7 @@ export default async function handler(
       warppingQty,
       coverPlasticId,
       coverQty,
+      amount,
       quantity,
     } = req.body;
     const workShopId = Number(req.query.workShopId);
@@ -31,6 +32,7 @@ export default async function handler(
       warppingQty != undefined &&
       coverPlasticId &&
       coverQty != undefined &&
+      amount != undefined &&
       quantity != undefined;
     if (!isValid) return res.status(405).send("bad requestsss");
 
@@ -46,6 +48,7 @@ export default async function handler(
         coverPlasticId,
         coverPlasticQty: coverQty,
         cherootQty: quantity,
+        amount,
         workShopId,
       },
     });
@@ -62,6 +65,7 @@ export default async function handler(
       warppingQty,
       coverPlasticId,
       coverQty,
+      amount,
       quantity,
     } = req.body;
     const workShopId = Number(req.query.workShopId);
@@ -77,6 +81,7 @@ export default async function handler(
       warppingQty != undefined &&
       coverPlasticId &&
       coverQty != undefined &&
+      amount != undefined &&
       quantity != undefined;
     if (!isValid) return res.status(405).send("bad requestsss");
 
@@ -93,6 +98,7 @@ export default async function handler(
         coverPlasticId,
         coverPlasticQty: coverQty,
         cherootQty: quantity,
+        amount,
         workShopId,
       },
     });

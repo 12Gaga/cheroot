@@ -48,7 +48,10 @@ import bagoLabelReducer from "./slices/bagoLabel";
 import bagoPlasticReducer from "./slices/bagoPLastic";
 import taungyiEnterStockReducer from "./slices/taungyiEnterStock";
 import taungyiExitStockReducer from "./slices/taungyiExitStock";
-import bagoInstallmentReducer from "./slices/bagoInstallment";
+import bagoLeafInstallmentReducer from "./slices/bagoLeafInstallment";
+import bagoFilterSizeInstallmentReducer from "./slices/bagoFilterSizeInstallment";
+import bagoLabelInstallmentReducer from "./slices/bagoLabelInstallment";
+import bagoPlasticInstallmentReducer from "./slices/bagoPlasticInstallment";
 import taungyiInstallmentReducer from "./slices/taungyiInstallment";
 import cherootTransferReducer from "./slices/cherootTransfer";
 import cherootInstallmentReducer from "./slices/cherootInstallment";
@@ -104,7 +107,10 @@ export const store = configureStore({
     bagoPlastic: bagoPlasticReducer,
     taungyiEnterStock: taungyiEnterStockReducer,
     taungyiExitStock: taungyiExitStockReducer,
-    bagoInstallment: bagoInstallmentReducer,
+    bagoLeafInstallment: bagoLeafInstallmentReducer,
+    bagoFilterSizeInstallment: bagoFilterSizeInstallmentReducer,
+    bagoLabelInstallment: bagoLabelInstallmentReducer,
+    bagoPlasticInstallment: bagoPlasticInstallmentReducer,
     taungyiInstallment: taungyiInstallmentReducer,
     cherootTransfer: cherootTransferReducer,
     cherootInstallment: cherootInstallmentReducer,

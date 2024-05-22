@@ -1,15 +1,10 @@
-import { store } from "@/store";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import {
-  AddBagoInstallment,
-  UpdatedBagoInstallment,
+  AddBagoLeafInstallment,
   setIsLoading,
-} from "@/store/slices/bagoInstallment";
+} from "@/store/slices/bagoLeafInstallment";
 import { setOpenSnackbar } from "@/store/slices/snackBar";
-import {
-  addBagoInstallment,
-  updateBagoInstallment,
-} from "@/types/bagoInstallment";
+import { addBagoLeafInstallment } from "@/types/bagoLeafInstallment";
 import { LoadingButton } from "@mui/lab";
 import {
   Dialog,
@@ -27,42 +22,34 @@ import {
 import { useEffect, useState } from "react";
 import DatePicker from "react-datepicker";
 interface Props {
-  updateOpen: boolean;
-  setUpdateOpen: (value: boolean) => void;
-  selectedId: number;
+  open: boolean;
+  setOpen: (value: boolean) => void;
 }
 
-const defaultValue: updateBagoInstallment = {
-  id: null,
+const defaultValue: addBagoLeafInstallment = {
   date: "",
   shopId: null,
   cashBalance: 0,
   payBalance: 0,
 };
 
-const UpdateBagoInstallment = ({
-  updateOpen,
-  setUpdateOpen,
-  selectedId,
-}: Props) => {
-  const installment = useAppSelector((store) => store.bagoInstallment.item);
-  const selectInstallment = installment.find((item) => item.id === selectedId);
+const NewBagoLeafInstallment = ({ open, setOpen }: Props) => {
   const [selecteddate, setSelectedDate] = useState<any>(
     new Date().toLocaleDateString()
   );
   const dispatch = useAppDispatch();
   const workshop = useAppSelector((store) => store.workShop.selectedWorkShop);
   const leaf = useAppSelector((store) => store.bagoLeaf.item);
-  const filterSize = useAppSelector((store) => store.bagoFilterSize.item);
-  const label = useAppSelector((store) => store.bagoLabel.item);
-  const plastic = useAppSelector((store) => store.bagoPlastic.item);
+  // const filterSize = useAppSelector((store) => store.bagoFilterSize.item);
+  // const label = useAppSelector((store) => store.bagoLabel.item);
+  // const plastic = useAppSelector((store) => store.bagoPlastic.item);
   const shop = useAppSelector((store) => store.typeOfShop.item);
   const concernShop = shop.filter((item) => item.workShopId === workshop?.id);
-  const { item: bagoInstallments, isLoading } = useAppSelector(
-    (store) => store.bagoInstallment
+  const { item: bagoLeafInstallments, isLoading } = useAppSelector(
+    (store) => store.bagoLeafInstallment
   );
-  const [updateBagoInstallment, setUpdateBagoInstallment] =
-    useState<updateBagoInstallment>(defaultValue);
+  const [bagoLeafInstallment, setBagoLeafInstallment] =
+    useState<addBagoLeafInstallment>(defaultValue);
 
   const handleChange = (shopId: number) => {
     const leafPrice = leaf
@@ -70,30 +57,29 @@ const UpdateBagoInstallment = ({
       .reduce((total, leaf) => {
         return (total += leaf.totalPrice);
       }, 0);
-    const filterSizePrice = filterSize
-      .filter((item) => item.shopId === shopId)
-      .reduce((total, filterSize) => {
-        return (total += filterSize.totalPrice);
-      }, 0);
-    const labelPrice = label
-      .filter((item) => item.shopId === shopId)
-      .reduce((total, label) => {
-        return (total += label.totalPrice);
-      }, 0);
-    const plasticPrice = plastic
-      .filter((item) => item.shopId === shopId)
-      .reduce((total, plastic) => {
-        return (total += plastic.totalPrice);
-      }, 0);
-    const alreadyPay = bagoInstallments
+    // const filterSizePrice = filterSize
+    //   .filter((item) => item.shopId === shopId)
+    //   .reduce((total, filterSize) => {
+    //     return (total += filterSize.totalPrice);
+    //   }, 0);
+    // const labelPrice = label
+    //   .filter((item) => item.shopId === shopId)
+    //   .reduce((total, label) => {
+    //     return (total += label.totalPrice);
+    //   }, 0);
+    // const plasticPrice = plastic
+    //   .filter((item) => item.shopId === shopId)
+    //   .reduce((total, plastic) => {
+    //     return (total += plastic.totalPrice);
+    //   }, 0);
+    const alreadyPay = bagoLeafInstallments
       .filter((item) => item.shopId === shopId)
       .reduce((total, bago) => {
         return (total += bago.payBalance);
       }, 0);
-    const cashBalance =
-      leafPrice + filterSizePrice + labelPrice + plasticPrice - alreadyPay;
-    setUpdateBagoInstallment({
-      ...updateBagoInstallment,
+    const cashBalance = leafPrice - alreadyPay;
+    setBagoLeafInstallment({
+      ...bagoLeafInstallment,
       shopId: shopId,
       cashBalance: cashBalance,
     });
@@ -102,37 +88,25 @@ const UpdateBagoInstallment = ({
   const handleClick = () => {
     dispatch(setIsLoading(true));
     dispatch(
-      UpdatedBagoInstallment({
-        ...updateBagoInstallment,
+      AddBagoLeafInstallment({
+        ...bagoLeafInstallment,
         onSuccess: () => {
-          setUpdateOpen(false);
-          setUpdateBagoInstallment(defaultValue);
-          dispatch(setOpenSnackbar({ message: "Update installment success" }));
+          setOpen(false);
+          setBagoLeafInstallment(defaultValue);
+          dispatch(setOpenSnackbar({ message: "Add installment success" }));
           dispatch(setIsLoading(false));
         },
       })
     );
   };
+
   useEffect(() => {
-    if (selectInstallment) {
-      setSelectedDate(selectInstallment.date);
-      setUpdateBagoInstallment({
-        ...updateBagoInstallment,
-        id: selectedId,
-        date: selecteddate,
-        shopId: selectInstallment.shopId,
-        cashBalance: selectInstallment.cashBalance,
-        payBalance: selectInstallment.payBalance,
-      });
-    }
-  }, [selectInstallment, updateOpen]);
-  useEffect(() => {
-    setUpdateBagoInstallment({ ...updateBagoInstallment, date: selecteddate });
-  }, [selecteddate]);
-  if (!selectInstallment) return null;
+    setBagoLeafInstallment({ ...bagoLeafInstallment, date: selecteddate });
+  }, [selecteddate, open]);
+  console.log("dkfh", bagoLeafInstallment);
   return (
     <>
-      <Dialog open={updateOpen} onClose={() => setUpdateOpen(false)}>
+      <Dialog open={open} onClose={() => setOpen(false)}>
         <DialogContent>
           <Box sx={{ display: "flex", justifyContent: "flex-end", mr: 2 }}>
             <Typography sx={{ mr: 2, fontWeight: "bold" }}>ရက်စွဲ</Typography>
@@ -159,8 +133,7 @@ const UpdateBagoInstallment = ({
                 <Select
                   labelId="demo-simple-select-filled-label"
                   id="demo-simple-select-filled"
-                  defaultValue={selectInstallment.shopId}
-                  value={updateBagoInstallment.shopId}
+                  value={bagoLeafInstallment.shopId}
                   onChange={(evt) => {
                     handleChange(Number(evt.target.value));
                   }}
@@ -180,7 +153,7 @@ const UpdateBagoInstallment = ({
                 ပေးရန်ကျန်ငွေ
               </Typography>
               <TextField
-                value={updateBagoInstallment.cashBalance}
+                value={bagoLeafInstallment.cashBalance}
                 placeholder="ပေးရန်ကျန်ငွေ"
                 sx={{ bgcolor: "#EEE8CF" }}
                 onChange={(evt) => {}}
@@ -192,12 +165,11 @@ const UpdateBagoInstallment = ({
                 သွင်းငွေ
               </Typography>
               <TextField
-                defaultValue={selectInstallment.payBalance}
                 placeholder="သွင်းငွေ"
                 sx={{ bgcolor: "#EEE8CF" }}
                 onChange={(evt) => {
-                  setUpdateBagoInstallment({
-                    ...updateBagoInstallment,
+                  setBagoLeafInstallment({
+                    ...bagoLeafInstallment,
                     payBalance: Number(evt.target.value),
                   });
                 }}
@@ -209,22 +181,28 @@ const UpdateBagoInstallment = ({
           <Button
             variant="contained"
             onClick={() => {
-              setUpdateOpen(false);
-              setUpdateBagoInstallment(defaultValue);
+              setOpen(false);
+              setBagoLeafInstallment(defaultValue);
             }}
           >
             မလုပ်တော့ပါ
           </Button>
           <LoadingButton
             variant="contained"
+            disabled={
+              !bagoLeafInstallment.date ||
+              !bagoLeafInstallment.shopId ||
+              !bagoLeafInstallment.cashBalance ||
+              !bagoLeafInstallment.payBalance
+            }
             onClick={handleClick}
             loading={isLoading}
           >
-            ပြင်ဆင်မည်
+            သိမ်းမည်
           </LoadingButton>
         </DialogActions>
       </Dialog>
     </>
   );
 };
-export default UpdateBagoInstallment;
+export default NewBagoLeafInstallment;

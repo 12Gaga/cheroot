@@ -40,6 +40,7 @@ const defaultValue: updateFormOfPacking = {
   warppingQty: 0,
   coverPlasticId: undefined,
   coverQty: 0,
+  amount: 0,
   quantity: 0,
 };
 
@@ -178,6 +179,21 @@ const UpdateFormOfPacking = ({
             updateFormOfPacking={updateFormOfPacking}
             setUpdateFormOfPacking={setUpdateFormOfPacking}
           />
+
+          <Box sx={{ mt: 2 }}>
+            <Typography sx={{ fontWeight: "bold" }}>ဈေးနှုန်း</Typography>
+            <TextField
+              defaultValue={selectFormOfPacking.amount}
+              placeholder="ဈေးနှုန်း"
+              sx={{ bgcolor: "#EEE8CF", width: 300 }}
+              onChange={(evt) =>
+                setUpdateFormOfPacking({
+                  ...updateFormOfPacking,
+                  amount: Number(evt.target.value),
+                })
+              }
+            />
+          </Box>
 
           <Box sx={{ mt: 2 }}>
             <Typography sx={{ fontWeight: "bold" }}>ဆေးလိပ်အရေအတွက်</Typography>

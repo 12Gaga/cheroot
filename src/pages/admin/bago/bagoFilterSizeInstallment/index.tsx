@@ -3,16 +3,18 @@ import { useState } from "react";
 import AdminLayout from "@/components/adminLayout";
 import "react-datepicker/dist/react-datepicker.css";
 import AddBoxIcon from "@mui/icons-material/AddBox";
-import NewBagoInstallment from "@/components/bago/newBagoInstallment";
 import { useAppSelector } from "@/store/hooks";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
-import UpdateBagoInstallment from "@/components/bago/updateBagoInstallment";
-import DeleteBagoInstallment from "@/components/bago/deleteBagoInstallment";
-const BagoInstallment = () => {
+import UpdateBagoFilerSizeInstallment from "@/components/bago/updateBagoFilterSizeInstallment";
+import DeleteBagoFilterSizeInstallment from "@/components/bago/deleteBagoFilterSizeInstallment";
+import NewBagoFilerSizeInstallment from "@/components/bago/newBagoFilterSizeInstallment";
+const BagoFilterSizeInstallment = () => {
   const [open, setOpen] = useState<boolean>(false);
   const workshop = useAppSelector((store) => store.workShop.selectedWorkShop);
-  const bagoInstallment = useAppSelector((store) => store.bagoInstallment.item);
+  const bagoInstallment = useAppSelector(
+    (store) => store.bagoFilterSizeInstallment.item
+  );
   const shops = useAppSelector((store) => store.typeOfShop.item);
   const concernBagoInstallment = bagoInstallment.filter(
     (item) => item.workShopId === workshop?.id
@@ -27,7 +29,7 @@ const BagoInstallment = () => {
           variant="h5"
           sx={{ textAlign: "center", fontWeight: "bold" }}
         >
-          အရစ်ကျစာရင်း
+          ပဲခူးအစီခံအရစ်ကျစာရင်း
         </Typography>
 
         <Box sx={{ display: "flex", justifyContent: "flex-end" }}>
@@ -45,6 +47,7 @@ const BagoInstallment = () => {
               <th>ဆိုင်နာမည်</th>
               <th>ပေးရန်ကျန်ငွေ</th>
               <th>သွင်းငွေ</th>
+              <th>လက်ကျန်ငွေ</th>
             </tr>
           </thead>
           {concernBagoInstallment.map((item) => {
@@ -56,6 +59,7 @@ const BagoInstallment = () => {
                     <td>{shops.find((s) => s.id === item.shopId)?.name}</td>
                     <td>{item.cashBalance}</td>
                     <td>{item.payBalance}</td>
+                    <td>{item.cashBalance - item.payBalance}</td>
                     <td
                       onClick={() => {
                         setUpdateOpen(true), setSelectId(item.id);
@@ -76,13 +80,13 @@ const BagoInstallment = () => {
             );
           })}
         </table>
-        <NewBagoInstallment open={open} setOpen={setOpen} />
-        <UpdateBagoInstallment
+        <NewBagoFilerSizeInstallment open={open} setOpen={setOpen} />
+        <UpdateBagoFilerSizeInstallment
           updateOpen={updateOpen}
           setUpdateOpen={setUpdateOpen}
           selectedId={selectId}
         />
-        <DeleteBagoInstallment
+        <DeleteBagoFilterSizeInstallment
           deleteOpen={deleteOpen}
           setDeleteOpen={setDeleteOpen}
           selectedId={selectId}
@@ -91,4 +95,4 @@ const BagoInstallment = () => {
     </>
   );
 };
-export default BagoInstallment;
+export default BagoFilterSizeInstallment;

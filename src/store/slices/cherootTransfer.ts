@@ -3,7 +3,7 @@ import {
   cherootTransferSlice,
   deleteCherootTransfer,
   updateCherootTransfer,
-} from "@/types/bagoInstallment copy";
+} from "@/types/cherootTransfer";
 import Config from "@/utils/config";
 import { Conveying } from "@prisma/client";
 import { PayloadAction, createAsyncThunk, createSlice } from "@reduxjs/toolkit";
@@ -24,6 +24,7 @@ export const AddCherootTransfer = createAsyncThunk(
       typeOfPackingId,
       formOfPackingId,
       quantity,
+      amount,
       totalPrice,
       onSuccess,
       onError,
@@ -44,6 +45,7 @@ export const AddCherootTransfer = createAsyncThunk(
             typeOfPackingId,
             formOfPackingId,
             quantity,
+            amount,
             totalPrice,
           }),
         }
@@ -67,6 +69,7 @@ export const UpdatedCherootTransfer = createAsyncThunk(
       typeOfPackingId,
       formOfPackingId,
       quantity,
+      amount,
       totalPrice,
       id,
       onSuccess,
@@ -88,6 +91,7 @@ export const UpdatedCherootTransfer = createAsyncThunk(
             typeOfPackingId,
             formOfPackingId,
             quantity,
+            amount,
             totalPrice,
             id,
           }),

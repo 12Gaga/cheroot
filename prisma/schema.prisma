@@ -84,7 +84,6 @@ model WorkShop{
   filterSizeTransferGarage FilterSizeTransferGarage[]
   tabaccoTransferGarage TabaccoTransferGarage[]
   labelTransferGarage LabelTransferGarage[]
-  bagoInstallment BagoInstallment[] 
   isArchived Boolean @default(false)
 }
 
@@ -147,7 +146,6 @@ model TypeOfShop{
   tabacco Tabacco[]
   label Label[]
   plastic Plastic[]
-  bagoInstallment BagoInstallment[]
   isArchived Boolean @default(false)
 }
 
@@ -164,7 +162,6 @@ model TypeOfLeaf{
   leafDeduction LeafDeduction[]
   leafTransferGarage LeafTransferGarage[]
   bagoLeafPurchase BagoLeafPurchase[] 
-  bagoLeafInstallment BagoLeafInstallment[]
   isArchived Boolean @default(false)
   isAvariabled Boolean @default(false)
 }
@@ -182,7 +179,6 @@ model TypeOfFilterSize{
   filterSizeTransferGarage FilterSizeTransferGarage[]
   formula Formula[]
   bagoFilterSizePurchase BagoFilterSizePurchase[]
-  bagoFilterSizeInstallment BagoFilterSizeInstallment[]
   isArchived Boolean @default(false)
   isAvariabled Boolean @default(false)
 }
@@ -215,7 +211,6 @@ model TypeOfLabel{
   extraPurchase ExtraPurchase[]
   labelTransferGarage LabelTransferGarage[]
   bagoLabelPurchase BagoLabelPurchase[]
-  bagoLabelInstallment BagoLabelInstallment[]
   isArchived Boolean @default(false)
   isAvariabled Boolean @default(false)
 }
@@ -227,7 +222,6 @@ model TypeOfPlastic{
   workShopId Int
   plastic Plastic[]
   bagoPlasticPurchase BagoPlasticPurchase[]
-  bagoPlasticInstallment BagoPlasticInstallment[]
   addStock AddStock[]
   isArchived Boolean @default(false)
 }
@@ -364,6 +358,7 @@ model FormOfPacking{
   coverPlasticId Int
   coverPlasticQty Int @default(0)
   cherootQty Int @default(0)
+  amount Int @default(0)
   workShop WorkShop @relation(fields: [workShopId],references: [id])
   workShopId Int
   packing Packing[]
@@ -415,6 +410,7 @@ model Conveying{
   formOfPacking FormOfPacking @relation(fields: [formOfPackingId],references: [id])
   formOfPackingId Int
   quantity Int
+  amount Int @default(0)
   totalPrice Int
   cashBalance Int @default(0)
   workShop WorkShop @relation(fields: [workShopId],references: [id])
@@ -890,8 +886,6 @@ model BagoLeafInstallment{
   date String
   shop TypeOfShop @relation(fields: [shopId],references: [id])
   shopId Int
-  typeOfLeaf TypeOfLeaf @relation(fields: [typeOfLeafId],references: [id])
-  typeOfLeafId Int
   cashBalance Int
   payBalance Int
   workShop WorkShop @relation(fields: [workShopId],references: [id])
@@ -904,8 +898,6 @@ model BagoFilterSizeInstallment{
   date String
   shop TypeOfShop @relation(fields: [shopId],references: [id])
   shopId Int
-  typeOfFilterSize TypeOfFilterSize @relation(fields: [typeOfFilterSizeId],references: [id])
-  typeOfFilterSizeId Int
   cashBalance Int
   payBalance Int
   workShop WorkShop @relation(fields: [workShopId],references: [id])
@@ -918,8 +910,6 @@ model BagoPlasticInstallment{
   date String
   shop TypeOfShop @relation(fields: [shopId],references: [id])
   shopId Int
-  plastic TypeOfPlastic @relation(fields: [plasticId],references: [id])
-  plasticId Int
   cashBalance Int
   payBalance Int
   workShop WorkShop @relation(fields: [workShopId],references: [id])
@@ -932,8 +922,6 @@ model BagoLabelInstallment{
   date String
   shop TypeOfShop @relation(fields: [shopId],references: [id])
   shopId Int
-  typeOfLabel TypeOfLabel @relation(fields: [typeOfLabelId],references: [id])
-  typeOfLabelId Int
   cashBalance Int
   payBalance Int
   workShop WorkShop @relation(fields: [workShopId],references: [id])
@@ -941,14 +929,14 @@ model BagoLabelInstallment{
   isArchived Boolean @default(false)
 }
 
-model BagoInstallment{
-  id Int @id @default(autoincrement())
-  date String
-  shop TypeOfShop @relation(fields: [shopId],references: [id])
-  shopId Int
-  cashBalance Int
-  payBalance Int
-  workShop WorkShop @relation(fields: [workShopId],references: [id])
-  workShopId Int
-  isArchived Boolean @default(false)
-}
+// model BagoInstallment{
+//   id Int @id @default(autoincrement())
+//   date String
+//   shop TypeOfShop @relation(fields: [shopId],references: [id])
+//   shopId Int
+//   cashBalance Int
+//   payBalance Int
+//   workShop WorkShop @relation(fields: [workShopId],references: [id])
+//   workShopId Int
+//   isArchived Boolean @default(false)
+// }

@@ -15,7 +15,7 @@ import {
 import { useEffect, useState } from "react";
 import "react-datepicker/dist/react-datepicker.css";
 import DatePicker from "react-datepicker";
-import { addCherootTransfer } from "@/types/bagoInstallment copy";
+import { addCherootTransfer } from "@/types/cherootTransfer";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { FormOfPacking, TypeOfPacking } from "@prisma/client";
 import {
@@ -36,6 +36,7 @@ const defaultValue: addCherootTransfer = {
   typeOfPackingId: null,
   formOfPackingId: null,
   quantity: 0,
+  amount: 0,
   totalPrice: 0,
 };
 
@@ -76,6 +77,29 @@ const NewTransferCherootData = ({ open, setOpen }: Props) => {
     );
     setConcernPackingForm(packingForm);
     setCherootTransfer({ ...cherootTransfer, typeOfPackingId: packingTypeId });
+  };
+
+  const handelFormType = (formTypeId: number) => {
+    const exit = formOfPacking.find(
+      (item) => item.id === formTypeId
+    ) as FormOfPacking;
+    const totalamount = cherootTransfer.quantity * exit.amount;
+
+    setCherootTransfer({
+      ...cherootTransfer,
+      formOfPackingId: formTypeId,
+      amount: exit.amount,
+      totalPrice: totalamount,
+    });
+  };
+
+  const handleQty = (qty: number) => {
+    const totalamount = cherootTransfer.amount * qty;
+    setCherootTransfer({
+      ...cherootTransfer,
+      quantity: qty,
+      totalPrice: totalamount,
+    });
   };
 
   const handleClick = () => {
@@ -197,10 +221,7 @@ const NewTransferCherootData = ({ open, setOpen }: Props) => {
                 id="demo-simple-select-filled"
                 value={cherootTransfer.formOfPackingId}
                 onChange={(evt) => {
-                  setCherootTransfer({
-                    ...cherootTransfer,
-                    formOfPackingId: Number(evt.target.value),
-                  });
+                  handelFormType(Number(evt.target.value));
                 }}
                 sx={{ bgcolor: "#EEE8CF" }}
               >
@@ -219,25 +240,29 @@ const NewTransferCherootData = ({ open, setOpen }: Props) => {
               placeholder="အရေအတွက်"
               sx={{ bgcolor: "#EEE8CF", width: 300 }}
               onChange={(evt) => {
-                setCherootTransfer({
-                  ...cherootTransfer,
-                  quantity: Number(evt.target.value),
-                });
+                handleQty(Number(evt.target.value));
               }}
             />
           </Box>
 
           <Box sx={{ mt: 2 }}>
-            <Typography sx={{ fontWeight: "bold" }}>ဆေးလိပ်တန်ဖိုး</Typography>
+            <Typography sx={{ fontWeight: "bold" }}>တန်ဖိုး</Typography>
             <TextField
-              placeholder="ဆေးလိပ်တန်ဖိုး"
+              value={cherootTransfer.amount}
+              placeholder="တန်ဖိုး"
               sx={{ bgcolor: "#EEE8CF", width: 300 }}
-              onChange={(evt) => {
-                setCherootTransfer({
-                  ...cherootTransfer,
-                  totalPrice: Number(evt.target.value),
-                });
-              }}
+            />
+          </Box>
+
+          <Box sx={{ mt: 2 }}>
+            <Typography sx={{ fontWeight: "bold" }}>
+              စုစုပေါင်းတန်ဖိုး
+            </Typography>
+            <TextField
+              value={cherootTransfer.totalPrice}
+              placeholder="စုစုပေါင်းတန်ဖိုး"
+              sx={{ bgcolor: "#EEE8CF", width: 300 }}
+              onChange={(evt) => {}}
             />
           </Box>
         </Box>

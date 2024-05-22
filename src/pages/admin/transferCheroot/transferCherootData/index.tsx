@@ -48,7 +48,8 @@ const TransferCherootData = () => {
               <th>ပါကင်အမျိုးအစား</th>
               <th>ထုပ်ပိုးမှုအမျိုးအစား</th>
               <th>အရေအတွက်</th>
-              <th>ဆေးလိပ်တန်ဖိုး</th>
+              <th>တန်ဖိုး</th>
+              <th>စုစုပေါင်းတန်ဖိုး</th>
             </tr>
           </thead>
           {concernCherootTransfer.map((item) => {
@@ -82,6 +83,7 @@ const TransferCherootData = () => {
                       }
                     </td>
                     <td>{item.quantity}</td>
+                    <td>{item.amount}</td>
                     <td>{item.totalPrice}</td>
                     <td
                       onClick={() => {

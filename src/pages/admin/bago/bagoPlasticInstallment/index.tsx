@@ -1,20 +1,24 @@
-import AdminLayout from "@/components/adminLayout";
-import NewTaungyiInstallment from "@/components/taungyi/newTaungyiInstallment";
-import { useAppSelector } from "@/store/hooks";
-import { Box, Button, Typography } from "@mui/material";
+import { Box, Typography } from "@mui/material";
 import { useState } from "react";
+import AdminLayout from "@/components/adminLayout";
+import "react-datepicker/dist/react-datepicker.css";
+import AddBoxIcon from "@mui/icons-material/AddBox";
+import { useAppSelector } from "@/store/hooks";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
-import UpdateTaungyiInstallment from "@/components/taungyi/updateTaungyiInstallment";
-import DeleteTaungyiInstallment from "@/components/taungyi/deleteTaungyiInstallment";
-const TaungyiInstallment = () => {
+import NewBagoPlasticInstallment from "@/components/bago/newBagoPlasticInstallment";
+import UpdateBagoPlasticInstallment from "@/components/bago/updateBagoPlasticInstallment";
+import DeleteBagoPlasticInstallment from "@/components/bago/deleteBagoPlasticInstallment";
+const BagoPlasticInstallment = () => {
   const [open, setOpen] = useState<boolean>(false);
-  const industryId = useAppSelector((store) => store.industry.item)?.id;
-  const installment = useAppSelector((store) => store.taungyiInstallment.item);
-  const concernInstallment = installment.filter(
-    (item) => item.cigratteIndustryId === industryId
+  const workshop = useAppSelector((store) => store.workShop.selectedWorkShop);
+  const bagoInstallment = useAppSelector(
+    (store) => store.bagoPlasticInstallment.item
   );
-  const banquets = useAppSelector((store) => store.typeOfBanquet.item);
+  const shops = useAppSelector((store) => store.typeOfShop.item);
+  const concernBagoInstallment = bagoInstallment.filter(
+    (item) => item.workShopId === workshop?.id
+  );
   const [updateOpen, setUpdateOpen] = useState<boolean>(false);
   const [deleteOpen, setDeleteOpen] = useState<boolean>(false);
   const [selectId, setSelectId] = useState<number>(0);
@@ -25,50 +29,34 @@ const TaungyiInstallment = () => {
           variant="h5"
           sx={{ textAlign: "center", fontWeight: "bold" }}
         >
-          ပစ္စည်းတန်ဖိုးအရစ်ကျစာရင်း
+          ပဲခူးပလပ်စတစ်အရစ်ကျစာရင်း
         </Typography>
 
         <Box sx={{ display: "flex", justifyContent: "flex-end" }}>
-          <Button
-            variant="contained"
-            sx={{
-              bgcolor: "#E55252",
-              mt: 3,
-              width: 320,
-              height: 50,
-              fontSize: 18,
-              borderRadius: 20,
-              "&:hover": {
-                bgcolor: "#FCB500",
-                color: "white",
-                fontWeight: "bold",
-              },
+          <AddBoxIcon
+            onClick={() => {
+              setOpen(true);
             }}
-            onClick={() => setOpen(true)}
-          >
-            အရစ်ကျစာရင်း
-          </Button>
+            sx={{ fontSize: 50 }}
+          />
         </Box>
-
         <table border={1}>
           <thead>
             <tr style={{ border: "1px solid" }}>
               <th>နေ့စွဲ</th>
-              <th>ပွဲရုံနာမည်</th>
+              <th>ဆိုင်နာမည်</th>
               <th>ပေးရန်ကျန်ငွေ</th>
               <th>သွင်းငွေ</th>
               <th>လက်ကျန်ငွေ</th>
             </tr>
           </thead>
-          {concernInstallment.map((item) => {
+          {concernBagoInstallment.map((item) => {
             return (
               <>
                 <thead key={item.id}>
                   <tr style={{ border: "1px solid" }}>
                     <td>{item.date}</td>
-                    <td>
-                      {banquets.find((b) => b.id === item.banquetId)?.name}
-                    </td>
+                    <td>{shops.find((s) => s.id === item.shopId)?.name}</td>
                     <td>{item.cashBalance}</td>
                     <td>{item.payBalance}</td>
                     <td>{item.cashBalance - item.payBalance}</td>
@@ -92,14 +80,13 @@ const TaungyiInstallment = () => {
             );
           })}
         </table>
-
-        <NewTaungyiInstallment open={open} setOpen={setOpen} />
-        <UpdateTaungyiInstallment
+        <NewBagoPlasticInstallment open={open} setOpen={setOpen} />
+        <UpdateBagoPlasticInstallment
           updateOpen={updateOpen}
           setUpdateOpen={setUpdateOpen}
           selectedId={selectId}
         />
-        <DeleteTaungyiInstallment
+        <DeleteBagoPlasticInstallment
           deleteOpen={deleteOpen}
           setDeleteOpen={setDeleteOpen}
           selectedId={selectId}
@@ -108,4 +95,4 @@ const TaungyiInstallment = () => {
     </>
   );
 };
-export default TaungyiInstallment;
+export default BagoPlasticInstallment;

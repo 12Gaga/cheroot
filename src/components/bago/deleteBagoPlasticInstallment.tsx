@@ -9,9 +9,9 @@ import { LoadingButton } from "@mui/lab";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { setOpenSnackbar } from "@/store/slices/snackBar";
 import {
-  DeletedBagoInstallment,
+  DeletedBagoPlasticInstallment,
   setIsLoading,
-} from "@/store/slices/bagoInstallment";
+} from "@/store/slices/bagoPlasticInstallment";
 
 interface Props {
   deleteOpen: boolean;
@@ -19,17 +19,17 @@ interface Props {
   selectedId: number;
 }
 
-const DeleteBagoInstallment = ({
+const DeleteBagoPlasticInstallment = ({
   deleteOpen,
   setDeleteOpen,
   selectedId,
 }: Props) => {
-  const { isLoading } = useAppSelector((store) => store.bagoInstallment);
+  const { isLoading } = useAppSelector((store) => store.bagoLeafInstallment);
   const dispatch = useAppDispatch();
   const handleClick = () => {
     dispatch(setIsLoading(true));
     dispatch(
-      DeletedBagoInstallment({
+      DeletedBagoPlasticInstallment({
         id: selectedId,
         onSuccess: () => {
           setDeleteOpen(false),
@@ -65,4 +65,4 @@ const DeleteBagoInstallment = ({
   );
 };
 
-export default DeleteBagoInstallment;
+export default DeleteBagoPlasticInstallment;

@@ -1,28 +1,28 @@
 import {
-  addBagoInstallment,
-  bagoInstallmentSlice,
-  deleteBagoInstallment,
-  updateBagoInstallment,
-} from "@/types/bagoInstallment";
+  addBagoLeafInstallment,
+  bagoLeafInstallmentSlice,
+  deleteBagoLeafInstallment,
+  updateBagoLeafInstallment,
+} from "@/types/bagoLeafInstallment";
 import Config from "@/utils/config";
-import { BagoInstallment, TypeOfLeaf } from "@prisma/client";
+import { BagoLeafInstallment, TypeOfLeaf } from "@prisma/client";
 import { PayloadAction, createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 
-const initialState: bagoInstallmentSlice = {
+const initialState: bagoLeafInstallmentSlice = {
   item: [],
   isLoading: false,
   error: null,
 };
 
-export const AddBagoInstallment = createAsyncThunk(
-  "bagoInstallment/AddBagoInstallment",
-  async (option: addBagoInstallment, thunkApi) => {
+export const AddBagoLeafInstallment = createAsyncThunk(
+  "bagoleafInstallment/AddBagoLeafInstallment",
+  async (option: addBagoLeafInstallment, thunkApi) => {
     const { date, shopId, cashBalance, payBalance, onSuccess, onError } =
       option;
     const workShopId = localStorage.getItem("selectedWorkShopId");
     try {
       const response = await fetch(
-        `${Config.apiBaseUrl}/bagoInstallment?workShopId=${workShopId}`,
+        `${Config.apiBaseUrl}/bagoLeafInstallment?workShopId=${workShopId}`,
         {
           method: "POST",
           headers: {
@@ -31,8 +31,8 @@ export const AddBagoInstallment = createAsyncThunk(
           body: JSON.stringify({ date, shopId, cashBalance, payBalance }),
         }
       );
-      const { addBagoInstallment } = await response.json();
-      thunkApi.dispatch(addedBagoInstallment(addBagoInstallment));
+      const { addBagoLeafInstallment } = await response.json();
+      thunkApi.dispatch(addedBagoLeafInstallment(addBagoLeafInstallment));
       onSuccess && onSuccess();
     } catch (err) {
       onError && onError();
@@ -40,15 +40,15 @@ export const AddBagoInstallment = createAsyncThunk(
   }
 );
 
-export const UpdatedBagoInstallment = createAsyncThunk(
-  "bagoInstallment/UpdatedBagoInstallment",
-  async (option: updateBagoInstallment, thunkApi) => {
+export const UpdatedBagoLeafInstallment = createAsyncThunk(
+  "bagoLeafInstallment/UpdatedBagoLeafInstallment",
+  async (option: updateBagoLeafInstallment, thunkApi) => {
     const { date, shopId, cashBalance, payBalance, id, onSuccess, onError } =
       option;
     const workShopId = localStorage.getItem("selectedWorkShopId");
     try {
       const response = await fetch(
-        `${Config.apiBaseUrl}/bagoInstallment?workShopId=${workShopId}`,
+        `${Config.apiBaseUrl}/bagoLeafInstallment?workShopId=${workShopId}`,
         {
           method: "PUT",
           headers: {
@@ -57,8 +57,8 @@ export const UpdatedBagoInstallment = createAsyncThunk(
           body: JSON.stringify({ date, shopId, cashBalance, payBalance, id }),
         }
       );
-      const { updateBagoInstallment } = await response.json();
-      thunkApi.dispatch(updatedBagoInstallment(updateBagoInstallment));
+      const { updateBagoLeafInstallment } = await response.json();
+      thunkApi.dispatch(updatedBagoLeafInstallment(updateBagoLeafInstallment));
       onSuccess && onSuccess();
     } catch (err) {
       onError && onError();
@@ -66,18 +66,18 @@ export const UpdatedBagoInstallment = createAsyncThunk(
   }
 );
 
-export const DeletedBagoInstallment = createAsyncThunk(
-  "bagoInstallment/DeletedBagoInstallment",
-  async (option: deleteBagoInstallment, thunkApi) => {
+export const DeletedBagoLeafInstallment = createAsyncThunk(
+  "bagoInstallment/DeletedBagoLeafInstallment",
+  async (option: deleteBagoLeafInstallment, thunkApi) => {
     const { id, onSuccess, onError } = option;
     try {
       const response = await fetch(
-        `${Config.apiBaseUrl}/bagoInstallment?id=${id}`,
+        `${Config.apiBaseUrl}/bagoLeafInstallment?id=${id}`,
         {
           method: "DELETE",
         }
       );
-      thunkApi.dispatch(deletedBagoInstallment(id));
+      thunkApi.dispatch(deletedBagoLeafInstallment(id));
       onSuccess && onSuccess();
     } catch (err) {
       onError && onError();
@@ -85,35 +85,44 @@ export const DeletedBagoInstallment = createAsyncThunk(
   }
 );
 
-const BagoInstllment = createSlice({
+const BagoLeafInstllment = createSlice({
   name: "lebagoInstallmentaf",
   initialState,
   reducers: {
-    setBagoInstallment: (state, action: PayloadAction<BagoInstallment[]>) => {
+    setBagoLeafInstallment: (
+      state,
+      action: PayloadAction<BagoLeafInstallment[]>
+    ) => {
       state.item = action.payload;
     },
     setIsLoading: (state, action: PayloadAction<boolean>) => {
       state.isLoading = action.payload;
     },
-    addedBagoInstallment: (state, action: PayloadAction<BagoInstallment>) => {
+    addedBagoLeafInstallment: (
+      state,
+      action: PayloadAction<BagoLeafInstallment>
+    ) => {
       state.item = [...state.item, action.payload];
     },
-    updatedBagoInstallment: (state, action: PayloadAction<BagoInstallment>) => {
+    updatedBagoLeafInstallment: (
+      state,
+      action: PayloadAction<BagoLeafInstallment>
+    ) => {
       state.item = state.item.map((item) =>
         item.id === action.payload.id ? action.payload : item
       );
     },
-    deletedBagoInstallment: (state, action: PayloadAction<number>) => {
+    deletedBagoLeafInstallment: (state, action: PayloadAction<number>) => {
       state.item = state.item.filter((item) => item.id != action.payload);
     },
   },
 });
 
 export const {
-  setBagoInstallment,
+  setBagoLeafInstallment,
   setIsLoading,
-  addedBagoInstallment,
-  updatedBagoInstallment,
-  deletedBagoInstallment,
-} = BagoInstllment.actions;
-export default BagoInstllment.reducer;
+  addedBagoLeafInstallment,
+  updatedBagoLeafInstallment,
+  deletedBagoLeafInstallment,
+} = BagoLeafInstllment.actions;
+export default BagoLeafInstllment.reducer;

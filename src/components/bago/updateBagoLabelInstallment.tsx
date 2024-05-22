@@ -1,10 +1,10 @@
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import {
-  AddBagoInstallment,
+  UpdatedBagoLabelInstallment,
   setIsLoading,
-} from "@/store/slices/bagoInstallment";
+} from "@/store/slices/bagoLabelInstallment";
 import { setOpenSnackbar } from "@/store/slices/snackBar";
-import { addBagoInstallment } from "@/types/bagoInstallment";
+import { updateBagoLabelInstallment } from "@/types/bagoLabelInstallment ";
 import { LoadingButton } from "@mui/lab";
 import {
   Dialog,
@@ -22,65 +22,56 @@ import {
 import { useEffect, useState } from "react";
 import DatePicker from "react-datepicker";
 interface Props {
-  open: boolean;
-  setOpen: (value: boolean) => void;
+  updateOpen: boolean;
+  setUpdateOpen: (value: boolean) => void;
+  selectedId: number;
 }
 
-const defaultValue: addBagoInstallment = {
+const defaultValue: updateBagoLabelInstallment = {
+  id: null,
   date: "",
   shopId: null,
   cashBalance: 0,
   payBalance: 0,
 };
 
-const NewBagoInstallment = ({ open, setOpen }: Props) => {
+const UpdateBagoLabelInstallment = ({
+  updateOpen,
+  setUpdateOpen,
+  selectedId,
+}: Props) => {
+  const installment = useAppSelector(
+    (store) => store.bagoLabelInstallment.item
+  );
+  const selectInstallment = installment.find((item) => item.id === selectedId);
   const [selecteddate, setSelectedDate] = useState<any>(
     new Date().toLocaleDateString()
   );
   const dispatch = useAppDispatch();
   const workshop = useAppSelector((store) => store.workShop.selectedWorkShop);
-  const leaf = useAppSelector((store) => store.bagoLeaf.item);
-  const filterSize = useAppSelector((store) => store.bagoFilterSize.item);
   const label = useAppSelector((store) => store.bagoLabel.item);
-  const plastic = useAppSelector((store) => store.bagoPlastic.item);
   const shop = useAppSelector((store) => store.typeOfShop.item);
   const concernShop = shop.filter((item) => item.workShopId === workshop?.id);
-  const { item: bagoInstallments, isLoading } = useAppSelector(
-    (store) => store.bagoInstallment
+  const { item: bagoLabelInstallments, isLoading } = useAppSelector(
+    (store) => store.bagoLabelInstallment
   );
-  const [bagoInstallment, setBagoInstallment] =
-    useState<addBagoInstallment>(defaultValue);
+  const [updateBagoLabelInstallment, setUpdateBagoLabelInstallment] =
+    useState<updateBagoLabelInstallment>(defaultValue);
 
   const handleChange = (shopId: number) => {
-    const leafPrice = leaf
-      .filter((item) => item.shopId === shopId)
-      .reduce((total, leaf) => {
-        return (total += leaf.totalPrice);
-      }, 0);
-    const filterSizePrice = filterSize
-      .filter((item) => item.shopId === shopId)
-      .reduce((total, filterSize) => {
-        return (total += filterSize.totalPrice);
-      }, 0);
     const labelPrice = label
       .filter((item) => item.shopId === shopId)
       .reduce((total, label) => {
         return (total += label.totalPrice);
       }, 0);
-    const plasticPrice = plastic
-      .filter((item) => item.shopId === shopId)
-      .reduce((total, plastic) => {
-        return (total += plastic.totalPrice);
-      }, 0);
-    const alreadyPay = bagoInstallments
+    const alreadyPay = bagoLabelInstallments
       .filter((item) => item.shopId === shopId)
       .reduce((total, bago) => {
         return (total += bago.payBalance);
       }, 0);
-    const cashBalance =
-      leafPrice + filterSizePrice + labelPrice + plasticPrice - alreadyPay;
-    setBagoInstallment({
-      ...bagoInstallment,
+    const cashBalance = labelPrice - alreadyPay;
+    setUpdateBagoLabelInstallment({
+      ...updateBagoLabelInstallment,
       shopId: shopId,
       cashBalance: cashBalance,
     });
@@ -89,25 +80,40 @@ const NewBagoInstallment = ({ open, setOpen }: Props) => {
   const handleClick = () => {
     dispatch(setIsLoading(true));
     dispatch(
-      AddBagoInstallment({
-        ...bagoInstallment,
+      UpdatedBagoLabelInstallment({
+        ...updateBagoLabelInstallment,
         onSuccess: () => {
-          setOpen(false);
-          setBagoInstallment(defaultValue);
-          dispatch(setOpenSnackbar({ message: "Add installment success" }));
+          setUpdateOpen(false);
+          setUpdateBagoLabelInstallment(defaultValue);
+          dispatch(setOpenSnackbar({ message: "Update installment success" }));
           dispatch(setIsLoading(false));
         },
       })
     );
   };
-
   useEffect(() => {
-    setBagoInstallment({ ...bagoInstallment, date: selecteddate });
-  }, [selecteddate, open]);
-  console.log("dkfh", bagoInstallment);
+    if (selectInstallment) {
+      setSelectedDate(selectInstallment.date);
+      setUpdateBagoLabelInstallment({
+        ...updateBagoLabelInstallment,
+        id: selectedId,
+        date: selecteddate,
+        shopId: selectInstallment.shopId,
+        cashBalance: selectInstallment.cashBalance,
+        payBalance: selectInstallment.payBalance,
+      });
+    }
+  }, [selectInstallment, updateOpen]);
+  useEffect(() => {
+    setUpdateBagoLabelInstallment({
+      ...updateBagoLabelInstallment,
+      date: selecteddate,
+    });
+  }, [selecteddate]);
+  if (!selectInstallment) return null;
   return (
     <>
-      <Dialog open={open} onClose={() => setOpen(false)}>
+      <Dialog open={updateOpen} onClose={() => setUpdateOpen(false)}>
         <DialogContent>
           <Box sx={{ display: "flex", justifyContent: "flex-end", mr: 2 }}>
             <Typography sx={{ mr: 2, fontWeight: "bold" }}>ရက်စွဲ</Typography>
@@ -134,7 +140,8 @@ const NewBagoInstallment = ({ open, setOpen }: Props) => {
                 <Select
                   labelId="demo-simple-select-filled-label"
                   id="demo-simple-select-filled"
-                  value={bagoInstallment.shopId}
+                  defaultValue={selectInstallment.shopId}
+                  value={updateBagoLabelInstallment.shopId}
                   onChange={(evt) => {
                     handleChange(Number(evt.target.value));
                   }}
@@ -154,7 +161,7 @@ const NewBagoInstallment = ({ open, setOpen }: Props) => {
                 ပေးရန်ကျန်ငွေ
               </Typography>
               <TextField
-                value={bagoInstallment.cashBalance}
+                value={updateBagoLabelInstallment.cashBalance}
                 placeholder="ပေးရန်ကျန်ငွေ"
                 sx={{ bgcolor: "#EEE8CF" }}
                 onChange={(evt) => {}}
@@ -166,11 +173,12 @@ const NewBagoInstallment = ({ open, setOpen }: Props) => {
                 သွင်းငွေ
               </Typography>
               <TextField
+                defaultValue={selectInstallment.payBalance}
                 placeholder="သွင်းငွေ"
                 sx={{ bgcolor: "#EEE8CF" }}
                 onChange={(evt) => {
-                  setBagoInstallment({
-                    ...bagoInstallment,
+                  setUpdateBagoLabelInstallment({
+                    ...updateBagoLabelInstallment,
                     payBalance: Number(evt.target.value),
                   });
                 }}
@@ -182,28 +190,22 @@ const NewBagoInstallment = ({ open, setOpen }: Props) => {
           <Button
             variant="contained"
             onClick={() => {
-              setOpen(false);
-              setBagoInstallment(defaultValue);
+              setUpdateOpen(false);
+              setUpdateBagoLabelInstallment(defaultValue);
             }}
           >
             မလုပ်တော့ပါ
           </Button>
           <LoadingButton
             variant="contained"
-            disabled={
-              !bagoInstallment.date ||
-              !bagoInstallment.shopId ||
-              !bagoInstallment.cashBalance ||
-              !bagoInstallment.payBalance
-            }
             onClick={handleClick}
             loading={isLoading}
           >
-            သိမ်းမည်
+            ပြင်ဆင်မည်
           </LoadingButton>
         </DialogActions>
       </Dialog>
     </>
   );
 };
-export default NewBagoInstallment;
+export default UpdateBagoLabelInstallment;

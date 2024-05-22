@@ -14,6 +14,7 @@ export default async function handler(
       typeOfPackingId,
       formOfPackingId,
       quantity,
+      amount,
       totalPrice,
     } = req.body;
     const workShopId = Number(req.query.workShopId);
@@ -25,6 +26,7 @@ export default async function handler(
       typeOfPackingId &&
       formOfPackingId &&
       quantity != undefined &&
+      amount != undefined &&
       totalPrice != undefined;
     if (!isValid) return res.status(405).send("bad request");
 
@@ -36,6 +38,7 @@ export default async function handler(
         typeOfPackingId,
         formOfPackingId,
         quantity,
+        amount,
         totalPrice,
         workShopId,
       },
@@ -49,6 +52,7 @@ export default async function handler(
       typeOfPackingId,
       formOfPackingId,
       quantity,
+      amount,
       totalPrice,
       id,
     } = req.body;
@@ -59,6 +63,7 @@ export default async function handler(
       typeOfPackingId &&
       formOfPackingId &&
       quantity != undefined &&
+      amount != undefined &&
       totalPrice != undefined &&
       id;
     if (!isValid) return res.status(405).send("bad request");
@@ -71,6 +76,7 @@ export default async function handler(
         typeOfPackingId,
         formOfPackingId,
         quantity,
+        amount,
         totalPrice,
       },
     });

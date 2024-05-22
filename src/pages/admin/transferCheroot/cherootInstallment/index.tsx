@@ -60,6 +60,7 @@ const CherootInstallment = () => {
               <th>မြို့နာမည်</th>
               <th>ရရန်ကျန်ငွေ</th>
               <th>သွင်းငွေ</th>
+              <th>လက်ကျန်ငွေ</th>
             </tr>
           </thead>
           {concernCherootInstallment.map((item) => {
@@ -76,6 +77,7 @@ const CherootInstallment = () => {
                     </td>
                     <td>{item.cashBalance}</td>
                     <td>{item.payBalance}</td>
+                    <td>{item.cashBalance - item.payBalance}</td>
                     <td
                       onClick={() => {
                         setUpdateOpen(true), setSelectId(item.id);

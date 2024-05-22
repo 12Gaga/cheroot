@@ -48,10 +48,13 @@ import { setBagoPlastic } from "./bagoPLastic";
 import { setTaungyiEnterStock } from "./taungyiEnterStock";
 import { setTaungyiExitStock } from "./taungyiExitStock";
 import { setPlasticStock } from "./plasticStock";
-import { setBagoInstallment } from "./bagoInstallment";
+import { setBagoLeafInstallment } from "./bagoLeafInstallment";
 import { setTaungyiInstllment } from "./taungyiInstallment";
 import { setCherootInstallment } from "./cherootInstallment";
 import { setCherootTransfer } from "./cherootTransfer";
+import { setBagoFilterSizeInstallment } from "./bagoFilterSizeInstallment";
+import { setBagoLabelInstallment } from "./bagoLabelInstallment";
+import { setBagoPlasticInstallment } from "./bagoPlasticInstallment";
 
 const initialState: appSlice = {
   init: false,
@@ -114,7 +117,10 @@ export const fetchApp = createAsyncThunk(
         bagoPlastic,
         taungyiEnterStock,
         taungyiExitStock,
-        bagoInstallment,
+        bagoLeafInstallment,
+        bagoFilterSizeInstallment,
+        bagoLabelInstallment,
+        bagoPlasticInstallment,
         taungyiInstallment,
         cherootInstallment,
         cherootTransfer,
@@ -167,7 +173,12 @@ export const fetchApp = createAsyncThunk(
       thunkApi.dispatch(setBagoPlastic(bagoPlastic));
       thunkApi.dispatch(setTaungyiEnterStock(taungyiEnterStock));
       thunkApi.dispatch(setTaungyiExitStock(taungyiExitStock));
-      thunkApi.dispatch(setBagoInstallment(bagoInstallment));
+      thunkApi.dispatch(setBagoLeafInstallment(bagoLeafInstallment));
+      thunkApi.dispatch(
+        setBagoFilterSizeInstallment(bagoFilterSizeInstallment)
+      );
+      thunkApi.dispatch(setBagoLabelInstallment(bagoLabelInstallment));
+      thunkApi.dispatch(setBagoPlasticInstallment(bagoPlasticInstallment));
       thunkApi.dispatch(setTaungyiInstllment(taungyiInstallment));
       thunkApi.dispatch(setCherootInstallment(cherootInstallment));
       thunkApi.dispatch(setCherootTransfer(cherootTransfer));

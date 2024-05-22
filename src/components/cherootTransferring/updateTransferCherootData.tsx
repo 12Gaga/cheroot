@@ -15,7 +15,7 @@ import {
 import { useEffect, useState } from "react";
 import "react-datepicker/dist/react-datepicker.css";
 import DatePicker from "react-datepicker";
-import { updateCherootTransfer } from "@/types/bagoInstallment copy";
+import { updateCherootTransfer } from "@/types/cherootTransfer";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { FormOfPacking, TypeOfPacking } from "@prisma/client";
 import {
@@ -38,6 +38,7 @@ const defaultValue: updateCherootTransfer = {
   typeOfPackingId: null,
   formOfPackingId: null,
   quantity: 0,
+  amount: 0,
   totalPrice: 0,
 };
 
@@ -93,6 +94,29 @@ const UpdateTransferCherootData = ({
     });
   };
 
+  const handelFormType = (formTypeId: number) => {
+    const exit = formOfPacking.find(
+      (item) => item.id === formTypeId
+    ) as FormOfPacking;
+    const totalamount = updatecherootTransfer.quantity * exit.amount;
+
+    setUpdateCherootTransfer({
+      ...updatecherootTransfer,
+      formOfPackingId: formTypeId,
+      amount: exit.amount,
+      totalPrice: totalamount,
+    });
+  };
+
+  const handleQty = (qty: number) => {
+    const totalamount = updatecherootTransfer.amount * qty;
+    setUpdateCherootTransfer({
+      ...updatecherootTransfer,
+      quantity: qty,
+      totalPrice: totalamount,
+    });
+  };
+
   const handleClick = () => {
     dispatch(setIsLoading(true));
     dispatch(
@@ -122,6 +146,7 @@ const UpdateTransferCherootData = ({
         typeOfPackingId: selectCherootTransfer.typeOfPackingId,
         formOfPackingId: selectCherootTransfer.formOfPackingId,
         quantity: selectCherootTransfer.quantity,
+        amount: selectCherootTransfer.amount,
         totalPrice: selectCherootTransfer.totalPrice,
       });
       const packingType = typeOfPacking.filter(
@@ -240,10 +265,7 @@ const UpdateTransferCherootData = ({
                 defaultValue={selectCherootTransfer.formOfPackingId}
                 value={updatecherootTransfer.formOfPackingId}
                 onChange={(evt) => {
-                  setUpdateCherootTransfer({
-                    ...updatecherootTransfer,
-                    formOfPackingId: Number(evt.target.value),
-                  });
+                  handelFormType(Number(evt.target.value));
                 }}
                 sx={{ bgcolor: "#EEE8CF" }}
               >
@@ -263,26 +285,29 @@ const UpdateTransferCherootData = ({
               placeholder="အရေအတွက်"
               sx={{ bgcolor: "#EEE8CF", width: 300 }}
               onChange={(evt) => {
-                setUpdateCherootTransfer({
-                  ...updatecherootTransfer,
-                  quantity: Number(evt.target.value),
-                });
+                handleQty(Number(evt.target.value));
               }}
             />
           </Box>
 
           <Box sx={{ mt: 2 }}>
-            <Typography sx={{ fontWeight: "bold" }}>ဆေးလိပ်တန်ဖိုး</Typography>
+            <Typography sx={{ fontWeight: "bold" }}>တန်ဖိုး</Typography>
             <TextField
-              defaultValue={selectCherootTransfer.totalPrice}
-              placeholder="ဆေးလိပ်တန်ဖိုး"
+              value={updatecherootTransfer.amount}
+              placeholder="တန်ဖိုး"
               sx={{ bgcolor: "#EEE8CF", width: 300 }}
-              onChange={(evt) => {
-                setUpdateCherootTransfer({
-                  ...updatecherootTransfer,
-                  totalPrice: Number(evt.target.value),
-                });
-              }}
+            />
+          </Box>
+
+          <Box sx={{ mt: 2 }}>
+            <Typography sx={{ fontWeight: "bold" }}>
+              စုစုပေါင်းတန်ဖိုး
+            </Typography>
+            <TextField
+              value={updatecherootTransfer.totalPrice}
+              placeholder="စုစုပေါင်းတန်ဖိုး"
+              sx={{ bgcolor: "#EEE8CF", width: 300 }}
+              onChange={(evt) => {}}
             />
           </Box>
         </Box>

@@ -17,6 +17,7 @@ export interface createNewFormOfPacking extends BasicOption {
   warppingQty: number;
   coverPlasticId: number | undefined;
   coverQty: number;
+  amount: number;
   quantity: number;
 }
 
@@ -31,6 +32,7 @@ export interface updateFormOfPacking extends BasicOption {
   warppingQty: number;
   coverPlasticId: number | undefined;
   coverQty: number;
+  amount: number;
   quantity: number;
 }
 

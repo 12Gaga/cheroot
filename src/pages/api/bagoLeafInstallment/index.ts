@@ -14,10 +14,10 @@ export default async function handler(
       date && shopId && cashBalance != undefined && payBalance != undefined;
     if (!isValid) return res.status(405).send("bad request");
 
-    const addBagoInstallment = await prisma.bagoInstallment.create({
+    const addBagoLeafInstallment = await prisma.bagoLeafInstallment.create({
       data: { date, shopId, cashBalance, payBalance, workShopId },
     });
-    return res.status(200).json({ addBagoInstallment });
+    return res.status(200).json({ addBagoLeafInstallment });
   } else if (method === "PUT") {
     const { date, shopId, cashBalance, payBalance, id } = req.body;
     const isValid =
@@ -27,16 +27,16 @@ export default async function handler(
       payBalance != undefined &&
       id;
     if (!isValid) return res.status(405).send("bad request");
-    const updateBagoInstallment = await prisma.bagoInstallment.update({
+    const updateBagoLeafInstallment = await prisma.bagoLeafInstallment.update({
       where: { id },
       data: { date, shopId, cashBalance, payBalance },
     });
-    return res.status(200).json({ updateBagoInstallment });
+    return res.status(200).json({ updateBagoLeafInstallment });
   } else if (method === "DELETE") {
     const id = Number(req.query.id);
     const isValid = id;
     if (!isValid) return res.status(405).send("bad request");
-    await prisma.bagoInstallment.update({
+    await prisma.bagoLeafInstallment.update({
       data: { isArchived: true },
       where: { id },
     });

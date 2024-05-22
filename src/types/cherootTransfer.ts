@@ -14,6 +14,7 @@ export interface addCherootTransfer extends BasicOption {
   typeOfPackingId: number | null;
   formOfPackingId: number | null;
   quantity: number;
+  amount: number;
   totalPrice: number;
 }
 
@@ -25,6 +26,7 @@ export interface updateCherootTransfer extends BasicOption {
   typeOfPackingId: number | null;
   formOfPackingId: number | null;
   quantity: number;
+  amount: number;
   totalPrice: number;
 }
 
