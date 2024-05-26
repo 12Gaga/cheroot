@@ -8,7 +8,7 @@ export interface taungyiExitStockSlice {
 }
 
 export interface addNewTaungyiExitStock extends BasicOption {
-  date: string;
+  date: Date | null;
   storeId: number | null;
   tolBatchNo: number;
   netWeight: number;
@@ -17,7 +17,7 @@ export interface addNewTaungyiExitStock extends BasicOption {
 
 export interface updateTaungyiExitStock extends BasicOption {
   id: number | null;
-  date: string;
+  date: Date | null;
   storeId: number | null;
   tolBatchNo: number;
   netWeight: number;

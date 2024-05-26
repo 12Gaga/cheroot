@@ -22,7 +22,7 @@ import {
   setIsLoading,
 } from "@/store/slices/formOfPacking";
 import UpdatePlasticData from "./updateplasticData";
-import { FormOfPacking } from "@prisma/client";
+import { FormOfPacking, TypeOfPacking } from "@prisma/client";
 interface Props {
   updateOpen: boolean;
   setUpdateOpen: (value: boolean) => void;
@@ -59,13 +59,22 @@ const UpdateFormOfPacking = ({
     useState<updateFormOfPacking>(defaultValue);
   const { isLoading } = useAppSelector((store) => store.formOfPacking);
   const typeOfPackings = useAppSelector((store) => store.typeOfPacking.item);
-  const concernTypeOfPacking = typeOfPackings.filter(
-    (item) => item.workShopId === workShop?.id
+  const concernCheroots = useAppSelector(
+    (store) => store.typeOfCheroot.item
+  ).filter((item) => item.workShopId === workShop?.id);
+  const [concernPackingType, setConcernPackingType] = useState<TypeOfPacking[]>(
+    []
   );
-  const cheroots = useAppSelector((store) => store.typeOfCheroot.item);
-  const concernCheroot = cheroots.filter(
-    (item) => item.workShopId === workShop?.id
-  );
+  const handleCheroot = (cherootId: number) => {
+    const packingType = typeOfPackings.filter(
+      (item) => item.typeOfCherootId === cherootId
+    );
+    setConcernPackingType(packingType);
+    setUpdateFormOfPacking({
+      ...updateFormOfPacking,
+      typeOfCherootId: cherootId,
+    });
+  };
   console.log("select", selectFormOfPacking);
   const handleClick = () => {
     dispatch(setIsLoading(true));
@@ -98,7 +107,12 @@ const UpdateFormOfPacking = ({
         coverPlasticId: selectFormOfPacking.coverPlasticId,
         coverQty: selectFormOfPacking.coverPlasticQty,
         quantity: selectFormOfPacking.cherootQty,
+        amount: selectFormOfPacking.amount,
       });
+      const packingType = typeOfPackings.filter(
+        (item) => item.typeOfCherootId === selectFormOfPacking.typeOfCherootId
+      );
+      setConcernPackingType(packingType);
     }
   }, [updateOpen, selectFormOfPacking]);
   if (!selectFormOfPacking) return null;
@@ -133,14 +147,11 @@ const UpdateFormOfPacking = ({
                 defaultValue={selectFormOfPacking.typeOfCherootId}
                 value={updateFormOfPacking.typeOfCherootId}
                 onChange={(evt) => {
-                  setUpdateFormOfPacking({
-                    ...updateFormOfPacking,
-                    typeOfCherootId: Number(evt.target.value),
-                  });
+                  handleCheroot(Number(evt.target.value));
                 }}
                 sx={{ bgcolor: "#EEE8CF" }}
               >
-                {concernCheroot.map((item) => (
+                {concernCheroots.map((item) => (
                   <MenuItem key={item.id} value={item.id}>
                     <ListItemText primary={item.name} />
                   </MenuItem>
@@ -165,7 +176,7 @@ const UpdateFormOfPacking = ({
                 }}
                 sx={{ bgcolor: "#EEE8CF" }}
               >
-                {concernTypeOfPacking.map((item) => (
+                {concernPackingType.map((item) => (
                   <MenuItem key={item.id} value={item.id}>
                     <ListItemText primary={item.name} />
                   </MenuItem>

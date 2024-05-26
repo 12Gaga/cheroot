@@ -9,7 +9,59 @@ export default async function handler(
   const method = req.method;
   if (method === "POST") {
     const invNo = Number(req.query.invNo);
-    if (!invNo) {
+    const loop = Number(req.query.loop);
+    if (loop) {
+      const {
+        date,
+        invNo,
+        carNo,
+        typeOfLeafId,
+        batchNo,
+        viss,
+        garageId,
+        shopId,
+      } = req.body;
+      const isValid =
+        date &&
+        invNo != undefined &&
+        carNo &&
+        typeOfLeafId &&
+        batchNo != undefined &&
+        viss != undefined &&
+        garageId &&
+        shopId;
+      if (!isValid) return res.status(405).send("bad request");
+      const leafAddStocks = await prisma.leaf.findMany({
+        where: { typeOfLeafId: typeOfLeafId },
+      });
+      let lastbatchno = leafAddStocks[leafAddStocks.length - 1].batchNo;
+
+      for (let i = 0; i < batchNo; i++) {
+        lastbatchno += 1;
+        const stockSeq = nanoid(5);
+        await prisma.leaf.create({
+          data: {
+            date,
+            typeOfLeafId,
+            batchNo: lastbatchno,
+            viss,
+            garageId,
+            shopId,
+            stockSeq,
+          },
+        });
+        await prisma.addStock.create({
+          data: { date, invNo, carNo, typeOfLeafId, garageId, stockSeq },
+        });
+      }
+      const newleafLoopAddStock = await prisma.leaf.findMany({
+        where: { isArchived: false },
+      });
+      const newLoopAddStock = await prisma.addStock.findMany({
+        where: { isArchived: false },
+      });
+      return res.status(200).json({ newleafLoopAddStock, newLoopAddStock });
+    } else if (!invNo) {
       const { date, typeOfLeafId, batchNo, viss, garageId, shopId } = req.body;
       const isValid =
         date &&

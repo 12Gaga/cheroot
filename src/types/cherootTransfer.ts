@@ -8,7 +8,7 @@ export interface cherootTransferSlice {
 }
 
 export interface addCherootTransfer extends BasicOption {
-  date: string;
+  date: Date | null;
   conveyLocationId: number | null;
   typeOfCherootId: number | null;
   typeOfPackingId: number | null;
@@ -20,7 +20,7 @@ export interface addCherootTransfer extends BasicOption {
 
 export interface updateCherootTransfer extends BasicOption {
   id: number | null;
-  date: string;
+  date: Date | null;
   conveyLocationId: number | null;
   typeOfCherootId: number | null;
   typeOfPackingId: number | null;

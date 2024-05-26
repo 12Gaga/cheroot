@@ -8,14 +8,14 @@ export interface directPaymentTypeSlice {
 }
 
 export interface addDirectPayment extends BasicOption {
-  date: string;
+  date: Date | null;
   tilte: string;
   amount: number;
 }
 
 export interface updateDirectPayment extends BasicOption {
   id: number | null;
-  date: string;
+  date: Date | null;
   tilte: string;
   amount: number;
 }

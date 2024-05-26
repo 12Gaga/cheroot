@@ -8,7 +8,7 @@ export interface bagoLeafInstallmentSlice {
 }
 
 export interface addBagoLeafInstallment extends BasicOption {
-  date: string;
+  date: Date | null;
   shopId: number | null;
   cashBalance: number;
   payBalance: number;
@@ -16,7 +16,7 @@ export interface addBagoLeafInstallment extends BasicOption {
 
 export interface updateBagoLeafInstallment extends BasicOption {
   id: number | null;
-  date: string;
+  date: Date | null;
   shopId: number | null;
   cashBalance: number;
   payBalance: number;

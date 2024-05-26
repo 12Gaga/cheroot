@@ -1,5 +1,6 @@
 import { Leaf } from "@prisma/client";
 import { BasicOption } from "./appType";
+import typeOfShop from "@/store/slices/typeOfShop";
 
 export interface leafStockSlice {
   item: Leaf[];
@@ -8,7 +9,7 @@ export interface leafStockSlice {
 }
 
 export interface createNewLeafStock extends BasicOption {
-  date: string;
+  date: Date | null;
   typeOfLeafId: number | undefined;
   batchNo: number;
   viss: number;
@@ -18,7 +19,7 @@ export interface createNewLeafStock extends BasicOption {
 
 export interface updateLeafStock extends BasicOption {
   id: number | null;
-  date: string;
+  date: Date | null;
   typeOfLeafId: number | undefined;
   batchNo: number;
   viss: number;
@@ -31,7 +32,7 @@ export interface deleteLeafStock extends BasicOption {
 }
 
 export interface createNewLeafAddStock extends BasicOption {
-  date: string;
+  date: Date | null;
   invNo: number;
   carNo: string;
   typeOfLeafId: number | undefined;
@@ -43,7 +44,7 @@ export interface createNewLeafAddStock extends BasicOption {
 
 export interface updateLeafAddStock extends BasicOption {
   stockSeq: string;
-  date: string;
+  date: Date | null;
   invNo: number;
   carNo: string;
   typeOfLeafId: number | undefined;
@@ -55,4 +56,9 @@ export interface updateLeafAddStock extends BasicOption {
 
 export interface deleteLeafAddStock extends BasicOption {
   stockSeq: string;
+}
+
+export interface checkOnItem {
+  typeOfLeaf: number | null;
+  typeOfShop: number | null;
 }

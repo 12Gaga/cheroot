@@ -8,7 +8,7 @@ export interface bagoFilterSizeSlice {
 }
 
 export interface createNewBagoFilterSize extends BasicOption {
-  date: string;
+  date: Date | null;
   shopId: number | null;
   typeOfFilterSizeId: number | null;
   quantity: number;
@@ -18,7 +18,7 @@ export interface createNewBagoFilterSize extends BasicOption {
 
 export interface updateBagoFilterSize extends BasicOption {
   id: number | null;
-  date: string;
+  date: Date | null;
   shopId: number | null;
   typeOfFilterSizeId: number | null;
   quantity: number;

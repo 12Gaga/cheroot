@@ -28,7 +28,7 @@ interface Props {
 
 const defaultValue: updateMainMoney = {
   id: null,
-  date: "",
+  date: null,
   locationId: null,
   amount: 0,
 };
@@ -43,9 +43,7 @@ const UpdateMainMoney = ({ updateOpen, setUpdateOpen, selectedId }: Props) => {
   const concernLocation = locations.filter(
     (item) => item.workShopId === workShop?.id
   );
-  const [selecteddate, setSelectedDate] = useState<any>(
-    new Date().toLocaleDateString()
-  );
+  const [selecteddate, setSelectedDate] = useState<Date>(new Date());
   const [updateMainMoney, setUpdateMainMoney] =
     useState<updateMainMoney>(defaultValue);
   useEffect(() => {
@@ -95,7 +93,7 @@ const UpdateMainMoney = ({ updateOpen, setUpdateOpen, selectedId }: Props) => {
             <Typography sx={{ mr: 2, fontWeight: "bold" }}>ရက်စွဲ</Typography>
             <DatePicker
               selected={selecteddate}
-              onChange={(date) => setSelectedDate(date?.toLocaleDateString())}
+              onChange={(date) => setSelectedDate(date as Date)}
             />
           </Box>
 

@@ -8,7 +8,7 @@ export interface cherootInstallmentSlice {
 }
 
 export interface addCherootInstallment extends BasicOption {
-  date: string;
+  date: Date | null;
   conveyLocationId: number | null;
   cashBalance: number;
   payBalance: number;
@@ -16,7 +16,7 @@ export interface addCherootInstallment extends BasicOption {
 
 export interface updateCherootInstallment extends BasicOption {
   id: number | null;
-  date: string;
+  date: Date | null;
   conveyLocationId: number | null;
   cashBalance: number;
   payBalance: number;

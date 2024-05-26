@@ -27,7 +27,7 @@ interface Props {
 
 const defaultValue: updateBagoLabel = {
   id: null,
-  date: "",
+  date: null,
   shopId: null,
   typeOfLabelId: null,
   bandle: 0,
@@ -37,9 +37,7 @@ const defaultValue: updateBagoLabel = {
 const UpdateBagoLabel = ({ updateOpen, setUpdateOpen, selectedId }: Props) => {
   const bagoLabel = useAppSelector((store) => store.bagoLabel.item);
   const selectBagoLabel = bagoLabel.find((item) => item.id === selectedId);
-  const [selecteddate, setSelectedDate] = useState<any>(
-    new Date().toLocaleDateString()
-  );
+  const [selecteddate, setSelectedDate] = useState<Date>(new Date());
   const [updateBagoLabel, setUpdateBagoLabel] =
     useState<updateBagoLabel>(defaultValue);
   const dispatch = useAppDispatch();
@@ -99,7 +97,7 @@ const UpdateBagoLabel = ({ updateOpen, setUpdateOpen, selectedId }: Props) => {
             <Typography sx={{ mr: 2, fontWeight: "bold" }}>ရက်စွဲ</Typography>
             <DatePicker
               selected={selecteddate}
-              onChange={(date) => setSelectedDate(date?.toLocaleDateString())}
+              onChange={(date) => setSelectedDate(date as Date)}
             />
           </Box>
 

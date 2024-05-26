@@ -8,7 +8,7 @@ export interface bagoLabelSlice {
 }
 
 export interface createNewBagoLabel extends BasicOption {
-  date: string;
+  date: Date | null;
   shopId: number | null;
   typeOfLabelId: number | null;
   bandle: number;
@@ -17,7 +17,7 @@ export interface createNewBagoLabel extends BasicOption {
 
 export interface updateBagoLabel extends BasicOption {
   id: number | null;
-  date: string;
+  date: Date | null;
   shopId: number | null;
   typeOfLabelId: number | null;
   bandle: number;

@@ -8,7 +8,7 @@ export interface labelTransferSlice {
 }
 
 export interface createNewLabelTransfer extends BasicOption {
-  date: string;
+  date: Date | null;
   exitGarageId: number | null;
   enterenceGarageId: number | null;
   typeOfLabelId: number | null;
@@ -17,7 +17,7 @@ export interface createNewLabelTransfer extends BasicOption {
 
 export interface updateLabelTransfer extends BasicOption {
   id: number | null;
-  date: string;
+  date: Date | null;
   exitGarageId: number | null;
   enterenceGarageId: number | null;
   typeOfLabelId: number | null;

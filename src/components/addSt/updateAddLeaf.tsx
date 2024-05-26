@@ -15,17 +15,9 @@ import {
 } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useAppSelector, useAppDispatch } from "@/store/hooks";
-import {
-  CreateLeafAddStock,
-  CreateLeafStock,
-  UpdatedLeafAddStock,
-  setIsLoading,
-} from "@/store/slices/leafStock";
+import { UpdatedLeafAddStock, setIsLoading } from "@/store/slices/leafStock";
 import { setOpenSnackbar } from "@/store/slices/snackBar";
-import {
-  createNewLeafAddStock,
-  updateLeafAddStock,
-} from "@/types/leafStockType";
+import { updateLeafAddStock } from "@/types/leafStockType";
 import { LoadingButton } from "@mui/lab";
 
 interface Props {
@@ -36,7 +28,7 @@ interface Props {
 
 const defaultValue: updateLeafAddStock = {
   stockSeq: "",
-  date: "",
+  date: null,
   invNo: 0,
   carNo: "",
   typeOfLeafId: undefined,
@@ -59,9 +51,7 @@ const UpdateAddLeaf = ({
   const selectedLeafAddStock = leafAddStock.find(
     (item) => item.stockSeq === selectedStockSeq
   );
-  const [selecteddate, setSelectedDate] = useState<any>(
-    new Date().toLocaleDateString()
-  );
+  const [selecteddate, setSelectedDate] = useState<Date>(new Date());
   const workShop = useAppSelector((store) => store.workShop.selectedWorkShop);
   const { item: garages, selectedGarage } = useAppSelector(
     (store) => store.garage
@@ -75,6 +65,11 @@ const UpdateAddLeaf = ({
   const leaves = useAppSelector((store) => store.typeOfLeaf.item);
   const concernleaves = leaves.filter(
     (item) => item.workShopId === workShop?.id
+  );
+  const garageId = useAppSelector((store) => store.garage.selectedGarage)
+    ?.id as number;
+  const leafstock = useAppSelector((item) => item.leafStock.item).filter(
+    (item) => item.garageId === garageId
   );
   const [updateLeafAddStock, setUpdateLeafAddStock] =
     useState<updateLeafAddStock>(defaultValue);
@@ -96,6 +91,17 @@ const UpdateAddLeaf = ({
         },
       })
     );
+  };
+
+  const handelLeaf = (leafId: number) => {
+    const leaf = leafstock.filter((item) => item.typeOfLeafId === leafId);
+    const batchno = leaf.length && leaf[leaf.length - 1].batchNo;
+
+    setUpdateLeafAddStock({
+      ...updateLeafAddStock,
+      typeOfLeafId: leafId,
+      batchNo: batchno ? batchno + 1 : 1,
+    });
   };
 
   useEffect(() => {
@@ -128,7 +134,7 @@ const UpdateAddLeaf = ({
             <Typography sx={{ mr: 2, fontWeight: "bold" }}>ရက်စွဲ</Typography>
             <DatePicker
               selected={selecteddate}
-              onChange={(date) => setSelectedDate(date?.toLocaleDateString())}
+              onChange={(date) => setSelectedDate(date as Date)}
             />
           </Box>
 
@@ -248,10 +254,7 @@ const UpdateAddLeaf = ({
                   defaultValue={selectedLeafStock.typeOfLeafId}
                   value={updateLeafAddStock.typeOfLeafId}
                   onChange={(evt) => {
-                    setUpdateLeafAddStock({
-                      ...updateLeafAddStock,
-                      typeOfLeafId: Number(evt.target.value),
-                    });
+                    handelLeaf(Number(evt.target.value));
                   }}
                   sx={{ bgcolor: "#EEE8CF" }}
                 >
@@ -269,15 +272,11 @@ const UpdateAddLeaf = ({
                 ပိုနံပါတ်
               </Typography>
               <TextField
+                value={updateLeafAddStock.batchNo}
                 defaultValue={selectedLeafStock.batchNo}
                 placeholder="ပိုနံပါတ်"
                 sx={{ bgcolor: "#EEE8CF" }}
-                onChange={(evt) => {
-                  setUpdateLeafAddStock({
-                    ...updateLeafAddStock,
-                    batchNo: Number(evt.target.value),
-                  });
-                }}
+                onChange={(evt) => {}}
               />
             </Box>
 

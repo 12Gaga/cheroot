@@ -8,7 +8,7 @@ export interface bagoLabelInstallmentSlice {
 }
 
 export interface addBagoLabelInstallment extends BasicOption {
-  date: string;
+  date: Date | null;
   shopId: number | null;
   cashBalance: number;
   payBalance: number;
@@ -16,7 +16,7 @@ export interface addBagoLabelInstallment extends BasicOption {
 
 export interface updateBagoLabelInstallment extends BasicOption {
   id: number | null;
-  date: string;
+  date: Date | null;
   shopId: number | null;
   cashBalance: number;
   payBalance: number;

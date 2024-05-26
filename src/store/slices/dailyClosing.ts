@@ -39,49 +39,49 @@ export const AddDailyClosing = createAsyncThunk(
   }
 );
 
-export const UpdatedDailyClosing = createAsyncThunk(
-  "dailyClosing/UpdatedDailyClosing",
-  async (option: updateDailyClosing, thunkApi) => {
-    const { amount, id, date, onSuccess, onError } = option;
-    const workShopId = localStorage.getItem("selectedWorkShopId");
-    try {
-      const response = await fetch(
-        `${Config.apiBaseUrl}/dailyClosing?workShopId=${workShopId}`,
-        {
-          method: "PUT",
-          headers: {
-            "content-type": "application/json",
-          },
-          body: JSON.stringify({ date, amount, id }),
-        }
-      );
-      const { updateDailyClosing } = await response.json();
-      thunkApi.dispatch(updatedDailyClosing(updateDailyClosing));
-      onSuccess && onSuccess();
-    } catch (err) {
-      onError && onError();
-    }
-  }
-);
+// export const UpdatedDailyClosing = createAsyncThunk(
+//   "dailyClosing/UpdatedDailyClosing",
+//   async (option: updateDailyClosing, thunkApi) => {
+//     const { amount, id, date, onSuccess, onError } = option;
+//     const workShopId = localStorage.getItem("selectedWorkShopId");
+//     try {
+//       const response = await fetch(
+//         `${Config.apiBaseUrl}/dailyClosing?workShopId=${workShopId}`,
+//         {
+//           method: "PUT",
+//           headers: {
+//             "content-type": "application/json",
+//           },
+//           body: JSON.stringify({ date, amount, id }),
+//         }
+//       );
+//       const { updateDailyClosing } = await response.json();
+//       thunkApi.dispatch(updatedDailyClosing(updateDailyClosing));
+//       onSuccess && onSuccess();
+//     } catch (err) {
+//       onError && onError();
+//     }
+//   }
+// );
 
-export const DeletedDailyClosing = createAsyncThunk(
-  "dailyClosing/DeletedDailyClosing",
-  async (option: deleteDailyClosing, thunkApi) => {
-    const { id, onSuccess, onError } = option;
-    try {
-      const response = await fetch(
-        `${Config.apiBaseUrl}/dailyClosing?id=${id}`,
-        {
-          method: "DELETE",
-        }
-      );
-      thunkApi.dispatch(deletedDailyClosing(id));
-      onSuccess && onSuccess();
-    } catch (err) {
-      onError && onError();
-    }
-  }
-);
+// export const DeletedDailyClosing = createAsyncThunk(
+//   "dailyClosing/DeletedDailyClosing",
+//   async (option: deleteDailyClosing, thunkApi) => {
+//     const { id, onSuccess, onError } = option;
+//     try {
+//       const response = await fetch(
+//         `${Config.apiBaseUrl}/dailyClosing?id=${id}`,
+//         {
+//           method: "DELETE",
+//         }
+//       );
+//       thunkApi.dispatch(deletedDailyClosing(id));
+//       onSuccess && onSuccess();
+//     } catch (err) {
+//       onError && onError();
+//     }
+//   }
+// );
 
 const DailyClosingSlice = createSlice({
   name: "dailyClosing",

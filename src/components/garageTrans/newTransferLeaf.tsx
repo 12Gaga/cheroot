@@ -31,7 +31,7 @@ interface Props {
 }
 
 const defaultValue: createNewLeafTransfer = {
-  date: "",
+  date: null,
   exitGarageId: null,
   enterenceGarageId: null,
   typeOfLeafId: null,
@@ -40,9 +40,7 @@ const defaultValue: createNewLeafTransfer = {
 };
 
 const NewTransferLeaf = ({ open, setOpen }: Props) => {
-  const [selecteddate, setSelectedDate] = useState<any>(
-    new Date().toLocaleDateString()
-  );
+  const [selecteddate, setSelectedDate] = useState<Date>(new Date());
   const [transferLeaf, setTransferLeaf] =
     useState<createNewLeafTransfer>(defaultValue);
   const workshop = useAppSelector((store) => store.workShop.selectedWorkShop);
@@ -126,7 +124,7 @@ const NewTransferLeaf = ({ open, setOpen }: Props) => {
             <Typography sx={{ mr: 2, fontWeight: "bold" }}>ရက်စွဲ</Typography>
             <DatePicker
               selected={selecteddate}
-              onChange={(date) => setSelectedDate(date?.toLocaleDateString())}
+              onChange={(date) => setSelectedDate(date as Date)}
             />
           </Box>
 

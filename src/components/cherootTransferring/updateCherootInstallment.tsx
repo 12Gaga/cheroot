@@ -34,7 +34,7 @@ interface Props {
 
 const defaultValue: updateCherootInstallment = {
   id: null,
-  date: "",
+  date: null,
   conveyLocationId: null,
   cashBalance: 0,
   payBalance: 0,
@@ -48,9 +48,7 @@ const UpdateCherootInstallment = ({
   const selectedInstallment = useAppSelector(
     (store) => store.cherootInstallment.item
   ).find((item) => item.id === selectedId);
-  const [selecteddate, setSelectedDate] = useState<any>(
-    new Date().toLocaleDateString()
-  );
+  const [selecteddate, setSelectedDate] = useState<Date>(new Date());
   const dispatch = useAppDispatch();
   const { isLoading } = useAppSelector((store) => store.cherootInstallment);
   const workShop = useAppSelector((store) => store.workShop.selectedWorkShop);
@@ -126,7 +124,7 @@ const UpdateCherootInstallment = ({
             <Typography sx={{ mr: 2, fontWeight: "bold" }}>ရက်စွဲ</Typography>
             <DatePicker
               selected={selecteddate}
-              onChange={(date) => setSelectedDate(date?.toLocaleDateString())}
+              onChange={(date) => setSelectedDate(date as Date)}
             />
           </Box>
 

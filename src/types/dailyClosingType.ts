@@ -8,13 +8,13 @@ export interface dailyClosingTypeSlice {
 }
 
 export interface addDailyClosing extends BasicOption {
-  date: string;
+  date: Date | null;
   amount: number;
 }
 
 export interface updateDailyClosing extends BasicOption {
   id: number | null;
-  date: string;
+  date: Date | null;
   amount: number;
 }
 

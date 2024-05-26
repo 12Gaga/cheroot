@@ -22,7 +22,7 @@ interface Props {
 }
 
 const defaultValue: addDirectPayment = {
-  date: "",
+  date: null,
   tilte: "",
   amount: 0,
 };
@@ -30,9 +30,7 @@ const defaultValue: addDirectPayment = {
 const NewDirectPayment = ({ open, setOpen }: Props) => {
   const dispatch = useAppDispatch();
   const { isLoading } = useAppSelector((store) => store.directPayment);
-  const [selecteddate, setSelectedDate] = useState<any>(
-    new Date().toLocaleDateString()
-  );
+  const [selecteddate, setSelectedDate] = useState<Date>(new Date());
   const [addDirectPayment, setAddDirectPayment] =
     useState<addDirectPayment>(defaultValue);
 
@@ -72,7 +70,7 @@ const NewDirectPayment = ({ open, setOpen }: Props) => {
               <Typography sx={{ mr: 2, fontWeight: "bold" }}>ရက်စွဲ</Typography>
               <DatePicker
                 selected={selecteddate}
-                onChange={(date) => setSelectedDate(date?.toLocaleDateString())}
+                onChange={(date) => setSelectedDate(date as Date)}
               />
             </Box>
             <Box sx={{ mt: 2 }}>

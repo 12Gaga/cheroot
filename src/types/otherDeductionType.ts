@@ -8,7 +8,7 @@ export interface otherDeductionSlice {
 }
 
 export interface createNewOtherDeduction extends BasicOption {
-  date: string;
+  date: Date | null;
   agentId: number | undefined;
   cashAdvanceBigDeduction: number;
   cashAdvanceSmallDeduction: number;

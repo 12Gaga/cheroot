@@ -15,11 +15,10 @@ import { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
 import { payStock, createNewPayStock } from "@/types/payStockType";
 import { useAppSelector } from "@/store/hooks";
-import { setSelectedGarage } from "@/store/slices/garage";
 import { WorkShop } from "@prisma/client";
 
 const defaultValue: createNewPayStock = {
-  date: "",
+  date: null,
   agentId: undefined,
   typeOfCherootId: undefined,
   cherootQty: 0,
@@ -47,9 +46,7 @@ const defaultPayStock: payStock = {
 
 const PayStock = () => {
   const { data: session } = useSession();
-  const [selecteddate, setSelectedDate] = useState<any>(
-    new Date().toLocaleDateString()
-  );
+  const [selecteddate, setSelectedDate] = useState<Date>(new Date());
   const [newPayStock, setNewPayStock] =
     useState<createNewPayStock>(defaultValue);
   const [payStock, setPayStock] = useState<payStock>(defaultPayStock);
@@ -92,7 +89,7 @@ const PayStock = () => {
         <Typography sx={{ mr: 2 }}>ရက်စွဲ</Typography>
         <DatePicker
           selected={selecteddate}
-          onChange={(date) => setSelectedDate(date?.toLocaleDateString())}
+          onChange={(date) => setSelectedDate(date as Date)}
         />
       </Box>
 

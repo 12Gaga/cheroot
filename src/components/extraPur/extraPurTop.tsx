@@ -23,9 +23,7 @@ const ExtraPurTop = ({
   setNewExtraPurchase,
   workshopId,
 }: Props) => {
-  const [selecteddate, setSelectedDate] = useState<any>(
-    new Date().toLocaleDateString()
-  );
+  const [selecteddate, setSelectedDate] = useState<Date>(new Date());
   const agent = useAppSelector((store) => store.agent.item);
   const concernAgent = agent.filter((item) => item.workShopId === workshopId);
   const garage = useAppSelector((store) => store.garage.item);
@@ -33,6 +31,7 @@ const ExtraPurTop = ({
   useEffect(() => {
     setNewExtraPurchase({ ...newExtraPurchase, date: selecteddate });
   }, [selecteddate]);
+  console.log("data", newExtraPurchase);
   return (
     <>
       <Box
@@ -106,7 +105,7 @@ const ExtraPurTop = ({
           <Typography sx={{ mr: 2 }}>ရက်စွဲ</Typography>
           <DatePicker
             selected={selecteddate}
-            onChange={(date) => setSelectedDate(date?.toLocaleDateString())}
+            onChange={(date) => setSelectedDate(date as Date)}
           />
         </Box>
       </Box>

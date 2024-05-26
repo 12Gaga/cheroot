@@ -8,7 +8,7 @@ export interface payStockSlice {
 }
 
 export interface createNewPayStock extends BasicOption {
-  date: string;
+  date: Date | null;
   agentId: number | undefined;
   typeOfCherootId: number | undefined;
   cherootQty: number;

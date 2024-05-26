@@ -9,7 +9,7 @@ export interface tabaccoStockSlice {
 }
 
 export interface createNewTabaccoStock extends BasicOption {
-  date: string;
+  date: Date | null;
   typeOfTabaccoId: number | undefined;
   tin: number;
   pyi: number;
@@ -20,7 +20,7 @@ export interface createNewTabaccoStock extends BasicOption {
 
 export interface updateTabaccoStock extends BasicOption {
   id: number | null;
-  date: string;
+  date: Date | null;
   typeOfTabaccoId: number | undefined;
   tin: number;
   pyi: number;
@@ -34,7 +34,7 @@ export interface deleteTabaccoStock extends BasicOption {
 }
 
 export interface createNewTabaccoAddStock extends BasicOption {
-  date: string;
+  date: Date | null;
   invNo: number;
   carNo: string;
   typeOfTabaccoId: number | undefined;
@@ -47,7 +47,7 @@ export interface createNewTabaccoAddStock extends BasicOption {
 
 export interface updateTabaccoAddStock extends BasicOption {
   stockSeq: string;
-  date: string;
+  date: Date | null;
   invNo: number;
   carNo: string;
   typeOfTabaccoId: number | undefined;
@@ -60,4 +60,9 @@ export interface updateTabaccoAddStock extends BasicOption {
 
 export interface deleteTabaccoAddStock extends BasicOption {
   stockSeq: string;
+}
+
+export interface checkOnTabaccoItem {
+  typeOfTabacco: number | null;
+  typeOfShop: number | null;
 }

@@ -30,7 +30,7 @@ interface Props {
 }
 
 const defaultValue: createNewPlasticAddStock = {
-  date: "",
+  date: null,
   invNo: 0,
   carNo: "",
   typeOfPlasticId: undefined,
@@ -41,9 +41,7 @@ const defaultValue: createNewPlasticAddStock = {
 };
 
 const AddPlastic = ({ open, setOpen }: Props) => {
-  const [selecteddate, setSelectedDate] = useState<any>(
-    new Date().toLocaleDateString()
-  );
+  const [selecteddate, setSelectedDate] = useState<Date>(new Date());
   const workShop = useAppSelector((store) => store.workShop.selectedWorkShop);
   const { item: garages, selectedGarage } = useAppSelector(
     (store) => store.garage
@@ -63,7 +61,7 @@ const AddPlastic = ({ open, setOpen }: Props) => {
   const concernShop = shops.filter((item) => item.workShopId === workShop?.id);
   useEffect(() => {
     setNewPlasticAddStock({ ...newPlasticAddStock, date: selecteddate });
-  }, [selecteddate]);
+  }, [selecteddate, open]);
 
   const handleClick = () => {
     dispatch(setIsLoading(true));
@@ -89,7 +87,7 @@ const AddPlastic = ({ open, setOpen }: Props) => {
             <Typography sx={{ mr: 2, fontWeight: "bold" }}>ရက်စွဲ</Typography>
             <DatePicker
               selected={selecteddate}
-              onChange={(date) => setSelectedDate(date?.toLocaleDateString())}
+              onChange={(date) => setSelectedDate(date as Date)}
             />
           </Box>
           <Box

@@ -1,8 +1,7 @@
 import { Box, Typography } from "@mui/material";
 import AdminLayout from "@/components/adminLayout";
 import AddBoxIcon from "@mui/icons-material/AddBox";
-import LeafOpen from "@/components/openingSt/leaf";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useSession } from "next-auth/react";
 import { useAppSelector } from "@/store/hooks";
 import EditIcon from "@mui/icons-material/Edit";
@@ -63,10 +62,11 @@ const OpeningPlastic = () => {
               </tr>
             </thead>
             {concernPlastic.map((item) => {
+              const itemdate = new Date(item.date);
               return (
                 <thead key={item.id}>
                   <tr style={{ border: "1px solid" }}>
-                    <td>{item.date}</td>
+                    <td>{itemdate.toLocaleDateString()}</td>
                     <td>
                       {plastics.find((p) => p.id === item.plasticId)?.name}
                     </td>

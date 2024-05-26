@@ -30,6 +30,7 @@ const OpeningStock = () => {
   const [updateOpen, setUpdateOpen] = useState<boolean>(false);
   const [deleteOpen, setDeleteOpen] = useState<boolean>(false);
   const [selectId, setSelectId] = useState<number>(0);
+
   if (!session) return null;
   return (
     <>
@@ -61,11 +62,13 @@ const OpeningStock = () => {
                 <th>ဝယ်ယူခဲ့သည့်ဆိုင်အမည်</th>
               </tr>
             </thead>
+            {}
             {concernLeaf.map((item) => {
+              const itemdate = new Date(item.date);
               return (
                 <thead key={item.id}>
                   <tr style={{ border: "1px solid" }}>
-                    <td>{item.date.toString()}</td>
+                    <td>{itemdate.toLocaleDateString()}</td>
                     <td>
                       {leaves.find((l) => l.id === item.typeOfLeafId)?.name}
                     </td>

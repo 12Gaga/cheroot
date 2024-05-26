@@ -356,6 +356,10 @@ export default async function handler(
     const cherootTransfer = await prisma.conveying.findMany({
       where: { workShopId: { in: workShopIds }, isArchived: false },
     });
+    //54. find packingData
+    const packingData = await prisma.packing.findMany({
+      where: { workShopId: { in: workShopIds }, isArchived: false },
+    });
     return res.json({
       industry,
       workShop,
@@ -411,6 +415,7 @@ export default async function handler(
       taungyiInstallment,
       cherootInstallment,
       cherootTransfer,
+      packingData,
     });
   }
 }

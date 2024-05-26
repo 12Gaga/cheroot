@@ -29,6 +29,9 @@ const AddStockSlice = createSlice({
     deletedAddStock: (state, action: PayloadAction<string>) => {
       state.item = state.item.filter((item) => item.stockSeq != action.payload);
     },
+    addAddLoopStock: (state, action: PayloadAction<AddStock[]>) => {
+      state.item = [...action.payload];
+    },
   },
 });
 
@@ -36,6 +39,7 @@ export const {
   setAddStock,
   setIsLoading,
   addAddStock,
+  addAddLoopStock,
   updatedAddStock,
   deletedAddStock,
 } = AddStockSlice.actions;

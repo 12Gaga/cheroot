@@ -8,7 +8,7 @@ export interface leafTransferSlice {
 }
 
 export interface createNewLeafTransfer extends BasicOption {
-  date: string;
+  date: Date | null;
   exitGarageId: number | null;
   enterenceGarageId: number | null;
   typeOfLeafId: number | null;
@@ -18,7 +18,7 @@ export interface createNewLeafTransfer extends BasicOption {
 
 export interface updateLeafTransfer extends BasicOption {
   transferSeq: string;
-  date: string;
+  date: Date | null;
   exitGarageId: number | null;
   enterenceGarageId: number | null;
   typeOfLeafId: number | null;

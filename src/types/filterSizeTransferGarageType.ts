@@ -8,7 +8,7 @@ export interface filterSizeTransferSlice {
 }
 
 export interface createNewFilterSizeTransfer extends BasicOption {
-  date: string;
+  date: Date | null;
   exitGarageId: number | null;
   enterenceGarageId: number | null;
   typeOfFilterSizeId: number | null;
@@ -18,7 +18,7 @@ export interface createNewFilterSizeTransfer extends BasicOption {
 
 export interface updateFilterSizeTransfer extends BasicOption {
   id: number | null;
-  date: string;
+  date: Date | null;
   exitGarageId: number | null;
   enterenceGarageId: number | null;
   typeOfFilterSizeId: number | null;

@@ -10,7 +10,12 @@ import {
 import Config from "@/utils/config";
 import { Leaf } from "@prisma/client";
 import { PayloadAction, createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { addAddStock, deletedAddStock, updatedAddStock } from "./addStock";
+import {
+  addAddLoopStock,
+  addAddStock,
+  deletedAddStock,
+  updatedAddStock,
+} from "./addStock";
 
 const initialState: leafStockSlice = {
   item: [],
@@ -222,6 +227,48 @@ export const DeletedLeafAddStock = createAsyncThunk(
   }
 );
 
+export const CreateLoopLeafAddStock = createAsyncThunk(
+  "leafStock/CreateLoopLeafAddStock",
+  async (option: createNewLeafAddStock, thunkApi) => {
+    const {
+      date,
+      invNo,
+      carNo,
+      typeOfLeafId,
+      batchNo,
+      viss,
+      garageId,
+      shopId,
+      onSuccess,
+      onError,
+    } = option;
+    try {
+      const response = await fetch(`${Config.apiBaseUrl}/leafStock?loop=1`, {
+        method: "POST",
+        headers: {
+          "content-type": "application/json",
+        },
+        body: JSON.stringify({
+          date,
+          invNo,
+          carNo,
+          typeOfLeafId,
+          batchNo,
+          viss,
+          garageId,
+          shopId,
+        }),
+      });
+      const { newleafLoopAddStock, newLoopAddStock } = await response.json();
+      thunkApi.dispatch(addLoopStock(newleafLoopAddStock));
+      thunkApi.dispatch(addAddLoopStock(newLoopAddStock));
+      onSuccess && onSuccess();
+    } catch (err) {
+      onError && onError();
+    }
+  }
+);
+
 const LeafStockSlice = createSlice({
   name: "leafStock",
   initialState,
@@ -251,14 +298,14 @@ const LeafStockSlice = createSlice({
     deletedLeafAddStock: (state, action: PayloadAction<string>) => {
       state.item = state.item.filter((item) => item.stockSeq != action.payload);
     },
-    addStock: (state, action) => {
-      state.item = [...state.item, ...action.payload];
+    addLoopStock: (state, action: PayloadAction<Leaf[]>) => {
+      state.item = [...action.payload];
     },
-    updatedStock: (state, action) => {
-      const seq = action.payload[0].stockSeq;
-      const otherItem = state.item.filter((item) => item.stockSeq !== seq);
-      state.item = [...otherItem, ...action.payload];
-    },
+    // updatedStock: (state, action) => {
+    //   const seq = action.payload[0].stockSeq;
+    //   const otherItem = state.item.filter((item) => item.stockSeq !== seq);
+    //   state.item = [...otherItem, ...action.payload];
+    // },
   },
 });
 
@@ -270,7 +317,6 @@ export const {
   deletedLeafStock,
   updatedLeafAddStock,
   deletedLeafAddStock,
-  addStock,
-  updatedStock,
+  addLoopStock,
 } = LeafStockSlice.actions;
 export default LeafStockSlice.reducer;

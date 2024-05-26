@@ -8,13 +8,13 @@ export interface replenishmentTypeSlice {
 }
 
 export interface addReplenishment extends BasicOption {
-  date: string;
+  date: Date | null;
   amount: number;
 }
 
 export interface updateReplenishment extends BasicOption {
   id: number | null;
-  date: string;
+  date: Date | null;
   amount: number;
 }
 

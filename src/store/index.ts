@@ -55,6 +55,8 @@ import bagoPlasticInstallmentReducer from "./slices/bagoPlasticInstallment";
 import taungyiInstallmentReducer from "./slices/taungyiInstallment";
 import cherootTransferReducer from "./slices/cherootTransfer";
 import cherootInstallmentReducer from "./slices/cherootInstallment";
+import packingDataReducer from "./slices/packingData";
+import closingDataReducer from "./slices/closing";
 
 export const store = configureStore({
   reducer: {
@@ -114,6 +116,8 @@ export const store = configureStore({
     taungyiInstallment: taungyiInstallmentReducer,
     cherootTransfer: cherootTransferReducer,
     cherootInstallment: cherootInstallmentReducer,
+    packingData: packingDataReducer,
+    closing: closingDataReducer,
   },
 });
 

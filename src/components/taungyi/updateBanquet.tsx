@@ -1,4 +1,3 @@
-import { CreateNewLeaf } from "@/types/LeafType";
 import {
   Box,
   Button,
@@ -13,12 +12,7 @@ import { useEffect, useState } from "react";
 import { LoadingButton } from "@mui/lab";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { setOpenSnackbar } from "@/store/slices/snackBar";
-import { CreateNewStore } from "@/types/storeType";
-import {
-  CreateBanquet,
-  UpdatedBanquet,
-  setIsLoading,
-} from "@/store/slices/typeOfBanquet";
+import { UpdatedBanquet, setIsLoading } from "@/store/slices/typeOfBanquet";
 import { updateBanquet } from "@/types/banquetType";
 
 interface Props {

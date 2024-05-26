@@ -31,7 +31,7 @@ interface Props {
 
 const defaultValue: updateDirectPayment = {
   id: null,
-  date: "",
+  date: null,
   tilte: "",
   amount: 0,
 };
@@ -47,9 +47,7 @@ const UpdateDirectPayment = ({
   );
   const dispatch = useAppDispatch();
   const { isLoading } = useAppSelector((store) => store.directPayment);
-  const [selecteddate, setSelectedDate] = useState<any>(
-    new Date().toLocaleDateString()
-  );
+  const [selecteddate, setSelectedDate] = useState<Date>(new Date());
   const [updateDirectPayment, setUpdateDirectPayment] =
     useState<updateDirectPayment>(defaultValue);
   useEffect(() => {
@@ -104,7 +102,7 @@ const UpdateDirectPayment = ({
               <Typography sx={{ mr: 2, fontWeight: "bold" }}>ရက်စွဲ</Typography>
               <DatePicker
                 selected={selecteddate}
-                onChange={(date) => setSelectedDate(date?.toLocaleDateString())}
+                onChange={(date) => setSelectedDate(date as Date)}
               />
             </Box>
             <Box sx={{ mt: 2 }}>

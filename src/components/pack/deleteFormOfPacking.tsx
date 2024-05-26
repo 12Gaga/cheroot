@@ -7,10 +7,11 @@ import {
 } from "@mui/material";
 import { LoadingButton } from "@mui/lab";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
-import { DeletedLeaf, setIsLoading } from "@/store/slices/typeOfLeaf";
+import {
+  DeletedFormOfPacking,
+  setIsLoading,
+} from "@/store/slices/formOfPacking";
 import { setOpenSnackbar } from "@/store/slices/snackBar";
-import { DeletedTypeOfPacking } from "@/store/slices/typeOfPacking";
-import { DeletedFormOfPacking } from "@/store/slices/formOfPacking";
 
 interface Props {
   deleteOpen: boolean;

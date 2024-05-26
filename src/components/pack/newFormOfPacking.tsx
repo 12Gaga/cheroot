@@ -22,6 +22,7 @@ import {
   setIsLoading,
 } from "@/store/slices/formOfPacking";
 import PlasticData from "./plasticData";
+import { TypeOfPacking } from "@prisma/client";
 
 interface Props {
   open: boolean;
@@ -47,8 +48,21 @@ const NewFormOfPacking = ({ open, setOpen }: Props) => {
   const [newFormOfPacking, setNewFormOfPacking] =
     useState<createNewFormOfPacking>(defaultValue);
   const { isLoading } = useAppSelector((store) => store.formOfPacking);
+  const workShop = useAppSelector((store) => store.workShop.selectedWorkShop);
   const typeOfPackings = useAppSelector((store) => store.typeOfPacking.item);
-  const cheroots = useAppSelector((store) => store.typeOfCheroot.item);
+  const concernCheroots = useAppSelector(
+    (store) => store.typeOfCheroot.item
+  ).filter((item) => item.workShopId === workShop?.id);
+  const [concernPackingType, setConcernPackingType] = useState<TypeOfPacking[]>(
+    []
+  );
+  const handleCheroot = (cherootId: number) => {
+    const packingType = typeOfPackings.filter(
+      (item) => item.typeOfCherootId === cherootId
+    );
+    setConcernPackingType(packingType);
+    setNewFormOfPacking({ ...newFormOfPacking, typeOfCherootId: cherootId });
+  };
 
   const handleClick = () => {
     dispatch(setIsLoading(true));
@@ -95,14 +109,11 @@ const NewFormOfPacking = ({ open, setOpen }: Props) => {
                 id="demo-simple-select-filled"
                 value={newFormOfPacking.typeOfCherootId}
                 onChange={(evt) => {
-                  setNewFormOfPacking({
-                    ...newFormOfPacking,
-                    typeOfCherootId: Number(evt.target.value),
-                  });
+                  handleCheroot(Number(evt.target.value));
                 }}
                 sx={{ bgcolor: "#EEE8CF" }}
               >
-                {cheroots.map((item) => (
+                {concernCheroots.map((item) => (
                   <MenuItem key={item.id} value={item.id}>
                     <ListItemText primary={item.name} />
                   </MenuItem>
@@ -126,7 +137,7 @@ const NewFormOfPacking = ({ open, setOpen }: Props) => {
                 }}
                 sx={{ bgcolor: "#EEE8CF" }}
               >
-                {typeOfPackings.map((item) => (
+                {concernPackingType.map((item) => (
                   <MenuItem key={item.id} value={item.id}>
                     <ListItemText primary={item.name} />
                   </MenuItem>

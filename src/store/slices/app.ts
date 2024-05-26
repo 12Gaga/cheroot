@@ -55,6 +55,7 @@ import { setCherootTransfer } from "./cherootTransfer";
 import { setBagoFilterSizeInstallment } from "./bagoFilterSizeInstallment";
 import { setBagoLabelInstallment } from "./bagoLabelInstallment";
 import { setBagoPlasticInstallment } from "./bagoPlasticInstallment";
+import { setPackingData } from "./packingData";
 
 const initialState: appSlice = {
   init: false,
@@ -124,6 +125,7 @@ export const fetchApp = createAsyncThunk(
         taungyiInstallment,
         cherootInstallment,
         cherootTransfer,
+        packingData,
       } = dataFromServer;
       thunkApi.dispatch(setInit(true));
       thunkApi.dispatch(setIndustry(industry));
@@ -182,6 +184,7 @@ export const fetchApp = createAsyncThunk(
       thunkApi.dispatch(setTaungyiInstllment(taungyiInstallment));
       thunkApi.dispatch(setCherootInstallment(cherootInstallment));
       thunkApi.dispatch(setCherootTransfer(cherootTransfer));
+      thunkApi.dispatch(setPackingData(packingData));
       onSuccess && onSuccess();
     } catch (err) {
       onError && onError(err);

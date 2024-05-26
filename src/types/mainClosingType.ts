@@ -8,13 +8,13 @@ export interface mainClosingTypeSlice {
 }
 
 export interface addMainClosing extends BasicOption {
-  date: string;
+  date: Date | null;
   amount: number;
 }
 
 export interface updateMainClosing extends BasicOption {
   id: number | null;
-  date: string;
+  date: Date | null;
   amount: number;
 }
 

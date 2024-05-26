@@ -1,5 +1,12 @@
-import { Box, Typography } from "@mui/material";
-import { useState } from "react";
+import {
+  Box,
+  FormControl,
+  ListItemText,
+  MenuItem,
+  Select,
+  Typography,
+} from "@mui/material";
+import { useEffect, useState } from "react";
 import AdminLayout from "@/components/adminLayout";
 import "react-datepicker/dist/react-datepicker.css";
 import AddBoxIcon from "@mui/icons-material/AddBox";
@@ -9,9 +16,29 @@ import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import UpdateAddLabel from "@/components/addSt/updateAddLabel";
 import DeleteAddLabel from "@/components/addSt/deleteAddLabel";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
+import { checkOnLabelItem } from "@/types/labelStockType";
+import { AddStock, Label } from "@prisma/client";
+
+const defaultValue: checkOnLabelItem = {
+  typeOfLabel: null,
+  typeOfShop: null,
+};
+
 const LabelAdd = () => {
+  const [addstocks, setAddStocks] = useState<AddStock[]>([]);
+  const [labelstocks, setLabelStocks] = useState<Label[]>([]);
+  const [selecting, setSelecting] = useState<checkOnLabelItem>(defaultValue);
+
+  const [selecteddate, setSelectedDate] = useState<Date>(new Date());
+
   const [open, setOpen] = useState<boolean>(false);
+  const workShop = useAppSelector((store) => store.workShop.selectedWorkShop);
   const labels = useAppSelector((store) => store.typeOfLabel.item);
+  const concernLabel = labels.filter(
+    (item) => item.workShopId === workShop?.id
+  );
   const labelStocks = useAppSelector((store) => store.labelStock.item);
   const garage = useAppSelector((store) => store.garage.selectedGarage);
   const concernLeafStock = labelStocks.filter(
@@ -37,9 +64,64 @@ const LabelAdd = () => {
     labelAddStockConcernStockSeq.includes(item.stockSeq)
   );
   const shop = useAppSelector((store) => store.typeOfShop.item);
+  const concernShop = shop.filter((item) => item.workShopId === workShop?.id);
   const [updateOpen, setUpdateOpen] = useState<boolean>(false);
   const [deleteOpen, setDeleteOpen] = useState<boolean>(false);
   const [selectStockSeq, setSelectStockSeq] = useState<string>("");
+
+  const handleDate = (date: Date) => {
+    const dataone = concernStock.filter((item) => {
+      const itemDate = new Date(item.date);
+      return itemDate.toLocaleDateString() === date.toLocaleDateString();
+    });
+    const labelSeq = dataone.map((item) => item.stockSeq);
+    const datatwo = labelAddStockConcern.filter((item) =>
+      labelSeq.includes(item.stockSeq)
+    );
+    setLabelStocks(dataone);
+    setAddStocks(datatwo);
+    setSelecting({ ...selecting, typeOfLabel: null, typeOfShop: null });
+  };
+
+  const handleLabel = (labelId: number) => {
+    const dataone = concernStock.filter(
+      (item) => item.typeOfLabelId === labelId
+    );
+    const leafSeq = dataone.map((item) => item.stockSeq);
+    const datatwo = labelAddStockConcern.filter((item) =>
+      leafSeq.includes(item.stockSeq)
+    );
+    setLabelStocks(dataone);
+    setAddStocks(datatwo);
+    console.log("leaf", addstocks);
+    setSelecting({ ...selecting, typeOfLabel: labelId, typeOfShop: null });
+  };
+
+  const handleshop = (shopid: number) => {
+    const dataone = concernStock.filter((item) => item.shopId === shopid);
+    const shopSeq = dataone.map((item) => item.stockSeq);
+    const datatwo = labelAddStockConcern.filter((item) =>
+      shopSeq.includes(item.stockSeq)
+    );
+    setLabelStocks(dataone);
+    setAddStocks(datatwo);
+    setSelecting({ ...selecting, typeOfShop: shopid, typeOfLabel: null });
+  };
+
+  useEffect(() => {
+    if (labelAddStockConcern.length) {
+      const data = labelAddStockConcern.filter((item) => {
+        const itemDate = new Date(item.date);
+        return (
+          itemDate.toLocaleDateString() === selecteddate.toLocaleDateString()
+        );
+      });
+      console.log("date", data);
+      setAddStocks(data);
+      setLabelStocks(concernStock);
+    }
+  }, [addStock]);
+
   return (
     <>
       <AdminLayout>
@@ -49,6 +131,74 @@ const LabelAdd = () => {
         >
           တံဆိပ် (လိပ်)
         </Typography>
+
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "space-around",
+            alignItems: "center",
+            flexWrap: "wrap",
+          }}
+        >
+          <Box sx={{ mr: 2, display: "flex", mt: 4, width: 300 }}>
+            <Typography sx={{ mr: 2, fontWeight: "bold" }}>ရက်စွဲ</Typography>
+            <DatePicker
+              selected={selecteddate}
+              onChange={(date) => {
+                setSelectedDate(date as Date);
+                handleDate(date as Date);
+              }}
+            />
+          </Box>
+          <Box sx={{ width: 300 }}>
+            <Box sx={{ mt: 2, display: "flex", alignItems: "center" }}>
+              <Typography sx={{ fontWeight: "bold", width: 150 }}>
+                တံဆိပ်အမျိုးအစား
+              </Typography>
+              <FormControl variant="filled" sx={{ width: 225 }}>
+                <Select
+                  labelId="demo-simple-select-filled-label"
+                  id="demo-simple-select-filled"
+                  value={selecting.typeOfLabel}
+                  onChange={(evt) => {
+                    handleLabel(Number(evt.target.value));
+                  }}
+                  sx={{ bgcolor: "#EEE8CF" }}
+                >
+                  {concernLabel.map((item) => (
+                    <MenuItem key={item.id} value={item.id}>
+                      <ListItemText primary={item.name} />
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+            </Box>
+          </Box>
+          <Box sx={{ width: 300 }}>
+            <Box sx={{ mt: 2, display: "flex", alignItems: "center" }}>
+              <Typography sx={{ fontWeight: "bold", width: 150 }}>
+                ဝယ်ယူခဲ့သည့်ဆိုင်
+              </Typography>
+              <FormControl variant="filled" sx={{ width: 225 }}>
+                <Select
+                  labelId="demo-simple-select-filled-label"
+                  id="demo-simple-select-filled"
+                  value={selecting.typeOfShop}
+                  onChange={(evt) => {
+                    handleshop(Number(evt.target.value));
+                  }}
+                  sx={{ bgcolor: "#EEE8CF" }}
+                >
+                  {concernShop.map((item) => (
+                    <MenuItem key={item.id} value={item.id}>
+                      <ListItemText primary={item.name} />
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+            </Box>
+          </Box>
+        </Box>
 
         <Box sx={{ display: "flex", justifyContent: "flex-end" }}>
           <AddBoxIcon
@@ -70,45 +220,53 @@ const LabelAdd = () => {
               <th>ဝယ်ယူခဲ့သည့်ဆိုင်အမည်</th>
             </tr>
           </thead>
-          {labelAddStockConcern.map((item) => (
-            <thead key={item.id}>
-              <tr style={{ border: "1px solid" }}>
-                <td>{item.date}</td>
-                <td>{item.invNo}</td>
-                <td>{item.carNo}</td>
-                {concernStock.map(
-                  (i) =>
-                    item.date === i.date &&
-                    item.typeOfLabelId === i.typeOfLabelId &&
-                    item.stockSeq === i.stockSeq && (
-                      <>
-                        <td>
-                          {labels.find((l) => l.id === i.typeOfLabelId)?.name}
-                        </td>
-                        <td>{i.bandle}</td>
-                        <td>{shop.find((s) => s.id === i.shopId)?.name}</td>
-                        <td
-                          onClick={() => {
-                            setUpdateOpen(true),
-                              setSelectStockSeq(item.stockSeq);
-                          }}
-                        >
-                          {<EditIcon />}
-                        </td>
-                        <td
-                          onClick={() => {
-                            setDeleteOpen(true),
-                              setSelectStockSeq(item.stockSeq);
-                          }}
-                        >
-                          {<DeleteIcon />}
-                        </td>
-                      </>
-                    )
-                )}
-              </tr>
-            </thead>
-          ))}
+          {addstocks.map((item) => {
+            const itemdate = new Date(item.date);
+            return (
+              <thead key={item.id}>
+                <tr style={{ border: "1px solid" }}>
+                  <td>{itemdate.toLocaleDateString()}</td>
+                  <td>{item.invNo}</td>
+                  <td>{item.carNo}</td>
+                  {labelstocks.map((i) => {
+                    const iDate = new Date(i.date);
+                    if (
+                      itemdate.toLocaleDateString() ===
+                        iDate.toLocaleDateString() &&
+                      item.typeOfLabelId === i.typeOfLabelId &&
+                      item.stockSeq === i.stockSeq
+                    ) {
+                      return (
+                        <>
+                          <td>
+                            {labels.find((l) => l.id === i.typeOfLabelId)?.name}
+                          </td>
+                          <td>{i.bandle}</td>
+                          <td>{shop.find((s) => s.id === i.shopId)?.name}</td>
+                          <td
+                            onClick={() => {
+                              setUpdateOpen(true),
+                                setSelectStockSeq(item.stockSeq);
+                            }}
+                          >
+                            {<EditIcon />}
+                          </td>
+                          <td
+                            onClick={() => {
+                              setDeleteOpen(true),
+                                setSelectStockSeq(item.stockSeq);
+                            }}
+                          >
+                            {<DeleteIcon />}
+                          </td>
+                        </>
+                      );
+                    }
+                  })}
+                </tr>
+              </thead>
+            );
+          })}
         </table>
         <AddLabel open={open} setOpen={setOpen} />
         <UpdateAddLabel

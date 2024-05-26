@@ -8,7 +8,7 @@ export interface payLeafSlice {
 }
 
 export interface createNewPayLeaf extends BasicOption {
-  date: string;
+  date: Date | null;
   agentId: number | undefined;
   typeOfLeafId: number | undefined;
   batchNo: number[];

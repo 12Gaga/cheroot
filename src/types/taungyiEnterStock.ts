@@ -8,7 +8,7 @@ export interface taungyiEnterStockSlice {
 }
 
 export interface addNewTaungyiEnterStock extends BasicOption {
-  date: string;
+  date: Date | null;
   storeId: number | null;
   banquetId: number | null;
   tolBatchNo: number;
@@ -23,7 +23,7 @@ export interface addNewTaungyiEnterStock extends BasicOption {
 
 export interface updateTaungyiEnterStock extends BasicOption {
   id: number | null;
-  date: string;
+  date: Date | null;
   storeId: number | null;
   banquetId: number | null;
   tolBatchNo: number;

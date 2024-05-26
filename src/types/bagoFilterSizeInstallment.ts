@@ -8,7 +8,7 @@ export interface bagoFilterSizeInstallmentSlice {
 }
 
 export interface addBagoFilterSizeInstallment extends BasicOption {
-  date: string;
+  date: Date | null;
   shopId: number | null;
   cashBalance: number;
   payBalance: number;
@@ -16,7 +16,7 @@ export interface addBagoFilterSizeInstallment extends BasicOption {
 
 export interface updateBagoFilterSizeInstallment extends BasicOption {
   id: number | null;
-  date: string;
+  date: Date | null;
   shopId: number | null;
   cashBalance: number;
   payBalance: number;

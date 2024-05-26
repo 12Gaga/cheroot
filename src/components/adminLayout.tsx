@@ -128,6 +128,10 @@ const Bago = [
     label: "ပလပ်စတစ်အရစ်ကျစာရင်း",
     url: "/admin/bago/bagoPlasticInstallment",
   },
+  {
+    label: "အရစ်ကျစာရင်းစစ်ခြင်း",
+    url: "/admin/bago/checkingInstallment",
+  },
 ];
 const AdminLayout = ({ children }: Props) => {
   const { data: session } = useSession();

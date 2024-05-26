@@ -8,7 +8,7 @@ export interface leafDeductionSlice {
 }
 
 export interface createNewLeafDeduction extends BasicOption {
-  date: string;
+  date: Date | null;
   agentId: number | undefined;
   typeOfLeafId: number | undefined;
   deductViss: number;

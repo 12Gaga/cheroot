@@ -35,7 +35,7 @@ interface Props {
 
 const defaultValue: updateBagoFilterSizeInstallment = {
   id: null,
-  date: "",
+  date: null,
   shopId: null,
   cashBalance: 0,
   payBalance: 0,
@@ -50,9 +50,7 @@ const UpdateBagoFilerSizeInstallment = ({
     (store) => store.bagoFilterSizeInstallment.item
   );
   const selectInstallment = installment.find((item) => item.id === selectedId);
-  const [selecteddate, setSelectedDate] = useState<any>(
-    new Date().toLocaleDateString()
-  );
+  const [selecteddate, setSelectedDate] = useState<Date>(new Date());
   const dispatch = useAppDispatch();
   const workshop = useAppSelector((store) => store.workShop.selectedWorkShop);
   const filterSize = useAppSelector((store) => store.bagoFilterSize.item);
@@ -126,7 +124,7 @@ const UpdateBagoFilerSizeInstallment = ({
             <Typography sx={{ mr: 2, fontWeight: "bold" }}>ရက်စွဲ</Typography>
             <DatePicker
               selected={selecteddate}
-              onChange={(date) => setSelectedDate(date?.toLocaleDateString())}
+              onChange={(date) => setSelectedDate(date as Date)}
             />
           </Box>
 

@@ -8,7 +8,7 @@ export interface extraPurchaseSlice {
 }
 
 export interface createNewExtraPurchase extends BasicOption {
-  date: string;
+  date: Date | null;
   agentId: number | undefined;
   typeOfFilterSizeId: number | undefined;
   filterSizeQty: number;

@@ -38,16 +38,17 @@ const MainClosingBalance = () => {
               <th>ပမာဏ</th>
             </tr>
           </thead>
-          {concernMainClosing.map((item) => (
-            <thead key={item.id}>
-              <tr style={{ border: "1px solid" }}>
-                <td>{item.date}</td>
-                <td>{item.amount}</td>
-                {/* <td>{<EditIcon />}</td>
-                <td>{<DeleteIcon />}</td> */}
-              </tr>
-            </thead>
-          ))}
+          {concernMainClosing.map((item) => {
+            const itemdate = new Date(item.date);
+            return (
+              <thead key={item.id}>
+                <tr style={{ border: "1px solid" }}>
+                  <td>{itemdate.toLocaleDateString()}</td>
+                  <td>{item.amount}</td>
+                </tr>
+              </thead>
+            );
+          })}
         </table>
 
         <NewMainClosingBalance open={open} setOpen={setOpen} />

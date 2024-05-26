@@ -1,7 +1,14 @@
-import { Box, Typography } from "@mui/material";
+import {
+  Box,
+  FormControl,
+  ListItemText,
+  MenuItem,
+  Select,
+  Typography,
+} from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import AdminLayout from "@/components/adminLayout";
 import "react-datepicker/dist/react-datepicker.css";
 import AddBoxIcon from "@mui/icons-material/AddBox";
@@ -9,9 +16,29 @@ import { useAppSelector } from "@/store/hooks";
 import AddTabacco from "@/components/addSt/addTabacco";
 import UpdateAddTabacco from "@/components/addSt/updateTabacco";
 import DeleteAddTabacco from "@/components/addSt/deleteAddTabacco";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
+import { checkOnTabaccoItem } from "@/types/tabaccoStockType";
+import { AddStock, Tabacco } from "@prisma/client";
+
+const defaultValue: checkOnTabaccoItem = {
+  typeOfTabacco: null,
+  typeOfShop: null,
+};
+
 const TabaccoAdd = () => {
+  const [addstocks, setAddStocks] = useState<AddStock[]>([]);
+  const [tabaccostocks, setTabaaccoStocks] = useState<Tabacco[]>([]);
+  const [selecting, setSelecting] = useState<checkOnTabaccoItem>(defaultValue);
+
+  const [selecteddate, setSelectedDate] = useState<Date>(new Date());
+
   const [open, setOpen] = useState<boolean>(false);
+  const workShop = useAppSelector((store) => store.workShop.selectedWorkShop);
   const tabaccos = useAppSelector((store) => store.typeOfTabacco.item);
+  const concernTabacco = tabaccos.filter(
+    (item) => item.workShopId === workShop?.id
+  );
   const tabaccoStocks = useAppSelector((store) => store.tabaccoStock.item);
   const garage = useAppSelector((store) => store.garage.selectedGarage);
   const concernTabaccoStock = tabaccoStocks.filter(
@@ -37,9 +64,64 @@ const TabaccoAdd = () => {
     tabaccoAddStockConcernStockSeq.includes(item.stockSeq)
   );
   const shop = useAppSelector((store) => store.typeOfShop.item);
+  const concernShop = shop.filter((item) => item.workShopId === workShop?.id);
   const [updateOpen, setUpdateOpen] = useState<boolean>(false);
   const [deleteOpen, setDeleteOpen] = useState<boolean>(false);
   const [selectStockSeq, setSelectStockSeq] = useState<string>("");
+
+  const handleDate = (date: Date) => {
+    const dataone = concernStock.filter((item) => {
+      const itemDate = new Date(item.date);
+      return itemDate.toLocaleDateString() === date.toLocaleDateString();
+    });
+    const leafSeq = dataone.map((item) => item.stockSeq);
+    const datatwo = tabaccoAddStockConcern.filter((item) =>
+      leafSeq.includes(item.stockSeq)
+    );
+    setTabaaccoStocks(dataone);
+    setAddStocks(datatwo);
+    setSelecting({ ...selecting, typeOfTabacco: null, typeOfShop: null });
+  };
+
+  const handleTabacco = (tabaccoId: number) => {
+    const dataone = concernStock.filter(
+      (item) => item.typeOfTabaccoId === tabaccoId
+    );
+    const tabaccoSeq = dataone.map((item) => item.stockSeq);
+    const datatwo = tabaccoAddStockConcern.filter((item) =>
+      tabaccoSeq.includes(item.stockSeq)
+    );
+    setTabaaccoStocks(dataone);
+    setAddStocks(datatwo);
+    console.log("leaf", addstocks);
+    setSelecting({ ...selecting, typeOfTabacco: tabaccoId, typeOfShop: null });
+  };
+
+  const handleshop = (shopid: number) => {
+    const dataone = concernStock.filter((item) => item.shopId === shopid);
+    const shopSeq = dataone.map((item) => item.stockSeq);
+    const datatwo = tabaccoAddStockConcern.filter((item) =>
+      shopSeq.includes(item.stockSeq)
+    );
+    setTabaaccoStocks(dataone);
+    setAddStocks(datatwo);
+    setSelecting({ ...selecting, typeOfShop: shopid, typeOfTabacco: null });
+  };
+
+  useEffect(() => {
+    if (tabaccoAddStockConcern.length) {
+      const data = tabaccoAddStockConcern.filter((item) => {
+        const itemDate = new Date(item.date);
+        return (
+          itemDate.toLocaleDateString() === selecteddate.toLocaleDateString()
+        );
+      });
+      console.log("date", data);
+      setAddStocks(data);
+      setTabaaccoStocks(concernStock);
+    }
+  }, [addStock]);
+
   return (
     <>
       <AdminLayout>
@@ -49,6 +131,74 @@ const TabaccoAdd = () => {
         >
           ဆေးစပ် (တင်း/ပြည်)
         </Typography>
+
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "space-around",
+            alignItems: "center",
+            flexWrap: "wrap",
+          }}
+        >
+          <Box sx={{ mr: 2, display: "flex", mt: 4, width: 300 }}>
+            <Typography sx={{ mr: 2, fontWeight: "bold" }}>ရက်စွဲ</Typography>
+            <DatePicker
+              selected={selecteddate}
+              onChange={(date) => {
+                setSelectedDate(date as Date);
+                handleDate(date as Date);
+              }}
+            />
+          </Box>
+          <Box sx={{ width: 300 }}>
+            <Box sx={{ mt: 2, display: "flex", alignItems: "center" }}>
+              <Typography sx={{ fontWeight: "bold", width: 150 }}>
+                ဆေးစပ်အမျိုးအစား
+              </Typography>
+              <FormControl variant="filled" sx={{ width: 225 }}>
+                <Select
+                  labelId="demo-simple-select-filled-label"
+                  id="demo-simple-select-filled"
+                  value={selecting.typeOfTabacco}
+                  onChange={(evt) => {
+                    handleTabacco(Number(evt.target.value));
+                  }}
+                  sx={{ bgcolor: "#EEE8CF" }}
+                >
+                  {concernTabacco.map((item) => (
+                    <MenuItem key={item.id} value={item.id}>
+                      <ListItemText primary={item.name} />
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+            </Box>
+          </Box>
+          <Box sx={{ width: 300 }}>
+            <Box sx={{ mt: 2, display: "flex", alignItems: "center" }}>
+              <Typography sx={{ fontWeight: "bold", width: 150 }}>
+                ဝယ်ယူခဲ့သည့်ဆိုင်
+              </Typography>
+              <FormControl variant="filled" sx={{ width: 225 }}>
+                <Select
+                  labelId="demo-simple-select-filled-label"
+                  id="demo-simple-select-filled"
+                  value={selecting.typeOfShop}
+                  onChange={(evt) => {
+                    handleshop(Number(evt.target.value));
+                  }}
+                  sx={{ bgcolor: "#EEE8CF" }}
+                >
+                  {concernShop.map((item) => (
+                    <MenuItem key={item.id} value={item.id}>
+                      <ListItemText primary={item.name} />
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+            </Box>
+          </Box>
+        </Box>
 
         <Box sx={{ display: "flex", justifyContent: "flex-end" }}>
           <AddBoxIcon
@@ -72,50 +222,58 @@ const TabaccoAdd = () => {
               <th>ဝယ်ယူခဲ့သည့်ဆိုင်အမည်</th>
             </tr>
           </thead>
-          {tabaccoAddStockConcern.map((item) => (
-            <thead key={item.id}>
-              <tr style={{ border: "1px solid" }}>
-                <td>{item.date}</td>
-                <td>{item.invNo}</td>
-                <td>{item.carNo}</td>
-                {concernStock.map(
-                  (i) =>
-                    item.date === i.date &&
-                    item.typeOfTabaccoId === i.typeOfTabaccoId &&
-                    item.stockSeq === i.stockSeq && (
-                      <>
-                        <td>
-                          {
-                            tabaccos.find((l) => l.id === i.typeOfTabaccoId)
-                              ?.name
-                          }
-                        </td>
-                        <td>{i.tin}</td>
-                        <td>{i.pyi}</td>
-                        <td>{i.bag}</td>
-                        <td>{shop.find((s) => s.id === i.shopId)?.name}</td>
-                        <td
-                          onClick={() => {
-                            setUpdateOpen(true),
-                              setSelectStockSeq(item.stockSeq);
-                          }}
-                        >
-                          {<EditIcon />}
-                        </td>
-                        <td
-                          onClick={() => {
-                            setDeleteOpen(true),
-                              setSelectStockSeq(item.stockSeq);
-                          }}
-                        >
-                          {<DeleteIcon />}
-                        </td>
-                      </>
-                    )
-                )}
-              </tr>
-            </thead>
-          ))}
+          {addstocks.map((item) => {
+            const itemDate = new Date(item.date);
+            return (
+              <thead key={item.id}>
+                <tr style={{ border: "1px solid" }}>
+                  <td>{itemDate.toLocaleDateString()}</td>
+                  <td>{item.invNo}</td>
+                  <td>{item.carNo}</td>
+                  {tabaccostocks.map((i) => {
+                    const iDate = new Date(i.date);
+                    if (
+                      itemDate.toLocaleDateString() ===
+                        iDate.toLocaleDateString() &&
+                      item.typeOfTabaccoId === i.typeOfTabaccoId &&
+                      item.stockSeq === i.stockSeq
+                    ) {
+                      return (
+                        <>
+                          <td>
+                            {
+                              tabaccos.find((l) => l.id === i.typeOfTabaccoId)
+                                ?.name
+                            }
+                          </td>
+                          <td>{i.tin}</td>
+                          <td>{i.pyi}</td>
+                          <td>{i.bag}</td>
+                          <td>{shop.find((s) => s.id === i.shopId)?.name}</td>
+                          <td
+                            onClick={() => {
+                              setUpdateOpen(true),
+                                setSelectStockSeq(item.stockSeq);
+                            }}
+                          >
+                            {<EditIcon />}
+                          </td>
+                          <td
+                            onClick={() => {
+                              setDeleteOpen(true),
+                                setSelectStockSeq(item.stockSeq);
+                            }}
+                          >
+                            {<DeleteIcon />}
+                          </td>
+                        </>
+                      );
+                    }
+                  })}
+                </tr>
+              </thead>
+            );
+          })}
         </table>
         <AddTabacco open={open} setOpen={setOpen} />
         <UpdateAddTabacco

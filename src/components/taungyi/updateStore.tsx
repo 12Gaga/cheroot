@@ -1,4 +1,3 @@
-import { CreateNewLeaf } from "@/types/LeafType";
 import {
   Box,
   Button,
@@ -18,7 +17,7 @@ import {
   UpdatedStore,
   setIsLoading,
 } from "@/store/slices/typeOfStore";
-import { CreateNewStore, updateStore } from "@/types/storeType";
+import { updateStore } from "@/types/storeType";
 
 interface Props {
   updateOpen: boolean;

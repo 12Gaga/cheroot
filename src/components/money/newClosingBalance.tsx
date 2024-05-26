@@ -22,16 +22,14 @@ interface Props {
 }
 
 const defaultValue: addDailyClosing = {
-  date: "",
+  date: null,
   amount: 0,
 };
 
 const NewClosingBalance = ({ open, setOpen }: Props) => {
   const dispatch = useAppDispatch();
   const { isLoading } = useAppSelector((store) => store.dailyClosing);
-  const [selecteddate, setSelectedDate] = useState<any>(
-    new Date().toLocaleDateString()
-  );
+  const [selecteddate, setSelectedDate] = useState<Date>(new Date());
   const [addDailyClosing, setAddDailyClosing] =
     useState<addDailyClosing>(defaultValue);
   useEffect(() => {
@@ -69,7 +67,7 @@ const NewClosingBalance = ({ open, setOpen }: Props) => {
             <Typography sx={{ mr: 2, fontWeight: "bold" }}>ရက်စွဲ</Typography>
             <DatePicker
               selected={selecteddate}
-              onChange={(date) => setSelectedDate(date?.toLocaleDateString())}
+              onChange={(date) => setSelectedDate(date as Date)}
             />
           </Box>
 

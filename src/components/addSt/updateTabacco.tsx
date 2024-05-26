@@ -35,7 +35,7 @@ interface Props {
 
 const defaultValue: updateTabaccoAddStock = {
   stockSeq: "",
-  date: "",
+  date: null,
   invNo: 0,
   carNo: "",
   typeOfTabaccoId: undefined,
@@ -59,9 +59,7 @@ const UpdateAddTabacco = ({
   const selectedTabaccoAddStock = tabaccoAddStock.find(
     (item) => item.stockSeq === selectedStockSeq
   );
-  const [selecteddate, setSelectedDate] = useState<any>(
-    new Date().toLocaleDateString()
-  );
+  const [selecteddate, setSelectedDate] = useState<Date>(new Date());
   const workShop = useAppSelector((store) => store.workShop.selectedWorkShop);
   const { item: garages, selectedGarage } = useAppSelector(
     (store) => store.garage
@@ -131,7 +129,7 @@ const UpdateAddTabacco = ({
             <Typography sx={{ mr: 2, fontWeight: "bold" }}>ရက်စွဲ</Typography>
             <DatePicker
               selected={selecteddate}
-              onChange={(date) => setSelectedDate(date?.toLocaleDateString())}
+              onChange={(date) => setSelectedDate(date as Date)}
             />
           </Box>
 

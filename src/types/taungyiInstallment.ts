@@ -8,7 +8,7 @@ export interface taungyiInstallmentSlice {
 }
 
 export interface addTaungyiInstallment extends BasicOption {
-  date: string;
+  date: Date | null;
   banquetId: number | null;
   cashBalance: number;
   payBalance: number;
@@ -17,7 +17,7 @@ export interface addTaungyiInstallment extends BasicOption {
 
 export interface updateTaungyiInstallment extends BasicOption {
   id: number | null;
-  date: string;
+  date: Date | null;
   banquetId: number | null;
   cashBalance: number;
   payBalance: number;

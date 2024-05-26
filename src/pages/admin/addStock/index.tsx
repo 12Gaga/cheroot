@@ -1,5 +1,13 @@
-import { Box, Typography } from "@mui/material";
-import { useState } from "react";
+import {
+  Box,
+  Button,
+  FormControl,
+  ListItemText,
+  MenuItem,
+  Select,
+  Typography,
+} from "@mui/material";
+import { useEffect, useState } from "react";
 import AdminLayout from "@/components/adminLayout";
 import "react-datepicker/dist/react-datepicker.css";
 import AddLeaf from "@/components/addSt/addLeaf";
@@ -9,9 +17,28 @@ import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import UpdateAddLeaf from "@/components/addSt/updateAddLeaf";
 import DeleteAddLeaf from "@/components/addSt/deleteAddLeaf";
-const AddStock = () => {
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
+import { AddStock, Leaf } from "@prisma/client";
+import { checkOnItem } from "@/types/leafStockType";
+import AddLoopLeaf from "@/components/addSt/addLoopLeaf";
+
+const defaultValue: checkOnItem = {
+  typeOfLeaf: null,
+  typeOfShop: null,
+};
+
+const AddStocks = () => {
+  const [addstocks, setAddStocks] = useState<AddStock[]>([]);
+  const [leafstocks, setLeafStocks] = useState<Leaf[]>([]);
+  const [selecting, setSelecting] = useState<checkOnItem>(defaultValue);
+
+  const [selecteddate, setSelectedDate] = useState<Date>(new Date());
   const [open, setOpen] = useState<boolean>(false);
+  const [loopOpen, setLoopOpen] = useState<boolean>(false);
+  const workShop = useAppSelector((store) => store.workShop.selectedWorkShop);
   const leaves = useAppSelector((store) => store.typeOfLeaf.item);
+  const concernLeaf = leaves.filter((item) => item.workShopId === workShop?.id);
   const leafStocks = useAppSelector((store) => store.leafStock.item);
   const garage = useAppSelector((store) => store.garage.selectedGarage);
   const concernLeafStock = leafStocks.filter(
@@ -34,11 +61,62 @@ const AddStock = () => {
   const concernStock = concernLeafStock.filter((item) =>
     leafAddStockConcernStockSeq.includes(item.stockSeq)
   );
+
   const shop = useAppSelector((store) => store.typeOfShop.item);
+  const concernShop = shop.filter((item) => item.workShopId === workShop?.id);
   const [updateOpen, setUpdateOpen] = useState<boolean>(false);
   const [deleteOpen, setDeleteOpen] = useState<boolean>(false);
   const [selectStockSeq, setSelectStockSeq] = useState<string>("");
-  console.log("concernLeaf", concernStock);
+
+  const handleDate = (date: Date) => {
+    const dataone = concernStock.filter((item) => {
+      const itemDate = new Date(item.date);
+      return itemDate.toLocaleDateString() === date.toLocaleDateString();
+    });
+    const leafSeq = dataone.map((item) => item.stockSeq);
+    const datatwo = leafAddStockConcern.filter((item) =>
+      leafSeq.includes(item.stockSeq)
+    );
+    setLeafStocks(dataone);
+    setAddStocks(datatwo);
+    setSelecting({ ...selecting, typeOfLeaf: null, typeOfShop: null });
+  };
+
+  const handleLeaf = (leafId: number) => {
+    const dataone = concernStock.filter((item) => item.typeOfLeafId === leafId);
+    const leafSeq = dataone.map((item) => item.stockSeq);
+    const datatwo = leafAddStockConcern.filter((item) =>
+      leafSeq.includes(item.stockSeq)
+    );
+    setLeafStocks(dataone);
+    setAddStocks(datatwo);
+    console.log("leaf", addstocks);
+    setSelecting({ ...selecting, typeOfLeaf: leafId, typeOfShop: null });
+  };
+
+  const handleshop = (shopid: number) => {
+    const dataone = concernStock.filter((item) => item.shopId === shopid);
+    const shopSeq = dataone.map((item) => item.stockSeq);
+    const datatwo = leafAddStockConcern.filter((item) =>
+      shopSeq.includes(item.stockSeq)
+    );
+    setLeafStocks(dataone);
+    setAddStocks(datatwo);
+    setSelecting({ ...selecting, typeOfShop: shopid, typeOfLeaf: null });
+  };
+
+  useEffect(() => {
+    if (leafAddStockConcern.length) {
+      const data = leafAddStockConcern.filter((item) => {
+        const itemDate = new Date(item.date);
+        return (
+          itemDate.toLocaleDateString() === selecteddate.toLocaleDateString()
+        );
+      });
+      setAddStocks(data);
+      setLeafStocks(concernStock);
+    }
+  }, [addStock]);
   return (
     <>
       <AdminLayout>
@@ -48,6 +126,74 @@ const AddStock = () => {
         >
           ပိုနံပါတ်
         </Typography>
+
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "space-around",
+            alignItems: "center",
+            flexWrap: "wrap",
+          }}
+        >
+          <Box sx={{ mr: 2, display: "flex", mt: 4, width: 300 }}>
+            <Typography sx={{ mr: 2, fontWeight: "bold" }}>ရက်စွဲ</Typography>
+            <DatePicker
+              selected={selecteddate}
+              onChange={(date) => {
+                setSelectedDate(date as Date);
+                handleDate(date as Date);
+              }}
+            />
+          </Box>
+          <Box sx={{ width: 300 }}>
+            <Box sx={{ mt: 2, display: "flex", alignItems: "center" }}>
+              <Typography sx={{ fontWeight: "bold", width: 150 }}>
+                ဖက်အမျိုးအစား
+              </Typography>
+              <FormControl variant="filled" sx={{ width: 225 }}>
+                <Select
+                  labelId="demo-simple-select-filled-label"
+                  id="demo-simple-select-filled"
+                  value={selecting.typeOfLeaf}
+                  onChange={(evt) => {
+                    handleLeaf(Number(evt.target.value));
+                  }}
+                  sx={{ bgcolor: "#EEE8CF" }}
+                >
+                  {concernLeaf.map((item) => (
+                    <MenuItem key={item.id} value={item.id}>
+                      <ListItemText primary={item.name} />
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+            </Box>
+          </Box>
+          <Box sx={{ width: 300 }}>
+            <Box sx={{ mt: 2, display: "flex", alignItems: "center" }}>
+              <Typography sx={{ fontWeight: "bold", width: 150 }}>
+                ဝယ်ယူခဲ့သည့်ဆိုင်
+              </Typography>
+              <FormControl variant="filled" sx={{ width: 225 }}>
+                <Select
+                  labelId="demo-simple-select-filled-label"
+                  id="demo-simple-select-filled"
+                  value={selecting.typeOfShop}
+                  onChange={(evt) => {
+                    handleshop(Number(evt.target.value));
+                  }}
+                  sx={{ bgcolor: "#EEE8CF" }}
+                >
+                  {concernShop.map((item) => (
+                    <MenuItem key={item.id} value={item.id}>
+                      <ListItemText primary={item.name} />
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+            </Box>
+          </Box>
+        </Box>
 
         <Box sx={{ display: "flex", justifyContent: "flex-end" }}>
           <AddBoxIcon
@@ -70,49 +216,55 @@ const AddStock = () => {
               <th>ဝယ်ယူခဲ့သည့်ဆိုင်အမည်</th>
             </tr>
           </thead>
-          {leafAddStockConcern.map((item) => (
-            <thead key={item.id}>
-              <tr style={{ border: "1px solid" }}>
-                <td>{item.date}</td>
-                <td>{item.invNo}</td>
-                <td>{item.carNo}</td>
-                {concernStock.map((i) => {
-                  if (
-                    item.date === i.date &&
-                    item.typeOfLeafId === i.typeOfLeafId &&
-                    item.stockSeq === i.stockSeq
-                  ) {
-                    return (
-                      <>
-                        <td>
-                          {leaves.find((l) => l.id === i.typeOfLeafId)?.name}
-                        </td>
-                        <td>{i.batchNo}</td>
-                        <td>{i.viss}</td>
-                        <td>{shop.find((s) => s.id === i.shopId)?.name}</td>
-                        <td
-                          onClick={() => {
-                            setUpdateOpen(true),
-                              setSelectStockSeq(item.stockSeq);
-                          }}
-                        >
-                          {<EditIcon />}
-                        </td>
-                        <td
-                          onClick={() => {
-                            setDeleteOpen(true),
-                              setSelectStockSeq(item.stockSeq);
-                          }}
-                        >
-                          {<DeleteIcon />}
-                        </td>
-                      </>
-                    );
-                  }
-                })}
-              </tr>
-            </thead>
-          ))}
+
+          {addstocks.map((item) => {
+            const itemDate = new Date(item.date);
+            return (
+              <thead key={item.id}>
+                <tr style={{ border: "1px solid" }}>
+                  <td>{itemDate.toLocaleDateString()}</td>
+                  <td>{item.invNo}</td>
+                  <td>{item.carNo}</td>
+                  {leafstocks.map((i) => {
+                    const iDate = new Date(i.date);
+                    if (
+                      itemDate.toLocaleDateString() ===
+                        iDate.toLocaleDateString() &&
+                      item.typeOfLeafId === i.typeOfLeafId &&
+                      item.stockSeq === i.stockSeq
+                    ) {
+                      return (
+                        <>
+                          <td>
+                            {leaves.find((l) => l.id === i.typeOfLeafId)?.name}
+                          </td>
+                          <td>{i.batchNo}</td>
+                          <td>{i.viss}</td>
+                          <td>{shop.find((s) => s.id === i.shopId)?.name}</td>
+                          <td
+                            onClick={() => {
+                              setUpdateOpen(true),
+                                setSelectStockSeq(item.stockSeq);
+                            }}
+                          >
+                            {<EditIcon />}
+                          </td>
+                          <td
+                            onClick={() => {
+                              setDeleteOpen(true),
+                                setSelectStockSeq(item.stockSeq);
+                            }}
+                          >
+                            {<DeleteIcon />}
+                          </td>
+                        </>
+                      );
+                    }
+                  })}
+                </tr>
+              </thead>
+            );
+          })}
         </table>
         <AddLeaf open={open} setOpen={setOpen} />
         <UpdateAddLeaf
@@ -125,8 +277,14 @@ const AddStock = () => {
           setDeleteOpen={setDeleteOpen}
           selectedStockSeq={selectStockSeq}
         />
+        <Box sx={{ position: "fixed", right: 3, bottom: 5 }}>
+          <Button variant="contained" onClick={() => setLoopOpen(true)}>
+            add stock by looping
+          </Button>
+        </Box>
+        <AddLoopLeaf loopOpen={loopOpen} setLoopOpen={setLoopOpen} />
       </AdminLayout>
     </>
   );
 };
-export default AddStock;
+export default AddStocks;

@@ -28,7 +28,7 @@ interface Props {
 
 const defaultValue: updateLeafStock = {
   id: null,
-  date: "",
+  date: null,
   typeOfLeafId: undefined,
   batchNo: 0,
   viss: 0,
@@ -39,9 +39,7 @@ const defaultValue: updateLeafStock = {
 const UpdateLeafOpen = ({ updateOpen, setUpdateOpen, selectedId }: Props) => {
   const leafStock = useAppSelector((item) => item.leafStock.item);
   const selectLeafStock = leafStock.find((item) => item.id === selectedId);
-  const [selecteddate, setSelectedDate] = useState<any>(
-    new Date().toLocaleDateString()
-  );
+  const [selecteddate, setSelectedDate] = useState<any>(new Date());
   const workShop = useAppSelector((store) => store.workShop.selectedWorkShop);
   const { item: garages, selectedGarage } = useAppSelector(
     (store) => store.garage
@@ -54,6 +52,11 @@ const UpdateLeafOpen = ({ updateOpen, setUpdateOpen, selectedId }: Props) => {
   const leaves = useAppSelector((store) => store.typeOfLeaf.item);
   const concernleaves = leaves.filter(
     (item) => item.workShopId === workShop?.id
+  );
+  const garageId = useAppSelector((store) => store.garage.selectedGarage)
+    ?.id as number;
+  const leafstock = useAppSelector((item) => item.leafStock.item).filter(
+    (item) => item.garageId === garageId
   );
   const [updateLeafStock, setUpdateLeafStock] =
     useState<updateLeafStock>(defaultValue);
@@ -99,6 +102,17 @@ const UpdateLeafOpen = ({ updateOpen, setUpdateOpen, selectedId }: Props) => {
     );
   };
 
+  const handelLeaf = (leafId: number) => {
+    const leaf = leafstock.filter((item) => item.typeOfLeafId === leafId);
+    const batchno = leaf.length && leaf[leaf.length - 1].batchNo;
+
+    setUpdateLeafStock({
+      ...updateLeafStock,
+      typeOfLeafId: leafId,
+      batchNo: batchno ? batchno + 1 : 1,
+    });
+  };
+
   if (!selectLeafStock) return null;
 
   return (
@@ -110,8 +124,7 @@ const UpdateLeafOpen = ({ updateOpen, setUpdateOpen, selectedId }: Props) => {
             <DatePicker
               selected={selecteddate}
               onChange={(date) => {
-                setSelectedDate(date?.toLocaleDateString());
-                console.log("date", date);
+                setSelectedDate(date);
               }}
             />
           </Box>
@@ -184,12 +197,9 @@ const UpdateLeafOpen = ({ updateOpen, setUpdateOpen, selectedId }: Props) => {
                   id="demo-simple-select-filled"
                   defaultValue={selectLeafStock.typeOfLeafId}
                   value={updateLeafStock.typeOfLeafId}
-                  onChange={(evt) =>
-                    setUpdateLeafStock({
-                      ...updateLeafStock,
-                      typeOfLeafId: Number(evt.target.value),
-                    })
-                  }
+                  onChange={(evt) => {
+                    handelLeaf(Number(evt.target.value));
+                  }}
                   sx={{ bgcolor: "#EEE8CF" }}
                 >
                   {concernleaves.map((item) => (
@@ -204,15 +214,11 @@ const UpdateLeafOpen = ({ updateOpen, setUpdateOpen, selectedId }: Props) => {
             <Box sx={{}}>
               <Typography sx={{ fontWeight: "bold" }}>ပိုနံပါတ်</Typography>
               <TextField
+                value={updateLeafStock.batchNo}
                 defaultValue={selectLeafStock.batchNo}
                 placeholder="ပိုနံပါတ်"
                 sx={{ bgcolor: "#EEE8CF", width: 350 }}
-                onChange={(evt) =>
-                  setUpdateLeafStock({
-                    ...updateLeafStock,
-                    batchNo: Number(evt.target.value),
-                  })
-                }
+                onChange={(evt) => {}}
               />
             </Box>
 

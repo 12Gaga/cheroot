@@ -27,7 +27,7 @@ interface Props {
 }
 
 const defaultValue: createNewBagoFilterSize = {
-  date: "",
+  date: null,
   shopId: null,
   typeOfFilterSizeId: null,
   quantity: 0,
@@ -36,9 +36,7 @@ const defaultValue: createNewBagoFilterSize = {
 };
 
 const NewBagoFilterSize = ({ open, setOpen }: Props) => {
-  const [selecteddate, setSelectedDate] = useState<any>(
-    new Date().toLocaleDateString()
-  );
+  const [selecteddate, setSelectedDate] = useState<Date>(new Date());
   const [newBagoFilterSize, setNewBagoFilterSize] =
     useState<createNewBagoFilterSize>(defaultValue);
   const dispatch = useAppDispatch();
@@ -79,7 +77,7 @@ const NewBagoFilterSize = ({ open, setOpen }: Props) => {
             <Typography sx={{ mr: 2, fontWeight: "bold" }}>ရက်စွဲ</Typography>
             <DatePicker
               selected={selecteddate}
-              onChange={(date) => setSelectedDate(date?.toLocaleDateString())}
+              onChange={(date) => setSelectedDate(date as Date)}
             />
           </Box>
 

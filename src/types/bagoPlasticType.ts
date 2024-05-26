@@ -8,7 +8,7 @@ export interface bagoPlasticSlice {
 }
 
 export interface createNewBagoPlastic extends BasicOption {
-  date: string;
+  date: Date | null;
   shopId: number | null;
   plasticId: number | null;
   quantity: number;
@@ -18,7 +18,7 @@ export interface createNewBagoPlastic extends BasicOption {
 
 export interface updateBagoPlastic extends BasicOption {
   id: number | null;
-  date: string;
+  date: Date | null;
   shopId: number | null;
   plasticId: number | null;
   quantity: number;

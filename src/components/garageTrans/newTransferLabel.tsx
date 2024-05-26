@@ -29,7 +29,7 @@ interface Props {
 }
 
 const defaultValue: createNewLabelTransfer = {
-  date: "",
+  date: null,
   exitGarageId: null,
   enterenceGarageId: null,
   typeOfLabelId: null,
@@ -39,9 +39,7 @@ const defaultValue: createNewLabelTransfer = {
 const NewTransferLabel = ({ open, setOpen }: Props) => {
   const dispatch = useAppDispatch();
   const workShop = useAppSelector((store) => store.workShop.selectedWorkShop);
-  const [selecteddate, setSelectedDate] = useState<any>(
-    new Date().toLocaleDateString()
-  );
+  const [selecteddate, setSelectedDate] = useState<Date>(new Date());
   const [newLabelTransfer, setNewLabelTransfer] =
     useState<createNewLabelTransfer>(defaultValue);
   const garages = useAppSelector((store) => store.garage.item);
@@ -88,7 +86,7 @@ const NewTransferLabel = ({ open, setOpen }: Props) => {
             <Typography sx={{ mr: 2, fontWeight: "bold" }}>ရက်စွဲ</Typography>
             <DatePicker
               selected={selecteddate}
-              onChange={(date) => setSelectedDate(date?.toLocaleDateString())}
+              onChange={(date) => setSelectedDate(date as Date)}
             />
           </Box>
 

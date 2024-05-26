@@ -17,24 +17,25 @@ export default async function handler(
       data: { date, amount, workShopId },
     });
     return res.status(200).json({ addDailyClosing });
-  } else if (method === "PUT") {
-    const { date, amount, id } = req.body;
-    const isValid = date && amount != undefined && id;
-    if (!isValid) return res.status(405).send("bad request");
-    const updateDailyClosing = await prisma.closingDailyBalance.update({
-      where: { id },
-      data: { date, amount },
-    });
-    return res.status(200).json({ updateDailyClosing });
-  } else if (method === "DELETE") {
-    const id = Number(req.query.id);
-    const isValid = id;
-    if (!isValid) return res.status(405).send("bad request");
-    await prisma.closingDailyBalance.update({
-      data: { isArchived: true },
-      where: { id },
-    });
-    return res.status(200).send("ok");
   }
+  // else if (method === "PUT") {
+  //   const { date, amount, id } = req.body;
+  //   const isValid = date && amount != undefined && id;
+  //   if (!isValid) return res.status(405).send("bad request");
+  //   const updateDailyClosing = await prisma.closingDailyBalance.update({
+  //     where: { id },
+  //     data: { date, amount },
+  //   });
+  //   return res.status(200).json({ updateDailyClosing });
+  // } else if (method === "DELETE") {
+  //   const id = Number(req.query.id);
+  //   const isValid = id;
+  //   if (!isValid) return res.status(405).send("bad request");
+  //   await prisma.closingDailyBalance.update({
+  //     data: { isArchived: true },
+  //     where: { id },
+  //   });
+  //   return res.status(200).send("ok");
+  // }
   res.status(400).json("bad request");
 }

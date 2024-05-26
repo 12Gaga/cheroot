@@ -19,10 +19,10 @@ import { useSession } from "next-auth/react";
 import { setSelectedGarage } from "@/store/slices/garage";
 import { createNewPayLeaf } from "@/types/payLeafType";
 import { useAppSelector } from "@/store/hooks";
-import { WorkShop } from "@prisma/client";
+import { Leaf, WorkShop } from "@prisma/client";
 
 const defaultValue: createNewPayLeaf = {
-  date: "",
+  date: null,
   agentId: undefined,
   typeOfLeafId: undefined,
   batchNo: [],
@@ -36,17 +36,37 @@ const defaultValue: createNewPayLeaf = {
 
 const PayLeaf = () => {
   const { data: session } = useSession();
-  const [selecteddate, setSelectedDate] = useState<any>(
-    new Date().toLocaleDateString()
-  );
+  const [selecteddate, setSelectedDate] = useState<Date>(new Date());
   const [newPayLeaf, setNewPayLeaf] = useState<createNewPayLeaf>(defaultValue);
   const garages = useAppSelector((store) => store.garage.item);
+  const leaves = useAppSelector((store) => store.typeOfLeaf.item);
   const workShop = useAppSelector(
     (store) => store.workShop.selectedWorkShop
   ) as WorkShop;
   const concernGarage = garages.filter(
     (item) => item.workShopId === workShop?.id
   );
+  const leafStock = useAppSelector((store) => store.leafStock.item);
+  const [concernLeafStock, setConcernLeafStock] = useState<Leaf[]>([]);
+  const [concernBatchNo, setConcernBatchNo] = useState<Leaf[]>([]);
+
+  const handleGarage = (garageId: number) => {
+    const data = leafStock.filter((item) => item.garageId === garageId);
+    setConcernLeafStock(data);
+    const batchNo = concernLeafStock.filter(
+      (item) => item.typeOfLeafId === newPayLeaf.typeOfLeafId
+    );
+    setConcernBatchNo(batchNo);
+    const concernPrice = leaves.find(
+      (item) => item.id === newPayLeaf.typeOfLeafId
+    )?.price as number;
+    setNewPayLeaf({
+      ...newPayLeaf,
+      garageId: garageId,
+      price: concernPrice,
+    });
+  };
+
   useEffect(() => {
     setNewPayLeaf({ ...newPayLeaf, date: selecteddate });
   }, [selecteddate]);
@@ -72,7 +92,7 @@ const PayLeaf = () => {
         <Typography sx={{ mr: 2 }}>ရက်စွဲ</Typography>
         <DatePicker
           selected={selecteddate}
-          onChange={(date) => setSelectedDate(date?.toLocaleDateString())}
+          onChange={(date) => setSelectedDate(date as Date)}
         />
       </Box>
 
@@ -86,10 +106,7 @@ const PayLeaf = () => {
             id="demo-simple-select-filled"
             value={newPayLeaf.garageId}
             onChange={(evt) => {
-              setNewPayLeaf({
-                ...newPayLeaf,
-                garageId: Number(evt.target.value),
-              });
+              handleGarage(Number(evt.target.value));
             }}
             sx={{ bgcolor: "#EEE8CF" }}
           >
@@ -116,6 +133,9 @@ const PayLeaf = () => {
             newPayLeaf={newPayLeaf}
             setNewPayLeaf={setNewPayLeaf}
             workShopId={workShop?.id}
+            concernLeafStock={concernLeafStock}
+            setConcernBatchNo={setConcernBatchNo}
+            concernBatchNo={concernBatchNo}
           />
           <PayLeafTwo newPayLeaf={newPayLeaf} setNewPayLeaf={setNewPayLeaf} />
         </Box>

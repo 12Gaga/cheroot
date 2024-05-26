@@ -1,16 +1,9 @@
 import { useAppSelector, useAppDispatch } from "@/store/hooks";
-import {
-  CreateLabelAddStock,
-  UpdatedLabelAddStock,
-  setIsLoading,
-} from "@/store/slices/labelStock";
+import { UpdatedLabelAddStock, setIsLoading } from "@/store/slices/labelStock";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { setOpenSnackbar } from "@/store/slices/snackBar";
-import {
-  createNewLabelAddStock,
-  updateLabelAddStock,
-} from "@/types/labelStockType";
+import { updateLabelAddStock } from "@/types/labelStockType";
 
 import {
   Box,
@@ -36,7 +29,7 @@ interface Props {
 
 const defaultValue: updateLabelAddStock = {
   stockSeq: "",
-  date: "",
+  date: null,
   invNo: 0,
   carNo: "",
   typeOfLabelId: undefined,
@@ -58,9 +51,7 @@ const UpdateAddLabel = ({
   const selectedLabelAddStock = labelAddStock.find(
     (item) => item.stockSeq === selectedStockSeq
   );
-  const [selecteddate, setSelectedDate] = useState<any>(
-    new Date().toLocaleDateString()
-  );
+  const [selecteddate, setSelectedDate] = useState<Date>(new Date());
   const workShop = useAppSelector((store) => store.workShop.selectedWorkShop);
   const { item: garages, selectedGarage } = useAppSelector(
     (store) => store.garage
@@ -126,7 +117,7 @@ const UpdateAddLabel = ({
             <Typography sx={{ mr: 2, fontWeight: "bold" }}>ရက်စွဲ</Typography>
             <DatePicker
               selected={selecteddate}
-              onChange={(date) => setSelectedDate(date?.toLocaleDateString())}
+              onChange={(date) => setSelectedDate(date as Date)}
             />
           </Box>
           <Box

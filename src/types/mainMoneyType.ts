@@ -8,14 +8,14 @@ export interface mainMoneyTypeSlice {
 }
 
 export interface addMainMoney extends BasicOption {
-  date: string;
+  date: Date | null;
   locationId: number | null;
   amount: number;
 }
 
 export interface updateMainMoney extends BasicOption {
   id: number | null;
-  date: string;
+  date: Date | null;
   locationId: number | null;
   amount: number;
 }

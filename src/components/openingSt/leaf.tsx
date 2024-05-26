@@ -18,7 +18,10 @@ import "react-datepicker/dist/react-datepicker.css";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { LoadingButton } from "@mui/lab";
 import { createNewLeafStock } from "@/types/leafStockType";
-import { CreateLeafStock, setIsLoading } from "@/store/slices/leafStock";
+import leafStock, {
+  CreateLeafStock,
+  setIsLoading,
+} from "@/store/slices/leafStock";
 import { setOpenSnackbar } from "@/store/slices/snackBar";
 interface Props {
   open: boolean;
@@ -26,7 +29,7 @@ interface Props {
 }
 
 const defaultValue: createNewLeafStock = {
-  date: "",
+  date: null,
   typeOfLeafId: undefined,
   batchNo: 0,
   viss: 0,
@@ -35,9 +38,7 @@ const defaultValue: createNewLeafStock = {
 };
 
 const LeafOpen = ({ open, setOpen }: Props) => {
-  const [selecteddate, setSelectedDate] = useState<any>(
-    new Date().toLocaleDateString()
-  );
+  const [selecteddate, setSelectedDate] = useState<any>(new Date());
   const workShop = useAppSelector((store) => store.workShop.selectedWorkShop);
   const { item: garages, selectedGarage } = useAppSelector(
     (store) => store.garage
@@ -50,6 +51,11 @@ const LeafOpen = ({ open, setOpen }: Props) => {
   const leaves = useAppSelector((store) => store.typeOfLeaf.item);
   const concernleaves = leaves.filter(
     (item) => item.workShopId === workShop?.id
+  );
+  const garageId = useAppSelector((store) => store.garage.selectedGarage)
+    ?.id as number;
+  const leafstock = useAppSelector((item) => item.leafStock.item).filter(
+    (item) => item.garageId === garageId
   );
   const [newLeafStock, setNewLeafStock] =
     useState<createNewLeafStock>(defaultValue);
@@ -74,10 +80,21 @@ const LeafOpen = ({ open, setOpen }: Props) => {
     );
   };
 
+  const handelLeaf = (leafId: number) => {
+    const leaf = leafstock.filter((item) => item.typeOfLeafId === leafId);
+    const batchno = leaf.length && leaf[leaf.length - 1].batchNo;
+
+    setNewLeafStock({
+      ...newLeafStock,
+      typeOfLeafId: leafId,
+      batchNo: batchno ? batchno + 1 : 1,
+    });
+  };
+
   useEffect(() => {
     setNewLeafStock({ ...newLeafStock, date: selecteddate });
   }, [selecteddate, open]);
-
+  console.log("dhf", newLeafStock);
   return (
     <>
       <Dialog open={open} onClose={() => setOpen(false)}>
@@ -87,19 +104,9 @@ const LeafOpen = ({ open, setOpen }: Props) => {
             <DatePicker
               selected={selecteddate}
               onChange={(date) => {
-                setSelectedDate(date?.toLocaleDateString());
-                console.log("date", date);
+                setSelectedDate(date);
               }}
             />
-            {/* mui datePicker */}
-            {/* <DatePicker
-              label="Controlled picker"
-              value={setSelectedDate}
-              onChange={(date: any) => {
-                setSelectedDate(date);
-                console.log("date", date);
-              }}
-            /> */}
           </Box>
 
           <Box sx={{ mt: 2 }}>
@@ -167,12 +174,9 @@ const LeafOpen = ({ open, setOpen }: Props) => {
                   labelId="demo-simple-select-filled-label"
                   id="demo-simple-select-filled"
                   value={newLeafStock.typeOfLeafId}
-                  onChange={(evt) =>
-                    setNewLeafStock({
-                      ...newLeafStock,
-                      typeOfLeafId: Number(evt.target.value),
-                    })
-                  }
+                  onChange={(evt) => {
+                    handelLeaf(Number(evt.target.value));
+                  }}
                   sx={{ bgcolor: "#EEE8CF" }}
                 >
                   {concernleaves.map((item) => (
@@ -187,14 +191,10 @@ const LeafOpen = ({ open, setOpen }: Props) => {
             <Box sx={{}}>
               <Typography sx={{ fontWeight: "bold" }}>ပိုနံပါတ်</Typography>
               <TextField
+                value={newLeafStock.batchNo}
                 placeholder="ပိုနံပါတ်"
                 sx={{ bgcolor: "#EEE8CF", width: 350 }}
-                onChange={(evt) =>
-                  setNewLeafStock({
-                    ...newLeafStock,
-                    batchNo: Number(evt.target.value),
-                  })
-                }
+                onChange={(evt) => {}}
               />
             </Box>
 

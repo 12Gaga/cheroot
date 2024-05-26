@@ -12,21 +12,29 @@ import {
   SelectChangeEvent,
 } from "@mui/material";
 import { Leaf } from "@prisma/client";
-import { useState } from "react";
 import "react-datepicker/dist/react-datepicker.css";
 interface Props {
   newPayLeaf: createNewPayLeaf;
   setNewPayLeaf: (value: createNewPayLeaf) => void;
+  setConcernBatchNo: (value: Leaf[]) => void;
   workShopId: number;
+  concernLeafStock: Leaf[];
+  concernBatchNo: Leaf[];
 }
-const PayLeafOne = ({ newPayLeaf, setNewPayLeaf, workShopId }: Props) => {
-  const leafStock = useAppSelector((store) => store.leafStock.item);
-  const concernLeafStock = leafStock.filter(
-    (item) => item.garageId === newPayLeaf.garageId
-  );
+const PayLeafOne = ({
+  newPayLeaf,
+  setNewPayLeaf,
+  workShopId,
+  concernLeafStock,
+  concernBatchNo,
+  setConcernBatchNo,
+}: Props) => {
+  // const leafStock = useAppSelector((store) => store.leafStock.item);
+  // const concernLeafStock = leafStock.filter(
+  //   (item) => item.garageId === newPayLeaf.garageId
+  // );
   const leaves = useAppSelector((store) => store.typeOfLeaf.item);
   const concernLeaves = leaves.filter((item) => item.workShopId === workShopId);
-  const [concernBatchNo, setConcernBatchNo] = useState<Leaf[]>([]);
 
   console.log("newLeaf", newPayLeaf);
 
@@ -50,15 +58,15 @@ const PayLeafOne = ({ newPayLeaf, setNewPayLeaf, workShopId }: Props) => {
   };
 
   const changeBatchNo = (leafId: number) => {
-    const batchNo = concernLeafStock.filter(
+    const batchNos = concernLeafStock.filter(
       (item) => item.typeOfLeafId === leafId
     );
-    setConcernBatchNo(batchNo);
+    setConcernBatchNo(batchNos);
     const concernPrice = leaves.find((item) => item.id === leafId)
       ?.price as number;
     setNewPayLeaf({ ...newPayLeaf, price: concernPrice, typeOfLeafId: leafId });
   };
-
+  console.log("leafid", newPayLeaf.typeOfLeafId);
   return (
     <>
       <Box

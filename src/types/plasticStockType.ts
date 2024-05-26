@@ -8,7 +8,7 @@ export interface plasticStockSlice {
 }
 
 export interface createNewPlasticStock extends BasicOption {
-  date: string;
+  date: Date | null;
   typeOfPlasticId: number | undefined;
   quantity: number;
   bag: number;
@@ -18,7 +18,7 @@ export interface createNewPlasticStock extends BasicOption {
 
 export interface updatePlasticStock extends BasicOption {
   id: number | null;
-  date: string;
+  date: Date | null;
   typeOfPlasticId: number | undefined;
   quantity: number;
   bag: number;
@@ -31,7 +31,7 @@ export interface deletePlasticStock extends BasicOption {
 }
 
 export interface createNewPlasticAddStock extends BasicOption {
-  date: string;
+  date: Date | null;
   invNo: number;
   carNo: string;
   typeOfPlasticId: number | undefined;
@@ -43,7 +43,7 @@ export interface createNewPlasticAddStock extends BasicOption {
 
 export interface updatePlasticAddStock extends BasicOption {
   stockSeq: string;
-  date: string;
+  date: Date | null;
   invNo: number;
   carNo: string;
   typeOfPlasticId: number | undefined;
@@ -55,4 +55,9 @@ export interface updatePlasticAddStock extends BasicOption {
 
 export interface deletePlasticAddStock extends BasicOption {
   stockSeq: string;
+}
+
+export interface checkOnPlasticItem {
+  typeOfPlastic: number | null;
+  typeOfShop: number | null;
 }

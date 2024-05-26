@@ -1,31 +1,67 @@
 import AdminLayout from "@/components/adminLayout";
 import { Box, Typography } from "@mui/material";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import AddBoxIcon from "@mui/icons-material/AddBox";
 import NewTransferLeaf from "@/components/garageTrans/newTransferLeaf";
 import { useAppSelector } from "@/store/hooks";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import DeleteLeafTransfer from "@/components/garageTrans/deleteLeafTransfer";
+import { LeafTransferGarage } from "@prisma/client";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 const GarageTransfer = () => {
   const [open, setOpen] = useState<boolean>(false);
   const workShop = useAppSelector((store) => store.workShop.selectedWorkShop);
-  const concernLeafTransfer = useAppSelector(
-    (store) => store.leafTransfer.item
-  ).filter((item) => item.workShopId === workShop?.id);
+  const leafTransfers = useAppSelector((store) => store.leafTransfer.item);
+  const concernLeafTransfer = leafTransfers.filter(
+    (item) => item.workShopId === workShop?.id
+  );
   const garage = useAppSelector((store) => store.garage.item);
   const leaves = useAppSelector((store) => store.typeOfLeaf.item);
   const [updateOpen, setUpdateOpen] = useState<boolean>(false);
   const [deleteOpen, setDeleteOpen] = useState<boolean>(false);
   const [selectSeq, setSelectSeq] = useState<string>("");
+
   let seqs: string[] = [];
-  concernLeafTransfer.forEach((item) => {
-    const seq = item.transferSeq;
-    const exit = seqs.find((item) => item === seq);
-    if (!exit) {
-      seqs.push(seq);
+
+  const [selecteddate, setSelectedDate] = useState<Date>(new Date());
+  const [leafTransfer, setLeafTransfer] = useState<LeafTransferGarage[]>([]);
+
+  const handleDate = (date: Date) => {
+    seqs = [];
+    const data = concernLeafTransfer.filter((item) => {
+      const itemDate = new Date(item.date);
+      return itemDate.toLocaleDateString() === date.toLocaleDateString();
+    });
+    data.forEach((item) => {
+      const seq = item.transferSeq;
+      const exit = seqs.find((item) => item === seq);
+      if (!exit) {
+        seqs.push(seq);
+      }
+    });
+    setLeafTransfer(data);
+  };
+
+  useEffect(() => {
+    if (concernLeafTransfer.length) {
+      const concern = concernLeafTransfer.filter((item) => {
+        const itemDate = new Date(item.date);
+        return (
+          itemDate.toLocaleDateString() === selecteddate.toLocaleDateString()
+        );
+      });
+      concern.forEach((item) => {
+        const seq = item.transferSeq;
+        const exit = seqs.find((item) => item === seq);
+        if (!exit) {
+          seqs.push(seq);
+        }
+      });
+      setLeafTransfer(concern);
     }
-  });
+  }, []);
   return (
     <>
       <AdminLayout>
@@ -35,6 +71,18 @@ const GarageTransfer = () => {
         >
           ပိုနံပါတ်
         </Typography>
+
+        <Box sx={{ mr: 2, display: "flex", mt: 4, width: 300 }}>
+          <Typography sx={{ mr: 2, fontWeight: "bold" }}>ရက်စွဲ</Typography>
+          <DatePicker
+            selected={selecteddate}
+            onChange={(date) => {
+              setSelectedDate(date as Date);
+              handleDate(date as Date);
+            }}
+          />
+        </Box>
+
         <Box sx={{ display: "flex", justifyContent: "flex-end" }}>
           <AddBoxIcon
             onClick={() => {
@@ -54,71 +102,71 @@ const GarageTransfer = () => {
               <th>ပိသာ</th>
             </tr>
           </thead>
-          {seqs.map((item) => (
-            <>
-              <thead
-                key={concernLeafTransfer.find((c) => c.transferSeq == item)?.id}
-              ></thead>
-              <tr style={{ border: "1px solid" }}>
-                <td>
-                  {concernLeafTransfer.find((c) => c.transferSeq == item)?.date}
-                </td>
-                <td>
-                  {
-                    garage.find(
-                      (g) =>
-                        g.id ===
-                        concernLeafTransfer.find((c) => c.transferSeq == item)
-                          ?.exitGarageId
-                    )?.name
-                  }
-                </td>
-                <td>
-                  {
-                    garage.find(
-                      (g) =>
-                        g.id ===
-                        concernLeafTransfer.find((c) => c.transferSeq == item)
-                          ?.enterenceGarageId
-                    )?.name
-                  }
-                </td>
-                <td>
-                  {
-                    leaves.find(
-                      (l) =>
-                        l.id ===
-                        concernLeafTransfer.find((c) => c.transferSeq == item)
-                          ?.typeOfLeafId
-                    )?.name
-                  }
-                </td>
-                <td style={{ fontSize: "18px" }}>
-                  {concernLeafTransfer
-                    .filter((c) => c.transferSeq === item)
-                    .map((m) => m.batchNo)
-                    .join(",")}
-                </td>
-                <td>
-                  {
-                    concernLeafTransfer.find((c) => c.transferSeq == item)
-                      ?.totalViss
-                  }
-                </td>
-                <td
-                  onClick={() => {
-                    setDeleteOpen(true),
-                      setSelectSeq(
-                        concernLeafTransfer.find((c) => c.transferSeq == item)
-                          ?.transferSeq as string
-                      );
-                  }}
-                >
-                  {<DeleteIcon />}
-                </td>
-              </tr>
-            </>
-          ))}
+          {seqs.map((item) => {
+            const itemdate = new Date(
+              leafTransfer.find((c) => c.transferSeq == item)?.date as any
+            );
+            return (
+              <>
+                <thead
+                  key={leafTransfer.find((c) => c.transferSeq == item)?.id}
+                ></thead>
+                <tr style={{ border: "1px solid" }}>
+                  <td>{itemdate.toLocaleDateString()}</td>
+                  <td>
+                    {
+                      garage.find(
+                        (g) =>
+                          g.id ===
+                          leafTransfer.find((c) => c.transferSeq == item)
+                            ?.exitGarageId
+                      )?.name
+                    }
+                  </td>
+                  <td>
+                    {
+                      garage.find(
+                        (g) =>
+                          g.id ===
+                          leafTransfer.find((c) => c.transferSeq == item)
+                            ?.enterenceGarageId
+                      )?.name
+                    }
+                  </td>
+                  <td>
+                    {
+                      leaves.find(
+                        (l) =>
+                          l.id ===
+                          leafTransfer.find((c) => c.transferSeq == item)
+                            ?.typeOfLeafId
+                      )?.name
+                    }
+                  </td>
+                  <td style={{ fontSize: "18px" }}>
+                    {leafTransfer
+                      .filter((c) => c.transferSeq === item)
+                      .map((m) => m.batchNo)
+                      .join(",")}
+                  </td>
+                  <td>
+                    {leafTransfer.find((c) => c.transferSeq == item)?.totalViss}
+                  </td>
+                  <td
+                    onClick={() => {
+                      setDeleteOpen(true),
+                        setSelectSeq(
+                          leafTransfer.find((c) => c.transferSeq == item)
+                            ?.transferSeq as string
+                        );
+                    }}
+                  >
+                    {<DeleteIcon />}
+                  </td>
+                </tr>
+              </>
+            );
+          })}
         </table>
         <NewTransferLeaf open={open} setOpen={setOpen} />
         <DeleteLeafTransfer

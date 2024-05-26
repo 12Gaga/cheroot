@@ -60,32 +60,35 @@ const FilterSize = () => {
                 <th>ဝယ်ယူခဲ့သည့်ဆိုင်အမည်</th>
               </tr>
             </thead>
-            {concernLabel.map((item) => (
-              <thead key={item.id}>
-                <tr style={{ border: "1px solid" }}>
-                  <td>{item.date.toString()}</td>
-                  <td>
-                    {labels.find((f) => f.id === item.typeOfLabelId)?.name}
-                  </td>
-                  <td>{item.bandle}</td>
-                  <td>{shop.find((s) => s.id === item.shopId)?.name}</td>
-                  <td
-                    onClick={() => {
-                      setUpdateOpen(true), setSelectId(item.id);
-                    }}
-                  >
-                    {<EditIcon />}
-                  </td>
-                  <td
-                    onClick={() => {
-                      setDeleteOpen(true), setSelectId(item.id);
-                    }}
-                  >
-                    {<DeleteIcon />}
-                  </td>
-                </tr>
-              </thead>
-            ))}
+            {concernLabel.map((item) => {
+              const itemdate = new Date(item.date);
+              return (
+                <thead key={item.id}>
+                  <tr style={{ border: "1px solid" }}>
+                    <td>{itemdate.toLocaleDateString()}</td>
+                    <td>
+                      {labels.find((f) => f.id === item.typeOfLabelId)?.name}
+                    </td>
+                    <td>{item.bandle}</td>
+                    <td>{shop.find((s) => s.id === item.shopId)?.name}</td>
+                    <td
+                      onClick={() => {
+                        setUpdateOpen(true), setSelectId(item.id);
+                      }}
+                    >
+                      {<EditIcon />}
+                    </td>
+                    <td
+                      onClick={() => {
+                        setDeleteOpen(true), setSelectId(item.id);
+                      }}
+                    >
+                      {<DeleteIcon />}
+                    </td>
+                  </tr>
+                </thead>
+              );
+            })}
           </table>
         </Box>
         <LabelOpen open={open} setOpen={setOpen} />

@@ -27,22 +27,17 @@ interface Props {
 }
 
 const defaultValue: addBagoLeafInstallment = {
-  date: "",
+  date: null,
   shopId: null,
   cashBalance: 0,
   payBalance: 0,
 };
 
 const NewBagoLeafInstallment = ({ open, setOpen }: Props) => {
-  const [selecteddate, setSelectedDate] = useState<any>(
-    new Date().toLocaleDateString()
-  );
+  const [selecteddate, setSelectedDate] = useState<Date>(new Date());
   const dispatch = useAppDispatch();
   const workshop = useAppSelector((store) => store.workShop.selectedWorkShop);
   const leaf = useAppSelector((store) => store.bagoLeaf.item);
-  // const filterSize = useAppSelector((store) => store.bagoFilterSize.item);
-  // const label = useAppSelector((store) => store.bagoLabel.item);
-  // const plastic = useAppSelector((store) => store.bagoPlastic.item);
   const shop = useAppSelector((store) => store.typeOfShop.item);
   const concernShop = shop.filter((item) => item.workShopId === workshop?.id);
   const { item: bagoLeafInstallments, isLoading } = useAppSelector(
@@ -57,21 +52,6 @@ const NewBagoLeafInstallment = ({ open, setOpen }: Props) => {
       .reduce((total, leaf) => {
         return (total += leaf.totalPrice);
       }, 0);
-    // const filterSizePrice = filterSize
-    //   .filter((item) => item.shopId === shopId)
-    //   .reduce((total, filterSize) => {
-    //     return (total += filterSize.totalPrice);
-    //   }, 0);
-    // const labelPrice = label
-    //   .filter((item) => item.shopId === shopId)
-    //   .reduce((total, label) => {
-    //     return (total += label.totalPrice);
-    //   }, 0);
-    // const plasticPrice = plastic
-    //   .filter((item) => item.shopId === shopId)
-    //   .reduce((total, plastic) => {
-    //     return (total += plastic.totalPrice);
-    //   }, 0);
     const alreadyPay = bagoLeafInstallments
       .filter((item) => item.shopId === shopId)
       .reduce((total, bago) => {
@@ -112,7 +92,7 @@ const NewBagoLeafInstallment = ({ open, setOpen }: Props) => {
             <Typography sx={{ mr: 2, fontWeight: "bold" }}>ရက်စွဲ</Typography>
             <DatePicker
               selected={selecteddate}
-              onChange={(date) => setSelectedDate(date?.toLocaleDateString())}
+              onChange={(date) => setSelectedDate(date as Date)}
             />
           </Box>
 

@@ -28,7 +28,7 @@ interface Props {
 }
 
 const defaultValue: addNewTaungyiEnterStock = {
-  date: "",
+  date: null,
   storeId: null,
   banquetId: null,
   tolBatchNo: 0,
@@ -42,9 +42,7 @@ const defaultValue: addNewTaungyiEnterStock = {
 };
 
 const NewTaungyiLeaf = ({ open, setOpen }: Props) => {
-  const [selecteddate, setSelectedDate] = useState<any>(
-    new Date().toLocaleDateString()
-  );
+  const [selecteddate, setSelectedDate] = useState<Date>(new Date());
   const { isLoading } = useAppSelector((store) => store.taungyiEnterStock);
   const dispatch = useAppDispatch();
   const cigratteIndustryId = useAppSelector((store) => store.industry.item)?.id;
@@ -123,7 +121,7 @@ const NewTaungyiLeaf = ({ open, setOpen }: Props) => {
             <Typography sx={{ mr: 2, fontWeight: "bold" }}>ရက်စွဲ</Typography>
             <DatePicker
               selected={selecteddate}
-              onChange={(date) => setSelectedDate(date?.toLocaleDateString())}
+              onChange={(date) => setSelectedDate(date as Date)}
             />
           </Box>
 

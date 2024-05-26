@@ -27,7 +27,7 @@ interface Props {
 
 const defaultValue: updateBagoPlastic = {
   id: null,
-  date: "",
+  date: null,
   shopId: null,
   plasticId: null,
   quantity: 0,
@@ -42,9 +42,7 @@ const UpdateBagoPlastic = ({
 }: Props) => {
   const bagoPlastic = useAppSelector((store) => store.bagoPlastic.item);
   const selectBagoPlastic = bagoPlastic.find((item) => item.id === selectedId);
-  const [selecteddate, setSelectedDate] = useState<any>(
-    new Date().toLocaleDateString()
-  );
+  const [selecteddate, setSelectedDate] = useState<Date>(new Date());
   const [updateBagoPlastic, setUpdateBagoPlastic] =
     useState<updateBagoPlastic>(defaultValue);
   const dispatch = useAppDispatch();
@@ -105,7 +103,7 @@ const UpdateBagoPlastic = ({
             <Typography sx={{ mr: 2, fontWeight: "bold" }}>ရက်စွဲ</Typography>
             <DatePicker
               selected={selecteddate}
-              onChange={(date) => setSelectedDate(date?.toLocaleDateString())}
+              onChange={(date) => setSelectedDate(date as Date)}
             />
           </Box>
 

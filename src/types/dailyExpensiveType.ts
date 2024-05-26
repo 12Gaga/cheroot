@@ -8,7 +8,7 @@ export interface dailyExpensiveTypeSlice {
 }
 
 export interface addDailyExpensive extends BasicOption {
-  date: string;
+  date: Date | null;
   expensiveLabelId: number | null;
   content: string;
   amount: number;
@@ -16,7 +16,7 @@ export interface addDailyExpensive extends BasicOption {
 
 export interface updateDailyExpensive extends BasicOption {
   id: number | null;
-  date: string;
+  date: Date | null;
   expensiveLabelId: number | null;
   content: string;
   amount: number;

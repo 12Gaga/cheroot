@@ -26,7 +26,7 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 
 const defaultReturnCheroot: createNewReturnCheroot = {
-  date: "",
+  date: null,
   agentId: undefined,
   typeOfCherootId: undefined,
   goodQty: 0,
@@ -37,7 +37,7 @@ const defaultReturnCheroot: createNewReturnCheroot = {
 };
 
 const defaultLeafDeduction: createNewLeafDeduction = {
-  date: "",
+  date: null,
   agentId: undefined,
   typeOfLeafId: undefined,
   deductViss: 0,
@@ -46,7 +46,7 @@ const defaultLeafDeduction: createNewLeafDeduction = {
 };
 
 const defaultOtherDeduction: createNewOtherDeduction = {
-  date: "",
+  date: null,
   agentId: undefined,
   cashAdvanceBigDeduction: 0,
   cashAdvanceSmallDeduction: 0,
@@ -71,9 +71,7 @@ const ReturnCheroot = () => {
   const otherDeductionLoading = useAppSelector(
     (store) => store.otherDeduction.isLoading
   );
-  const [selecteddate, setSelectedDate] = useState<any>(
-    new Date().toLocaleDateString()
-  );
+  const [selecteddate, setSelectedDate] = useState<Date>(new Date());
   const [no, setNo] = useState<number>(1);
   const [newReturnCheroot, setNewReturnCheroot] =
     useState<createNewReturnCheroot>(defaultReturnCheroot);
@@ -111,7 +109,7 @@ const ReturnCheroot = () => {
         <Typography sx={{ mr: 2 }}>ရက်စွဲ</Typography>
         <DatePicker
           selected={selecteddate}
-          onChange={(date) => setSelectedDate(date?.toLocaleDateString())}
+          onChange={(date) => setSelectedDate(date as Date)}
         />
       </Box>
 

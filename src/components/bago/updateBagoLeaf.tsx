@@ -26,7 +26,7 @@ interface Props {
 }
 const defaultValue: updateBagoLeaf = {
   id: null,
-  date: "",
+  date: null,
   shopId: null,
   typeOfLeafId: null,
   netWeight: 0,
@@ -37,9 +37,7 @@ const defaultValue: updateBagoLeaf = {
 const UpdateBagoLeaf = ({ updateOpen, setUpdateOpen, selectedId }: Props) => {
   const bagoLeaf = useAppSelector((store) => store.bagoLeaf.item);
   const selectBagoLeaf = bagoLeaf.find((item) => item.id === selectedId);
-  const [selecteddate, setSelectedDate] = useState<any>(
-    new Date().toLocaleDateString()
-  );
+  const [selecteddate, setSelectedDate] = useState<Date>(new Date());
   const [updateBagoLeaf, setUpdateBagoLeaf] =
     useState<updateBagoLeaf>(defaultValue);
   const dispatch = useAppDispatch();
@@ -117,7 +115,7 @@ const UpdateBagoLeaf = ({ updateOpen, setUpdateOpen, selectedId }: Props) => {
             <Typography sx={{ mr: 2, fontWeight: "bold" }}>ရက်စွဲ</Typography>
             <DatePicker
               selected={selecteddate}
-              onChange={(date) => setSelectedDate(date?.toLocaleDateString())}
+              onChange={(date) => setSelectedDate(date as Date)}
             />
           </Box>
 

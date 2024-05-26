@@ -8,7 +8,7 @@ export interface returnCherootSlice {
 }
 
 export interface createNewReturnCheroot extends BasicOption {
-  date: string;
+  date: Date | null;
   agentId: number | undefined;
   typeOfCherootId: number | undefined;
   goodQty: number;

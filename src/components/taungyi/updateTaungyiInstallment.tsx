@@ -34,7 +34,7 @@ interface Props {
 
 const defaultValue: updateTaungyiInstallment = {
   id: null,
-  date: "",
+  date: null,
   banquetId: null,
   cashBalance: 0,
   payBalance: 0,
@@ -48,9 +48,7 @@ const UpdateTaungyiInstallment = ({
 }: Props) => {
   const installment = useAppSelector((store) => store.taungyiInstallment.item);
   const selectInstallment = installment.find((item) => item.id === selectedId);
-  const [selecteddate, setSelectedDate] = useState<any>(
-    new Date().toLocaleDateString()
-  );
+  const [selecteddate, setSelectedDate] = useState<Date>(new Date());
   const industryId = useAppSelector((store) => store.industry.item)?.id;
   const banquet = useAppSelector((store) => store.typeOfBanquet.item);
   const concernBanquet = banquet.filter(
@@ -127,7 +125,7 @@ const UpdateTaungyiInstallment = ({
             <Typography sx={{ mr: 2, fontWeight: "bold" }}>ရက်စွဲ</Typography>
             <DatePicker
               selected={selecteddate}
-              onChange={(date) => setSelectedDate(date?.toLocaleDateString())}
+              onChange={(date) => setSelectedDate(date as Date)}
             />
           </Box>
 

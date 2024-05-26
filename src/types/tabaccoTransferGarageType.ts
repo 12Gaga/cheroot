@@ -8,7 +8,7 @@ export interface tabaccoTransferSlice {
 }
 
 export interface createNewTabaccoTransfer extends BasicOption {
-  date: string;
+  date: Date | null;
   exitGarageId: number | null;
   enterenceGarageId: number | null;
   typeOfTabaccoId: number | null;
@@ -19,7 +19,7 @@ export interface createNewTabaccoTransfer extends BasicOption {
 
 export interface updateTabaccoTransfer extends BasicOption {
   id: number | null;
-  date: string;
+  date: Date | null;
   exitGarageId: number | null;
   enterenceGarageId: number | null;
   typeOfTabaccoId: number | null;

@@ -31,7 +31,7 @@ interface Props {
 
 const defaultValue: updateFilterSizeTransfer = {
   id: null,
-  date: "",
+  date: null,
   exitGarageId: null,
   enterenceGarageId: null,
   typeOfFilterSizeId: null,
@@ -52,9 +52,7 @@ const UpdateTransferFilterSize = ({
   );
   const dispatch = useAppDispatch();
   const workShop = useAppSelector((store) => store.workShop.selectedWorkShop);
-  const [selecteddate, setSelectedDate] = useState<any>(
-    new Date().toLocaleDateString()
-  );
+  const [selecteddate, setSelectedDate] = useState<Date>(new Date());
   const [updateFilterSizeTransfer, setUpdateNewFilterSizeTransfer] =
     useState<updateFilterSizeTransfer>(defaultValue);
   const garages = useAppSelector((store) => store.garage.item);
@@ -120,7 +118,7 @@ const UpdateTransferFilterSize = ({
             <Typography sx={{ mr: 2, fontWeight: "bold" }}>ရက်စွဲ</Typography>
             <DatePicker
               selected={selecteddate}
-              onChange={(date) => setSelectedDate(date?.toLocaleDateString())}
+              onChange={(date) => setSelectedDate(date as Date)}
             />
           </Box>
 

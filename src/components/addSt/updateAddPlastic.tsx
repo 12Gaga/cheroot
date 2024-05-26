@@ -36,7 +36,7 @@ interface Props {
 
 const defaultValue: updatePlasticAddStock = {
   stockSeq: "",
-  date: "",
+  date: null,
   invNo: 0,
   carNo: "",
   typeOfPlasticId: undefined,
@@ -59,9 +59,7 @@ const UpdateAddPlastic = ({
   const selectedPlasticAddStock = plasticAddStock.find(
     (item) => item.stockSeq === selectedStockSeq
   );
-  const [selecteddate, setSelectedDate] = useState<any>(
-    new Date().toLocaleDateString()
-  );
+  const [selecteddate, setSelectedDate] = useState<Date>(new Date());
   const workShop = useAppSelector((store) => store.workShop.selectedWorkShop);
   const { item: garages, selectedGarage } = useAppSelector(
     (store) => store.garage
@@ -130,7 +128,7 @@ const UpdateAddPlastic = ({
             <Typography sx={{ mr: 2, fontWeight: "bold" }}>ရက်စွဲ</Typography>
             <DatePicker
               selected={selecteddate}
-              onChange={(date) => setSelectedDate(date?.toLocaleDateString())}
+              onChange={(date) => setSelectedDate(date as Date)}
             />
           </Box>
           <Box

@@ -30,7 +30,7 @@ interface Props {
 
 const defaultValue: updateBagoFilterSize = {
   id: null,
-  date: "",
+  date: null,
   shopId: null,
   typeOfFilterSizeId: null,
   quantity: 0,
@@ -47,9 +47,7 @@ const UpdateBagoFilterSize = ({
   const selectBagoFilterSize = bagoFilterSize.find(
     (item) => item.id === selectedId
   );
-  const [selecteddate, setSelectedDate] = useState<any>(
-    new Date().toLocaleDateString()
-  );
+  const [selecteddate, setSelectedDate] = useState<Date>(new Date());
   const [updateBagoFilterSize, setUpdateBagoFilterSize] =
     useState<updateBagoFilterSize>(defaultValue);
   const dispatch = useAppDispatch();
@@ -110,7 +108,7 @@ const UpdateBagoFilterSize = ({
             <Typography sx={{ mr: 2, fontWeight: "bold" }}>ရက်စွဲ</Typography>
             <DatePicker
               selected={selecteddate}
-              onChange={(date) => setSelectedDate(date?.toLocaleDateString())}
+              onChange={(date) => setSelectedDate(date as Date)}
             />
           </Box>
 

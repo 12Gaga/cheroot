@@ -39,49 +39,49 @@ export const AddMainClosing = createAsyncThunk(
   }
 );
 
-export const UpdatedMainClosing = createAsyncThunk(
-  "mainClosing/UpdatedMainClosing",
-  async (option: updateMainClosing, thunkApi) => {
-    const { amount, id, date, onSuccess, onError } = option;
-    const workShopId = localStorage.getItem("selectedWorkShopId");
-    try {
-      const response = await fetch(
-        `${Config.apiBaseUrl}/mainClosing?workShopId=${workShopId}`,
-        {
-          method: "PUT",
-          headers: {
-            "content-type": "application/json",
-          },
-          body: JSON.stringify({ date, amount, id }),
-        }
-      );
-      const { updateMainClosing } = await response.json();
-      thunkApi.dispatch(updatedMainClosing(updateMainClosing));
-      onSuccess && onSuccess();
-    } catch (err) {
-      onError && onError();
-    }
-  }
-);
+// export const UpdatedMainClosing = createAsyncThunk(
+//   "mainClosing/UpdatedMainClosing",
+//   async (option: updateMainClosing, thunkApi) => {
+//     const { amount, id, date, onSuccess, onError } = option;
+//     const workShopId = localStorage.getItem("selectedWorkShopId");
+//     try {
+//       const response = await fetch(
+//         `${Config.apiBaseUrl}/mainClosing?workShopId=${workShopId}`,
+//         {
+//           method: "PUT",
+//           headers: {
+//             "content-type": "application/json",
+//           },
+//           body: JSON.stringify({ date, amount, id }),
+//         }
+//       );
+//       const { updateMainClosing } = await response.json();
+//       thunkApi.dispatch(updatedMainClosing(updateMainClosing));
+//       onSuccess && onSuccess();
+//     } catch (err) {
+//       onError && onError();
+//     }
+//   }
+// );
 
-export const DeletedMainClosing = createAsyncThunk(
-  "mainClosing/DeletedMainClosing",
-  async (option: deleteMainClosing, thunkApi) => {
-    const { id, onSuccess, onError } = option;
-    try {
-      const response = await fetch(
-        `${Config.apiBaseUrl}/mainClosing?id=${id}`,
-        {
-          method: "DELETE",
-        }
-      );
-      thunkApi.dispatch(deletedMainClosing(id));
-      onSuccess && onSuccess();
-    } catch (err) {
-      onError && onError();
-    }
-  }
-);
+// export const DeletedMainClosing = createAsyncThunk(
+//   "mainClosing/DeletedMainClosing",
+//   async (option: deleteMainClosing, thunkApi) => {
+//     const { id, onSuccess, onError } = option;
+//     try {
+//       const response = await fetch(
+//         `${Config.apiBaseUrl}/mainClosing?id=${id}`,
+//         {
+//           method: "DELETE",
+//         }
+//       );
+//       thunkApi.dispatch(deletedMainClosing(id));
+//       onSuccess && onSuccess();
+//     } catch (err) {
+//       onError && onError();
+//     }
+//   }
+// );
 
 const MainClosingSlice = createSlice({
   name: "mainClosing",

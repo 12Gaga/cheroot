@@ -30,7 +30,7 @@ interface Props {
 }
 
 const defaultValue: addCherootTransfer = {
-  date: "",
+  date: null,
   conveyLocationId: null,
   typeOfCherootId: null,
   typeOfPackingId: null,
@@ -43,9 +43,7 @@ const defaultValue: addCherootTransfer = {
 const NewTransferCherootData = ({ open, setOpen }: Props) => {
   const dispatch = useAppDispatch();
   const { isLoading } = useAppSelector((store) => store.cherootTransfer);
-  const [selecteddate, setSelectedDate] = useState<any>(
-    new Date().toLocaleDateString()
-  );
+  const [selecteddate, setSelectedDate] = useState<Date>(new Date());
   const [cherootTransfer, setCherootTransfer] =
     useState<addCherootTransfer>(defaultValue);
   const workshop = useAppSelector((store) => store.workShop.selectedWorkShop);
@@ -139,7 +137,7 @@ const NewTransferCherootData = ({ open, setOpen }: Props) => {
             <Typography sx={{ mr: 2, fontWeight: "bold" }}>ရက်စွဲ</Typography>
             <DatePicker
               selected={selecteddate}
-              onChange={(date) => setSelectedDate(date?.toLocaleDateString())}
+              onChange={(date) => setSelectedDate(date as Date)}
             />
           </Box>
 

@@ -29,7 +29,7 @@ interface Props {
 }
 
 const defaultValue: createNewTabaccoTransfer = {
-  date: "",
+  date: null,
   exitGarageId: null,
   enterenceGarageId: null,
   typeOfTabaccoId: null,
@@ -41,9 +41,7 @@ const defaultValue: createNewTabaccoTransfer = {
 const NewTransferTabacco = ({ open, setOpen }: Props) => {
   const dispatch = useAppDispatch();
   const workShop = useAppSelector((store) => store.workShop.selectedWorkShop);
-  const [selecteddate, setSelectedDate] = useState<any>(
-    new Date().toLocaleDateString()
-  );
+  const [selecteddate, setSelectedDate] = useState<Date>(new Date());
   const [newTabaccoTransfer, setNewTabaccoTransfer] =
     useState<createNewTabaccoTransfer>(defaultValue);
   const garages = useAppSelector((store) => store.garage.item);
@@ -90,7 +88,7 @@ const NewTransferTabacco = ({ open, setOpen }: Props) => {
             <Typography sx={{ mr: 2, fontWeight: "bold" }}>ရက်စွဲ</Typography>
             <DatePicker
               selected={selecteddate}
-              onChange={(date) => setSelectedDate(date?.toLocaleDateString())}
+              onChange={(date) => setSelectedDate(date as Date)}
             />
           </Box>
 

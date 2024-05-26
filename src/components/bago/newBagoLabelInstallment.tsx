@@ -27,16 +27,14 @@ interface Props {
 }
 
 const defaultValue: addBagoLabelInstallment = {
-  date: "",
+  date: null,
   shopId: null,
   cashBalance: 0,
   payBalance: 0,
 };
 
 const NewBagoLabelInstallment = ({ open, setOpen }: Props) => {
-  const [selecteddate, setSelectedDate] = useState<any>(
-    new Date().toLocaleDateString()
-  );
+  const [selecteddate, setSelectedDate] = useState<Date>(new Date());
   const dispatch = useAppDispatch();
   const workshop = useAppSelector((store) => store.workShop.selectedWorkShop);
   const label = useAppSelector((store) => store.bagoLabel.item);
@@ -94,7 +92,7 @@ const NewBagoLabelInstallment = ({ open, setOpen }: Props) => {
             <Typography sx={{ mr: 2, fontWeight: "bold" }}>ရက်စွဲ</Typography>
             <DatePicker
               selected={selecteddate}
-              onChange={(date) => setSelectedDate(date?.toLocaleDateString())}
+              onChange={(date) => setSelectedDate(date as Date)}
             />
           </Box>
 

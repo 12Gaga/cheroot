@@ -26,7 +26,7 @@ interface Props {
 }
 
 const defaultValue: addDailyExpensive = {
-  date: "",
+  date: null,
   expensiveLabelId: null,
   content: "",
   amount: 0,
@@ -40,9 +40,7 @@ const NewDailyExpenses = ({ open, setOpen }: Props) => {
   const concernTitle = titles.filter(
     (item) => item.workShopId === workShop?.id
   );
-  const [selecteddate, setSelectedDate] = useState<any>(
-    new Date().toLocaleDateString()
-  );
+  const [selecteddate, setSelectedDate] = useState<Date>(new Date());
   const [addDailyExpense, setAddDailyExpense] =
     useState<addDailyExpensive>(defaultValue);
   useEffect(() => {
@@ -79,7 +77,7 @@ const NewDailyExpenses = ({ open, setOpen }: Props) => {
             <Typography sx={{ mr: 2, fontWeight: "bold" }}>ရက်စွဲ</Typography>
             <DatePicker
               selected={selecteddate}
-              onChange={(date) => setSelectedDate(date?.toLocaleDateString())}
+              onChange={(date) => setSelectedDate(date as Date)}
             />
           </Box>
 

@@ -28,16 +28,14 @@ interface Props {
 }
 
 const defaultValue: addCherootInstallment = {
-  date: "",
+  date: null,
   conveyLocationId: null,
   cashBalance: 0,
   payBalance: 0,
 };
 
 const NewCherootInstallment = ({ open, setOpen }: Props) => {
-  const [selecteddate, setSelectedDate] = useState<any>(
-    new Date().toLocaleDateString()
-  );
+  const [selecteddate, setSelectedDate] = useState<Date>(new Date());
   const dispatch = useAppDispatch();
   const { isLoading } = useAppSelector((store) => store.cherootInstallment);
   const workShop = useAppSelector((store) => store.workShop.selectedWorkShop);
@@ -90,13 +88,19 @@ const NewCherootInstallment = ({ open, setOpen }: Props) => {
 
   return (
     <>
-      <Dialog open={open} onClose={() => setOpen(false)}>
+      <Dialog
+        open={open}
+        onClose={() => {
+          setOpen(false);
+          setCherootInstallment(defaultValue);
+        }}
+      >
         <DialogContent>
           <Box sx={{ display: "flex", justifyContent: "flex-end", mr: 2 }}>
             <Typography sx={{ mr: 2, fontWeight: "bold" }}>ရက်စွဲ</Typography>
             <DatePicker
               selected={selecteddate}
-              onChange={(date) => setSelectedDate(date?.toLocaleDateString())}
+              onChange={(date) => setSelectedDate(date as Date)}
             />
           </Box>
 

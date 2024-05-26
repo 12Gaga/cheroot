@@ -9,7 +9,7 @@ export interface filterSizeStockSlice {
 }
 
 export interface createNewFilterSizeStock extends BasicOption {
-  date: string;
+  date: Date | null;
   typeOfFilterSizeId: number | undefined;
   quantity: number;
   bag: number;
@@ -19,7 +19,7 @@ export interface createNewFilterSizeStock extends BasicOption {
 
 export interface updateFilterSizeStock extends BasicOption {
   id: number | null;
-  date: string;
+  date: Date | null;
   typeOfFilterSizeId: number | undefined;
   quantity: number;
   bag: number;
@@ -32,7 +32,7 @@ export interface deleteFilterSizeStock extends BasicOption {
 }
 
 export interface createNewFilterSizeAddStock extends BasicOption {
-  date: string;
+  date: Date | null;
   invNo: number;
   carNo: string;
   typeOfFilterSizeId: number | undefined;
@@ -44,7 +44,7 @@ export interface createNewFilterSizeAddStock extends BasicOption {
 
 export interface updateFilterSizeAddStock extends BasicOption {
   stockSeq: string;
-  date: string;
+  date: Date | null;
   invNo: number;
   carNo: string;
   typeOfFilterSizeId: number | undefined;
@@ -56,4 +56,9 @@ export interface updateFilterSizeAddStock extends BasicOption {
 
 export interface deleteFilterSizeAddStock extends BasicOption {
   stockSeq: string;
+}
+
+export interface checkOnFilterItem {
+  typeOfFilterSize: number | null;
+  typeOfShop: number | null;
 }

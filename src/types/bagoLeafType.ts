@@ -8,7 +8,7 @@ export interface bagoLeafSlice {
 }
 
 export interface createNewBagoLeaf extends BasicOption {
-  date: string;
+  date: Date | null;
   shopId: number | null;
   typeOfLeafId: number | null;
   netWeight: number;
@@ -18,7 +18,7 @@ export interface createNewBagoLeaf extends BasicOption {
 
 export interface updateBagoLeaf extends BasicOption {
   id: number | null;
-  date: string;
+  date: Date | null;
   shopId: number | null;
   typeOfLeafId: number | null;
   netWeight: number;

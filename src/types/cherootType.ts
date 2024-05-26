@@ -21,3 +21,8 @@ export interface updateCheroot extends BasicOption {
 export interface deleteCheroot extends BasicOption {
   id: number;
 }
+
+export interface checkCherootItem {
+  typeOfCheroot: number | null;
+  location: number | null;
+}

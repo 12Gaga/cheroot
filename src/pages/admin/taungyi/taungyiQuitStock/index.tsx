@@ -2,12 +2,15 @@ import AdminLayout from "@/components/adminLayout";
 import NewTaungyiQuitStock from "@/components/taungyi/newTaungyiQuit";
 import { useAppSelector } from "@/store/hooks";
 import { Box, Button, Typography } from "@mui/material";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import UpdateTaungyiQuitStock from "@/components/taungyi/updateTaungyiQuit";
 import DeleteTaungyiExitStock from "@/components/taungyi/deleteTaungyiExitStock";
-const TaungyiQuitStock = () => {
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
+import { TaungyiQuitStock } from "@prisma/client";
+const TaungyiQuitStocks = () => {
   const [open, setOpen] = useState<boolean>(false);
   const cigratteIndustryId = useAppSelector((store) => store.industry.item)?.id;
   const taungyiExitStock = useAppSelector(
@@ -20,6 +23,29 @@ const TaungyiQuitStock = () => {
   const [updateOpen, setUpdateOpen] = useState<boolean>(false);
   const [deleteOpen, setDeleteOpen] = useState<boolean>(false);
   const [selectId, setSelectId] = useState<number>(0);
+
+  const [selecteddate, setSelectedDate] = useState<Date>(new Date());
+  const [exitStock, setExitStock] = useState<TaungyiQuitStock[]>([]);
+
+  const handleDate = (date: Date) => {
+    const data = concernTaungyiExitStock.filter((item) => {
+      const itemDate = new Date(item.date);
+      return itemDate.toLocaleDateString() === date.toLocaleDateString();
+    });
+    setExitStock(data);
+  };
+
+  useEffect(() => {
+    if (concernTaungyiExitStock.length) {
+      const data = concernTaungyiExitStock.filter((item) => {
+        const itemDate = new Date(item.date);
+        return (
+          itemDate.toLocaleDateString() === selecteddate.toLocaleDateString()
+        );
+      });
+      setExitStock(data);
+    }
+  }, [taungyiExitStock]);
   return (
     <>
       <AdminLayout>
@@ -29,6 +55,17 @@ const TaungyiQuitStock = () => {
         >
           သိုလှောင်ရုံပစ္စည်းထုတ်စာရင်း
         </Typography>
+
+        <Box sx={{ mr: 2, display: "flex", mt: 4, width: 300 }}>
+          <Typography sx={{ mr: 2, fontWeight: "bold" }}>ရက်စွဲ</Typography>
+          <DatePicker
+            selected={selecteddate}
+            onChange={(date) => {
+              setSelectedDate(date as Date);
+              handleDate(date as Date);
+            }}
+          />
+        </Box>
 
         <Box sx={{ display: "flex", justifyContent: "flex-end" }}>
           <Button
@@ -61,12 +98,13 @@ const TaungyiQuitStock = () => {
               <th>ကုန်ချိန်</th>
             </tr>
           </thead>
-          {concernTaungyiExitStock.map((item) => {
+          {exitStock.map((item) => {
+            const itemdate = new Date(item.date);
             return (
               <>
                 <thead key={item.id}>
                   <tr style={{ border: "1px solid" }}>
-                    <td>{item.date}</td>
+                    <td>{itemdate.toLocaleDateString()}</td>
                     <td>{stores.find((s) => s.id === item.storeId)?.name}</td>
                     <td>{item.tolBatchNo}</td>
                     <td>{item.netWeight}</td>
@@ -106,4 +144,4 @@ const TaungyiQuitStock = () => {
     </>
   );
 };
-export default TaungyiQuitStock;
+export default TaungyiQuitStocks;

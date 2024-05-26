@@ -17,7 +17,7 @@ import { useState } from "react";
 import "react-datepicker/dist/react-datepicker.css";
 
 const defaultValue: createNewExtraPurchase = {
-  date: "",
+  date: null,
   agentId: undefined,
   typeOfFilterSizeId: undefined,
   filterSizeQty: 0,

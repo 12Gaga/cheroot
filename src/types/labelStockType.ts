@@ -8,7 +8,7 @@ export interface labelStockSlice {
 }
 
 export interface createNewLabelStock extends BasicOption {
-  date: string;
+  date: Date | null;
   typeOfLabelId: number | undefined;
   bandle: number;
   shopId: number;
@@ -17,7 +17,7 @@ export interface createNewLabelStock extends BasicOption {
 
 export interface updateLabelStock extends BasicOption {
   id: number | null;
-  date: string;
+  date: Date | null;
   typeOfLabelId: number | undefined;
   bandle: number;
   shopId: number;
@@ -29,7 +29,7 @@ export interface deleteLabelStock extends BasicOption {
 }
 
 export interface createNewLabelAddStock extends BasicOption {
-  date: string;
+  date: Date | null;
   invNo: number;
   carNo: string;
   typeOfLabelId: number | undefined;
@@ -40,7 +40,7 @@ export interface createNewLabelAddStock extends BasicOption {
 
 export interface updateLabelAddStock extends BasicOption {
   stockSeq: string;
-  date: string;
+  date: Date | null;
   invNo: number;
   carNo: string;
   typeOfLabelId: number | undefined;
@@ -51,4 +51,9 @@ export interface updateLabelAddStock extends BasicOption {
 
 export interface deleteLabelAddStock extends BasicOption {
   stockSeq: string;
+}
+
+export interface checkOnLabelItem {
+  typeOfLabel: number | null;
+  typeOfShop: number | null;
 }

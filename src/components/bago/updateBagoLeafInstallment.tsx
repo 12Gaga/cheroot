@@ -30,7 +30,7 @@ interface Props {
 
 const defaultValue: updateBagoLeafInstallment = {
   id: null,
-  date: "",
+  date: null,
   shopId: null,
   cashBalance: 0,
   payBalance: 0,
@@ -43,9 +43,7 @@ const UpdateBagoLeafInstallment = ({
 }: Props) => {
   const installment = useAppSelector((store) => store.bagoLeafInstallment.item);
   const selectInstallment = installment.find((item) => item.id === selectedId);
-  const [selecteddate, setSelectedDate] = useState<any>(
-    new Date().toLocaleDateString()
-  );
+  const [selecteddate, setSelectedDate] = useState<Date>(new Date());
   const dispatch = useAppDispatch();
   const workshop = useAppSelector((store) => store.workShop.selectedWorkShop);
   const leaf = useAppSelector((store) => store.bagoLeaf.item);
@@ -66,21 +64,6 @@ const UpdateBagoLeafInstallment = ({
       .reduce((total, leaf) => {
         return (total += leaf.totalPrice);
       }, 0);
-    // const filterSizePrice = filterSize
-    //   .filter((item) => item.shopId === shopId)
-    //   .reduce((total, filterSize) => {
-    //     return (total += filterSize.totalPrice);
-    //   }, 0);
-    // const labelPrice = label
-    //   .filter((item) => item.shopId === shopId)
-    //   .reduce((total, label) => {
-    //     return (total += label.totalPrice);
-    //   }, 0);
-    // const plasticPrice = plastic
-    //   .filter((item) => item.shopId === shopId)
-    //   .reduce((total, plastic) => {
-    //     return (total += plastic.totalPrice);
-    //   }, 0);
     const alreadyPay = bagoLeafInstallments
       .filter((item) => item.shopId === shopId)
       .reduce((total, bago) => {
@@ -136,7 +119,7 @@ const UpdateBagoLeafInstallment = ({
             <Typography sx={{ mr: 2, fontWeight: "bold" }}>ရက်စွဲ</Typography>
             <DatePicker
               selected={selecteddate}
-              onChange={(date) => setSelectedDate(date?.toLocaleDateString())}
+              onChange={(date) => setSelectedDate(date as Date)}
             />
           </Box>
 
