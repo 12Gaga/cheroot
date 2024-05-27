@@ -47,6 +47,7 @@ const defaultLeafDeduction: createNewLeafDeduction = {
 
 const defaultOtherDeduction: createNewOtherDeduction = {
   date: null,
+  deductDate: null,
   agentId: undefined,
   cashAdvanceBigDeduction: 0,
   cashAdvanceSmallDeduction: 0,
@@ -87,7 +88,7 @@ const ReturnCheroot = () => {
     setNewLeafDeduction({ ...newLeafDeduction, date: selecteddate });
     setNewOtherDeduction({ ...newOtherDeduction, date: selecteddate });
   }, [selecteddate]);
-  console.log("leaf", newOtherDeduction);
+  console.log("otjew", newOtherDeduction);
   if (!session) return;
   return (
     <>
@@ -249,6 +250,7 @@ const ReturnCheroot = () => {
         setNewOtherDeduction={setNewOtherDeduction}
         totalCherootAmount={totalCherootAmount}
         totalLeafAmount={totalLeafAmount}
+        selectedDate={selecteddate}
       />
 
       <ReturnCherootSix

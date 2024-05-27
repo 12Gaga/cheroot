@@ -8,6 +8,9 @@ import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { NewFormula } from "@/components/formula/newFormula";
 import { useRouter } from "next/router";
+import UpdateFormula from "@/components/formula/updateFormula";
+import DeleteFormula from "@/components/formula/deleteFormula";
+
 const Formula = () => {
   const { data: session } = useSession();
   const [open, setOpen] = useState<boolean>(false);
@@ -28,6 +31,10 @@ const Formula = () => {
   );
   const gar = garages.find((item) => item.id === selectedGarage?.id);
   const router = useRouter();
+  const [updateOpen, setUpdateOpen] = useState<boolean>(false);
+  const [deleteOpen, setDeleteOpen] = useState<boolean>(false);
+  const [selectId, setSelectId] = useState<number>(0);
+
   if (!session) return null;
   return (
     <>
@@ -67,7 +74,7 @@ const Formula = () => {
           sx={{ fontSize: 50 }}
         />
       </Box>
-      <NewFormula open={open} setOpen={setOpen} />
+
       <Box>
         <table border={1}>
           <thead>
@@ -104,13 +111,36 @@ const Formula = () => {
                 <td>{item.tabaccoQty}</td>
                 <td>{item.tabaccoTin}</td>
                 <td>{item.tabaccoPyi}</td>
-                <td>{<EditIcon />}</td>
-                <td>{<DeleteIcon />}</td>
+                <td
+                  onClick={() => {
+                    setUpdateOpen(true), setSelectId(item.id);
+                  }}
+                >
+                  {<EditIcon />}
+                </td>
+                <td
+                  onClick={() => {
+                    setDeleteOpen(true), setSelectId(item.id);
+                  }}
+                >
+                  {<DeleteIcon />}
+                </td>
               </tr>
             </thead>
           ))}
         </table>
       </Box>
+      <NewFormula open={open} setOpen={setOpen} />
+      <UpdateFormula
+        updateOpen={updateOpen}
+        setUpdateOpen={setUpdateOpen}
+        selectedId={selectId}
+      />
+      <DeleteFormula
+        deleteOpen={deleteOpen}
+        setDeleteOpen={setDeleteOpen}
+        selectedId={selectId}
+      />
     </>
   );
 };

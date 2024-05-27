@@ -40,6 +40,7 @@ const PayLeaf = () => {
   const [newPayLeaf, setNewPayLeaf] = useState<createNewPayLeaf>(defaultValue);
   const garages = useAppSelector((store) => store.garage.item);
   const leaves = useAppSelector((store) => store.typeOfLeaf.item);
+  const leafTransfer = useAppSelector((store) => store.leafTransfer.item);
   const workShop = useAppSelector(
     (store) => store.workShop.selectedWorkShop
   ) as WorkShop;
@@ -52,10 +53,23 @@ const PayLeaf = () => {
 
   const handleGarage = (garageId: number) => {
     const data = leafStock.filter((item) => item.garageId === garageId);
-    setConcernLeafStock(data);
-    const batchNo = concernLeafStock.filter(
-      (item) => item.typeOfLeafId === newPayLeaf.typeOfLeafId
+    const transferBatchNo = leafTransfer
+      .filter(
+        (item) =>
+          item.exitGarageId === garageId &&
+          item.typeOfLeafId === newPayLeaf.typeOfLeafId
+      )
+      .map((item) => item.batchNo);
+    const concerndata = data.filter(
+      (item) => !transferBatchNo.includes(item.batchNo)
     );
+    setConcernLeafStock(concerndata);
+    const batchNo = concerndata.filter(
+      (item) =>
+        item.typeOfLeafId === newPayLeaf.typeOfLeafId &&
+        item.garageId === garageId
+    );
+    console.log("batch", batchNo);
     setConcernBatchNo(batchNo);
     const concernPrice = leaves.find(
       (item) => item.id === newPayLeaf.typeOfLeafId
@@ -70,7 +84,7 @@ const PayLeaf = () => {
   useEffect(() => {
     setNewPayLeaf({ ...newPayLeaf, date: selecteddate });
   }, [selecteddate]);
-
+  console.log("concern", concernLeafStock);
   if (!session) return;
   return (
     <>
@@ -132,6 +146,7 @@ const PayLeaf = () => {
           <PayLeafOne
             newPayLeaf={newPayLeaf}
             setNewPayLeaf={setNewPayLeaf}
+            setConcernLeafStock={setConcernLeafStock}
             workShopId={workShop?.id}
             concernLeafStock={concernLeafStock}
             setConcernBatchNo={setConcernBatchNo}

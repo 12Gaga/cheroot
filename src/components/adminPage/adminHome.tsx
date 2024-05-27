@@ -63,14 +63,19 @@ const btns = [
     url: "/admin/payLeaf/payStock",
   },
   {
-    id: 12,
+    id: 13,
     title: "ဂိုထောင်အကူးအပြောင်းစာရင်း",
     url: "/admin/garageTransfer",
   },
   {
-    id: 12,
+    id: 14,
     title: "ဆေးလိပ်ပို့ခြင်း",
     url: "/admin/transferCheroot",
+  },
+  {
+    id: 15,
+    title: "ပစ္စည်းပါကင်ထုတ်ခြင်း",
+    url: "/admin/packing",
   },
 ];
 

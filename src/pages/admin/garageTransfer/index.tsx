@@ -4,7 +4,6 @@ import { useEffect, useState } from "react";
 import AddBoxIcon from "@mui/icons-material/AddBox";
 import NewTransferLeaf from "@/components/garageTrans/newTransferLeaf";
 import { useAppSelector } from "@/store/hooks";
-import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import DeleteLeafTransfer from "@/components/garageTrans/deleteLeafTransfer";
 import { LeafTransferGarage } from "@prisma/client";
@@ -22,46 +21,44 @@ const GarageTransfer = () => {
   const [updateOpen, setUpdateOpen] = useState<boolean>(false);
   const [deleteOpen, setDeleteOpen] = useState<boolean>(false);
   const [selectSeq, setSelectSeq] = useState<string>("");
-
-  let seqs: string[] = [];
-
+  const [seqs, setSeqs] = useState<string[]>([]);
   const [selecteddate, setSelectedDate] = useState<Date>(new Date());
   const [leafTransfer, setLeafTransfer] = useState<LeafTransferGarage[]>([]);
 
   const handleDate = (date: Date) => {
-    seqs = [];
     const data = concernLeafTransfer.filter((item) => {
       const itemDate = new Date(item.date);
       return itemDate.toLocaleDateString() === date.toLocaleDateString();
     });
-    data.forEach((item) => {
-      const seq = item.transferSeq;
-      const exit = seqs.find((item) => item === seq);
-      if (!exit) {
-        seqs.push(seq);
-      }
-    });
     setLeafTransfer(data);
+    handelSeqs(data);
   };
-
   useEffect(() => {
     if (concernLeafTransfer.length) {
       const concern = concernLeafTransfer.filter((item) => {
         const itemDate = new Date(item.date);
+        console.log("date", itemDate);
         return (
           itemDate.toLocaleDateString() === selecteddate.toLocaleDateString()
         );
       });
-      concern.forEach((item) => {
-        const seq = item.transferSeq;
-        const exit = seqs.find((item) => item === seq);
-        if (!exit) {
-          seqs.push(seq);
-        }
-      });
       setLeafTransfer(concern);
+      handelSeqs(concern);
     }
-  }, []);
+  }, [leafTransfers]);
+
+  const handelSeqs = (seq: LeafTransferGarage[]) => {
+    seq.forEach((item) => {
+      const seq = item.transferSeq;
+      const exit = seqs.find((item) => item === seq);
+      if (!exit) {
+        seqs.push(seq);
+        console.log("seq2", seqs);
+      }
+    });
+  };
+  console.log("leaf", leafTransfer);
+  console.log("seqs", seqs);
   return (
     <>
       <AdminLayout>
@@ -103,8 +100,10 @@ const GarageTransfer = () => {
             </tr>
           </thead>
           {seqs.map((item) => {
+            const exit = leafTransfer.find((c) => c.transferSeq == item);
+            if (!exit) return null;
             const itemdate = new Date(
-              leafTransfer.find((c) => c.transferSeq == item)?.date as any
+              leafTransfer.find((c) => c.transferSeq == item)?.date as Date
             );
             return (
               <>

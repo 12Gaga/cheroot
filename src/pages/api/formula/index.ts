@@ -47,6 +47,55 @@ export default async function handler(
       },
     });
     return res.status(200).json({ newFormula });
+  } else if (method === "PUT") {
+    const {
+      typeOfCherootId,
+      cherootQty,
+      typeOfFilterSizeId,
+      filterSizeQty,
+      filterSizeBag,
+      typeOfTabaccoId,
+      tabaccoQty,
+      tin,
+      pyi,
+      id,
+    } = req.body;
+    const isValid =
+      typeOfCherootId &&
+      cherootQty != undefined &&
+      typeOfFilterSizeId &&
+      filterSizeQty != undefined &&
+      filterSizeBag != undefined &&
+      typeOfTabaccoId &&
+      tabaccoQty != undefined &&
+      tin != undefined &&
+      pyi != undefined &&
+      id;
+    if (!isValid) return res.status(405).send("bad request");
+    const updateFormula = await prisma.formula.update({
+      where: { id },
+      data: {
+        typeOfCherootId,
+        cherootQty,
+        typeOfFilterSizeId,
+        filterSizeQty,
+        filterSizeBag,
+        typeOfTabaccoId,
+        tabaccoQty,
+        tabaccoTin: tin,
+        tabaccoPyi: pyi,
+      },
+    });
+    return res.status(200).json({ updateFormula });
+  } else if (method === "DELETE") {
+    const id = Number(req.query.id);
+    const isValid = id;
+    if (!isValid) return res.status(405).send("bad request");
+    await prisma.formula.update({
+      data: { isArchived: true },
+      where: { id },
+    });
+    return res.status(200).send("ok");
   }
-  res.status(200).json("bad request");
+  res.status(400).json("bad request");
 }

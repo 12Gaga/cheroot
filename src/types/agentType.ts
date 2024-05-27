@@ -15,6 +15,19 @@ export interface createNewAgent extends BasicOption {
   cashSmall: number | undefined;
 }
 
+export interface updateAgent extends BasicOption {
+  id: number | null;
+  name: string;
+  phoneNo: number | undefined;
+  address: string;
+  cashBig: number | undefined;
+  cashSmall: number | undefined;
+}
+
+export interface deleteAgent extends BasicOption {
+  id: number;
+}
+
 export interface selectedAgent {
   agentId: number | undefined;
   phoneNo: number | undefined;

@@ -8,6 +8,8 @@ import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { useRouter } from "next/router";
 import HomeIcon from "@mui/icons-material/Home";
+import UpdateAgentLeafViss from "@/components/agentName/updateAgentLeafViss";
+import DeleteAgentLeafViss from "@/components/agentName/deleteAgentLeafViss";
 const AgentLeafVissPage = () => {
   const { data: session } = useSession();
   const [open, setOpen] = useState<boolean>(false);
@@ -32,6 +34,10 @@ const AgentLeafVissPage = () => {
   );
   const gar = garages.find((item) => item.id === selectedGarage?.id);
   const router = useRouter();
+  const [updateOpen, setUpdateOpen] = useState<boolean>(false);
+  const [deleteOpen, setDeleteOpen] = useState<boolean>(false);
+  const [selectId, setSelectId] = useState<number>(0);
+
   if (!session) return;
   return (
     <>
@@ -72,9 +78,7 @@ const AgentLeafVissPage = () => {
         />
       </Box>
 
-      <NewAgentLeafViss open={open} setOpen={setOpen} />
-
-      <Box>
+      <Box sx={{}}>
         <table border={1}>
           <thead>
             <tr style={{ border: "1px solid" }}>
@@ -91,13 +95,36 @@ const AgentLeafVissPage = () => {
                   {concernLeaves.find((l) => l.id === item.typeOfLeafId)?.name}
                 </td>
                 <td>{item.viss}</td>
-                <td>{<EditIcon />}</td>
-                <td>{<DeleteIcon />}</td>
+                <td
+                  onClick={() => {
+                    setUpdateOpen(true), setSelectId(item.id);
+                  }}
+                >
+                  {<EditIcon />}
+                </td>
+                <td
+                  onClick={() => {
+                    setDeleteOpen(true), setSelectId(item.id);
+                  }}
+                >
+                  {<DeleteIcon />}
+                </td>
               </tr>
             </thead>
           ))}
         </table>
       </Box>
+      <NewAgentLeafViss open={open} setOpen={setOpen} />
+      <UpdateAgentLeafViss
+        updateOpen={updateOpen}
+        setUpdateOpen={setUpdateOpen}
+        selectedId={selectId}
+      />
+      <DeleteAgentLeafViss
+        deleteOpen={deleteOpen}
+        setDeleteOpen={setDeleteOpen}
+        selectedId={selectId}
+      />
     </>
   );
 };

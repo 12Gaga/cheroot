@@ -22,6 +22,28 @@ export default async function handler(
       },
     });
     return res.status(200).json({ newAgentLeafViss });
+  } else if (method === "PUT") {
+    const { agentId, typeOfLeafId, viss, id } = req.body;
+    const isValid = agentId && typeOfLeafId && viss != undefined && id;
+    if (!isValid) return res.status(405).send("bad request");
+    const updateAgentLeafViss = await prisma.agentLeafViss.update({
+      where: { id },
+      data: {
+        agentId,
+        typeOfLeafId,
+        viss,
+      },
+    });
+    return res.status(200).json({ updateAgentLeafViss });
+  } else if (method === "DELETE") {
+    const id = Number(req.query.id);
+    const isValid = id;
+    if (!isValid) return res.status(405).send("bad request");
+    await prisma.agentLeafViss.update({
+      data: { isArchived: true },
+      where: { id },
+    });
+    return res.status(200).send("ok");
   }
-  res.status(200).json("bad request");
+  res.status(400).json("bad request");
 }

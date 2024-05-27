@@ -17,6 +17,7 @@ export const CreateOtherDeduction = createAsyncThunk(
   async (option: createNewOtherDeduction, thunkApi) => {
     const {
       date,
+      deductDate,
       agentId,
       cashAdvanceBigDeduction,
       cashAdvanceSmallDeduction,
@@ -40,6 +41,7 @@ export const CreateOtherDeduction = createAsyncThunk(
           },
           body: JSON.stringify({
             date,
+            deductDate,
             agentId,
             cashAdvanceBigDeduction,
             cashAdvanceSmallDeduction,

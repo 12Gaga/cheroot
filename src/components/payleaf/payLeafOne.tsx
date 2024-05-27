@@ -17,6 +17,7 @@ interface Props {
   newPayLeaf: createNewPayLeaf;
   setNewPayLeaf: (value: createNewPayLeaf) => void;
   setConcernBatchNo: (value: Leaf[]) => void;
+  setConcernLeafStock: (value: Leaf[]) => void;
   workShopId: number;
   concernLeafStock: Leaf[];
   concernBatchNo: Leaf[];
@@ -28,14 +29,12 @@ const PayLeafOne = ({
   concernLeafStock,
   concernBatchNo,
   setConcernBatchNo,
+  setConcernLeafStock,
 }: Props) => {
-  // const leafStock = useAppSelector((store) => store.leafStock.item);
-  // const concernLeafStock = leafStock.filter(
-  //   (item) => item.garageId === newPayLeaf.garageId
-  // );
   const leaves = useAppSelector((store) => store.typeOfLeaf.item);
   const concernLeaves = leaves.filter((item) => item.workShopId === workShopId);
-
+  const leafTransfer = useAppSelector((store) => store.leafTransfer.item);
+  const leafStock = useAppSelector((store) => store.leafStock.item);
   console.log("newLeaf", newPayLeaf);
 
   const handleChange = (evt: SelectChangeEvent<number[]>) => {
@@ -58,9 +57,21 @@ const PayLeafOne = ({
   };
 
   const changeBatchNo = (leafId: number) => {
-    const batchNos = concernLeafStock.filter(
-      (item) => item.typeOfLeafId === leafId
+    const data = leafStock.filter(
+      (item) => item.garageId === newPayLeaf.garageId
     );
+    const transferBatchNo = leafTransfer
+      .filter(
+        (item) =>
+          item.exitGarageId === newPayLeaf.garageId &&
+          item.typeOfLeafId === leafId
+      )
+      .map((item) => item.batchNo);
+    const concerndata = data.filter(
+      (item) => !transferBatchNo.includes(item.batchNo)
+    );
+    setConcernLeafStock(concerndata);
+    const batchNos = concerndata.filter((item) => item.typeOfLeafId === leafId);
     setConcernBatchNo(batchNos);
     const concernPrice = leaves.find((item) => item.id === leafId)
       ?.price as number;

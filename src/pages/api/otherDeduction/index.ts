@@ -10,6 +10,7 @@ export default async function handler(
   if (method === "POST") {
     const {
       date,
+      deductDate,
       agentId,
       cashAdvanceBigDeduction,
       cashAdvanceSmallDeduction,
@@ -25,6 +26,7 @@ export default async function handler(
     console.log("workShopId", workShopId);
     const isValid =
       date &&
+      deductDate &&
       agentId &&
       cashAdvanceBigDeduction != undefined &&
       cashAdvanceSmallDeduction != undefined &&
@@ -51,6 +53,11 @@ export default async function handler(
         totalNetAgentPayment,
         workShopId,
       },
+    });
+
+    await prisma.extraPurchase.updateMany({
+      where: { agentId, totalAmount: otherDeduction },
+      data: { isArchived: true },
     });
 
     const agent = (await prisma.agent.findFirst({

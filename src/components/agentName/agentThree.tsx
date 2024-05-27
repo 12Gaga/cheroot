@@ -28,28 +28,7 @@ const AgentThree = ({ newAgentLeafViss, setNewAgentLeafViss }: Props) => {
   return (
     <>
       <Box>
-        {/* <Typography
-          variant="h6"
-          sx={{
-            color: "white",
-            fontWeight: "bold",
-            bgcolor: "#FCB500",
-            width: 200,
-            p: 1,
-            borderTopRightRadius: 40,
-            borderBottomRightRadius: 40,
-          }}
-        >
-          လက်ကျန်ဖက်ပိဿာ
-        </Typography> */}
-        <Box
-        // sx={{
-        //   display: "flex",
-        //   ml: 2,
-        //   alignItems: "center",
-        //   flexWrap: "wrap",
-        // }}
-        >
+        <Box>
           <Box sx={{ width: 300, mt: 2 }}>
             <Typography sx={{ fontWeight: "bold" }}>
               ကိုယ်စားလှယ်အမည်

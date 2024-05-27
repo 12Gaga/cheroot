@@ -1,14 +1,5 @@
 import { createNewAgent } from "@/types/agentType";
-import {
-  Box,
-  Button,
-  FormControl,
-  InputLabel,
-  MenuItem,
-  Select,
-  TextField,
-  Typography,
-} from "@mui/material";
+import { Box, TextField, Typography } from "@mui/material";
 
 interface Props {
   newAgent: createNewAgent;

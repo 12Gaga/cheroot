@@ -29,6 +29,40 @@ export default async function handler(
       },
     });
     return res.status(200).json({ newAgent });
+  } else if (method === "PUT") {
+    const { name, phoneNo, address, cashBig, cashSmall, id } = req.body;
+    const isValid =
+      name &&
+      phoneNo &&
+      address &&
+      cashBig != undefined &&
+      cashSmall != undefined &&
+      id;
+    if (!isValid) return res.status(405).send("bad request");
+    const updateAgent = await prisma.agent.update({
+      where: { id },
+      data: {
+        name,
+        phoneNo,
+        adderess: address,
+        cashBalcanceBig: cashBig,
+        cashBalcanceSmall: cashSmall,
+      },
+    });
+    return res.status(200).json({ updateAgent });
+  } else if (method === "DELETE") {
+    const id = Number(req.query.id);
+    const isValid = id;
+    if (!isValid) return res.status(405).send("bad request");
+    await prisma.agent.update({
+      data: { isArchived: true },
+      where: { id },
+    });
+    await prisma.agentLeafViss.updateMany({
+      where: { agentId: id },
+      data: { isArchived: true },
+    });
+    return res.status(200).send("ok");
   }
-  res.status(200).json("bad request");
+  res.status(400).json("bad request");
 }

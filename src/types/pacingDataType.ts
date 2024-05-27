@@ -8,7 +8,7 @@ export interface packingDataSlice {
 }
 
 export interface addPackingData extends BasicOption {
-  date: string;
+  date: Date | null;
   typeOfCherootId: number | null;
   typeOfPackingId: number | null;
   formOfPackingId: number | null;
@@ -23,7 +23,7 @@ export interface addPackingData extends BasicOption {
 
 export interface updatePackingData extends BasicOption {
   id: number | null;
-  date: string;
+  date: Date | null;
   typeOfCherootId: number | null;
   typeOfPackingId: number | null;
   formOfPackingId: number | null;
@@ -38,4 +38,10 @@ export interface updatePackingData extends BasicOption {
 
 export interface deletePackingData extends BasicOption {
   id: number;
+}
+
+export interface checkPackingOnItem {
+  typeOfCheroot: number | null;
+  typeOfPacking: number | null;
+  formOfPacking: number | null;
 }

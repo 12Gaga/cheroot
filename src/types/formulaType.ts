@@ -18,3 +18,20 @@ export interface createNewFormula extends BasicOption {
   tin: number;
   pyi: number;
 }
+
+export interface updateFormula extends BasicOption {
+  id: number | null;
+  typeOfCherootId: number | undefined;
+  cherootQty: number;
+  typeOfFilterSizeId: number | undefined;
+  filterSizeQty: number;
+  filterSizeBag: number;
+  typeOfTabaccoId: number | undefined;
+  tabaccoQty: number;
+  tin: number;
+  pyi: number;
+}
+
+export interface deleteFormula extends BasicOption {
+  id: number;
+}

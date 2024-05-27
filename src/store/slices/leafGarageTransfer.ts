@@ -7,7 +7,7 @@ import {
 import Config from "@/utils/config";
 import { LeafTransferGarage } from "@prisma/client";
 import { PayloadAction, createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { addStock, deletedLeafAddStock, updatedStock } from "./leafStock";
+import { addStock, deletedLeafAddStock } from "./leafStock";
 
 const initialState: leafTransferSlice = {
   item: [],
@@ -93,7 +93,7 @@ export const UpdatedLeafTransfer = createAsyncThunk(
       );
       const { updateLeafTransfer, updateLeafStock } = await response.json();
       thunkApi.dispatch(updatedLeafTransfer(updateLeafTransfer));
-      thunkApi.dispatch(updatedStock(updateLeafStock));
+      // thunkApi.dispatch(updatedStock(updateLeafStock));
       onSuccess && onSuccess();
     } catch (err) {
       onError && onError();

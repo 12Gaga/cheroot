@@ -1,7 +1,7 @@
 import { useAppSelector } from "@/store/hooks";
 import { createNewOtherDeduction } from "@/types/otherDeductionType";
 import { Box, Typography, TextField } from "@mui/material";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 
@@ -10,6 +10,7 @@ interface Props {
   setNewOtherDeduction: (value: createNewOtherDeduction) => void;
   totalCherootAmount: number;
   totalLeafAmount: number;
+  selectedDate: Date;
 }
 
 const ReturnCherootFive = ({
@@ -17,21 +18,26 @@ const ReturnCherootFive = ({
   setNewOtherDeduction,
   totalCherootAmount,
   totalLeafAmount,
+  selectedDate,
 }: Props) => {
-  const [ddate, setDate] = useState<any>(new Date().toLocaleDateString());
+  const [ddate, setDate] = useState<Date>(new Date());
   console.log("date", ddate);
   const extraPurchase = useAppSelector((store) => store.extraPurchase.item);
-  const exit = extraPurchase.find(
-    (item) =>
+  const exit = extraPurchase.find((item) => {
+    const itemdate = new Date(item.date);
+    return (
       item.agentId === newOtherDeduction.agentId &&
-      item.date === newOtherDeduction.date
-  )?.totalAmount;
+      itemdate.toLocaleDateString() === selectedDate.toLocaleDateString()
+    );
+  })?.totalAmount;
   if (exit) {
     const agentPay =
-      newOtherDeduction.cashAdvanceSmallDeduction +
-      newOtherDeduction.cashAdvanceBigDeduction +
-      exit -
-      (totalCherootAmount - totalLeafAmount);
+      totalCherootAmount -
+      totalLeafAmount -
+      (newOtherDeduction.cashAdvanceSmallDeduction +
+        newOtherDeduction.cashAdvanceBigDeduction +
+        exit);
+
     const totalPay =
       agentPay +
       newOtherDeduction.cashAdvanceBig +
@@ -52,10 +58,14 @@ const ReturnCherootFive = ({
       return (totalViss += agentViss.viss);
     }, 0);
   //changeDate
-  const handelDate = (date: any) => {
-    const exitPurchase = extraPurchase.find(
-      (item) => item.agentId === newOtherDeduction.agentId && item.date === date
-    )?.totalAmount as number;
+  const handelDate = (date: Date) => {
+    const exitPurchase = extraPurchase.find((item) => {
+      const itemdate = new Date(item.date);
+      return (
+        item.agentId === newOtherDeduction.agentId &&
+        itemdate.toLocaleDateString() === date.toLocaleDateString()
+      );
+    })?.totalAmount as number;
     const agentPay =
       totalCherootAmount -
       totalLeafAmount -
@@ -69,9 +79,10 @@ const ReturnCherootFive = ({
       newOtherDeduction.bonusPayment;
     setNewOtherDeduction({
       ...newOtherDeduction,
-      otherDeduction: exitPurchase,
+      otherDeduction: exitPurchase ? exitPurchase : 0,
       netAgentPayment: agentPay,
       totalNetAgentPayment: totalPay,
+      deductDate: date,
     });
     setDate(date);
   };
@@ -115,6 +126,9 @@ const ReturnCherootFive = ({
       totalNetAgentPayment: totalPay,
     });
   };
+  useEffect(() => {
+    setNewOtherDeduction({ ...newOtherDeduction, deductDate: ddate });
+  }, [ddate]);
   return (
     <>
       <Box
@@ -182,7 +196,7 @@ const ReturnCherootFive = ({
             <Typography sx={{ mr: 2 }}>ရက်စွဲ</Typography>
             <DatePicker
               selected={ddate}
-              onChange={(date) => handelDate(date?.toLocaleDateString())}
+              onChange={(date) => handelDate(date as Date)}
             />
           </Box>
           <Box sx={{ width: 250, mt: 1, ml: 2 }}>

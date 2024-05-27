@@ -9,11 +9,13 @@ import {
 } from "@mui/material";
 import { useAppSelector, useAppDispatch } from "@/store/hooks";
 import { setOpenSnackbar } from "@/store/slices/snackBar";
-import { setIsLoading } from "@/store/slices/workShop";
 import { useState } from "react";
 import AgentThree from "./agentThree";
 import { CreateNewAgentLeafViss } from "@/types/agentLeafVissType";
-import { CreateAgentLeafViss } from "@/store/slices/agentLeafViss";
+import {
+  CreateAgentLeafViss,
+  setIsLoading,
+} from "@/store/slices/agentLeafViss";
 
 interface Props {
   open: boolean;

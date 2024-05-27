@@ -1,7 +1,12 @@
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
-import { CreateFormula, setIsLoading } from "@/store/slices/formula";
+import {
+  CreateFormula,
+  UpdatedFormula,
+  setIsLoading,
+} from "@/store/slices/formula";
 import { setOpenSnackbar } from "@/store/slices/snackBar";
-import { createNewFormula } from "@/types/formulaType";
+import typeOfCheroot from "@/store/slices/typeOfCheroot";
+import { createNewFormula, updateFormula } from "@/types/formulaType";
 import { LoadingButton } from "@mui/lab";
 import {
   Box,
@@ -17,14 +22,16 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 export interface Props {
-  open: boolean;
-  setOpen: (value: boolean) => void;
+  updateOpen: boolean;
+  setUpdateOpen: (value: boolean) => void;
+  selectedId: number;
 }
 
-export const defaultValue: createNewFormula = {
+export const defaultValue: updateFormula = {
+  id: null,
   typeOfCherootId: undefined,
   cherootQty: 0,
   typeOfFilterSizeId: undefined,
@@ -36,9 +43,16 @@ export const defaultValue: createNewFormula = {
   pyi: 0,
 };
 
-export const NewFormula = ({ open, setOpen }: Props) => {
+export const UpdateFormula = ({
+  updateOpen,
+  setUpdateOpen,
+  selectedId,
+}: Props) => {
+  const formula = useAppSelector((store) => store.formula.item);
+  const selectFormula = formula.find((item) => item.id === selectedId);
   const dispatch = useAppDispatch();
-  const [newFormula, setNewFormula] = useState<createNewFormula>(defaultValue);
+  const [updateFormula, setUpdateFormula] =
+    useState<updateFormula>(defaultValue);
   const workShop = useAppSelector((store) => store.workShop.selectedWorkShop);
   const cheroots = useAppSelector((store) => store.typeOfCheroot.item);
   const concernCheroots = cheroots.filter(
@@ -56,14 +70,14 @@ export const NewFormula = ({ open, setOpen }: Props) => {
   const handleClick = () => {
     dispatch(setIsLoading(true)),
       dispatch(
-        CreateFormula({
-          ...newFormula,
+        UpdatedFormula({
+          ...updateFormula,
           onSuccess: () => {
-            setOpen(false);
-            setNewFormula(defaultValue);
+            setUpdateOpen(false);
+            setUpdateFormula(defaultValue);
             dispatch(
               setOpenSnackbar({
-                message: "Create new tabacco add Stock success",
+                message: "Update formula success",
               })
             );
             dispatch(setIsLoading(false));
@@ -71,9 +85,29 @@ export const NewFormula = ({ open, setOpen }: Props) => {
         })
       );
   };
+
+  useEffect(() => {
+    if (selectFormula) {
+      setUpdateFormula({
+        ...updateFormula,
+        id: selectedId,
+        typeOfCherootId: selectFormula.typeOfCherootId,
+        cherootQty: selectFormula.cherootQty,
+        typeOfFilterSizeId: selectFormula.typeOfFilterSizeId,
+        filterSizeQty: selectFormula.filterSizeQty,
+        filterSizeBag: selectFormula.filterSizeBag,
+        typeOfTabaccoId: selectFormula.typeOfTabaccoId,
+        tabaccoQty: selectFormula.tabaccoQty,
+        tin: selectFormula.tabaccoTin,
+        pyi: selectFormula.tabaccoPyi,
+      });
+    }
+  }, [updateOpen, selectFormula]);
+
+  if (!selectFormula) return null;
   return (
     <>
-      <Dialog open={open} onClose={() => setOpen(false)}>
+      <Dialog open={updateOpen} onClose={() => setUpdateOpen(false)}>
         <DialogTitle>Formula ထည့်သွင်းခြင်း</DialogTitle>
         <DialogContent>
           <Box sx={{ display: "flex", alignItems: "center", mt: 2 }}>
@@ -84,10 +118,11 @@ export const NewFormula = ({ open, setOpen }: Props) => {
               <Select
                 labelId="demo-simple-select-filled-label"
                 id="demo-simple-select-filled"
-                value={newFormula.typeOfCherootId}
+                defaultValue={selectFormula.typeOfCherootId}
+                value={updateFormula.typeOfCherootId}
                 onChange={(evt) => {
-                  setNewFormula({
-                    ...newFormula,
+                  setUpdateFormula({
+                    ...updateFormula,
                     typeOfCherootId: Number(evt.target.value),
                   });
                 }}
@@ -107,11 +142,12 @@ export const NewFormula = ({ open, setOpen }: Props) => {
               ဆေးလိပ်အရေအတွက်
             </Typography>
             <TextField
+              defaultValue={selectFormula.cherootQty}
               placeholder="ဆေးလိပ်အရေအတွက်"
               sx={{ bgcolor: "#EEE8CF" }}
               onChange={(evt) => {
-                setNewFormula({
-                  ...newFormula,
+                setUpdateFormula({
+                  ...updateFormula,
                   cherootQty: Number(evt.target.value),
                 });
               }}
@@ -126,10 +162,11 @@ export const NewFormula = ({ open, setOpen }: Props) => {
               <Select
                 labelId="demo-simple-select-filled-label"
                 id="demo-simple-select-filled"
-                value={newFormula.typeOfFilterSizeId}
+                defaultValue={selectFormula.typeOfFilterSizeId}
+                value={updateFormula.typeOfFilterSizeId}
                 onChange={(evt) => {
-                  setNewFormula({
-                    ...newFormula,
+                  setUpdateFormula({
+                    ...updateFormula,
                     typeOfFilterSizeId: Number(evt.target.value),
                   });
                 }}
@@ -149,11 +186,12 @@ export const NewFormula = ({ open, setOpen }: Props) => {
               အဆီခံအရေအတွက်
             </Typography>
             <TextField
+              defaultValue={selectFormula.filterSizeQty}
               placeholder="အဆီခံအရေအတွက်"
               sx={{ bgcolor: "#EEE8CF" }}
               onChange={(evt) => {
-                setNewFormula({
-                  ...newFormula,
+                setUpdateFormula({
+                  ...updateFormula,
                   filterSizeQty: Number(evt.target.value),
                 });
               }}
@@ -165,11 +203,12 @@ export const NewFormula = ({ open, setOpen }: Props) => {
               အိတ်
             </Typography>
             <TextField
+              defaultValue={selectFormula.filterSizeBag}
               placeholder="အိတ်"
               sx={{ bgcolor: "#EEE8CF" }}
               onChange={(evt) => {
-                setNewFormula({
-                  ...newFormula,
+                setUpdateFormula({
+                  ...updateFormula,
                   filterSizeBag: Number(evt.target.value),
                 });
               }}
@@ -184,10 +223,11 @@ export const NewFormula = ({ open, setOpen }: Props) => {
               <Select
                 labelId="demo-simple-select-filled-label"
                 id="demo-simple-select-filled"
-                value={newFormula.typeOfTabaccoId}
+                defaultValue={selectFormula.typeOfTabaccoId}
+                value={updateFormula.typeOfTabaccoId}
                 onChange={(evt) => {
-                  setNewFormula({
-                    ...newFormula,
+                  setUpdateFormula({
+                    ...updateFormula,
                     typeOfTabaccoId: Number(evt.target.value),
                   });
                 }}
@@ -207,11 +247,12 @@ export const NewFormula = ({ open, setOpen }: Props) => {
               အရေအတွက်
             </Typography>
             <TextField
+              defaultValue={selectFormula.tabaccoQty}
               placeholder="အရေအတွက်"
               sx={{ bgcolor: "#EEE8CF" }}
               onChange={(evt) => {
-                setNewFormula({
-                  ...newFormula,
+                setUpdateFormula({
+                  ...updateFormula,
                   tabaccoQty: Number(evt.target.value),
                 });
               }}
@@ -223,11 +264,12 @@ export const NewFormula = ({ open, setOpen }: Props) => {
               တင်း
             </Typography>
             <TextField
+              defaultValue={selectFormula.tabaccoTin}
               placeholder="တင်း"
               sx={{ bgcolor: "#EEE8CF" }}
               onChange={(evt) => {
-                setNewFormula({
-                  ...newFormula,
+                setUpdateFormula({
+                  ...updateFormula,
                   tin: Number(evt.target.value),
                 });
               }}
@@ -239,11 +281,12 @@ export const NewFormula = ({ open, setOpen }: Props) => {
               ပြည်
             </Typography>
             <TextField
+              defaultValue={selectFormula.tabaccoPyi}
               placeholder="ပြည်"
               sx={{ bgcolor: "#EEE8CF" }}
               onChange={(evt) => {
-                setNewFormula({
-                  ...newFormula,
+                setUpdateFormula({
+                  ...updateFormula,
                   pyi: Number(evt.target.value),
                 });
               }}
@@ -254,25 +297,14 @@ export const NewFormula = ({ open, setOpen }: Props) => {
           <Button
             variant="contained"
             onClick={() => {
-              setOpen(false);
-              setNewFormula(defaultValue);
+              setUpdateOpen(false);
+              setUpdateFormula(defaultValue);
             }}
           >
             မလုပ်တော့ပါ
           </Button>
           <LoadingButton
             variant="contained"
-            disabled={
-              !newFormula.typeOfCherootId ||
-              !newFormula.cherootQty ||
-              !newFormula.typeOfFilterSizeId ||
-              !newFormula.filterSizeQty ||
-              !newFormula.filterSizeBag ||
-              !newFormula.typeOfTabaccoId ||
-              !newFormula.tabaccoQty ||
-              !newFormula.tin ||
-              !newFormula.pyi
-            }
             onClick={handleClick}
             loading={isLoading}
           >
@@ -283,5 +315,4 @@ export const NewFormula = ({ open, setOpen }: Props) => {
     </>
   );
 };
-
-export default NewFormula;
+export default UpdateFormula;

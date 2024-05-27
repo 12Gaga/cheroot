@@ -8,6 +8,8 @@ import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { useRouter } from "next/router";
 import HomeIcon from "@mui/icons-material/Home";
+import UpdateAgent from "@/components/agentName/updateAgent";
+import DeleteAgent from "@/components/agentName/deleteAgent";
 const NamePage = () => {
   const router = useRouter();
   const { data: session } = useSession();
@@ -25,8 +27,11 @@ const NamePage = () => {
     (store) => store.garage
   );
   const gar = garages.find((item) => item.id === selectedGarage?.id);
-  if (!session) return null;
 
+  const [updateOpen, setUpdateOpen] = useState<boolean>(false);
+  const [deleteOpen, setDeleteOpen] = useState<boolean>(false);
+  const [selectId, setSelectId] = useState<number>(0);
+  if (!session) return null;
   return (
     <>
       <Box
@@ -65,7 +70,6 @@ const NamePage = () => {
           sx={{ fontSize: 50 }}
         />
       </Box>
-      <NewAgent open={open} setOpen={setOpen} />
 
       <Box>
         <table border={1}>
@@ -86,8 +90,20 @@ const NamePage = () => {
                 <td>{item.phoneNo}</td>
                 <td>{item.cashBalcanceBig}</td>
                 <td>{item.cashBalcanceSmall}</td>
-                <td>{<EditIcon />}</td>
-                <td>{<DeleteIcon />}</td>
+                <td
+                  onClick={() => {
+                    setUpdateOpen(true), setSelectId(item.id);
+                  }}
+                >
+                  {<EditIcon />}
+                </td>
+                <td
+                  onClick={() => {
+                    setDeleteOpen(true), setSelectId(item.id);
+                  }}
+                >
+                  {<DeleteIcon />}
+                </td>
               </tr>
             </thead>
           ))}
@@ -113,6 +129,17 @@ const NamePage = () => {
           ဖက်လက်ကျန်ထည့်ခြင်း
         </Button>
       </Box>
+      <NewAgent open={open} setOpen={setOpen} />
+      <UpdateAgent
+        updateOpen={updateOpen}
+        setUpdateOpen={setUpdateOpen}
+        selectedId={selectId}
+      />
+      <DeleteAgent
+        deleteOpen={deleteOpen}
+        setDeleteOpen={setDeleteOpen}
+        selectedId={selectId}
+      />
     </>
   );
 };

@@ -12,3 +12,13 @@ export interface CreateNewAgentLeafViss extends BasicOption {
   typeOfLeafId: number | undefined;
   viss: number;
 }
+
+export interface updateAgentLeafViss extends BasicOption {
+  id: number | null;
+  agentId: number | undefined;
+  typeOfLeafId: number | undefined;
+  viss: number;
+}
+export interface deleteAgentLeafViss extends BasicOption {
+  id: number;
+}

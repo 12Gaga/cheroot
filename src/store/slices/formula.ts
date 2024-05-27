@@ -1,4 +1,9 @@
-import { createNewFormula, formulaSlice } from "@/types/formulaType";
+import {
+  createNewFormula,
+  deleteFormula,
+  formulaSlice,
+  updateFormula,
+} from "@/types/formulaType";
 import Config from "@/utils/config";
 import { Formula } from "@prisma/client";
 import { PayloadAction, createAsyncThunk, createSlice } from "@reduxjs/toolkit";
@@ -56,6 +61,71 @@ export const CreateFormula = createAsyncThunk(
   }
 );
 
+export const UpdatedFormula = createAsyncThunk(
+  "formula/UpdateFormula",
+  async (option: updateFormula, thunkApi) => {
+    const {
+      id,
+      typeOfCherootId,
+      cherootQty,
+      typeOfFilterSizeId,
+      filterSizeQty,
+      filterSizeBag,
+      typeOfTabaccoId,
+      tabaccoQty,
+      tin,
+      pyi,
+      onSuccess,
+      onError,
+    } = option;
+    const workShopId = localStorage.getItem("selectedWorkShopId");
+    try {
+      const response = await fetch(
+        `${Config.apiBaseUrl}/formula?workShopId=${workShopId}`,
+        {
+          method: "PUT",
+          headers: {
+            "content-type": "application/json",
+          },
+          body: JSON.stringify({
+            id,
+            typeOfCherootId,
+            cherootQty,
+            typeOfFilterSizeId,
+            filterSizeQty,
+            filterSizeBag,
+            typeOfTabaccoId,
+            tabaccoQty,
+            tin,
+            pyi,
+          }),
+        }
+      );
+      const { updateFormula } = await response.json();
+      thunkApi.dispatch(updatedFormula(updateFormula));
+      onSuccess && onSuccess();
+    } catch (err) {
+      onError && onError();
+    }
+  }
+);
+
+export const DeletedFormula = createAsyncThunk(
+  "formula/DeletedFormula",
+  async (option: deleteFormula, thunkApi) => {
+    const { id, onSuccess, onError } = option;
+    try {
+      const response = await fetch(`${Config.apiBaseUrl}/formula?id=${id}`, {
+        method: "DELETE",
+      });
+      thunkApi.dispatch(deletedFormula(id));
+      onSuccess && onSuccess();
+    } catch (err) {
+      onError && onError();
+    }
+  }
+);
+
 const FormulaSlice = createSlice({
   name: "formula",
   initialState,
@@ -69,8 +139,22 @@ const FormulaSlice = createSlice({
     addFormula: (state, action: PayloadAction<Formula>) => {
       state.item = [...state.item, action.payload];
     },
+    updatedFormula: (state, action: PayloadAction<Formula>) => {
+      state.item = state.item.map((item) =>
+        item.id === action.payload.id ? action.payload : item
+      );
+    },
+    deletedFormula: (state, action: PayloadAction<number>) => {
+      state.item = state.item.filter((item) => item.id != action.payload);
+    },
   },
 });
 
-export const { setFormula, setIsLoading, addFormula } = FormulaSlice.actions;
+export const {
+  setFormula,
+  setIsLoading,
+  addFormula,
+  updatedFormula,
+  deletedFormula,
+} = FormulaSlice.actions;
 export default FormulaSlice.reducer;

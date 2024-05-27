@@ -27,7 +27,7 @@ interface Props {
 }
 
 const defaultValue: addPackingData = {
-  date: "",
+  date: null,
   typeOfCherootId: null,
   typeOfPackingId: null,
   formOfPackingId: null,
@@ -41,9 +41,7 @@ const defaultValue: addPackingData = {
 };
 
 const NewPackingData = ({ open, setOpen }: Props) => {
-  const [selecteddate, setSelectedDate] = useState<any>(
-    new Date().toLocaleDateString()
-  );
+  const [selecteddate, setSelectedDate] = useState<Date>(new Date());
   const { isLoading } = useAppSelector((store) => store.packingData);
   const dispatch = useAppDispatch();
   const workshop = useAppSelector((store) => store.workShop.selectedWorkShop);
@@ -148,7 +146,7 @@ const NewPackingData = ({ open, setOpen }: Props) => {
             <Typography sx={{ mr: 2, fontWeight: "bold" }}>ရက်စွဲ</Typography>
             <DatePicker
               selected={selecteddate}
-              onChange={(date) => setSelectedDate(date?.toLocaleDateString())}
+              onChange={(date) => setSelectedDate(date as Date)}
             />
           </Box>
 

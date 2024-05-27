@@ -21,12 +21,18 @@ const ReturnCherootFour = ({
   setNewLeafDeduction,
   totalAmount,
 }: Props) => {
+  const agentsLeafViss = useAppSelector((store) => store.agentLeafViss.item);
   const workShop = useAppSelector((store) => store.workShop.selectedWorkShop);
   const leaves = useAppSelector((store) => store.typeOfLeaf.item);
   const concernLeaves = leaves.filter(
     (item) => item.workShopId === workShop?.id
   );
   const handleChange = (leafId: number) => {
+    // const leftViss = agentsLeafViss
+    //   .filter((item) => item.agentId === newLeafDeduction.agentId)
+    //   .reduce((totalViss, agentViss) => {
+    //     return (totalViss += agentViss.viss);
+    //   }, 0);
     const selectLeafPrice = concernLeaves.find((item) => item.id === leafId)
       ?.price as number;
     console.log("prie", selectLeafPrice);

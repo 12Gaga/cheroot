@@ -46,6 +46,21 @@ export default async function handler(
         })
       )
     );
+    // await prisma.$transaction(
+    //   realBatchNo.map((item) =>
+    //     prisma.leafTransferGarage.updateMany({
+    //       where: {
+    //         batchNo: item.batchNo,
+    //         exitGarageId: enterenceGarageId,
+    //         typeOfLeafId,
+    //       },
+    //       data: {
+    //         isArchived: true,
+    //       },
+    //     })
+    //   )
+    // );
+
     const newLeafStock = await prisma.$transaction(
       realBatchNo.map((item) =>
         prisma.leaf.create({
