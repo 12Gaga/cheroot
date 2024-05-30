@@ -133,6 +133,28 @@ const Bago = [
     url: "/admin/bago/checkingInstallment",
   },
 ];
+
+const ReturnCherootReport = [
+  {
+    label: "ကိုယ်စားလှယ်နေ့စဉ်ဆေးလိပ်အဝင်စာရင်း",
+    url: "/admin/returnCherootReport",
+  },
+  {
+    label: "ဆေးလိပ်အဝင်လချုပ်စာရင်း",
+    url: "/admin/returnCherootReport/monthlyCherootData",
+  },
+];
+
+const CashAdvanceReport = [
+  {
+    label: "ကိုယ်စားလှယ်ကြိုယူငွေလက်ကျန်ရှင်းတမ်း",
+    url: "/admin/cashAdvanceReport",
+  },
+  {
+    label: "ကိုယ်စားလှယ်ကြိုယူငွေလက်ကျန်ရှင်းတမ်း(လချုပ်)",
+    url: "/admin/cashAdvanceReport/monthlyCashAdvanceData",
+  },
+];
 const AdminLayout = ({ children }: Props) => {
   const { data: session } = useSession();
   const router = useRouter();
@@ -145,6 +167,8 @@ const AdminLayout = ({ children }: Props) => {
   const taungyi = router.pathname.includes("taungyi");
   const transfer = router.pathname.includes("transferCheroot");
   const bago = router.pathname.includes("bago");
+  const returnCherootReport = router.pathname.includes("returnCherootReport");
+  const cashAdvanceReport = router.pathname.includes("cashAdvanceReport");
   const { selectedWorkShop, item: workShops } = useAppSelector(
     (store) => store.workShop
   );
@@ -173,6 +197,10 @@ const AdminLayout = ({ children }: Props) => {
     data = [...Taungyi];
   } else if (bago) {
     data = [...Bago];
+  } else if (returnCherootReport) {
+    data = [...ReturnCherootReport];
+  } else if (cashAdvanceReport) {
+    data = [...CashAdvanceReport];
   }
 
   if (!session) return null;
@@ -232,6 +260,16 @@ const AdminLayout = ({ children }: Props) => {
         {bago && (
           <Typography variant="h5" sx={{ color: "white", fontWeight: "bold" }}>
             ပဲခူးပစ္စည်းစာရင်း
+          </Typography>
+        )}
+        {returnCherootReport && (
+          <Typography variant="h5" sx={{ color: "white", fontWeight: "bold" }}>
+            ဆေးလိပ်အဝင်စာရင်းစစ်ခြင်း
+          </Typography>
+        )}
+        {cashAdvanceReport && (
+          <Typography variant="h5" sx={{ color: "white", fontWeight: "bold" }}>
+            ကိုယ်စားလှယ်ကြိုယူငွေလက်ကျန်စစ်ခြင်း
           </Typography>
         )}
         <Box sx={{ display: "flex" }}>

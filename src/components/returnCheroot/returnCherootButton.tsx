@@ -4,9 +4,13 @@ import {
   setLoadingOtherDeduction,
 } from "@/store/slices/otherDeduction";
 import { setOpenSnackbar } from "@/store/slices/snackBar";
-import { createNewOtherDeduction } from "@/types/otherDeductionType";
+import {
+  createNewOtherDeduction,
+  otherDeductionSlice,
+} from "@/types/otherDeductionType";
 import { LoadingButton } from "@mui/lab";
 import { Box, Button } from "@mui/material";
+import { OtherDeduction } from "@prisma/client";
 import { useRouter } from "next/router";
 
 interface Props {
@@ -25,6 +29,10 @@ const ReturnCherootButton = ({ newOtherDeduction }: Props) => {
         onSuccess: () => {
           dispatch(setOpenSnackbar({ message: "Add Other Deduction success" }));
           dispatch(setLoadingOtherDeduction(false));
+          console.log("hello");
+          router.push(
+            `/admin/returnCheroot/printReturnCherootData?agentId=${newOtherDeduction.agentId}&date=${newOtherDeduction.date}&deductDate=${newOtherDeduction.deductDate}`
+          );
         },
       })
     );

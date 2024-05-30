@@ -23,33 +23,6 @@ const ReturnCherootFive = ({
   const [ddate, setDate] = useState<Date>(new Date());
   console.log("date", ddate);
   const extraPurchase = useAppSelector((store) => store.extraPurchase.item);
-  const exit = extraPurchase.find((item) => {
-    const itemdate = new Date(item.date);
-    return (
-      item.agentId === newOtherDeduction.agentId &&
-      itemdate.toLocaleDateString() === selectedDate.toLocaleDateString()
-    );
-  })?.totalAmount;
-  if (exit) {
-    const agentPay =
-      totalCherootAmount -
-      totalLeafAmount -
-      (newOtherDeduction.cashAdvanceSmallDeduction +
-        newOtherDeduction.cashAdvanceBigDeduction +
-        exit);
-
-    const totalPay =
-      agentPay +
-      newOtherDeduction.cashAdvanceBig +
-      newOtherDeduction.cashAdvanceSmall +
-      newOtherDeduction.bonusPayment;
-    setNewOtherDeduction({
-      ...newOtherDeduction,
-      otherDeduction: exit,
-      netAgentPayment: agentPay,
-      totalNetAgentPayment: totalPay,
-    });
-  }
   //find leftVissOfSelectAgent
   const agentsLeafViss = useAppSelector((store) => store.agentLeafViss.item);
   const leftViss = agentsLeafViss
@@ -129,6 +102,44 @@ const ReturnCherootFive = ({
   useEffect(() => {
     setNewOtherDeduction({ ...newOtherDeduction, deductDate: ddate });
   }, [ddate]);
+
+  useEffect(() => {
+    const exit = extraPurchase.find((item) => {
+      const itemdate = new Date(item.date);
+      return (
+        item.agentId === newOtherDeduction.agentId &&
+        itemdate.toLocaleDateString() === selectedDate.toLocaleDateString()
+      );
+    })?.totalAmount;
+    if (exit) {
+      const agentPay =
+        totalCherootAmount -
+        totalLeafAmount -
+        (newOtherDeduction.cashAdvanceSmallDeduction +
+          newOtherDeduction.cashAdvanceBigDeduction +
+          exit);
+
+      const totalPay =
+        agentPay +
+        newOtherDeduction.cashAdvanceBig +
+        newOtherDeduction.cashAdvanceSmall +
+        newOtherDeduction.bonusPayment;
+      setNewOtherDeduction({
+        ...newOtherDeduction,
+        otherDeduction: exit,
+        netAgentPayment: agentPay,
+        totalNetAgentPayment: totalPay,
+      });
+    } else {
+      setNewOtherDeduction({
+        ...newOtherDeduction,
+        otherDeduction: 0,
+        netAgentPayment: 0,
+        totalNetAgentPayment: 0,
+      });
+    }
+    console.log("exit", exit);
+  }, [extraPurchase, newOtherDeduction.agentId]);
   return (
     <>
       <Box
@@ -204,7 +215,11 @@ const ReturnCherootFive = ({
               အခြားခုနှိမ်ခြင်း
             </Typography>
             <TextField
-              value={newOtherDeduction.otherDeduction}
+              value={
+                newOtherDeduction.otherDeduction
+                  ? newOtherDeduction.otherDeduction
+                  : 0
+              }
               placeholder="အခြားခုနှိမ်ခြင်း"
               sx={{ bgcolor: "#EEE8CF" }}
               onChange={() => {}}

@@ -10,7 +10,6 @@ export default async function handler(
   if (method === "POST") {
     const {
       date,
-      deductDate,
       agentId,
       cashAdvanceBigDeduction,
       cashAdvanceSmallDeduction,
@@ -26,7 +25,6 @@ export default async function handler(
     console.log("workShopId", workShopId);
     const isValid =
       date &&
-      deductDate &&
       agentId &&
       cashAdvanceBigDeduction != undefined &&
       cashAdvanceSmallDeduction != undefined &&
@@ -38,6 +36,14 @@ export default async function handler(
       totalNetAgentPayment != undefined;
 
     if (!isValid) return res.status(405).send("bad request");
+
+    const agent = (await prisma.agent.findFirst({
+      where: { id: agentId },
+    })) as Agent;
+    const bigCash =
+      cashAdvanceBig + (agent.cashBalcanceBig - cashAdvanceBigDeduction);
+    const smallCash =
+      cashAdvanceSmall + (agent.cashBalcanceSmall - cashAdvanceSmallDeduction);
 
     const newOtherDeduction = await prisma.otherDeduction.create({
       data: {
@@ -51,6 +57,8 @@ export default async function handler(
         netAgentPayment,
         bonusPayment,
         totalNetAgentPayment,
+        remainCashBig: bigCash,
+        remainCashSmall: smallCash,
         workShopId,
       },
     });
@@ -60,18 +68,10 @@ export default async function handler(
       data: { isArchived: true },
     });
 
-    const agent = (await prisma.agent.findFirst({
-      where: { id: agentId },
-    })) as Agent;
-    const bigCash =
-      cashAdvanceBig + (agent.cashBalcanceBig - cashAdvanceBigDeduction);
-    const smallCash =
-      cashAdvanceSmall + (agent.cashBalcanceSmall - cashAdvanceSmallDeduction);
-
-    await prisma.agent.updateMany({
-      data: { cashBalcanceBig: bigCash, cashBalcanceSmall: smallCash },
-      where: { id: agentId },
-    });
+    // await prisma.agent.updateMany({
+    //   data: { cashBalcanceBig: bigCash, cashBalcanceSmall: smallCash },
+    //   where: { id: agentId },
+    // });
     return res.status(200).json({ newOtherDeduction });
   }
   res.status(200).json("bad request");

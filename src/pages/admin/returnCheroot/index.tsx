@@ -20,6 +20,7 @@ import { createNewOtherDeduction } from "@/types/otherDeductionType";
 import { createNewReturnCheroot } from "@/types/returnCherootType";
 import { LoadingButton } from "@mui/lab";
 import { Box, Button, Typography } from "@mui/material";
+import { OtherDeduction } from "@prisma/client";
 import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
 import DatePicker from "react-datepicker";
@@ -82,11 +83,14 @@ const ReturnCheroot = () => {
     useState<createNewOtherDeduction>(defaultOtherDeduction);
   const [totalCherootAmount, setTotalCherootAmount] = useState<number>(0);
   const [totalLeafAmount, setTotalLeafAmount] = useState<number>(0);
-  // const [totalOtherAmount, setTotalOtherAmount] = useState<number>(0);
   useEffect(() => {
     setNewReturnCheroot({ ...newReturnCheroot, date: selecteddate });
     setNewLeafDeduction({ ...newLeafDeduction, date: selecteddate });
-    setNewOtherDeduction({ ...newOtherDeduction, date: selecteddate });
+    setNewOtherDeduction({
+      ...newOtherDeduction,
+      date: selecteddate,
+      deductDate: selecteddate,
+    });
   }, [selecteddate]);
   console.log("otjew", newOtherDeduction);
   if (!session) return;

@@ -1,6 +1,5 @@
 import LabelExtra from "@/components/extraPur/extraLabel";
 import FilterSizeExtra from "@/components/extraPur/extraPurFilterSize";
-import ExtraPurTop from "@/components/extraPur/extraPurTop";
 import TabaccoExtra from "@/components/extraPur/extraTabacco";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import {
@@ -10,10 +9,19 @@ import {
 import { setOpenSnackbar } from "@/store/slices/snackBar";
 import { createNewExtraPurchase } from "@/types/extraPurchaseType";
 import { LoadingButton } from "@mui/lab";
-import { Box, Button, Typography } from "@mui/material";
+import {
+  Box,
+  Button,
+  FormControl,
+  ListItemText,
+  MenuItem,
+  Select,
+  Typography,
+} from "@mui/material";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 
 const defaultValue: createNewExtraPurchase = {
@@ -47,7 +55,20 @@ const ExtraPurchase = () => {
     ?.id as number;
   const [newExtraPurchase, setNewExtraPurchase] =
     useState<createNewExtraPurchase>(defaultValue);
-  console.log("concern", newExtraPurchase);
+  const [selecteddate, setSelectedDate] = useState<Date>(new Date());
+  const agent = useAppSelector((store) => store.agent.item);
+  const concernAgent = agent.filter((item) => item.workShopId === workShop);
+  const garage = useAppSelector((store) => store.garage.item);
+  const concernGarage = garage.filter((item) => item.workShopId === workShop);
+  const filterSize = useAppSelector((store) => store.typeOfFilterSize.item);
+  const concernFilterSize = filterSize.filter(
+    (item) => item.workShopId === workShop
+  );
+  const tabacco = useAppSelector((store) => store.typeOfTabacco.item);
+  const concernTabacco = tabacco.filter((item) => item.workShopId === workShop);
+  const label = useAppSelector((store) => store.typeOfLabel.item);
+  const concernLabel = label.filter((item) => item.workShopId === workShop);
+
   const handleClick = () => {
     dispatch(setIsLoading(true));
     dispatch(
@@ -61,6 +82,25 @@ const ExtraPurchase = () => {
       })
     );
   };
+
+  useEffect(() => {
+    setNewExtraPurchase({ ...newExtraPurchase, date: selecteddate });
+  }, [selecteddate]);
+
+  useEffect(() => {
+    if (concernFilterSize.length) {
+      setNewExtraPurchase({
+        ...newExtraPurchase,
+        typeOfFilterSizeId: concernFilterSize[0].id,
+        typeOfTabaccoId: concernTabacco[0].id,
+        typeOfLabelId: concernLabel[0].id,
+        date: selecteddate,
+      });
+      console.log("hello");
+    }
+  }, [filterSize]);
+
+  console.log("datedfg", newExtraPurchase);
   if (!session) return;
   return (
     <>
@@ -78,11 +118,81 @@ const ExtraPurchase = () => {
         </Typography>
       </Box>
 
-      <ExtraPurTop
-        newExtraPurchase={newExtraPurchase}
-        setNewExtraPurchase={setNewExtraPurchase}
-        workshopId={workShop}
-      />
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+        }}
+      >
+        <Box
+          sx={{
+            width: 400,
+            mt: 2,
+            ml: 2,
+            display: "flex",
+            alignItems: "center",
+          }}
+        >
+          <Typography sx={{ fontWeight: "bold", mr: 2 }}>
+            ကိုယ်စားလှယ်အမည်
+          </Typography>
+          <FormControl variant="filled" sx={{ width: 225 }}>
+            <Select
+              labelId="demo-simple-select-filled-label"
+              id="demo-simple-select-filled"
+              value={newExtraPurchase?.agentId}
+              onChange={(evt) => {
+                setNewExtraPurchase({
+                  ...newExtraPurchase,
+                  agentId: Number(evt.target.value),
+                });
+              }}
+              sx={{ bgcolor: "#EEE8CF" }}
+            >
+              {concernAgent.map((item) => (
+                <MenuItem key={item.id} value={item.id}>
+                  <ListItemText primary={item.name} />
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+        </Box>
+
+        <Box sx={{ display: "flex", alignItems: "center" }}>
+          <Typography sx={{ fontWeight: "bold", width: 120 }}>
+            ဂိုထောင်အမည်
+          </Typography>
+          <FormControl variant="filled" sx={{ width: 225 }}>
+            <Select
+              labelId="demo-simple-select-filled-label"
+              id="demo-simple-select-filled"
+              value={newExtraPurchase.garageId}
+              onChange={(evt) => {
+                setNewExtraPurchase({
+                  ...newExtraPurchase,
+                  garageId: Number(evt.target.value),
+                });
+              }}
+              sx={{ bgcolor: "#EEE8CF" }}
+            >
+              {concernGarage.map((item) => (
+                <MenuItem key={item.id} value={item.id}>
+                  <ListItemText primary={item.name} />
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+        </Box>
+
+        <Box sx={{ display: "flex", justifyContent: "flex-end", mr: 5, mt: 2 }}>
+          <Typography sx={{ mr: 2 }}>ရက်စွဲ</Typography>
+          <DatePicker
+            selected={selecteddate}
+            onChange={(date) => setSelectedDate(date as Date)}
+          />
+        </Box>
+      </Box>
 
       <Typography
         variant="h6"

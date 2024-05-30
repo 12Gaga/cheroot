@@ -29,6 +29,7 @@ const ExtraPurTop = ({
   const garage = useAppSelector((store) => store.garage.item);
   const concernGarage = garage.filter((item) => item.workShopId === workshopId);
   useEffect(() => {
+    console.log("datedfg", selecteddate);
     setNewExtraPurchase({ ...newExtraPurchase, date: selecteddate });
   }, [selecteddate]);
   console.log("data", newExtraPurchase);

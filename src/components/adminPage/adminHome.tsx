@@ -77,6 +77,16 @@ const btns = [
     title: "ပစ္စည်းပါကင်ထုတ်ခြင်း",
     url: "/admin/packing",
   },
+  {
+    id: 16,
+    title: "ဆေးလိပ်အဝင်စာရင်းစစ်ခြင်း",
+    url: "/admin/returnCherootReport",
+  },
+  {
+    id: 17,
+    title: "ကိုယ်စားလှယ်ကြိုယူငွေလက်ကျန်စာရင်းစစ်ခြင်း",
+    url: "/admin/cashAdvanceReport",
+  },
 ];
 
 const Admin = () => {

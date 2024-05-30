@@ -117,3 +117,7 @@ body {
     display: none;
   }
 }
+
+.table {
+  border-collapse: collapse;
+}

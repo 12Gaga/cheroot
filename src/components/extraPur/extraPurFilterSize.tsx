@@ -60,16 +60,17 @@ const FilterSizeExtra = ({
       totalAmount,
     });
   };
-  useEffect(() => {
-    if (concernFilterSize.length) {
-      setNewExtraPurchase({
-        ...newExtraPurchase,
-        typeOfFilterSizeId: concernFilterSize[0].id,
-        typeOfTabaccoId: concernTabacco[0].id,
-        typeOfLabelId: concernLabel[0].id,
-      });
-    }
-  }, [concernFilterSize.length]);
+  // useEffect(() => {
+  //   if (concernFilterSize.length) {
+  //     setNewExtraPurchase({
+  //       ...newExtraPurchase,
+  //       typeOfFilterSizeId: concernFilterSize[0].id,
+  //       typeOfTabaccoId: concernTabacco[0].id,
+  //       typeOfLabelId: concernLabel[0].id,
+  //     });
+  //     console.log("hello");
+  //   }
+  // }, [concernFilterSize.length]);
 
   return (
     <>

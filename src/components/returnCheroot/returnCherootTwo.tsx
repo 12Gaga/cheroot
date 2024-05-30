@@ -13,21 +13,6 @@ const ReturnCherootTwo = ({
   totalAmount,
 }: Props) => {
   const workShop = useAppSelector((store) => store.workShop.selectedWorkShop);
-  // const returnCheroots = useAppSelector((store) => store.returnCheroot.item);
-  // const concernReturnCheroots = returnCheroots
-  //   .filter((item) => item.workShopId === workShop?.id)
-  //   .filter(
-  //     (i) =>
-  //       i.date.toLocaleDateString() ===
-  //         newReturnCheroot.date?.toLocaleDateString() &&
-  //       i.agentId === newReturnCheroot.agentId
-  //   );
-  // console.log("djof", concernReturnCheroots);
-  // console.log("date", selectedDate);
-  // const totalAmount = concernReturnCheroots.reduce(
-  //   (total, cheroot) => (total += cheroot.amount),
-  //   0
-  // );
   return (
     <>
       <Box

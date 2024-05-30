@@ -637,6 +637,8 @@ model OtherDeduction{
   netAgentPayment Int
   bonusPayment Int @default(0)
   totalNetAgentPayment Int
+  remainCashBig Int @default(0)
+  remainCashSmall Int @default(0)
   workShop WorkShop @relation(fields: [workShopId],references: [id])
   workShopId Int
   isArchived Boolean @default(false)
