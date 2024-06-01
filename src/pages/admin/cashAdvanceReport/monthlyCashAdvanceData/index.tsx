@@ -151,7 +151,7 @@ const MonthlyCashAdvanceReport = () => {
                 findConcernLastData[findConcernLastData.length - 1];
               no += 1;
               return (
-                <tr>
+                <tr key={item}>
                   <th style={{ height: 30 }}>{no}</th>
                   <td
                     style={{

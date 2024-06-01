@@ -1,6 +1,7 @@
 import { Box, Button } from "@mui/material";
 import AdminButton3 from "./adminButtonThree";
 import { useRouter } from "next/router";
+import { useSession } from "next-auth/react";
 const btns = [
   {
     id: 1,
@@ -87,9 +88,14 @@ const btns = [
     title: "ကိုယ်စားလှယ်ကြိုယူငွေလက်ကျန်စာရင်းစစ်ခြင်း",
     url: "/admin/cashAdvanceReport",
   },
+  {
+    id: 18,
+    title: "ဂိုထောင်လက်ကျန်ပစ္စည်းစစ်ခြင်း",
+    url: "/admin/garageReport",
+  },
 ];
 
-const Admin = () => {
+const AdminRoute = () => {
   const router = useRouter();
   return (
     <>
@@ -142,7 +148,6 @@ const Admin = () => {
                 </Button>
               ))}
             </Box>
-            <AdminButton3 />
           </Box>
         </Box>
       </Box>
@@ -150,4 +155,4 @@ const Admin = () => {
   );
 };
 
-export default Admin;
+export default AdminRoute;

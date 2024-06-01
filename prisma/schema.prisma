@@ -121,6 +121,7 @@ model Garage{
   payLeaf PayLeaf[]
   payOtherItem PayOtherItem[]
   extraPurchase ExtraPurchase[]
+  packing Packing[]
   // leafTransferGarage LeafTransferGarage[]
   // filterSizeTransferGarage FilterSizeTransferGarage[]
   // tabaccoTransferGarage TabaccoTransferGarage[]
@@ -376,6 +377,8 @@ model Packing{
   formOfPacking FormOfPacking @relation(fields: [formOfPackingId],references: [id])
   formOfPackingId Int
   quantity Int
+  garage Garage @relation(fields: [garageId],references: [id])
+  garageId Int
   packingPlasticId Int
   packingPlasticQty Int @default(0)
   warpingPlasticId Int

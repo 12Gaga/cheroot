@@ -33,11 +33,12 @@ interface Props {
 
 const defaultValue: updatePackingData = {
   id: null,
-  date: "",
+  date: null,
   typeOfCherootId: null,
   typeOfPackingId: null,
   formOfPackingId: null,
   quantity: 0,
+  garageId: null,
   packingPlasticId: null,
   packingPlasticQty: 0,
   warpingPlasticId: null,
@@ -65,6 +66,8 @@ const UpdatePackingData = ({
   const concernCheroots = cheroots.filter(
     (item) => item.workShopId === workshop?.id
   );
+  const garages = useAppSelector((store) => store.garage.item);
+  const concernGarages = garages.filter((g) => g.workShopId === workshop?.id);
   const typeOfPacking = useAppSelector((store) => store.typeOfPacking.item);
   const formOfPacking = useAppSelector((store) => store.formOfPacking.item);
   const [updatePackingData, setUpdatePackingData] =
@@ -159,6 +162,7 @@ const UpdatePackingData = ({
         ...updatePackingData,
         id: selectedId,
         date: selecteddate,
+        garageId: selectPackingData.garageId,
         typeOfCherootId: selectPackingData.typeOfCherootId,
         typeOfPackingId: selectPackingData.typeOfPackingId,
         formOfPackingId: selectPackingData.formOfPackingId,
@@ -220,6 +224,32 @@ const UpdatePackingData = ({
                 sx={{ bgcolor: "#EEE8CF", width: 150 }}
                 onChange={() => {}}
               />
+            </Box>
+            <Box sx={{ my: 3, display: "flex", alignItems: "center", ml: 2 }}>
+              <Typography sx={{ fontWeight: "bold", width: 80 }}>
+                ဂိုထောင်
+              </Typography>
+              <FormControl variant="filled" sx={{ width: 225 }}>
+                <Select
+                  labelId="demo-simple-select-filled-label"
+                  id="demo-simple-select-filled"
+                  defaultValue={selectPackingData.garageId}
+                  value={updatePackingData.garageId}
+                  onChange={(evt) => {
+                    setUpdatePackingData({
+                      ...updatePackingData,
+                      garageId: Number(evt.target.value),
+                    });
+                  }}
+                  sx={{ bgcolor: "#EEE8CF" }}
+                >
+                  {concernGarages.map((item) => (
+                    <MenuItem key={item.id} value={item.id}>
+                      <ListItemText primary={item.name} />
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
             </Box>
           </Box>
 

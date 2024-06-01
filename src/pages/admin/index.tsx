@@ -1,14 +1,20 @@
-import { useAppSelector, useAppDispatch } from "@/store/hooks";
-import { fetchApp } from "@/store/slices/app";
 import { Box, Button } from "@mui/material";
 import { signIn, useSession } from "next-auth/react";
 import { useRouter } from "next/router";
-import { useEffect } from "react";
 
 const Admin = () => {
   const { data: session } = useSession();
   const router = useRouter();
   console.log(session);
+  // const { data: session } = useSession();
+  // const { init } = useAppSelector((store) => store.app);
+  // const dispatch = useAppDispatch();
+  // console.log("session", session);
+  // useEffect(() => {
+  //   if (session && !init) {
+  //     dispatch(fetchApp({}));
+  //   }
+  // }, [session]);
   if (!session) {
     return (
       <>

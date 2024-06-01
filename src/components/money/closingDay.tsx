@@ -43,6 +43,16 @@ const DailyClosingData = ({ closing, setClosing }: Props) => {
       </Box>
 
       <Box sx={{ mt: 2 }}>
+        <Typography sx={{ fontWeight: "bold" }}>ဆေးလိပ်ဖိုးပေးငွေ</Typography>
+        <TextField
+          value={closing.payCheroot}
+          placeholder="ဖြည့်တင်းငွေ"
+          sx={{ bgcolor: "#EEE8CF", width: 300 }}
+          onChange={() => {}}
+        />
+      </Box>
+
+      <Box sx={{ mt: 2 }}>
         <Typography sx={{ fontWeight: "bold" }}>ယနေ့လက်ကျန်ငွေ</Typography>
         <TextField
           value={closing.dailyClosing}

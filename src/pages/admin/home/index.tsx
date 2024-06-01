@@ -1,4 +1,4 @@
-import Admin from "@/components/adminPage/adminHome";
+import AdminRoute from "@/components/adminPage/adminHome";
 import { Box, Button, Typography } from "@mui/material";
 import { signOut, useSession } from "next-auth/react";
 import Image from "next/image";
@@ -35,7 +35,7 @@ const AdminPage = () => {
         </Button>
       </Box>
 
-      <Admin />
+      <AdminRoute />
     </>
   );
 };

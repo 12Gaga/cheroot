@@ -54,9 +54,7 @@ const LeafOpen = ({ open, setOpen }: Props) => {
   );
   const garageId = useAppSelector((store) => store.garage.selectedGarage)
     ?.id as number;
-  const leafstock = useAppSelector((item) => item.leafStock.item).filter(
-    (item) => item.garageId === garageId
-  );
+  const leafstock = useAppSelector((item) => item.leafStock.item);
   const [newLeafStock, setNewLeafStock] =
     useState<createNewLeafStock>(defaultValue);
 
@@ -81,12 +79,30 @@ const LeafOpen = ({ open, setOpen }: Props) => {
   };
 
   const handelLeaf = (leafId: number) => {
-    const leaf = leafstock.filter((item) => item.typeOfLeafId === leafId);
+    const leaf = leafstock.filter(
+      (item) =>
+        item.typeOfLeafId === leafId && item.garageId === newLeafStock.garageId
+    );
     const batchno = leaf.length && leaf[leaf.length - 1].batchNo;
 
     setNewLeafStock({
       ...newLeafStock,
       typeOfLeafId: leafId,
+      batchNo: batchno ? batchno + 1 : 1,
+    });
+  };
+
+  const handelGarage = (garageId: number) => {
+    const leaf = leafstock.filter(
+      (item) =>
+        item.typeOfLeafId === newLeafStock.typeOfLeafId &&
+        item.garageId === garageId
+    );
+    const batchno = leaf.length && leaf[leaf.length - 1].batchNo;
+    console.log("batcj", leaf);
+    setNewLeafStock({
+      ...newLeafStock,
+      garageId: garageId,
       batchNo: batchno ? batchno + 1 : 1,
     });
   };
@@ -116,12 +132,7 @@ const LeafOpen = ({ open, setOpen }: Props) => {
                 labelId="demo-simple-select-filled-label"
                 id="demo-simple-select-filled"
                 value={newLeafStock.garageId}
-                onChange={(evt) =>
-                  setNewLeafStock({
-                    ...newLeafStock,
-                    garageId: Number(evt.target.value),
-                  })
-                }
+                onChange={(evt) => handelGarage(Number(evt.target.value))}
                 sx={{ bgcolor: "#EEE8CF" }}
               >
                 {concernGarage.map((item) => (

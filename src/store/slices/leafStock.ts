@@ -304,11 +304,11 @@ const LeafStockSlice = createSlice({
     addStock: (state, action: PayloadAction<Leaf[]>) => {
       state.item = [...state.item, ...action.payload];
     },
-    // updatedStock: (state, action) => {
-    //   const seq = action.payload[0].stockSeq;
-    //   const otherItem = state.item.filter((item) => item.stockSeq !== seq);
-    //   state.item = [...otherItem, ...action.payload];
-    // },
+    deletedPayLeafStock: (state, action: PayloadAction<number[]>) => {
+      state.item = state.item.filter(
+        (item) => !action.payload.includes(item.id)
+      );
+    },
   },
 });
 
@@ -322,5 +322,6 @@ export const {
   deletedLeafAddStock,
   addLoopStock,
   addStock,
+  deletedPayLeafStock,
 } = LeafStockSlice.actions;
 export default LeafStockSlice.reducer;

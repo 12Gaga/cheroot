@@ -133,7 +133,13 @@ const NewTransferLeaf = ({ open, setOpen }: Props) => {
   }, [selecteddate, open]);
   return (
     <>
-      <Dialog open={open} onClose={() => setOpen(false)}>
+      <Dialog
+        open={open}
+        onClose={() => {
+          setOpen(false);
+          setTransferLeaf(defaultValue);
+        }}
+      >
         <DialogTitle></DialogTitle>
         <DialogContent>
           <Box

@@ -2,6 +2,7 @@ import { createNewPayLeaf, payLeafSlice } from "@/types/payLeafType";
 import Config from "@/utils/config";
 import { PayLeaf, TypeOfLeaf } from "@prisma/client";
 import { PayloadAction, createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { deletedPayLeafStock } from "./leafStock";
 
 const initialState: payLeafSlice = {
   item: [],
@@ -51,6 +52,7 @@ export const CreatePayLeaf = createAsyncThunk(
       );
       const { newPayLeaf } = await response.json();
       thunkApi.dispatch(addPayleaf(newPayLeaf));
+      thunkApi.dispatch(deletedPayLeafStock(batchNo));
       onSuccess && onSuccess();
     } catch (err) {
       onError && onError();

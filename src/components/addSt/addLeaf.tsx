@@ -54,9 +54,7 @@ const AddLeaf = ({ open, setOpen }: Props) => {
   );
   const garageId = useAppSelector((store) => store.garage.selectedGarage)
     ?.id as number;
-  const leafstock = useAppSelector((item) => item.leafStock.item).filter(
-    (item) => item.garageId === garageId
-  );
+  const leafstock = useAppSelector((item) => item.leafStock.item);
   const [newLeafAddStock, setNewLeafAddStock] =
     useState<createNewLeafAddStock>(defaultValue);
   const { isLoading } = useAppSelector((store) => store.leafStock);
@@ -80,12 +78,31 @@ const AddLeaf = ({ open, setOpen }: Props) => {
   };
 
   const handelLeaf = (leafId: number) => {
-    const leaf = leafstock.filter((item) => item.typeOfLeafId === leafId);
+    const leaf = leafstock.filter(
+      (item) =>
+        item.typeOfLeafId === leafId &&
+        item.garageId === newLeafAddStock.garageId
+    );
     const batchno = leaf.length && leaf[leaf.length - 1].batchNo;
-
+    console.log("batcj", leaf);
     setNewLeafAddStock({
       ...newLeafAddStock,
       typeOfLeafId: leafId,
+      batchNo: batchno ? batchno + 1 : 1,
+    });
+  };
+
+  const handelGarage = (garageId: number) => {
+    const leaf = leafstock.filter(
+      (item) =>
+        item.typeOfLeafId === newLeafAddStock.typeOfLeafId &&
+        item.garageId === garageId
+    );
+    const batchno = leaf.length && leaf[leaf.length - 1].batchNo;
+    console.log("batcj", leaf);
+    setNewLeafAddStock({
+      ...newLeafAddStock,
+      garageId: garageId,
       batchNo: batchno ? batchno + 1 : 1,
     });
   };
@@ -95,7 +112,13 @@ const AddLeaf = ({ open, setOpen }: Props) => {
   }, [selecteddate, open]);
   return (
     <>
-      <Dialog open={open} onClose={() => setOpen(false)}>
+      <Dialog
+        open={open}
+        onClose={() => {
+          setOpen(false);
+          setNewLeafAddStock(defaultValue);
+        }}
+      >
         <DialogContent>
           <Box sx={{ display: "flex", justifyContent: "flex-end", mr: 2 }}>
             <Typography sx={{ mr: 2, fontWeight: "bold" }}>ရက်စွဲ</Typography>
@@ -190,10 +213,7 @@ const AddLeaf = ({ open, setOpen }: Props) => {
                   id="demo-simple-select-filled"
                   value={newLeafAddStock.garageId}
                   onChange={(evt) => {
-                    setNewLeafAddStock({
-                      ...newLeafAddStock,
-                      garageId: Number(evt.target.value),
-                    });
+                    handelGarage(Number(evt.target.value));
                   }}
                   sx={{ bgcolor: "#EEE8CF" }}
                 >

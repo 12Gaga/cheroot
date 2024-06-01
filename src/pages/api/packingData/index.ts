@@ -19,6 +19,7 @@ export default async function handler(
       coverPlasticId,
       coverPlasticQty,
       quantity,
+      garageId,
     } = req.body;
     const workShopId = Number(req.query.workShopId);
     console.log("workShopId", workShopId);
@@ -27,6 +28,7 @@ export default async function handler(
       typeOfCherootId &&
       typeOfPackingId &&
       packingPlasticId &&
+      garageId &&
       packingPlasticQty != undefined &&
       warpingPlasticId &&
       warpingPlasticQty != undefined &&
@@ -42,6 +44,7 @@ export default async function handler(
         typeOfCherootId,
         typeOfPackingId,
         formOfPackingId,
+        garageId,
         packingPlasticId,
         packingPlasticQty,
         warpingPlasticId,
@@ -67,6 +70,7 @@ export default async function handler(
       coverPlasticId,
       coverPlasticQty,
       quantity,
+      garageId,
     } = req.body;
     const workShopId = Number(req.query.workShopId);
     console.log("workShopId", workShopId);
@@ -76,6 +80,7 @@ export default async function handler(
       typeOfCherootId &&
       typeOfPackingId &&
       packingPlasticId &&
+      garageId &&
       packingPlasticQty != undefined &&
       warpingPlasticId &&
       warpingPlasticQty != undefined &&
@@ -89,6 +94,7 @@ export default async function handler(
       where: { id },
       data: {
         date,
+        garageId,
         typeOfCherootId,
         typeOfPackingId,
         formOfPackingId,

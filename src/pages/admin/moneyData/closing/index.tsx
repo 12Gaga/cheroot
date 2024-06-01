@@ -20,25 +20,41 @@ const defaultValue: addClosing = {
   directPayment: 0,
   mainBalance: 0,
   mainClosing: 0,
+  payCheroot: 0,
 };
 
 const Closing = () => {
   const [selecteddate, setSelectedDate] = useState<any>(
     new Date().toLocaleDateString()
   );
+  const workShopId = useAppSelector(
+    (store) => store.workShop.selectedWorkShop
+  )?.id;
   const [closing, setclosing] = useState<addClosing>(defaultValue);
   const { isLoading } = useAppSelector((store) => store.closing);
   const dispatch = useAppDispatch();
-
-  const dailyExpensive = useAppSelector((store) => store.dailyExpensive.item);
-  const cashBalance = useAppSelector((store) => store.dailyClosing.item);
-  const replenishment = useAppSelector((store) => store.replenishment.item);
+  const payCheroot = useAppSelector(
+    (store) => store.otherDeduction.item
+  ).filter((item) => item.workShopId === workShopId);
+  const dailyExpensive = useAppSelector(
+    (store) => store.dailyExpensive.item
+  ).filter((item) => item.workShopId === workShopId);
+  const cashBalance = useAppSelector((store) => store.dailyClosing.item).filter(
+    (item) => item.workShopId === workShopId
+  );
+  const replenishment = useAppSelector(
+    (store) => store.replenishment.item
+  ).filter((item) => item.workShopId === workShopId);
   const totalDailyExpensive = dailyExpensive
     .filter((item) => item.date === selecteddate)
     .reduce((total, daily) => {
       return (total += daily.amount);
     }, 0);
-
+  const tolalPayCheroot = payCheroot
+    .filter((item) => item.date === selecteddate)
+    .reduce((total, pay) => {
+      return (total += pay.totalNetAgentPayment);
+    }, 0);
   const tolCashBalance =
     cashBalance.length && cashBalance[cashBalance.length - 1].amount;
 
@@ -48,21 +64,29 @@ const Closing = () => {
       return (total += reple.amount);
     }, 0);
 
-  const closingDay = tolCashBalance + tolReplenishment - totalDailyExpensive;
+  const closingDay =
+    tolCashBalance + tolReplenishment - (totalDailyExpensive + tolalPayCheroot);
 
-  const mainBalance = useAppSelector((store) => store.mainMoney.item);
+  const mainBalance = useAppSelector((store) => store.mainMoney.item).filter(
+    (item) => item.workShopId === workShopId
+  );
   const totalMainBalance = mainBalance
     .filter((item) => item.date === selecteddate)
     .reduce((total, main) => {
       return (total += main.amount);
     }, 0);
 
-  const mainClosing = useAppSelector((store) => store.mainClosing.item);
+  const mainClosing = useAppSelector((store) => store.mainClosing.item).filter(
+    (item) => item.workShopId === workShopId
+  );
   const tolMainClosing =
     mainClosing.length && mainClosing[mainClosing.length - 1].amount;
   console.log("main", mainClosing);
 
-  const tolDirectPayment = useAppSelector((store) => store.directPayment.item)
+  const directPayment = useAppSelector(
+    (store) => store.directPayment.item
+  ).filter((item) => item.workShopId === workShopId);
+  const tolDirectPayment = directPayment
     .filter((item) => item.date === selecteddate)
     .reduce((total, direct) => {
       return (total += direct.amount);
@@ -105,6 +129,7 @@ const Closing = () => {
       directPayment: tolDirectPayment,
       mainBalance: totalMainBalance + tolMainClosing,
       mainClosing: closingMain,
+      payCheroot: tolalPayCheroot,
     });
   }, [closingMain]);
 

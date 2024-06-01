@@ -102,19 +102,6 @@ export default function Home() {
           </Box>
         </Box>
       </Box>
-      {/* 
-      <Image
-        src="/adminBottomWave.svg"
-        alt={"header-image"}
-        width={0}
-        height={0}
-        style={{
-          width: "100%",
-          height: "auto",
-          position: "relative",
-          top: -350,
-        }}
-      /> */}
     </>
   );
 }

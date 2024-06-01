@@ -32,6 +32,7 @@ const defaultValue: addPackingData = {
   typeOfPackingId: null,
   formOfPackingId: null,
   quantity: 0,
+  garageId: null,
   packingPlasticId: null,
   packingPlasticQty: 0,
   warpingPlasticId: null,
@@ -49,6 +50,8 @@ const NewPackingData = ({ open, setOpen }: Props) => {
   const concernCheroots = cheroots.filter(
     (item) => item.workShopId === workshop?.id
   );
+  const garages = useAppSelector((store) => store.garage.item);
+  const concernGarages = garages.filter((g) => g.workShopId === workshop?.id);
   const typeOfPacking = useAppSelector((store) => store.typeOfPacking.item);
   const formOfPacking = useAppSelector((store) => store.formOfPacking.item);
   const [packingData, setPackingData] = useState<addPackingData>(defaultValue);
@@ -150,7 +153,7 @@ const NewPackingData = ({ open, setOpen }: Props) => {
             />
           </Box>
 
-          <Box sx={{ mt: 2, display: "flex", justifyContent: "flex-end" }}>
+          <Box sx={{ mt: 2, display: "flex" }}>
             <Box>
               <Typography sx={{ fontWeight: "bold" }}>
                 ဆေးလိပ်အရေအတွက်
@@ -160,6 +163,31 @@ const NewPackingData = ({ open, setOpen }: Props) => {
                 sx={{ bgcolor: "#EEE8CF", width: 150 }}
                 onChange={() => {}}
               />
+            </Box>
+            <Box sx={{ my: 3, display: "flex", alignItems: "center", ml: 2 }}>
+              <Typography sx={{ fontWeight: "bold", width: 80 }}>
+                ဂိုထောင်
+              </Typography>
+              <FormControl variant="filled" sx={{ width: 225 }}>
+                <Select
+                  labelId="demo-simple-select-filled-label"
+                  id="demo-simple-select-filled"
+                  value={packingData.garageId}
+                  onChange={(evt) => {
+                    setPackingData({
+                      ...packingData,
+                      garageId: Number(evt.target.value),
+                    });
+                  }}
+                  sx={{ bgcolor: "#EEE8CF" }}
+                >
+                  {concernGarages.map((item) => (
+                    <MenuItem key={item.id} value={item.id}>
+                      <ListItemText primary={item.name} />
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
             </Box>
           </Box>
 

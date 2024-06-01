@@ -55,7 +55,7 @@ const PlasticOpen = ({ open, setOpen }: Props) => {
   const concernShop = shops.filter((item) => item.workShopId === workShop?.id);
   useEffect(() => {
     setNewPlasticStock({ ...newPlasticStock, date: selecteddate });
-  }, [selecteddate]);
+  }, [selecteddate, open]);
 
   const handleClick = () => {
     dispatch(setIsLoading(true));

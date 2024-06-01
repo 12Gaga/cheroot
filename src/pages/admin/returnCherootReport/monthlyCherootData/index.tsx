@@ -146,7 +146,7 @@ const MonthlyData = () => {
               </th>
               {concernCheroot.map((item) => {
                 return (
-                  <th style={{ backgroundColor: "#FFC100" }}>
+                  <th style={{ backgroundColor: "#FFC100" }} key={item.id}>
                     {concernData
                       .filter((c) => c.typeOfCherootId === item.id)
                       .reduce((total, cheroot) => {

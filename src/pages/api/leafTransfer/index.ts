@@ -60,14 +60,18 @@ export default async function handler(
     //     })
     //   )
     // );
-
+    const concernLeaf = await prisma.leaf.findMany({
+      where: { typeOfLeafId, garageId: enterenceGarageId },
+    });
+    let lastBatchNo =
+      concernLeaf.length && concernLeaf[concernLeaf.length - 1].batchNo;
     const newLeafStock = await prisma.$transaction(
       realBatchNo.map((item) =>
         prisma.leaf.create({
           data: {
             date,
             typeOfLeafId,
-            batchNo: item.batchNo,
+            batchNo: (lastBatchNo += 1),
             viss: item.viss,
             garageId: enterenceGarageId,
             stockSeq: transferSeq,

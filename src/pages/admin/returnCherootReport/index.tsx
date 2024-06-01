@@ -163,14 +163,14 @@ const DailyCherootData = () => {
               if (!exit) return null;
               const itemdate = new Date(exit.date);
               return (
-                <tr>
+                <tr key={item}>
                   <td style={{ textAlign: "center", height: 25 }}>
                     {itemdate.toLocaleDateString()}
                   </td>
                   {concernCheroot.map((i) => {
                     return (
                       <>
-                        <td style={{ textAlign: "center" }}>
+                        <td style={{ textAlign: "center" }} key={i.id}>
                           {
                             concernData.find(
                               (c) =>
@@ -204,7 +204,7 @@ const DailyCherootData = () => {
               </th>
               {concernCheroot.map((item) => {
                 return (
-                  <th style={{ backgroundColor: "#FFDB5C" }}>
+                  <th style={{ backgroundColor: "#FFDB5C" }} key={item.id}>
                     {concernData
                       .filter((data) => data.typeOfCherootId === item.id)
                       .reduce((total, d) => {

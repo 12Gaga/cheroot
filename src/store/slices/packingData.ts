@@ -28,6 +28,7 @@ export const AddPackingData = createAsyncThunk(
       coverPlasticId,
       coverPlasticQty,
       quantity,
+      garageId,
       onSuccess,
       onError,
     } = option;
@@ -52,6 +53,7 @@ export const AddPackingData = createAsyncThunk(
             coverPlasticId,
             coverPlasticQty,
             quantity,
+            garageId,
           }),
         }
       );
@@ -80,6 +82,7 @@ export const UpdatedPackingData = createAsyncThunk(
       coverPlasticId,
       coverPlasticQty,
       quantity,
+      garageId,
       onSuccess,
       onError,
     } = option;
@@ -105,6 +108,7 @@ export const UpdatedPackingData = createAsyncThunk(
             coverPlasticId,
             coverPlasticQty,
             quantity,
+            garageId,
           }),
         }
       );

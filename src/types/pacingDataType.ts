@@ -13,6 +13,7 @@ export interface addPackingData extends BasicOption {
   typeOfPackingId: number | null;
   formOfPackingId: number | null;
   quantity: number;
+  garageId: number | null;
   packingPlasticId: number | null;
   packingPlasticQty: number;
   warpingPlasticId: number | null;
@@ -28,6 +29,7 @@ export interface updatePackingData extends BasicOption {
   typeOfPackingId: number | null;
   formOfPackingId: number | null;
   quantity: number;
+  garageId: number | null;
   packingPlasticId: number | null;
   packingPlasticQty: number;
   warpingPlasticId: number | null;

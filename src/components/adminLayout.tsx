@@ -105,6 +105,10 @@ const Taungyi = [
     label: "ပစ္စည်းတန်ဖိုးအရစ်ကျစာရင်း",
     url: "/admin/taungyi/taungyiInstallment",
   },
+  {
+    label: "သိုလှောင်ရုံလက်ကျန်ပစ္စည်းစာရင်းစစ်ခြင်း",
+    url: "/admin/taungyi/taungyiReport",
+  },
 ];
 
 const Bago = [
@@ -155,6 +159,30 @@ const CashAdvanceReport = [
     url: "/admin/cashAdvanceReport/monthlyCashAdvanceData",
   },
 ];
+
+const GarageReport = [
+  {
+    label: "ဖက်လက်ကျန်စာရင်း",
+    url: "/admin/garageReport",
+  },
+  {
+    label: "အဆီခံလက်ကျန်စာရင်း",
+    url: "/admin/garageReport/filterSizeData",
+  },
+  {
+    label: "ဆေးစပ်လက်ကျန်စာရင်း",
+    url: "/admin/garageReport/tabaccoData",
+  },
+  {
+    label: "တံဆိပ်လက်ကျန်စာရင်း",
+    url: "/admin/garageReport/labelData",
+  },
+  {
+    label: "ပလပ်စတစ်လက်ကျန်စာရင်း",
+    url: "/admin/garageReport/plasticData",
+  },
+];
+
 const AdminLayout = ({ children }: Props) => {
   const { data: session } = useSession();
   const router = useRouter();
@@ -169,6 +197,7 @@ const AdminLayout = ({ children }: Props) => {
   const bago = router.pathname.includes("bago");
   const returnCherootReport = router.pathname.includes("returnCherootReport");
   const cashAdvanceReport = router.pathname.includes("cashAdvanceReport");
+  const garageReport = router.pathname.includes("garageReport");
   const { selectedWorkShop, item: workShops } = useAppSelector(
     (store) => store.workShop
   );
@@ -201,6 +230,8 @@ const AdminLayout = ({ children }: Props) => {
     data = [...ReturnCherootReport];
   } else if (cashAdvanceReport) {
     data = [...CashAdvanceReport];
+  } else if (garageReport) {
+    data = [...GarageReport];
   }
 
   if (!session) return null;
@@ -270,6 +301,11 @@ const AdminLayout = ({ children }: Props) => {
         {cashAdvanceReport && (
           <Typography variant="h5" sx={{ color: "white", fontWeight: "bold" }}>
             ကိုယ်စားလှယ်ကြိုယူငွေလက်ကျန်စစ်ခြင်း
+          </Typography>
+        )}
+        {garageReport && (
+          <Typography variant="h5" sx={{ color: "white", fontWeight: "bold" }}>
+            ဂိုထောင်လက်ကျန်ပစ္စည်းစစ်ခြင်း
           </Typography>
         )}
         <Box sx={{ display: "flex" }}>

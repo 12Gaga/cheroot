@@ -13,6 +13,7 @@ export interface closingSlice {
 
 export interface addClosing extends BasicOption {
   date: string;
+  payCheroot: number;
   cashBalance: number;
   replenishment: number;
   dailyBalance: number;
