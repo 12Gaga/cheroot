@@ -12,7 +12,7 @@ import { AddClosing, setIsLoading } from "@/store/slices/closing";
 import { setOpenSnackbar } from "@/store/slices/snackBar";
 
 const defaultValue: addClosing = {
-  date: "",
+  date: null,
   cashBalance: 0,
   replenishment: 0,
   dailyBalance: 0,
@@ -24,9 +24,7 @@ const defaultValue: addClosing = {
 };
 
 const Closing = () => {
-  const [selecteddate, setSelectedDate] = useState<any>(
-    new Date().toLocaleDateString()
-  );
+  const [selecteddate, setSelectedDate] = useState<Date>(new Date());
   const workShopId = useAppSelector(
     (store) => store.workShop.selectedWorkShop
   )?.id;
@@ -46,12 +44,22 @@ const Closing = () => {
     (store) => store.replenishment.item
   ).filter((item) => item.workShopId === workShopId);
   const totalDailyExpensive = dailyExpensive
-    .filter((item) => item.date === selecteddate)
+    .filter((item) => {
+      const itemdate = new Date(item.date);
+      return (
+        itemdate.toLocaleDateString() === selecteddate.toLocaleDateString()
+      );
+    })
     .reduce((total, daily) => {
       return (total += daily.amount);
     }, 0);
   const tolalPayCheroot = payCheroot
-    .filter((item) => item.date === selecteddate)
+    .filter((item) => {
+      const itemdate = new Date(item.date);
+      return (
+        itemdate.toLocaleDateString() === selecteddate.toLocaleDateString()
+      );
+    })
     .reduce((total, pay) => {
       return (total += pay.totalNetAgentPayment);
     }, 0);
@@ -59,7 +67,12 @@ const Closing = () => {
     cashBalance.length && cashBalance[cashBalance.length - 1].amount;
 
   const tolReplenishment = replenishment
-    .filter((item) => item.date === selecteddate)
+    .filter((item) => {
+      const itemdate = new Date(item.date);
+      return (
+        itemdate.toLocaleDateString() === selecteddate.toLocaleDateString()
+      );
+    })
     .reduce((total, reple) => {
       return (total += reple.amount);
     }, 0);
@@ -71,7 +84,12 @@ const Closing = () => {
     (item) => item.workShopId === workShopId
   );
   const totalMainBalance = mainBalance
-    .filter((item) => item.date === selecteddate)
+    .filter((item) => {
+      const itemdate = new Date(item.date);
+      return (
+        itemdate.toLocaleDateString() === selecteddate.toLocaleDateString()
+      );
+    })
     .reduce((total, main) => {
       return (total += main.amount);
     }, 0);
@@ -85,9 +103,17 @@ const Closing = () => {
 
   const directPayment = useAppSelector(
     (store) => store.directPayment.item
-  ).filter((item) => item.workShopId === workShopId);
+  ).filter((item) => {
+    const itemdate = new Date(item.date);
+    return itemdate.toLocaleDateString() === selecteddate.toLocaleDateString();
+  });
   const tolDirectPayment = directPayment
-    .filter((item) => item.date === selecteddate)
+    .filter((item) => {
+      const itemdate = new Date(item.date);
+      return (
+        itemdate.toLocaleDateString() === selecteddate.toLocaleDateString()
+      );
+    })
     .reduce((total, direct) => {
       return (total += direct.amount);
     }, 0);
@@ -103,7 +129,7 @@ const Closing = () => {
         onSuccess: () => {
           const today = new Date();
           const nextDay = today.setHours(today.getHours() + 24);
-          setSelectedDate(nextDay);
+          setSelectedDate(new Date(nextDay));
           dispatch(setOpenSnackbar({ message: "Saving complete" }));
           dispatch(setIsLoading(false));
         },
@@ -131,8 +157,7 @@ const Closing = () => {
       mainClosing: closingMain,
       payCheroot: tolalPayCheroot,
     });
-  }, [closingMain]);
-
+  }, [closingMain, workShopId]);
   return (
     <>
       <AdminLayout>
@@ -153,7 +178,7 @@ const Closing = () => {
           <Typography sx={{ mr: 2, fontWeight: "bold" }}>ရက်စွဲ</Typography>
           <DatePicker
             selected={selecteddate}
-            onChange={(date) => setSelectedDate(date?.toLocaleDateString())}
+            onChange={(date) => setSelectedDate(date as Date)}
           />
         </Box>
 
