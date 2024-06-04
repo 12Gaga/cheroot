@@ -41,6 +41,7 @@ const PayLeaf = () => {
   const garages = useAppSelector((store) => store.garage.item);
   const leaves = useAppSelector((store) => store.typeOfLeaf.item);
   const leafTransfer = useAppSelector((store) => store.leafTransfer.item);
+  const payLeaf = useAppSelector((store) => store.payLeaf.item);
   const workShop = useAppSelector(
     (store) => store.workShop.selectedWorkShop
   ) as WorkShop;
@@ -63,13 +64,24 @@ const PayLeaf = () => {
     const concerndata = data.filter(
       (item) => !transferBatchNo.includes(item.batchNo)
     );
-    setConcernLeafStock(concerndata);
-    const batchNo = concerndata.filter(
+    const findPayBatch = payLeaf
+      .filter(
+        (item) =>
+          item.garageId === garageId &&
+          item.typeOfLeafId === newPayLeaf.typeOfLeafId
+      )
+      .map((p) => p.batchNo);
+    const lastconcernData = concerndata.filter(
+      (item) => !findPayBatch.includes(item.batchNo)
+    );
+
+    const batchNo = lastconcernData.filter(
       (item) =>
         item.typeOfLeafId === newPayLeaf.typeOfLeafId &&
         item.garageId === garageId
     );
     console.log("batch", batchNo);
+    setConcernLeafStock(lastconcernData);
     setConcernBatchNo(batchNo);
     const concernPrice = leaves.find(
       (item) => item.id === newPayLeaf.typeOfLeafId

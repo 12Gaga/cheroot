@@ -46,6 +46,7 @@ const NewTransferLeaf = ({ open, setOpen }: Props) => {
   const workshop = useAppSelector((store) => store.workShop.selectedWorkShop);
   const leafStock = useAppSelector((store) => store.leafStock.item);
   const leafTransfer = useAppSelector((store) => store.leafTransfer.item);
+  const payLeaf = useAppSelector((store) => store.payLeaf.item);
   const concernGarages = useAppSelector((store) => store.garage.item).filter(
     (item) => item.workShopId === workshop?.id
   );
@@ -71,10 +72,20 @@ const NewTransferLeaf = ({ open, setOpen }: Props) => {
     const concerndata = concernLeafStocks.filter(
       (item) => !transferBatchNo.includes(item.batchNo)
     );
-    const concernBatch = concerndata.filter(
+    const findPayBatch = payLeaf
+      .filter(
+        (item) =>
+          item.garageId === exitId &&
+          item.typeOfLeafId === transferLeaf.typeOfLeafId
+      )
+      .map((p) => p.batchNo);
+    const lastconcernData = concerndata.filter(
+      (item) => !findPayBatch.includes(item.batchNo)
+    );
+    const concernBatch = lastconcernData.filter(
       (item) => item.typeOfLeafId === transferLeaf.typeOfLeafId
     );
-    setConcernLeafStock(concerndata);
+    setConcernLeafStock(lastconcernData);
     setConcernBatchNos(concernBatch);
     setTransferLeaf({ ...transferLeaf, exitGarageId: exitId });
   };
@@ -92,7 +103,19 @@ const NewTransferLeaf = ({ open, setOpen }: Props) => {
     const concerndata = concernLeafStocks.filter(
       (item) => !transferBatchNo.includes(item.batchNo)
     );
-    const batchNos = concerndata.filter((item) => item.typeOfLeafId === leafId);
+    const findPayBatch = payLeaf
+      .filter(
+        (item) =>
+          item.garageId === transferLeaf.exitGarageId &&
+          item.typeOfLeafId === leafId
+      )
+      .map((p) => p.batchNo);
+    const lastconcernData = concerndata.filter(
+      (item) => !findPayBatch.includes(item.batchNo)
+    );
+    const batchNos = lastconcernData.filter(
+      (item) => item.typeOfLeafId === leafId
+    );
     setConcernLeafStock(concerndata);
     setConcernBatchNos(batchNos);
     setTransferLeaf({ ...transferLeaf, typeOfLeafId: leafId });

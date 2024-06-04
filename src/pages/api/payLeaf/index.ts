@@ -47,7 +47,7 @@ export default async function handler(
             agentId,
             typeOfLeafId,
             batchNo: item.batchNo,
-            viss,
+            viss: item.viss,
             netViss,
             discountViss,
             price,
@@ -72,10 +72,10 @@ export default async function handler(
       where: { typeOfLeafId, agentId },
     });
 
-    await prisma.leaf.updateMany({
-      data: { isArchived: true },
-      where: { id: { in: BatchNos } },
-    });
+    // await prisma.leaf.updateMany({
+    //   data: { isArchived: true },
+    //   where: { id: { in: BatchNos } },
+    // });
     return res.status(200).json({ newPayLeaf });
   }
   res.status(200).json("bad request");

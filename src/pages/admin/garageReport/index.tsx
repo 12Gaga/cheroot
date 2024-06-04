@@ -19,6 +19,7 @@ const LeafReport = () => {
   const concernGarages = garages.filter((g) => g.workShopId === workShopId);
   const leafStock = useAppSelector((store) => store.leafStock.item);
   const leafGarageTransfer = useAppSelector((store) => store.leafTransfer.item);
+  const payLeaf = useAppSelector((store) => store.payLeaf.item);
   const [garage, setGarage] = useState<number | null>(null);
   return (
     <>
@@ -58,7 +59,7 @@ const LeafReport = () => {
                 ဖက်အမျိုးအစား
               </th>
               <th style={{ width: 200, backgroundColor: "#DBB5B5" }}>
-                ကျန်ရှိပိုနံပါတ်
+                ကျန်ရှိပိုလုံးရေ
               </th>
               <th style={{ width: 200, backgroundColor: "#DBB5B5" }}>
                 ကျန်ရှိပိသာ
@@ -93,7 +94,7 @@ const LeafReport = () => {
                   .reduce((total, leaf) => {
                     return (total += leaf.viss);
                   }, 0);
-                const lastBatchs = leafStock
+                const findBatchs = leafStock
                   .filter(
                     (l) =>
                       l.typeOfLeafId === item.id &&
@@ -101,14 +102,25 @@ const LeafReport = () => {
                       !findbatchNo.includes(l.batchNo)
                   )
                   .map((lb) => lb.batchNo);
+
+                const findPayLeaf = payLeaf.filter(
+                  (p) => p.typeOfLeafId === item.id && p.garageId === garage
+                );
+                const payLeafData = findPayLeaf.reduce((tol, pl) => {
+                  return (tol += pl.viss);
+                }, 0);
+                const paybatchs = findPayLeaf.map((p) => p.batchNo);
+                const lastBatchs = findBatchs.filter(
+                  (pb) => !paybatchs.includes(pb)
+                );
                 return (
                   <tr key={item.id}>
                     <td style={{ textAlign: "center", height: 30 }}>
                       {item.name}
                     </td>
-                    <td>{lastBatchs.join(",")}</td>
+                    <td>{lastBatchs.length}</td>
                     <td style={{ textAlign: "center" }}>
-                      {leafStockData - leafTransferData}
+                      {leafStockData - (leafTransferData + payLeafData)}
                     </td>
                   </tr>
                 );

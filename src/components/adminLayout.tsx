@@ -181,6 +181,26 @@ const GarageReport = [
     label: "ပလပ်စတစ်လက်ကျန်စာရင်း",
     url: "/admin/garageReport/plasticData",
   },
+  {
+    label: "ရက်အလိုက်ဖက်လက်ကျန်စာရင်းစစ်ခြင်း",
+    url: "/admin/garageReport/leafDateReport",
+  },
+  {
+    label: "ရက်အလိုက်အဆီခံလက်ကျန်စာရင်းစစ်ခြင်း",
+    url: "/admin/garageReport/filterSizeDateReport",
+  },
+  {
+    label: "ရက်အလိုက်ဆေးစပ်လက်ကျန်စာရင်းစစ်ခြင်း",
+    url: "/admin/garageReport/tabaccoDateReport",
+  },
+  {
+    label: "ရက်အလိုက်တံဆိပ်လက်ကျန်စာရင်းစစ်ခြင်း",
+    url: "/admin/garageReport/labelDateReport",
+  },
+  {
+    label: "ရက်အလိုက်ပလပ်စတစ်လက်ကျန်စာရင်းစစ်ခြင်း",
+    url: "/admin/garageReport/plasticDateReport",
+  },
 ];
 
 const AdminLayout = ({ children }: Props) => {
