@@ -19,6 +19,7 @@ import { useAppSelector, useAppDispatch } from "@/store/hooks";
 import { setOpenSnackbar } from "@/store/slices/snackBar";
 import { CreateTabaccoStock, setIsLoading } from "@/store/slices/tabaccoStock";
 import { LoadingButton } from "@mui/lab";
+import { TypeOfShop } from "@prisma/client";
 interface Props {
   open: boolean;
   setOpen: (value: boolean) => void;
@@ -51,6 +52,12 @@ const TabaccoOpen = ({ open, setOpen }: Props) => {
   );
   const [newTabaccoStock, setNewTabaccoStock] =
     useState<createNewTabaccoStock>(defaultValue);
+
+  const shopTiltes = useAppSelector((store) => store.shopTitle.item).filter(
+    (s) => s.workShopId === workShop?.id
+  );
+  const [showShop, setShowShop] = useState<TypeOfShop[]>([]);
+  const [titleId, setTitleId] = useState<number | null>(null);
   const { isLoading } = useAppSelector((store) => store.tabaccoStock);
   const dispatch = useAppDispatch();
 
@@ -74,16 +81,51 @@ const TabaccoOpen = ({ open, setOpen }: Props) => {
       })
     );
   };
+
+  const handleShopTitle = (shopTitleId: number) => {
+    const data = concernShop.filter((s) => s.shopTitleId === shopTitleId);
+    setShowShop(data);
+    setTitleId(shopTitleId);
+  };
+
   return (
     <>
-      <Dialog open={open} onClose={() => setOpen(false)}>
+      <Dialog
+        open={open}
+        onClose={() => {
+          setOpen(false), setNewTabaccoStock(defaultValue);
+        }}
+      >
         <DialogContent>
-          <Box sx={{ display: "flex", justifyContent: "flex-end", mr: 2 }}>
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "flex-end",
+              alignItems: "center",
+            }}
+          >
             <Typography sx={{ mr: 2, fontWeight: "bold" }}>ရက်စွဲ</Typography>
             <DatePicker
               selected={selecteddate}
               onChange={(date) => setSelectedDate(date as Date)}
             />
+          </Box>
+
+          <Box sx={{ mt: 2, mr: 3 }}>
+            <Typography sx={{ fontWeight: "bold" }}>ဆိုင်ခေါင်းစဉ်</Typography>
+            <FormControl variant="filled" sx={{ width: 350 }}>
+              <Select
+                value={titleId}
+                onChange={(evt) => handleShopTitle(Number(evt.target.value))}
+                sx={{ bgcolor: "#EEE8CF" }}
+              >
+                {shopTiltes.map((item) => (
+                  <MenuItem key={item.id} value={item.id}>
+                    <ListItemText primary={item.name} />
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
           </Box>
 
           <Box sx={{ mt: 2 }}>
@@ -118,11 +160,11 @@ const TabaccoOpen = ({ open, setOpen }: Props) => {
               mt: 4,
             }}
           >
-            <Box sx={{ mt: 2, display: "flex", alignItems: "center" }}>
+            <Box sx={{}}>
               <Typography sx={{ fontWeight: "bold", width: 150 }}>
                 ဝယ်ယူခဲ့သည့်ဆိုင်
               </Typography>
-              <FormControl variant="filled" sx={{ width: 225 }}>
+              <FormControl variant="filled" sx={{ width: 350 }}>
                 <Select
                   labelId="demo-simple-select-filled-label"
                   id="demo-simple-select-filled"
@@ -135,7 +177,7 @@ const TabaccoOpen = ({ open, setOpen }: Props) => {
                   }}
                   sx={{ bgcolor: "#EEE8CF" }}
                 >
-                  {concernShop.map((item) => (
+                  {showShop.map((item) => (
                     <MenuItem key={item.id} value={item.id}>
                       <ListItemText primary={item.name} />
                     </MenuItem>

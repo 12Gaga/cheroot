@@ -20,6 +20,7 @@ import {
 } from "@mui/material";
 import { useEffect, useState } from "react";
 import { LoadingButton } from "@mui/lab";
+import { TypeOfShop } from "@prisma/client";
 
 interface Props {
   updateOpen: boolean;
@@ -65,6 +66,12 @@ const UpdateAddLabel = ({
   const concernlabel = label.filter((item) => item.workShopId === workShop?.id);
   const [updateLabelAddStock, setUpdateLabelAddStock] =
     useState<updateLabelAddStock>(defaultValue);
+  const shopTiltes = useAppSelector((store) => store.shopTitle.item).filter(
+    (s) => s.workShopId === workShop?.id
+  );
+  const [showShop, setShowShop] = useState<TypeOfShop[]>([]);
+  const [titleId, setTitleId] = useState<number | null>(null);
+
   const { isLoading } = useAppSelector((store) => store.labelStock);
   const dispatch = useAppDispatch();
 
@@ -84,6 +91,12 @@ const UpdateAddLabel = ({
       })
     );
   };
+
+  const handleShopTitle = (shopTitleId: number) => {
+    const data = concernShop.filter((s) => s.shopTitleId === shopTitleId);
+    setShowShop(data);
+    setTitleId(shopTitleId);
+  };
   useEffect(() => {
     if (selectedLabelAddStock && selectedLabelStock) {
       setSelectedDate(selectedLabelStock.date);
@@ -99,6 +112,7 @@ const UpdateAddLabel = ({
         garageId: selectedLabelStock.garageId,
       });
     }
+    setShowShop(concernShop);
   }, [selectedLabelAddStock, selectedLabelStock, updateOpen]);
   useEffect(() => {
     setUpdateLabelAddStock({
@@ -111,14 +125,45 @@ const UpdateAddLabel = ({
 
   return (
     <>
-      <Dialog open={updateOpen} onClose={() => setUpdateOpen(false)}>
+      <Dialog
+        open={updateOpen}
+        onClose={() => {
+          setUpdateOpen(false), setUpdateLabelAddStock(defaultValue);
+        }}
+      >
         <DialogContent>
-          <Box sx={{ display: "flex", justifyContent: "flex-end", mr: 2 }}>
-            <Typography sx={{ mr: 2, fontWeight: "bold" }}>ရက်စွဲ</Typography>
-            <DatePicker
-              selected={selecteddate}
-              onChange={(date) => setSelectedDate(date as Date)}
-            />
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "space-around",
+              alignItems: "center",
+            }}
+          >
+            <Box sx={{ mt: 2, mr: 3 }}>
+              <Typography sx={{ fontWeight: "bold" }}>
+                ဆိုင်ခေါင်းစဉ်
+              </Typography>
+              <FormControl variant="filled" sx={{ width: 300 }}>
+                <Select
+                  value={titleId}
+                  onChange={(evt) => handleShopTitle(Number(evt.target.value))}
+                  sx={{ bgcolor: "#EEE8CF" }}
+                >
+                  {shopTiltes.map((item) => (
+                    <MenuItem key={item.id} value={item.id}>
+                      <ListItemText primary={item.name} />
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+            </Box>
+            <Box>
+              <Typography sx={{ mr: 2, fontWeight: "bold" }}>ရက်စွဲ</Typography>
+              <DatePicker
+                selected={selecteddate}
+                onChange={(date) => setSelectedDate(date as Date)}
+              />
+            </Box>
           </Box>
           <Box
             sx={{
@@ -179,7 +224,7 @@ const UpdateAddLabel = ({
                   }}
                   sx={{ bgcolor: "#EEE8CF" }}
                 >
-                  {concernShop.map((item) => (
+                  {showShop.map((item) => (
                     <MenuItem key={item.id} value={item.id}>
                       <ListItemText primary={item.name} />
                     </MenuItem>

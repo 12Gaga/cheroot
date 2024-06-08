@@ -84,6 +84,8 @@ model WorkShop{
   filterSizeTransferGarage FilterSizeTransferGarage[]
   tabaccoTransferGarage TabaccoTransferGarage[]
   labelTransferGarage LabelTransferGarage[]
+  agentRemineLeaf AgentRemineLeaf[]
+  shopTitle ShopTitle[]
   isArchived Boolean @default(false)
 }
 
@@ -104,6 +106,7 @@ model Agent{
   otherDeduction OtherDeduction[]
   leafDeduction LeafDeduction[]
   extraPurchase ExtraPurchase[]
+  agentRemineLeaf AgentRemineLeaf[]
   isArchived Boolean @default(false)
 }
 
@@ -122,16 +125,23 @@ model Garage{
   payOtherItem PayOtherItem[]
   extraPurchase ExtraPurchase[]
   packing Packing[]
-  // leafTransferGarage LeafTransferGarage[]
-  // filterSizeTransferGarage FilterSizeTransferGarage[]
-  // tabaccoTransferGarage TabaccoTransferGarage[]
-  // labelTransferGarage LabelTransferGarage[]
+  isArchived Boolean @default(false)
+}
+
+model ShopTitle{
+  id Int @id @default(autoincrement())
+  name String
+  typeOfShop TypeOfShop[]
+  workShop WorkShop @relation(fields: [workShopId],references: [id])
+  workShopId Int
   isArchived Boolean @default(false)
 }
 
 model TypeOfShop{
   id Int @id @default(autoincrement())
   name String
+  shopTitle ShopTitle @relation(fields: [shopTitleId],references: [id])
+  shopTitleId Int
   workShop WorkShop @relation(fields: [workShopId],references: [id])
   workShopId Int
   bagoLeafPurchase BagoLeafPurchase[]
@@ -163,6 +173,7 @@ model TypeOfLeaf{
   leafDeduction LeafDeduction[]
   leafTransferGarage LeafTransferGarage[]
   bagoLeafPurchase BagoLeafPurchase[] 
+  agentRemineLeaf AgentRemineLeaf[]
   isArchived Boolean @default(false)
   isAvariabled Boolean @default(false)
 }
@@ -326,7 +337,6 @@ model TypeOfCheroot{
   conveying Conveying[]
   payOtherItem PayOtherItem[]
   returnReadyCheroot ReturnReadyCheroot[]
-  // converycherootInstallment ConverycherootInstallment[] 
   formula Formula[]
   isArchived Boolean @default(false)
   isAvariabled Boolean @default(false)
@@ -426,23 +436,12 @@ model ConverycherootInstallment{
   date DateTime
   conveyLocation ConveyLocation @relation(fields: [conveyLocationId],references: [id])
   conveyLocationId Int
-  // typeOfCheroot TypeOfCheroot @relation(fields: [typeOfCherootId],references: [id])
-  // typeOfCherootId Int
   cashBalance Int
   payBalance Int
   workShop WorkShop @relation(fields: [workShopId],references: [id])
   workShopId Int
   isArchived Boolean @default(false)
 }
-
-// model Town{
-//   id Int @id @default(autoincrement())
-//   name String
-//   workShop WorkShop @relation(fields: [workShopId],references: [id])
-//   workShopId Int
-//   mainMoney MainMoney[]
-//   isArchived Boolean @default(false)
-// }
 
 model ExpensiveLabel{
   id Int @id @default(autoincrement())
@@ -584,6 +583,7 @@ model PayOtherItem{
   tabaccoQty Int
   tabaccoTin Int
   tabaccoPyi Int
+  tabaccoBag Int
   typeOfLabel TypeOfLabel @relation(fields: [typeOfLabelId],references: [id])
   typeOfLabelId Int
   labelBandle Int
@@ -773,7 +773,6 @@ model Store{
   cigratteIndustryId Int
   taungyiEnterStock TaungyiEnterStock[]
   taungyiQuitStock TaungyiQuitStock[]
-  // taungyiInstallment TaungyiInstallment[]
   isArchived Boolean @default(false)
 }
 
@@ -812,8 +811,6 @@ model TaungyiQuitStock{
 model TaungyiInstallment{
   id Int @id @default(autoincrement())
   date DateTime
-  // store Store @relation(fields: [storeId],references: [id])
-  // storeId Int
   banquet Banquet @relation(fields: [banquetId],references: [id])
   banquetId Int
   cashBalance Int
@@ -934,14 +931,16 @@ model BagoLabelInstallment{
   isArchived Boolean @default(false)
 }
 
-// model BagoInstallment{
-//   id Int @id @default(autoincrement())
-//   date String
-//   shop TypeOfShop @relation(fields: [shopId],references: [id])
-//   shopId Int
-//   cashBalance Int
-//   payBalance Int
-//   workShop WorkShop @relation(fields: [workShopId],references: [id])
-//   workShopId Int
-//   isArchived Boolean @default(false)
-// }
+model AgentRemineLeaf{
+   id Int @id @default(autoincrement())
+  date DateTime @default(now())
+  agent Agent @relation(fields: [agentId],references: [id])
+  agentId Int
+  leaf TypeOfLeaf @relation(fields: [leafId],references: [id])
+  leafId Int
+  Viss Int @default(0)
+   workShop WorkShop @relation(fields: [workShopId],references: [id])
+  workShopId Int
+  isArchived Boolean @default(false)
+}
+

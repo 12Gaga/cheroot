@@ -9,11 +9,13 @@ export interface typeOfShopSlice {
 
 export interface CreateNewShop extends BasicOption {
   name: string;
+  shopTitleId: number | null;
 }
 
 export interface updateShop extends BasicOption {
   id: number | null;
   name: string;
+  shopTitleId: number | null;
 }
 
 export interface deleteShop extends BasicOption {

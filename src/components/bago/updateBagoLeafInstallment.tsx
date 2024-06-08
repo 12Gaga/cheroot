@@ -20,6 +20,7 @@ import {
   ListItemText,
   MenuItem,
 } from "@mui/material";
+import { TypeOfShop } from "@prisma/client";
 import { useEffect, useState } from "react";
 import DatePicker from "react-datepicker";
 interface Props {
@@ -47,9 +48,12 @@ const UpdateBagoLeafInstallment = ({
   const dispatch = useAppDispatch();
   const workshop = useAppSelector((store) => store.workShop.selectedWorkShop);
   const leaf = useAppSelector((store) => store.bagoLeaf.item);
-  const filterSize = useAppSelector((store) => store.bagoFilterSize.item);
-  const label = useAppSelector((store) => store.bagoLabel.item);
-  const plastic = useAppSelector((store) => store.bagoPlastic.item);
+  const shopTiltes = useAppSelector((store) => store.shopTitle.item).filter(
+    (s) => s.workShopId === workshop?.id
+  );
+  const [showShop, setShowShop] = useState<TypeOfShop[]>([]);
+  const [titleId, setTitleId] = useState<number | null>(null);
+
   const shop = useAppSelector((store) => store.typeOfShop.item);
   const concernShop = shop.filter((item) => item.workShopId === workshop?.id);
   const { item: bagoLeafInstallments, isLoading } = useAppSelector(
@@ -91,6 +95,13 @@ const UpdateBagoLeafInstallment = ({
       })
     );
   };
+
+  const handleShopTitle = (shopTitleId: number) => {
+    const data = concernShop.filter((s) => s.shopTitleId === shopTitleId);
+    setShowShop(data);
+    setTitleId(shopTitleId);
+  };
+
   useEffect(() => {
     if (selectInstallment) {
       setSelectedDate(selectInstallment.date);
@@ -103,6 +114,7 @@ const UpdateBagoLeafInstallment = ({
         payBalance: selectInstallment.payBalance,
       });
     }
+    setShowShop(concernShop);
   }, [selectInstallment, updateOpen]);
   useEffect(() => {
     setUpdateBagoLeafInstallment({
@@ -113,14 +125,45 @@ const UpdateBagoLeafInstallment = ({
   if (!selectInstallment) return null;
   return (
     <>
-      <Dialog open={updateOpen} onClose={() => setUpdateOpen(false)}>
+      <Dialog
+        open={updateOpen}
+        onClose={() => {
+          setUpdateOpen(false), setUpdateBagoLeafInstallment(defaultValue);
+        }}
+      >
         <DialogContent>
-          <Box sx={{ display: "flex", justifyContent: "flex-end", mr: 2 }}>
-            <Typography sx={{ mr: 2, fontWeight: "bold" }}>ရက်စွဲ</Typography>
-            <DatePicker
-              selected={selecteddate}
-              onChange={(date) => setSelectedDate(date as Date)}
-            />
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "space-around",
+              alignItems: "center",
+            }}
+          >
+            <Box sx={{ mt: 2, mr: 3 }}>
+              <Typography sx={{ fontWeight: "bold" }}>
+                ဆိုင်ခေါင်းစဉ်
+              </Typography>
+              <FormControl variant="filled" sx={{ width: 300 }}>
+                <Select
+                  value={titleId}
+                  onChange={(evt) => handleShopTitle(Number(evt.target.value))}
+                  sx={{ bgcolor: "#EEE8CF" }}
+                >
+                  {shopTiltes.map((item) => (
+                    <MenuItem key={item.id} value={item.id}>
+                      <ListItemText primary={item.name} />
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+            </Box>
+            <Box>
+              <Typography sx={{ mr: 2, fontWeight: "bold" }}>ရက်စွဲ</Typography>
+              <DatePicker
+                selected={selecteddate}
+                onChange={(date) => setSelectedDate(date as Date)}
+              />
+            </Box>
           </Box>
 
           <Box
@@ -147,7 +190,7 @@ const UpdateBagoLeafInstallment = ({
                   }}
                   sx={{ bgcolor: "#EEE8CF" }}
                 >
-                  {concernShop.map((item) => (
+                  {showShop.map((item) => (
                     <MenuItem key={item.id} value={item.id}>
                       <ListItemText primary={item.name} />
                     </MenuItem>

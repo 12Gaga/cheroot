@@ -83,7 +83,6 @@ const Formula = () => {
               <th>ဆေးလိပ်အရေအတွက်</th>
               <th>အဆီခံအမျိုးအစား</th>
               <th>အဆီခံအရေအတွက်</th>
-              <th>အိတ်</th>
               <th>ဆေးစပ်အမျိုးအစား</th>
               <th>အရေအတွက်</th>
               <th>တင်း</th>
@@ -104,7 +103,6 @@ const Formula = () => {
                   }
                 </td>
                 <td>{item.filterSizeQty}</td>
-                <td>{item.filterSizeBag}</td>
                 <td>
                   {tabaccos.find((f) => f.id === item.typeOfTabaccoId)?.name}
                 </td>

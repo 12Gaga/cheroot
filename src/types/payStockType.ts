@@ -19,6 +19,7 @@ export interface createNewPayStock extends BasicOption {
   tabaccoQty: number;
   tabaccoTin: number;
   tabaccoPyi: number;
+  tabaccoBag: number;
   typeOfLabelId: number | undefined;
   labelBandle: number;
   totalPrice: number;
@@ -32,4 +33,5 @@ export interface payStock {
   tabaccoQty: number;
   tabaccoTin: number;
   tabaccoPyi: number;
+  tabaccoBag: number;
 }

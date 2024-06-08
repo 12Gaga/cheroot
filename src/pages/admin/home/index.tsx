@@ -29,7 +29,7 @@ const AdminPage = () => {
         </Typography>
         <Button
           variant="contained"
-          onClick={() => signOut({ callbackUrl: "/admin" })}
+          onClick={() => signOut({ callbackUrl: "/" })}
         >
           Sign out
         </Button>

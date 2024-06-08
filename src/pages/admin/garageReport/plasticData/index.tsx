@@ -60,7 +60,7 @@ const PlasticReport = () => {
                 ပလပ်စတစ်အမျိုးအစား
               </th>
               <th style={{ width: 200, backgroundColor: "#DBB5B5" }}>
-                ကျန်ရှိအိတ်
+                ကျန်ရှိအရေအတွက်
               </th>
             </tr>
             {garage &&
@@ -69,7 +69,7 @@ const PlasticReport = () => {
                   (p) => p.plasticId === item.id && p.garageId === garage
                 );
                 const plasticData = findPlasticData.reduce((total, plastic) => {
-                  return (total += plastic.bag);
+                  return (total += plastic.quantity);
                 }, 0);
                 //find form packing
                 const findPackingPlastic = packing.filter(

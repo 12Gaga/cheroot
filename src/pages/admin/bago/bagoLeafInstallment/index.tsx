@@ -1,5 +1,6 @@
 import {
   Box,
+  Button,
   FormControl,
   ListItemText,
   MenuItem,
@@ -19,7 +20,9 @@ import DeleteBagoLeafInstallment from "@/components/bago/deleteBagoLeafInstallme
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { BagoLeafInstallment } from "@prisma/client";
+import { useRouter } from "next/router";
 const BagoLeafInstallments = () => {
+  const router = useRouter();
   const [open, setOpen] = useState<boolean>(false);
   const workshop = useAppSelector((store) => store.workShop.selectedWorkShop);
   const bagoInstallment = useAppSelector(
@@ -67,7 +70,16 @@ const BagoLeafInstallments = () => {
         >
           ပဲခူးဖက်အရစ်ကျစာရင်း
         </Typography>
-
+        <Box sx={{ display: "flex", justifyContent: "flex-end" }}>
+          <Button
+            variant="contained"
+            onClick={() => {
+              router.push("/admin/moneyData/directPayment");
+            }}
+          >
+            ပေးငွေစာရင်းသွင်းခြင်း
+          </Button>
+        </Box>
         <Box sx={{ display: "flex", flexWrap: "wrap" }}>
           <Box sx={{ mr: 2, display: "flex", mt: 4, width: 300 }}>
             <Typography sx={{ mr: 2, fontWeight: "bold" }}>ရက်စွဲ</Typography>
@@ -79,6 +91,7 @@ const BagoLeafInstallments = () => {
               }}
             />
           </Box>
+
           <Box sx={{ width: 300 }}>
             <Box sx={{ mt: 2, display: "flex", alignItems: "center" }}>
               <Typography sx={{ fontWeight: "bold", width: 150 }}>

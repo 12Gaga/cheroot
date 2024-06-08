@@ -3,6 +3,7 @@ import Config from "@/utils/config";
 import { PayLeaf, TypeOfLeaf } from "@prisma/client";
 import { PayloadAction, createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { deletedPayLeafStock } from "./leafStock";
+import { addAgentRemainLeaf } from "./agentRemainLeaf";
 
 const initialState: payLeafSlice = {
   item: [],
@@ -50,8 +51,9 @@ export const CreatePayLeaf = createAsyncThunk(
           }),
         }
       );
-      const { newPayLeaf } = await response.json();
+      const { newPayLeaf, newRemainLeaf } = await response.json();
       thunkApi.dispatch(addPayleaf(newPayLeaf));
+      thunkApi.dispatch(addAgentRemainLeaf(newRemainLeaf));
       thunkApi.dispatch(deletedPayLeafStock(batchNo));
       onSuccess && onSuccess();
     } catch (err) {

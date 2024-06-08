@@ -1,16 +1,10 @@
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import {
-  AddBagoFilterSizeInstallment,
   UpdatedBagoFilterSizeInstallment,
   setIsLoading,
 } from "@/store/slices/bagoFilterSizeInstallment";
 import { setOpenSnackbar } from "@/store/slices/snackBar";
-import {
-  addBagoFilterSizeInstallment,
-  updateBagoFilterSizeInstallment,
-} from "@/types/bagoFilterSizeInstallment";
-import { addBagoLabelInstallment } from "@/types/bagoLabelInstallment ";
-import { addBagoLeafInstallment } from "@/types/bagoLeafInstallment";
+import { updateBagoFilterSizeInstallment } from "@/types/bagoFilterSizeInstallment";
 import { LoadingButton } from "@mui/lab";
 import {
   Dialog,
@@ -25,6 +19,7 @@ import {
   ListItemText,
   MenuItem,
 } from "@mui/material";
+import { TypeOfShop } from "@prisma/client";
 import { useEffect, useState } from "react";
 import DatePicker from "react-datepicker";
 interface Props {
@@ -59,6 +54,12 @@ const UpdateBagoFilerSizeInstallment = ({
   const { item: bagoFilterSizeInstallments, isLoading } = useAppSelector(
     (store) => store.bagoFilterSizeInstallment
   );
+  const shopTiltes = useAppSelector((store) => store.shopTitle.item).filter(
+    (s) => s.workShopId === workshop?.id
+  );
+  const [showShop, setShowShop] = useState<TypeOfShop[]>([]);
+  const [titleId, setTitleId] = useState<number | null>(null);
+
   const [updateBagoFilterSizeInstallment, setUpdateBagoFilterSizeInstallment] =
     useState<updateBagoFilterSizeInstallment>(defaultValue);
 
@@ -96,6 +97,12 @@ const UpdateBagoFilerSizeInstallment = ({
     );
   };
 
+  const handleShopTitle = (shopTitleId: number) => {
+    const data = concernShop.filter((s) => s.shopTitleId === shopTitleId);
+    setShowShop(data);
+    setTitleId(shopTitleId);
+  };
+
   useEffect(() => {
     if (selectInstallment) {
       setSelectedDate(selectInstallment.date);
@@ -108,6 +115,7 @@ const UpdateBagoFilerSizeInstallment = ({
         payBalance: selectInstallment.payBalance,
       });
     }
+    setShowShop(concernShop);
   }, [selectInstallment, updateOpen]);
   useEffect(() => {
     setUpdateBagoFilterSizeInstallment({
@@ -118,14 +126,46 @@ const UpdateBagoFilerSizeInstallment = ({
   if (!selectInstallment) return null;
   return (
     <>
-      <Dialog open={updateOpen} onClose={() => setUpdateOpen(false)}>
+      <Dialog
+        open={updateOpen}
+        onClose={() => {
+          setUpdateOpen(false),
+            setUpdateBagoFilterSizeInstallment(defaultValue);
+        }}
+      >
         <DialogContent>
-          <Box sx={{ display: "flex", justifyContent: "flex-end", mr: 2 }}>
-            <Typography sx={{ mr: 2, fontWeight: "bold" }}>ရက်စွဲ</Typography>
-            <DatePicker
-              selected={selecteddate}
-              onChange={(date) => setSelectedDate(date as Date)}
-            />
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "space-around",
+              alignItems: "center",
+            }}
+          >
+            <Box sx={{ mt: 2, mr: 3 }}>
+              <Typography sx={{ fontWeight: "bold" }}>
+                ဆိုင်ခေါင်းစဉ်
+              </Typography>
+              <FormControl variant="filled" sx={{ width: 300 }}>
+                <Select
+                  value={titleId}
+                  onChange={(evt) => handleShopTitle(Number(evt.target.value))}
+                  sx={{ bgcolor: "#EEE8CF" }}
+                >
+                  {shopTiltes.map((item) => (
+                    <MenuItem key={item.id} value={item.id}>
+                      <ListItemText primary={item.name} />
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+            </Box>
+            <Box>
+              <Typography sx={{ mr: 2, fontWeight: "bold" }}>ရက်စွဲ</Typography>
+              <DatePicker
+                selected={selecteddate}
+                onChange={(date) => setSelectedDate(date as Date)}
+              />
+            </Box>
           </Box>
 
           <Box
@@ -151,7 +191,7 @@ const UpdateBagoFilerSizeInstallment = ({
                   }}
                   sx={{ bgcolor: "#EEE8CF" }}
                 >
-                  {concernShop.map((item) => (
+                  {showShop.map((item) => (
                     <MenuItem key={item.id} value={item.id}>
                       <ListItemText primary={item.name} />
                     </MenuItem>

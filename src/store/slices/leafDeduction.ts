@@ -10,6 +10,7 @@ import {
   TypeOfLeaf,
 } from "@prisma/client";
 import { PayloadAction, createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { addAgentRemainLeaf } from "./agentRemainLeaf";
 
 const initialState: leafDeductionSlice = {
   item: [],
@@ -49,8 +50,9 @@ export const CreateLeafDeduction = createAsyncThunk(
           }),
         }
       );
-      const { newLeafDeduction } = await response.json();
+      const { newLeafDeduction, newRemainLeaf } = await response.json();
       thunkApi.dispatch(addLeafDeduction(newLeafDeduction));
+      newRemainLeaf && thunkApi.dispatch(addAgentRemainLeaf(newRemainLeaf));
       onSuccess && onSuccess();
     } catch (err) {
       onError && onError();

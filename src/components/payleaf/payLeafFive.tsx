@@ -93,7 +93,7 @@ const PayLeafFive = ({ newPayStock, setNewPayStock, workShopId }: Props) => {
         </Box>
 
         <Box sx={{ width: 250, mt: 4 }}>
-          <Typography sx={{ fontWeight: "bold" }}>အရေအတွက်</Typography>
+          <Typography sx={{ fontWeight: "bold" }}>အဆီခံအရေအတွက်</Typography>
           <TextField
             value={newPayStock.filterSizeQty}
             placeholder="အရေအတွက်"
@@ -105,28 +105,23 @@ const PayLeafFive = ({ newPayStock, setNewPayStock, workShopId }: Props) => {
 
       <Box
         sx={{
-          width: "25%",
+          width: "13%",
           display: "flex",
           justifyContent: "space-around",
           flexWrap: "wrap",
         }}
       >
         <Box sx={{ width: 170, mt: 4 }}>
-          <Typography sx={{ fontWeight: "bold" }}>အိတ်</Typography>
+          <Typography sx={{ fontWeight: "bold" }}>အဆီခံအိတ်</Typography>
           <TextField
-            value={newPayStock.filterSizeBag}
             placeholder="အိတ်"
             sx={{ bgcolor: "#EEE8CF" }}
-            onChange={() => {}}
-          />
-        </Box>
-        <Box sx={{ width: 170, mt: 4 }}>
-          <Typography sx={{ fontWeight: "bold" }}>စုစုပေါင်းငွေ</Typography>
-          <TextField
-            value={0}
-            placeholder="စုစုပေါင်းငွေ"
-            sx={{ bgcolor: "#EEE8CF" }}
-            onChange={() => {}}
+            onChange={(evt) => {
+              setNewPayStock({
+                ...newPayStock,
+                filterSizeBag: Number(evt.target.value),
+              });
+            }}
           />
         </Box>
       </Box>

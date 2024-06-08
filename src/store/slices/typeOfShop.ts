@@ -17,7 +17,7 @@ const initialState: typeOfShopSlice = {
 export const CreateShop = createAsyncThunk(
   "shop/CreateShop",
   async (option: CreateNewShop, thunkApi) => {
-    const { name, onSuccess, onError } = option;
+    const { name, shopTitleId, onSuccess, onError } = option;
     const workShopId = localStorage.getItem("selectedWorkShopId");
     try {
       const response = await fetch(
@@ -27,7 +27,7 @@ export const CreateShop = createAsyncThunk(
           headers: {
             "content-type": "application/json",
           },
-          body: JSON.stringify({ name }),
+          body: JSON.stringify({ name, shopTitleId }),
         }
       );
       const { newShop } = await response.json();
@@ -42,7 +42,7 @@ export const CreateShop = createAsyncThunk(
 export const UpdatedShop = createAsyncThunk(
   "shop/UpdatedShop",
   async (option: updateShop, thunkApi) => {
-    const { name, id, onSuccess, onError } = option;
+    const { name, id, shopTitleId, onSuccess, onError } = option;
     const workShopId = localStorage.getItem("selectedWorkShopId");
     try {
       const response = await fetch(
@@ -52,7 +52,7 @@ export const UpdatedShop = createAsyncThunk(
           headers: {
             "content-type": "application/json",
           },
-          body: JSON.stringify({ name, id }),
+          body: JSON.stringify({ name, id, shopTitleId }),
         }
       );
       const { updateShop } = await response.json();

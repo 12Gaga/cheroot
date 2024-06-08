@@ -1,4 +1,5 @@
 import Layout from "@/components/layout";
+import LayoutAdmin from "@/components/layoutAdmin";
 import SnackBar from "@/components/snackBar";
 import { store } from "@/store";
 import "@/styles/globals.css";
@@ -11,10 +12,10 @@ export default function App({ Component, pageProps }: AppProps) {
     <>
       <SessionProvider>
         <Provider store={store}>
-          <Layout>
+          <LayoutAdmin>
             <Component {...pageProps} />
             <SnackBar />
-          </Layout>
+          </LayoutAdmin>
         </Provider>
       </SessionProvider>
     </>

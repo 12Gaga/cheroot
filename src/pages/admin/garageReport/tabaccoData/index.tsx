@@ -67,6 +67,9 @@ const TabaccoReport = () => {
               <th style={{ width: 200, backgroundColor: "#DBB5B5" }}>
                 ကျန်ရှိပြည်
               </th>
+              <th style={{ width: 200, backgroundColor: "#DBB5B5" }}>
+                ကျန်ရှိအိတ်
+              </th>
             </tr>
 
             {garage &&
@@ -137,6 +140,9 @@ const TabaccoReport = () => {
                   return (total += tab.tabaccoPyi);
                 }, 0);
                 const tolPayTabacco = payTabaccoPyi + payTabaccoTin;
+                const payTabaccoBag = findPayTabacco.reduce((tol, tab) => {
+                  return (tol += tab.tabaccoBag);
+                }, 0);
                 //find from extraPurchase
                 const findExtraTabacco = extraPurchase.filter(
                   (et) =>
@@ -172,6 +178,11 @@ const TabaccoReport = () => {
                     </td>
                     <td style={{ textAlign: "center" }}>{tolTin}</td>
                     <td style={{ textAlign: "center" }}>{tolPyi}</td>
+                    <td style={{ textAlign: "center" }}>
+                      {tabaccoBag +
+                        enterTabaccoBag -
+                        (exitTabaccoBag + payTabaccoBag + extraTabaccobag)}
+                    </td>
                   </tr>
                 );
               })}

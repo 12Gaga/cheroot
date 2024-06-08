@@ -19,6 +19,7 @@ export default async function handler(
       tabaccoQty,
       tabaccoTin,
       tabaccoPyi,
+      tabaccoBag,
       typeOfLabelId,
       labelBandle,
       totalPrice,
@@ -38,6 +39,7 @@ export default async function handler(
       tabaccoQty != undefined &&
       tabaccoTin != undefined &&
       tabaccoPyi != undefined &&
+      tabaccoBag != undefined &&
       typeOfLabelId &&
       labelBandle != undefined &&
       totalPrice != undefined &&
@@ -57,6 +59,7 @@ export default async function handler(
         tabaccoQty,
         tabaccoTin,
         tabaccoPyi,
+        tabaccoBag,
         typeOfLabelId,
         labelBandle,
         totalPrice,

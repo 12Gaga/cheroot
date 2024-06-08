@@ -20,6 +20,7 @@ import { setOpenSnackbar } from "@/store/slices/snackBar";
 import { LoadingButton } from "@mui/lab";
 import { createNewPlasticStock } from "@/types/plasticStockType";
 import { CreatePlasticStock, setIsLoading } from "@/store/slices/plasticStock";
+import { TypeOfShop } from "@prisma/client";
 interface Props {
   open: boolean;
   setOpen: (value: boolean) => void;
@@ -49,6 +50,12 @@ const PlasticOpen = ({ open, setOpen }: Props) => {
   );
   const [newPlasticStock, setNewPlasticStock] =
     useState<createNewPlasticStock>(defaultValue);
+  const shopTiltes = useAppSelector((store) => store.shopTitle.item).filter(
+    (s) => s.workShopId === workShop?.id
+  );
+  const [showShop, setShowShop] = useState<TypeOfShop[]>([]);
+  const [titleId, setTitleId] = useState<number | null>(null);
+
   const { isLoading } = useAppSelector((store) => store.plasticStock);
   const dispatch = useAppDispatch();
   const shops = useAppSelector((store) => store.typeOfShop.item);
@@ -73,18 +80,51 @@ const PlasticOpen = ({ open, setOpen }: Props) => {
       })
     );
   };
+  const handleShopTitle = (shopTitleId: number) => {
+    const data = concernShop.filter((s) => s.shopTitleId === shopTitleId);
+    setShowShop(data);
+    setTitleId(shopTitleId);
+  };
 
   console.log("date", newPlasticStock);
   return (
     <>
-      <Dialog open={open} onClose={() => setOpen(false)}>
+      <Dialog
+        open={open}
+        onClose={() => {
+          setOpen(false), setNewPlasticStock(defaultValue);
+        }}
+      >
         <DialogContent>
-          <Box sx={{ display: "flex", justifyContent: "flex-end", mr: 2 }}>
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "flex-end",
+              alignItems: "center",
+            }}
+          >
             <Typography sx={{ mr: 2, fontWeight: "bold" }}>ရက်စွဲ</Typography>
             <DatePicker
               selected={selecteddate}
               onChange={(date) => setSelectedDate(date as Date)}
             />
+          </Box>
+
+          <Box sx={{ mt: 2, mr: 3 }}>
+            <Typography sx={{ fontWeight: "bold" }}>ဆိုင်ခေါင်းစဉ်</Typography>
+            <FormControl variant="filled" sx={{ width: 350 }}>
+              <Select
+                value={titleId}
+                onChange={(evt) => handleShopTitle(Number(evt.target.value))}
+                sx={{ bgcolor: "#EEE8CF" }}
+              >
+                {shopTiltes.map((item) => (
+                  <MenuItem key={item.id} value={item.id}>
+                    <ListItemText primary={item.name} />
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
           </Box>
 
           <Box sx={{ mt: 2 }}>
@@ -119,11 +159,11 @@ const PlasticOpen = ({ open, setOpen }: Props) => {
               mt: 4,
             }}
           >
-            <Box sx={{ mt: 2, display: "flex", alignItems: "center" }}>
+            <Box sx={{}}>
               <Typography sx={{ fontWeight: "bold", width: 150 }}>
                 ဝယ်ယူခဲ့သည့်ဆိုင်
               </Typography>
-              <FormControl variant="filled" sx={{ width: 225 }}>
+              <FormControl variant="filled" sx={{ width: 350 }}>
                 <Select
                   labelId="demo-simple-select-filled-label"
                   id="demo-simple-select-filled"
@@ -136,7 +176,7 @@ const PlasticOpen = ({ open, setOpen }: Props) => {
                   }}
                   sx={{ bgcolor: "#EEE8CF" }}
                 >
-                  {concernShop.map((item) => (
+                  {showShop.map((item) => (
                     <MenuItem key={item.id} value={item.id}>
                       <ListItemText primary={item.name} />
                     </MenuItem>
@@ -172,20 +212,6 @@ const PlasticOpen = ({ open, setOpen }: Props) => {
             </Box>
 
             <Box sx={{}}>
-              <Typography sx={{ fontWeight: "bold" }}>အရေအတွက်</Typography>
-              <TextField
-                placeholder="အရေအတွက်"
-                sx={{ bgcolor: "#EEE8CF", width: 350 }}
-                onChange={(evt) => {
-                  setNewPlasticStock({
-                    ...newPlasticStock,
-                    quantity: Number(evt.target.value),
-                  });
-                }}
-              />
-            </Box>
-
-            <Box sx={{}}>
               <Typography sx={{ fontWeight: "bold" }}>အိတ်</Typography>
               <TextField
                 placeholder="အိတ်"
@@ -194,6 +220,20 @@ const PlasticOpen = ({ open, setOpen }: Props) => {
                   setNewPlasticStock({
                     ...newPlasticStock,
                     bag: Number(evt.target.value),
+                  });
+                }}
+              />
+            </Box>
+
+            <Box sx={{}}>
+              <Typography sx={{ fontWeight: "bold" }}>အရေအတွက်</Typography>
+              <TextField
+                placeholder="အရေအတွက်"
+                sx={{ bgcolor: "#EEE8CF", width: 350 }}
+                onChange={(evt) => {
+                  setNewPlasticStock({
+                    ...newPlasticStock,
+                    quantity: Number(evt.target.value),
                   });
                 }}
               />

@@ -17,7 +17,10 @@ import {
   MenuItem,
   ListItemText,
 } from "@mui/material";
-import filterSizeStock from "@/store/slices/filterSizeStock";
+import FilterDateOne from "@/components/garageReport/filterDateOne";
+import FilterDateTwo from "@/components/garageReport/filterDateTwo";
+import FilterDateThree from "@/components/garageReport/filterSizeThree";
+import FilterDateFour from "@/components/garageReport/filterDateFour";
 const FilterSizeDateReport = () => {
   const workShopId = useAppSelector((store) => store.workShop.selectedWorkShop)
     ?.id as number;
@@ -227,7 +230,7 @@ const FilterSizeDateReport = () => {
           variant="h5"
           sx={{ textAlign: "center", fontWeight: "bold" }}
         >
-          ဖက်လက်ကျန်စာရင်း
+          ရက်အလိုက်အဆီခံလက်ကျန်စာရင်းစစ်ခြင်း
         </Typography>
         <Box
           sx={{
@@ -235,6 +238,7 @@ const FilterSizeDateReport = () => {
             display: "flex",
             justifyContent: "space-around",
             alignItems: "center",
+            mt: 3,
           }}
         >
           <Box>
@@ -281,285 +285,37 @@ const FilterSizeDateReport = () => {
         </Box>
 
         <Box sx={{ display: "flex", justifyContent: "space-around", mb: 4 }}>
-          <Box>
-            <Typography variant="h6" sx={{ mb: 2 }}>
-              အဆီခံသွင်းစာရင်း
-            </Typography>
-            <table border={1} className="table">
-              <tr>
-                <th style={{ width: 200, backgroundColor: "#DBB5B5" }}>
-                  အဆီခံအမျိုးအစား
-                </th>
-                <th style={{ width: 200, backgroundColor: "#DBB5B5" }}>
-                  စုစုပေါင်းအရေအတွက်
-                </th>
-                <th style={{ width: 200, backgroundColor: "#DBB5B5" }}>
-                  အိတ်ပေါင်း
-                </th>
-              </tr>
+          {/* Enter FilterSize */}
+          <FilterDateOne
+            concernFilterSizeStock={concernFilterSizeStock}
+            concernFilterSizes={concernFilterSizes}
+            concernFilterTransferEnter={concernFilterTransferEnter}
+            garage={garage}
+          />
 
-              {garage &&
-                concernFilterSizes.map((item) => {
-                  const findData = concernFilterSizeStock.filter(
-                    (f) => f.typeOfFilterSizeId === item.id
-                  );
-                  const findQty = findData.reduce((tol, fl) => {
-                    return (tol += fl.quantity);
-                  }, 0);
-                  const findbag = findData.reduce((tol, fl) => {
-                    return (tol += fl.bag);
-                  }, 0);
-                  const findEnterData = concernFilterTransferEnter.filter(
-                    (f) => f.typeOfFilterSizeId === item.id
-                  );
-                  const findEnterQty = findEnterData.reduce((tol, fl) => {
-                    return (tol += fl.quantity);
-                  }, 0);
-                  const findEnterbag = findEnterData.reduce((tol, fl) => {
-                    return (tol += fl.bag);
-                  }, 0);
-                  return (
-                    <tr key={item.id}>
-                      <td style={{ textAlign: "center" }}>{item.name}</td>
-                      <td style={{ textAlign: "center" }}>
-                        {findQty + findEnterQty}
-                      </td>
-                      <td style={{ textAlign: "center" }}>
-                        {findbag + findEnterbag}
-                      </td>
-                    </tr>
-                  );
-                })}
-            </table>
-          </Box>
-          <Box sx={{ ml: 4 }}>
-            <Typography variant="h6" sx={{ mb: 2 }}>
-              အဆီခံပေးစာရင်း
-            </Typography>
-            <table border={1} className="table">
-              <tr>
-                <th style={{ width: 200, backgroundColor: "#DBB5B5" }}>
-                  အဆီခံအမျိုးအစား
-                </th>
-                <th style={{ width: 200, backgroundColor: "#DBB5B5" }}>
-                  စုစုပေါင်းအရေအတွက်
-                </th>
-                <th style={{ width: 200, backgroundColor: "#DBB5B5" }}>
-                  အိတ်ပေါင်း
-                </th>
-              </tr>
-
-              {garage &&
-                concernFilterSizes.map((item) => {
-                  const findPayData = concernPayOther.filter(
-                    (f) => f.typeOfFilterSizeId === item.id
-                  );
-                  const findPayQty = findPayData.reduce((tol, fl) => {
-                    return (tol += fl.filterSizeQty);
-                  }, 0);
-                  const findpaybag = findPayData.reduce((tol, fl) => {
-                    return (tol += fl.filterSizeBag);
-                  }, 0);
-                  const findExtraData = concernExtraPurchase.filter(
-                    (f) => f.typeOfFilterSizeId === item.id
-                  );
-                  const findExtraQty = findExtraData.reduce((tol, fl) => {
-                    return (tol += fl.filterSizeQty);
-                  }, 0);
-                  const findExtrabag = findExtraData.reduce((tol, fl) => {
-                    return (tol += fl.filterSizeBag);
-                  }, 0);
-                  return (
-                    <tr key={item.id}>
-                      <td style={{ textAlign: "center" }}>{item.name}</td>
-                      <td style={{ textAlign: "center" }}>
-                        {findPayQty + findExtraQty}
-                      </td>
-                      <td style={{ textAlign: "center" }}>
-                        {findpaybag + findExtrabag}
-                      </td>
-                    </tr>
-                  );
-                })}
-            </table>
-          </Box>
+          {/* Left FiterSize */}
+          <FilterDateTwo
+            concernExtraPurchase={concernExtraPurchase}
+            concernFilterSizes={concernFilterSizes}
+            concernPayOther={concernPayOther}
+            garage={garage}
+          />
         </Box>
 
         <Box sx={{ display: "flex", justifyContent: "space-around" }}>
-          <Box sx={{ mr: 4 }}>
-            <Typography variant="h6" sx={{ mb: 2 }}>
-              အဆီခံဂိုထောင်ကူးပြောင်းစာရင်း
-            </Typography>
-            <table border={1} className="table">
-              <tr>
-                <th style={{ width: 200, backgroundColor: "#DBB5B5" }}>
-                  အဆီခံအမျိုးအစား
-                </th>
-                <th style={{ width: 200, backgroundColor: "#DBB5B5" }}>
-                  စုစုပေါင်းအရေအတွက်
-                </th>
-                <th style={{ width: 200, backgroundColor: "#DBB5B5" }}>
-                  အိတ်ပေါင်း
-                </th>
-              </tr>
-              {garage &&
-                concernFilterSizes.map((item) => {
-                  const findData = concernFilterTransferExit.filter(
-                    (f) => f.typeOfFilterSizeId === item.id
-                  );
-                  const findQty = findData.reduce((tol, fl) => {
-                    return (tol += fl.quantity);
-                  }, 0);
-                  const findbag = findData.reduce((tol, fl) => {
-                    return (tol += fl.bag);
-                  }, 0);
-                  return (
-                    <tr key={item.id}>
-                      <td style={{ textAlign: "center" }}>{item.name}</td>
-                      <td style={{ textAlign: "center" }}>{findQty}</td>
-                      <td style={{ textAlign: "center" }}>{findbag}</td>
-                    </tr>
-                  );
-                })}
-            </table>
-          </Box>
-          <Box>
-            <Typography variant="h6" sx={{ mb: 2 }}>
-              ကျန်ရှိစာရင်း
-            </Typography>
-            <table border={1} className="table">
-              <tr>
-                <th style={{ width: 200, backgroundColor: "#DBB5B5" }}>
-                  အဆီခံအမျိုးအစား
-                </th>
-                <th style={{ width: 200, backgroundColor: "#DBB5B5" }}>
-                  ကျန်ရှိအရေအတွက်
-                </th>
-                <th style={{ width: 200, backgroundColor: "#DBB5B5" }}>
-                  ကျန်ရှိအိတ်
-                </th>
-              </tr>
-              {garage &&
-                concernFilterSizes.map((item) => {
-                  const findFilterSizeData = filterSizeStocks.filter((f) => {
-                    const fdate = new Date(f.date);
-                    return (
-                      f.typeOfFilterSizeId === item.id &&
-                      f.garageId === garage &&
-                      fdate.getTime() <= endDate.getTime() + 24
-                    );
-                  });
-                  console.log("data", findFilterSizeData);
-                  const filterSizeQty = findFilterSizeData.reduce(
-                    (total, filter) => {
-                      return (total += filter.quantity);
-                    },
-                    0
-                  );
-                  const filterSizeBag = findFilterSizeData.reduce(
-                    (total, filter) => {
-                      return (total += filter.bag);
-                    },
-                    0
-                  );
-                  //findFilterGarageTrnsfer(EnterGarage)
-                  const findEnterFilter = filterGarageTransfer.filter((ef) => {
-                    const fdate = new Date(ef.date);
-                    return (
-                      ef.typeOfFilterSizeId === item.id &&
-                      ef.enterenceGarageId === garage &&
-                      fdate.getTime() <= endDate.getTime() + 24
-                    );
-                  });
-                  const enterFilterQty = findEnterFilter.reduce(
-                    (total, filter) => {
-                      return (total += filter.quantity);
-                    },
-                    0
-                  );
-                  const enterFilterBag = findEnterFilter.reduce(
-                    (total, filter) => {
-                      return (total += filter.bag);
-                    },
-                    0
-                  );
-                  //findFilterGarageTrnsfer(ExitGarage)
-                  const findExitFilter = filterGarageTransfer.filter((ef) => {
-                    const fdate = new Date(ef.date);
-                    return (
-                      ef.typeOfFilterSizeId === item.id &&
-                      ef.exitGarageId === garage &&
-                      fdate.getTime() <= endDate.getTime() + 24
-                    );
-                  });
-                  const exitFilterQty = findExitFilter.reduce(
-                    (total, filter) => {
-                      return (total += filter.quantity);
-                    },
-                    0
-                  );
-                  const exitFilterBag = findExitFilter.reduce(
-                    (total, filter) => {
-                      return (total += filter.bag);
-                    },
-                    0
-                  );
-                  //find from payother
-                  const findPayFilter = payOther.filter((ef) => {
-                    const fdate = new Date(ef.date);
-                    return (
-                      ef.typeOfFilterSizeId === item.id &&
-                      ef.garageId === garage &&
-                      fdate.getTime() <= endDate.getTime() + 24
-                    );
-                  });
-                  const payFilterQty = findPayFilter.reduce((total, filter) => {
-                    return (total += filter.filterSizeQty);
-                  }, 0);
-                  const payFilterBag = findPayFilter.reduce((total, filter) => {
-                    return (total += filter.filterSizeBag);
-                  }, 0);
-                  //find from extraPurchase
-                  const findExtraFilter = extraPurchase.filter((ef) => {
-                    const fdate = new Date(ef.date);
-                    return (
-                      ef.typeOfFilterSizeId === item.id &&
-                      ef.garageId === garage &&
-                      fdate.getTime() <= endDate.getTime() + 24
-                    );
-                  });
-                  const extraFilterQty = findExtraFilter.reduce(
-                    (total, filter) => {
-                      return (total += filter.filterSizeQty);
-                    },
-                    0
-                  );
-                  const extraFilterBag = findExtraFilter.reduce(
-                    (total, filter) => {
-                      return (total += filter.filterSizeBag);
-                    },
-                    0
-                  );
-                  return (
-                    <tr key={item.id}>
-                      <td style={{ textAlign: "center", height: 30 }}>
-                        {item.name}
-                      </td>
-                      <td style={{ textAlign: "center" }}>
-                        {filterSizeQty +
-                          enterFilterQty -
-                          (exitFilterQty + payFilterQty + extraFilterQty)}
-                      </td>
-                      <td style={{ textAlign: "center" }}>
-                        {filterSizeBag +
-                          enterFilterBag -
-                          (exitFilterBag + payFilterBag + extraFilterBag)}
-                      </td>
-                    </tr>
-                  );
-                })}
-            </table>
-          </Box>
+          {/* Transfer FilterSize */}
+          <FilterDateThree
+            concernFilterSizes={concernFilterSizes}
+            concernFilterTransferExit={concernFilterTransferExit}
+            garage={garage}
+            concernGarages={concernGarages}
+          />
+          {/* Remine FilterSize */}
+          <FilterDateFour
+            concernFilterSizes={concernFilterSizes}
+            garage={garage}
+            endDate={endDate}
+          />
         </Box>
       </AdminLayout>
     </>

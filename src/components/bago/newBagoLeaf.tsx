@@ -18,6 +18,7 @@ import { createNewBagoLeaf } from "@/types/bagoLeafType";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { CreateBagoLeaf, setIsLoading } from "@/store/slices/bagoLeaf";
 import { setOpenSnackbar } from "@/store/slices/snackBar";
+import { TypeOfShop } from "@prisma/client";
 interface Props {
   open: boolean;
   setOpen: (value: boolean) => void;
@@ -44,6 +45,12 @@ const NewBagoLeaf = ({ open, setOpen }: Props) => {
   const shops = useAppSelector((store) => store.typeOfShop.item);
   const concernShop = shops.filter((item) => item.workShopId === workShop?.id);
   const { isLoading } = useAppSelector((store) => store.bagoLeaf);
+  const shopTiltes = useAppSelector((store) => store.shopTitle.item).filter(
+    (s) => s.workShopId === workShop?.id
+  );
+  const [showShop, setShowShop] = useState<TypeOfShop[]>([]);
+  const [titleId, setTitleId] = useState<number | null>(null);
+
   const handleWeight = (weight: number) => {
     const tolamount = weight * newBagoLeaf.netPrice;
     setNewBagoLeaf({
@@ -75,20 +82,57 @@ const NewBagoLeaf = ({ open, setOpen }: Props) => {
     );
   };
 
+  const handleShopTitle = (shopTitleId: number) => {
+    const data = concernShop.filter((s) => s.shopTitleId === shopTitleId);
+    setShowShop(data);
+    setTitleId(shopTitleId);
+  };
+
   useEffect(() => {
     setNewBagoLeaf({ ...newBagoLeaf, date: selecteddate });
   }, [selecteddate, open]);
 
   return (
     <>
-      <Dialog open={open} onClose={() => setOpen(false)}>
+      <Dialog
+        open={open}
+        onClose={() => {
+          setOpen(false), setNewBagoLeaf(defaultValue);
+        }}
+      >
         <DialogContent>
-          <Box sx={{ display: "flex", justifyContent: "flex-end", mr: 2 }}>
-            <Typography sx={{ mr: 2, fontWeight: "bold" }}>ရက်စွဲ</Typography>
-            <DatePicker
-              selected={selecteddate}
-              onChange={(date) => setSelectedDate(date as Date)}
-            />
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "space-around",
+              alignItems: "center",
+            }}
+          >
+            <Box sx={{ mt: 2, mr: 3 }}>
+              <Typography sx={{ fontWeight: "bold" }}>
+                ဆိုင်ခေါင်းစဉ်
+              </Typography>
+              <FormControl variant="filled" sx={{ width: 300 }}>
+                <Select
+                  value={titleId}
+                  onChange={(evt) => handleShopTitle(Number(evt.target.value))}
+                  sx={{ bgcolor: "#EEE8CF" }}
+                >
+                  {shopTiltes.map((item) => (
+                    <MenuItem key={item.id} value={item.id}>
+                      <ListItemText primary={item.name} />
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+            </Box>
+            <Box>
+              <Typography sx={{ mr: 2, fontWeight: "bold" }}>ရက်စွဲ</Typography>
+              <DatePicker
+                selected={selecteddate}
+                onChange={(date) => setSelectedDate(date as Date)}
+              />
+            </Box>
           </Box>
 
           <Box
@@ -117,7 +161,7 @@ const NewBagoLeaf = ({ open, setOpen }: Props) => {
                   }}
                   sx={{ bgcolor: "#EEE8CF" }}
                 >
-                  {concernShop.map((item) => (
+                  {showShop.map((item) => (
                     <MenuItem key={item.id} value={item.id}>
                       <ListItemText primary={item.name} />
                     </MenuItem>

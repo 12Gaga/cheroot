@@ -65,18 +65,46 @@ export default async function handler(
     const leftViss = (await prisma.agentLeafViss.findFirst({
       where: { typeOfLeafId, agentId },
     })) as AgentLeafViss;
-    const totalViss = netViss + leftViss.viss;
+    let newRemainLeaf;
+    if (leftViss) {
+      const totalViss = netViss + leftViss.viss;
 
-    await prisma.agentLeafViss.updateMany({
-      data: { viss: totalViss },
-      where: { typeOfLeafId, agentId },
-    });
+      await prisma.agentLeafViss.updateMany({
+        data: { viss: totalViss },
+        where: { typeOfLeafId, agentId },
+      });
+
+      newRemainLeaf = await prisma.agentRemineLeaf.create({
+        data: {
+          agentId,
+          leafId: typeOfLeafId,
+          workShopId,
+          Viss: totalViss,
+          date,
+        },
+      });
+    } else {
+      await prisma.agentLeafViss.create({
+        data: { agentId, typeOfLeafId, viss: netViss, workShopId },
+      });
+
+      newRemainLeaf = await prisma.agentRemineLeaf.create({
+        data: {
+          agentId,
+          leafId: typeOfLeafId,
+          workShopId,
+          Viss: netViss,
+          date,
+        },
+      });
+    }
 
     // await prisma.leaf.updateMany({
     //   data: { isArchived: true },
     //   where: { id: { in: BatchNos } },
     // });
-    return res.status(200).json({ newPayLeaf });
+
+    return res.status(200).json({ newPayLeaf, newRemainLeaf });
   }
   res.status(200).json("bad request");
 }

@@ -10,7 +10,6 @@ import {
   ListItemText,
 } from "@mui/material";
 import { Formula } from "@prisma/client";
-import { useState } from "react";
 
 interface Props {
   newPayStock: createNewPayStock;
@@ -41,34 +40,34 @@ const PayLeafFour = ({
     const selectedFormula = concernFormula.find(
       (item) => item.typeOfCherootId === cherootId
     ) as Formula;
-    setNewPayStock({
-      ...newPayStock,
-      typeOfCherootId: cherootId,
-      cherootQty: selectedFormula?.cherootQty,
-      typeOfFilterSizeId: selectedFormula.typeOfFilterSizeId,
-      filterSizeQty: selectedFormula.filterSizeQty,
-      filterSizeBag: selectedFormula.filterSizeBag,
-      typeOfTabaccoId: selectedFormula.typeOfTabaccoId,
-      tabaccoQty: selectedFormula.tabaccoQty,
-      tabaccoTin: selectedFormula.tabaccoTin,
-      tabaccoPyi: selectedFormula.tabaccoPyi,
-    });
-    setPayStock({
-      ...payStock,
-      cherootQty: selectedFormula?.cherootQty,
-      filterSizeQty: selectedFormula.filterSizeQty,
-      filterSizeBag: selectedFormula.filterSizeBag,
-      tabaccoQty: selectedFormula.tabaccoQty,
-      tabaccoTin: selectedFormula.tabaccoTin,
-      tabaccoPyi: selectedFormula.tabaccoPyi,
-    });
+    if (selectedFormula) {
+      setNewPayStock({
+        ...newPayStock,
+        typeOfCherootId: cherootId,
+        cherootQty: selectedFormula?.cherootQty,
+        typeOfFilterSizeId: selectedFormula.typeOfFilterSizeId,
+        filterSizeQty: selectedFormula.filterSizeQty,
+        typeOfTabaccoId: selectedFormula.typeOfTabaccoId,
+        tabaccoQty: selectedFormula.tabaccoQty,
+        tabaccoTin: selectedFormula.tabaccoTin,
+        tabaccoPyi: selectedFormula.tabaccoPyi,
+      });
+      setPayStock({
+        ...payStock,
+        cherootQty: selectedFormula?.cherootQty,
+        filterSizeQty: selectedFormula.filterSizeQty,
+        tabaccoQty: selectedFormula.tabaccoQty,
+        tabaccoTin: selectedFormula.tabaccoTin,
+        tabaccoPyi: selectedFormula.tabaccoPyi,
+      });
+    }
   };
 
   const handelChangeQty = (quantity: number) => {
     const changeFilterSizeQty =
       (payStock.filterSizeQty * quantity) / payStock.cherootQty;
-    const changeFilterSizeBag =
-      (payStock.filterSizeBag * quantity) / payStock.cherootQty;
+    // const changeFilterSizeBag =
+    //   (payStock.filterSizeBag * quantity) / payStock.cherootQty;
     const changeTabaccoTin =
       (payStock.tabaccoTin * quantity) / payStock.cherootQty;
     const changeTabaccoPyi =
@@ -77,7 +76,6 @@ const PayLeafFour = ({
       ...newPayStock,
       cherootQty: quantity,
       filterSizeQty: changeFilterSizeQty,
-      filterSizeBag: changeFilterSizeBag,
       tabaccoQty: quantity,
       tabaccoTin: changeTabaccoTin,
       tabaccoPyi: changeTabaccoPyi,
@@ -116,7 +114,7 @@ const PayLeafFour = ({
         </Box>
 
         <Box sx={{ width: 250, mt: 2 }}>
-          <Typography sx={{ fontWeight: "bold" }}>အရေအတွက်</Typography>
+          <Typography sx={{ fontWeight: "bold" }}>ဆေးလိပ်အရေအတွက်</Typography>
           <TextField
             placeholder="အရေအတွက်"
             sx={{ bgcolor: "#EEE8CF" }}
@@ -148,11 +146,20 @@ const PayLeafFour = ({
           />
         </Box>
 
-        <Box sx={{ width: 250, mt: 2 }}>
+        {/* <Box sx={{ width: 250, mt: 2 }}>
           <Typography sx={{ fontWeight: "bold" }}>အရေအတွက်</Typography>
           <TextField
             value={newPayStock.tabaccoQty}
             placeholder="အရေအတွက်"
+            sx={{ bgcolor: "#EEE8CF" }}
+            onChange={() => {}}
+          />
+        </Box> */}
+        <Box sx={{ width: 250, mt: 2 }}>
+          <Typography sx={{ fontWeight: "bold" }}>တင်း</Typography>
+          <TextField
+            value={newPayStock.tabaccoTin}
+            placeholder="တင်း"
             sx={{ bgcolor: "#EEE8CF" }}
             onChange={() => {}}
           />
@@ -168,21 +175,25 @@ const PayLeafFour = ({
         }}
       >
         <Box sx={{ width: 170, mt: 2 }}>
-          <Typography sx={{ fontWeight: "bold" }}>တင်း</Typography>
-          <TextField
-            value={newPayStock.tabaccoTin}
-            placeholder="တင်း"
-            sx={{ bgcolor: "#EEE8CF" }}
-            onChange={() => {}}
-          />
-        </Box>
-        <Box sx={{ width: 170, mt: 2 }}>
           <Typography sx={{ fontWeight: "bold" }}>ပြည်</Typography>
           <TextField
             value={newPayStock.tabaccoPyi}
             placeholder="ပြည်"
             sx={{ bgcolor: "#EEE8CF" }}
             onChange={() => {}}
+          />
+        </Box>
+        <Box sx={{ width: 170, mt: 2 }}>
+          <Typography sx={{ fontWeight: "bold" }}>ဆေးစပ်အိတ်</Typography>
+          <TextField
+            placeholder="အိတ်"
+            sx={{ bgcolor: "#EEE8CF" }}
+            onChange={(evt) => {
+              setNewPayStock({
+                ...newPayStock,
+                tabaccoBag: Number(evt.target.value),
+              });
+            }}
           />
         </Box>
       </Box>

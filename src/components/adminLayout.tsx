@@ -42,6 +42,7 @@ const asigning = [
   { label: "ပလတ်စတစ်အမျိုးအစား", url: "/admin/asignNamePrice/plastic" },
   { label: "အလုပ်ရုံ", url: "/admin/asignNamePrice/workShop" },
   { label: "ဂိုထောင်", url: "/admin/asignNamePrice/garage" },
+  { label: "ဆိုင်ခေါင်းစဉ်", url: "/admin/asignNamePrice/shopTitle" },
   { label: "ပစ္စည်းဝယ်ယူသည့်ဆိုင်အမည်", url: "/admin/asignNamePrice/shop" },
 ];
 
@@ -132,10 +133,6 @@ const Bago = [
     label: "ပလပ်စတစ်အရစ်ကျစာရင်း",
     url: "/admin/bago/bagoPlasticInstallment",
   },
-  {
-    label: "အရစ်ကျစာရင်းစစ်ခြင်း",
-    url: "/admin/bago/checkingInstallment",
-  },
 ];
 
 const ReturnCherootReport = [
@@ -157,6 +154,17 @@ const CashAdvanceReport = [
   {
     label: "ကိုယ်စားလှယ်ကြိုယူငွေလက်ကျန်ရှင်းတမ်း(လချုပ်)",
     url: "/admin/cashAdvanceReport/monthlyCashAdvanceData",
+  },
+];
+
+const LeafReport = [
+  {
+    label: "ကိုယ်စားလှယ်ဖက်စာရင်းရှင်းတမ်း",
+    url: "/admin/leafReport",
+  },
+  {
+    label: "ကိုယ်စားလှယ်ဖက်စာရင်းရှင်းတမ်း(လချုပ်)",
+    url: "/admin/leafReport/monthlyLeafData",
   },
 ];
 
@@ -217,6 +225,7 @@ const AdminLayout = ({ children }: Props) => {
   const bago = router.pathname.includes("bago");
   const returnCherootReport = router.pathname.includes("returnCherootReport");
   const cashAdvanceReport = router.pathname.includes("cashAdvanceReport");
+  const leafReport = router.pathname.includes("leafReport");
   const garageReport = router.pathname.includes("garageReport");
   const { selectedWorkShop, item: workShops } = useAppSelector(
     (store) => store.workShop
@@ -252,6 +261,8 @@ const AdminLayout = ({ children }: Props) => {
     data = [...CashAdvanceReport];
   } else if (garageReport) {
     data = [...GarageReport];
+  } else if (leafReport) {
+    data = [...LeafReport];
   }
 
   if (!session) return null;
@@ -326,6 +337,11 @@ const AdminLayout = ({ children }: Props) => {
         {garageReport && (
           <Typography variant="h5" sx={{ color: "white", fontWeight: "bold" }}>
             ဂိုထောင်လက်ကျန်ပစ္စည်းစစ်ခြင်း
+          </Typography>
+        )}
+        {leafReport && (
+          <Typography variant="h5" sx={{ color: "white", fontWeight: "bold" }}>
+            ဖက်စာရင်းစစ်ခြင်း
           </Typography>
         )}
         <Box sx={{ display: "flex" }}>

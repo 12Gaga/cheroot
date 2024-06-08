@@ -19,6 +19,7 @@ import {
   ListItemText,
   MenuItem,
 } from "@mui/material";
+import { TypeOfShop } from "@prisma/client";
 import { useEffect, useState } from "react";
 import DatePicker from "react-datepicker";
 interface Props {
@@ -43,6 +44,12 @@ const NewBagoPlasticInstallment = ({ open, setOpen }: Props) => {
   const { item: bagoPlasticInstallments, isLoading } = useAppSelector(
     (store) => store.bagoPlasticInstallment
   );
+  const shopTiltes = useAppSelector((store) => store.shopTitle.item).filter(
+    (s) => s.workShopId === workshop?.id
+  );
+  const [showShop, setShowShop] = useState<TypeOfShop[]>([]);
+  const [titleId, setTitleId] = useState<number | null>(null);
+
   const [bagoPlasticInstallment, setBagoPlasticInstallment] =
     useState<addBagoPlasticlInstallment>(defaultValue);
 
@@ -80,6 +87,12 @@ const NewBagoPlasticInstallment = ({ open, setOpen }: Props) => {
     );
   };
 
+  const handleShopTitle = (shopTitleId: number) => {
+    const data = concernShop.filter((s) => s.shopTitleId === shopTitleId);
+    setShowShop(data);
+    setTitleId(shopTitleId);
+  };
+
   useEffect(() => {
     setBagoPlasticInstallment({
       ...bagoPlasticInstallment,
@@ -89,14 +102,45 @@ const NewBagoPlasticInstallment = ({ open, setOpen }: Props) => {
   console.log("dkfh", bagoPlasticInstallment);
   return (
     <>
-      <Dialog open={open} onClose={() => setOpen(false)}>
+      <Dialog
+        open={open}
+        onClose={() => {
+          setOpen(false), setBagoPlasticInstallment(defaultValue);
+        }}
+      >
         <DialogContent>
-          <Box sx={{ display: "flex", justifyContent: "flex-end", mr: 2 }}>
-            <Typography sx={{ mr: 2, fontWeight: "bold" }}>ရက်စွဲ</Typography>
-            <DatePicker
-              selected={selecteddate}
-              onChange={(date) => setSelectedDate(date as Date)}
-            />
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "space-around",
+              alignItems: "center",
+            }}
+          >
+            <Box sx={{ mt: 2, mr: 3 }}>
+              <Typography sx={{ fontWeight: "bold" }}>
+                ဆိုင်ခေါင်းစဉ်
+              </Typography>
+              <FormControl variant="filled" sx={{ width: 300 }}>
+                <Select
+                  value={titleId}
+                  onChange={(evt) => handleShopTitle(Number(evt.target.value))}
+                  sx={{ bgcolor: "#EEE8CF" }}
+                >
+                  {shopTiltes.map((item) => (
+                    <MenuItem key={item.id} value={item.id}>
+                      <ListItemText primary={item.name} />
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+            </Box>
+            <Box>
+              <Typography sx={{ mr: 2, fontWeight: "bold" }}>ရက်စွဲ</Typography>
+              <DatePicker
+                selected={selecteddate}
+                onChange={(date) => setSelectedDate(date as Date)}
+              />
+            </Box>
           </Box>
 
           <Box
@@ -122,7 +166,7 @@ const NewBagoPlasticInstallment = ({ open, setOpen }: Props) => {
                   }}
                   sx={{ bgcolor: "#EEE8CF" }}
                 >
-                  {concernShop.map((item) => (
+                  {showShop.map((item) => (
                     <MenuItem key={item.id} value={item.id}>
                       <ListItemText primary={item.name} />
                     </MenuItem>

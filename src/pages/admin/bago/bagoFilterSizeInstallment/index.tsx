@@ -1,5 +1,6 @@
 import {
   Box,
+  Button,
   FormControl,
   ListItemText,
   MenuItem,
@@ -19,8 +20,10 @@ import NewBagoFilerSizeInstallment from "@/components/bago/newBagoFilterSizeInst
 import { BagoFilterSizeInstallment } from "@prisma/client";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
+import { useRouter } from "next/router";
 
 const BagoFilterSizeInstallments = () => {
+  const router = useRouter();
   const [open, setOpen] = useState<boolean>(false);
   const workshop = useAppSelector((store) => store.workShop.selectedWorkShop);
   const bagoInstallment = useAppSelector(
@@ -70,7 +73,16 @@ const BagoFilterSizeInstallments = () => {
         >
           ပဲခူးအစီခံအရစ်ကျစာရင်း
         </Typography>
-
+        <Box sx={{ display: "flex", justifyContent: "flex-end" }}>
+          <Button
+            variant="contained"
+            onClick={() => {
+              router.push("/admin/moneyData/directPayment");
+            }}
+          >
+            ပေးငွေစာရင်းသွင်းခြင်း
+          </Button>
+        </Box>
         <Box sx={{ display: "flex", flexWrap: "wrap" }}>
           <Box sx={{ mr: 2, display: "flex", mt: 4, width: 300 }}>
             <Typography sx={{ mr: 2, fontWeight: "bold" }}>ရက်စွဲ</Typography>

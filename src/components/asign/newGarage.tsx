@@ -57,7 +57,12 @@ const NewGarage = ({ open, setOpen }: Props) => {
   };
 
   return (
-    <Dialog open={open} onClose={() => setOpen(false)}>
+    <Dialog
+      open={open}
+      onClose={() => {
+        setOpen(false), setNewGarage(defaultValue);
+      }}
+    >
       <DialogTitle>ဂိုထောင်အသစ်ထည့်ခြင်း</DialogTitle>
       <DialogContent>
         <Box>

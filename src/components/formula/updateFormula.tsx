@@ -1,12 +1,7 @@
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
-import {
-  CreateFormula,
-  UpdatedFormula,
-  setIsLoading,
-} from "@/store/slices/formula";
+import { UpdatedFormula, setIsLoading } from "@/store/slices/formula";
 import { setOpenSnackbar } from "@/store/slices/snackBar";
-import typeOfCheroot from "@/store/slices/typeOfCheroot";
-import { createNewFormula, updateFormula } from "@/types/formulaType";
+import { updateFormula } from "@/types/formulaType";
 import { LoadingButton } from "@mui/lab";
 import {
   Box,
@@ -200,23 +195,6 @@ export const UpdateFormula = ({
 
           <Box sx={{ display: "flex", alignItems: "center", mt: 2 }}>
             <Typography sx={{ fontWeight: "bold", width: 150 }}>
-              အိတ်
-            </Typography>
-            <TextField
-              defaultValue={selectFormula.filterSizeBag}
-              placeholder="အိတ်"
-              sx={{ bgcolor: "#EEE8CF" }}
-              onChange={(evt) => {
-                setUpdateFormula({
-                  ...updateFormula,
-                  filterSizeBag: Number(evt.target.value),
-                });
-              }}
-            />
-          </Box>
-
-          <Box sx={{ display: "flex", alignItems: "center", mt: 2 }}>
-            <Typography sx={{ fontWeight: "bold", width: 150 }}>
               ဆေးစပ်အမျိုးအစား
             </Typography>
             <FormControl variant="filled" sx={{ width: 225 }}>
@@ -244,7 +222,7 @@ export const UpdateFormula = ({
 
           <Box sx={{ display: "flex", alignItems: "center", mt: 2 }}>
             <Typography sx={{ fontWeight: "bold", width: 150 }}>
-              အရေအတွက်
+              ဆေးလိပ်အရေအတွက်
             </Typography>
             <TextField
               defaultValue={selectFormula.tabaccoQty}

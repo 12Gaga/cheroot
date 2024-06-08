@@ -29,6 +29,7 @@ const defaultValue: createNewPayStock = {
   tabaccoQty: 0,
   tabaccoTin: 0,
   tabaccoPyi: 0,
+  tabaccoBag: 0,
   typeOfLabelId: undefined,
   labelBandle: 0,
   totalPrice: 0,
@@ -42,6 +43,7 @@ const defaultPayStock: payStock = {
   tabaccoQty: 0,
   tabaccoTin: 0,
   tabaccoPyi: 0,
+  tabaccoBag: 0,
 };
 
 const PayStock = () => {

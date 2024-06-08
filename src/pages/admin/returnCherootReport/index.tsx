@@ -66,12 +66,12 @@ const DailyCherootData = () => {
     });
   };
 
-  if (
-    !concernAgent.length ||
-    !concernCheroot.length ||
-    !concernReturnCheroots.length
-  )
-    return null;
+  // if (
+  //   !concernAgent.length ||
+  //   !concernCheroot.length ||
+  //   !concernReturnCheroots.length
+  // )
+  //   return null;
   return (
     <>
       <AdminLayout>

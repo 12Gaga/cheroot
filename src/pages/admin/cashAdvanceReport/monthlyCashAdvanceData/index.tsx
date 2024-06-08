@@ -18,7 +18,6 @@ const MonthlyCashAdvanceReport = () => {
   const [selecteddate, setSelectedDate] = useState<Date>(new Date());
   const [agentId, setAgentId] = useState<number[]>([]);
   let no = 0;
-  let tol = 0;
   const handelAgent = (data: OtherDeduction[]) => {
     data.forEach((item) => {
       const exit = agentId.find((a) => item.agentId === a);

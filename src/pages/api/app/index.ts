@@ -65,10 +65,19 @@ export default async function handler(
     const newCheroot = await prisma.typeOfCheroot.create({
       data: { name: newCherootName, workShopId: newWorkShop.id },
     });
+    // create shopTilte
+    const newShopTitleName = "ဆိုင်ခေါင်းစဉ်၁";
+    const newShopTitle = await prisma.shopTitle.create({
+      data: { name: newShopTitleName, workShopId: newWorkShop.id },
+    });
     //10. create shop
     const newShopName = "ဆိုင်၁";
     const newShop = await prisma.typeOfShop.create({
-      data: { name: newShopName, workShopId: newWorkShop.id },
+      data: {
+        name: newShopName,
+        workShopId: newWorkShop.id,
+        shopTitleId: newShopTitle.id,
+      },
     });
     //11. create plastic
     const newPlasticName = "ပလပ်စတစ်၁";
@@ -129,6 +138,7 @@ export default async function handler(
       plastic: newPlastic,
       store: newStore,
       banquet: newBanquet,
+      shopTitle: newShopTitle,
     });
   } else {
     //get cigratteIndustry Id from dbuser
@@ -360,6 +370,14 @@ export default async function handler(
     const packingData = await prisma.packing.findMany({
       where: { workShopId: { in: workShopIds }, isArchived: false },
     });
+    //55. find agentRemainLeaf
+    const agentReaminLeaf = await prisma.agentRemineLeaf.findMany({
+      where: { workShopId: { in: workShopIds }, isArchived: false },
+    });
+    //56. find shopTitle
+    const shopTitle = await prisma.shopTitle.findMany({
+      where: { workShopId: { in: workShopIds }, isArchived: false },
+    });
     return res.json({
       industry,
       workShop,
@@ -416,6 +434,8 @@ export default async function handler(
       cherootInstallment,
       cherootTransfer,
       packingData,
+      agentReaminLeaf,
+      shopTitle,
     });
   }
 }

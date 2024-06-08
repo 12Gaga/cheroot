@@ -7,23 +7,23 @@ export default async function handler(
 ) {
   const method = req.method;
   if (method === "POST") {
-    const { name } = req.body;
+    const { name, shopTitleId } = req.body;
     const workShopId = Number(req.query.workShopId);
     console.log("workShopId", workShopId);
-    const isValid = name;
+    const isValid = name && shopTitleId;
     if (!isValid) return res.status(405).send("bad request");
 
     const newShop = await prisma.typeOfShop.create({
-      data: { name, workShopId },
+      data: { name, workShopId, shopTitleId },
     });
     return res.status(200).json({ newShop });
   } else if (method === "PUT") {
-    const { name, id } = req.body;
-    const isValid = name && id;
+    const { name, id, shopTitleId } = req.body;
+    const isValid = name && id && shopTitleId;
     if (!isValid) return res.status(405).send("bad request");
     const updateShop = await prisma.typeOfShop.update({
       where: { id },
-      data: { name },
+      data: { name, shopTitleId },
     });
     return res.status(200).json({ updateShop });
   } else if (method === "DELETE") {

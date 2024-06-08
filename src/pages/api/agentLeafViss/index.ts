@@ -21,7 +21,10 @@ export default async function handler(
         viss,
       },
     });
-    return res.status(200).json({ newAgentLeafViss });
+    const newRemainLeaf = await prisma.agentRemineLeaf.create({
+      data: { agentId, leafId: typeOfLeafId, workShopId, Viss: viss },
+    });
+    return res.status(200).json({ newAgentLeafViss, newRemainLeaf });
   } else if (method === "PUT") {
     const { agentId, typeOfLeafId, viss, id } = req.body;
     const isValid = agentId && typeOfLeafId && viss != undefined && id;

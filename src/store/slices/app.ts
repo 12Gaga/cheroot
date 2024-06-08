@@ -56,6 +56,8 @@ import { setBagoFilterSizeInstallment } from "./bagoFilterSizeInstallment";
 import { setBagoLabelInstallment } from "./bagoLabelInstallment";
 import { setBagoPlasticInstallment } from "./bagoPlasticInstallment";
 import { setPackingData } from "./packingData";
+import { setAgentRemainLeaf } from "./agentRemainLeaf";
+import { setShopTitle } from "./typeOfShopTitle";
 
 const initialState: appSlice = {
   init: false,
@@ -126,6 +128,8 @@ export const fetchApp = createAsyncThunk(
         cherootInstallment,
         cherootTransfer,
         packingData,
+        agentReaminLeaf,
+        shopTitle,
       } = dataFromServer;
       thunkApi.dispatch(setInit(true));
       thunkApi.dispatch(setIndustry(industry));
@@ -185,6 +189,8 @@ export const fetchApp = createAsyncThunk(
       thunkApi.dispatch(setCherootInstallment(cherootInstallment));
       thunkApi.dispatch(setCherootTransfer(cherootTransfer));
       thunkApi.dispatch(setPackingData(packingData));
+      thunkApi.dispatch(setAgentRemainLeaf(agentReaminLeaf));
+      thunkApi.dispatch(setShopTitle(shopTitle));
       onSuccess && onSuccess();
     } catch (err) {
       onError && onError(err);

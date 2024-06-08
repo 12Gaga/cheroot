@@ -20,6 +20,7 @@ import { LoadingButton } from "@mui/lab";
 import { updateLeafStock } from "@/types/leafStockType";
 import { UpdatedLeafStock, setIsLoading } from "@/store/slices/leafStock";
 import { setOpenSnackbar } from "@/store/slices/snackBar";
+import { TypeOfShop } from "@prisma/client";
 interface Props {
   updateOpen: boolean;
   setUpdateOpen: (value: boolean) => void;
@@ -60,6 +61,11 @@ const UpdateLeafOpen = ({ updateOpen, setUpdateOpen, selectedId }: Props) => {
   );
   const [updateLeafStock, setUpdateLeafStock] =
     useState<updateLeafStock>(defaultValue);
+  const shopTiltes = useAppSelector((store) => store.shopTitle.item).filter(
+    (s) => s.workShopId === workShop?.id
+  );
+  const [showShop, setShowShop] = useState<TypeOfShop[]>([]);
+  const [titleId, setTitleId] = useState<number | null>(null);
 
   const { isLoading } = useAppSelector((store) => store.leafStock);
   const dispatch = useAppDispatch();
@@ -78,6 +84,7 @@ const UpdateLeafOpen = ({ updateOpen, setUpdateOpen, selectedId }: Props) => {
         garageId: selectLeafStock.garageId,
       });
     }
+    setShowShop(concernShop);
   }, [selectLeafStock, updateOpen]);
 
   useEffect(() => {
@@ -113,13 +120,30 @@ const UpdateLeafOpen = ({ updateOpen, setUpdateOpen, selectedId }: Props) => {
     });
   };
 
+  const handleShopTitle = (shopTitleId: number) => {
+    const data = concernShop.filter((s) => s.shopTitleId === shopTitleId);
+    setShowShop(data);
+    setTitleId(shopTitleId);
+  };
+
   if (!selectLeafStock) return null;
 
   return (
     <>
-      <Dialog open={updateOpen} onClose={() => setUpdateOpen(false)}>
+      <Dialog
+        open={updateOpen}
+        onClose={() => {
+          setUpdateOpen(false), setUpdateLeafStock(defaultValue);
+        }}
+      >
         <DialogContent>
-          <Box sx={{ display: "flex", justifyContent: "flex-end", mr: 2 }}>
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "flex-end",
+              alignItems: "center",
+            }}
+          >
             <Typography sx={{ mr: 2, fontWeight: "bold" }}>ရက်စွဲ</Typography>
             <DatePicker
               selected={selecteddate}
@@ -127,6 +151,23 @@ const UpdateLeafOpen = ({ updateOpen, setUpdateOpen, selectedId }: Props) => {
                 setSelectedDate(date);
               }}
             />
+          </Box>
+
+          <Box sx={{ mt: 2, mr: 3 }}>
+            <Typography sx={{ fontWeight: "bold" }}>ဆိုင်ခေါင်းစဉ်</Typography>
+            <FormControl variant="filled" sx={{ width: 350 }}>
+              <Select
+                value={titleId}
+                onChange={(evt) => handleShopTitle(Number(evt.target.value))}
+                sx={{ bgcolor: "#EEE8CF" }}
+              >
+                {shopTiltes.map((item) => (
+                  <MenuItem key={item.id} value={item.id}>
+                    <ListItemText primary={item.name} />
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
           </Box>
 
           <Box sx={{ mt: 2 }}>
@@ -162,11 +203,11 @@ const UpdateLeafOpen = ({ updateOpen, setUpdateOpen, selectedId }: Props) => {
               mt: 4,
             }}
           >
-            <Box sx={{ mt: 2, display: "flex", alignItems: "center" }}>
+            <Box sx={{}}>
               <Typography sx={{ fontWeight: "bold", width: 150 }}>
                 ဝယ်ယူခဲ့သည့်ဆိုင်
               </Typography>
-              <FormControl variant="filled" sx={{ width: 225 }}>
+              <FormControl variant="filled" sx={{ width: 350 }}>
                 <Select
                   labelId="demo-simple-select-filled-label"
                   id="demo-simple-select-filled"
@@ -180,7 +221,7 @@ const UpdateLeafOpen = ({ updateOpen, setUpdateOpen, selectedId }: Props) => {
                   }}
                   sx={{ bgcolor: "#EEE8CF" }}
                 >
-                  {concernShop.map((item) => (
+                  {showShop.map((item) => (
                     <MenuItem key={item.id} value={item.id}>
                       <ListItemText primary={item.name} />
                     </MenuItem>

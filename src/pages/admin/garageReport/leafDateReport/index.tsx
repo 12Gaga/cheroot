@@ -12,6 +12,10 @@ import {
   Typography,
 } from "@mui/material";
 import { Leaf, LeafTransferGarage, PayLeaf } from "@prisma/client";
+import LeafDateOne from "@/components/garageReport/leafDateOne";
+import LeafDateTwo from "@/components/garageReport/leafDateTwo";
+import LeafDateThree from "@/components/garageReport/leafDateThree";
+import LeafDateFour from "@/components/garageReport/leafDateFour";
 const LeafDateReport = () => {
   const workShopId = useAppSelector((store) => store.workShop.selectedWorkShop)
     ?.id as number;
@@ -142,7 +146,7 @@ const LeafDateReport = () => {
           variant="h5"
           sx={{ textAlign: "center", fontWeight: "bold" }}
         >
-          ဖက်လက်ကျန်စာရင်း
+          ရက်အလိုက်ဖက်လက်ကျန်စာရင်းစစ်ခြင်း
         </Typography>
         <Box
           sx={{
@@ -150,6 +154,7 @@ const LeafDateReport = () => {
             display: "flex",
             justifyContent: "space-around",
             alignItems: "center",
+            mt: 3,
           }}
         >
           <Box>
@@ -196,226 +201,34 @@ const LeafDateReport = () => {
         </Box>
 
         <Box sx={{ display: "flex", justifyContent: "space-around", mb: 4 }}>
-          <Box>
-            <Typography variant="h6" sx={{ mb: 2 }}>
-              ဖက်သွင်းစာရင်း
-            </Typography>
-            <table border={1} className="table">
-              <tr>
-                <th style={{ width: 200, backgroundColor: "#DBB5B5" }}>
-                  ဖက်အမျိုးအစား
-                </th>
-                <th style={{ width: 200, backgroundColor: "#DBB5B5" }}>
-                  ပိုလုံးရေ
-                </th>
-                <th style={{ width: 200, backgroundColor: "#DBB5B5" }}>
-                  ပိသာပေါင်း
-                </th>
-              </tr>
-              {garage &&
-                concernLeaves.map((item) => {
-                  const concern = concernLeafStock.filter(
-                    (l) => l.typeOfLeafId === item.id
-                  );
-                  const total = concern.reduce((tol, c) => {
-                    return (tol += c.viss);
-                  }, 0);
-                  return (
-                    <tr key={item.id}>
-                      <td style={{ textAlign: "center" }}>{item.name}</td>
-                      <td style={{ textAlign: "center" }}>{concern.length}</td>
-                      <td style={{ textAlign: "center" }}>{total}</td>
-                    </tr>
-                  );
-                })}
-            </table>
-          </Box>
-          <Box sx={{ ml: 4 }}>
-            <Typography variant="h6" sx={{ mb: 2 }}>
-              ဖက်ထုတ်စာရင်း
-            </Typography>
-            <table border={1} className="table">
-              <tr>
-                <th style={{ width: 200, backgroundColor: "#DBB5B5" }}>
-                  ဖက်အမျိုးအစား
-                </th>
-                <th style={{ width: 200, backgroundColor: "#DBB5B5" }}>
-                  ပိုလုံးရေ
-                </th>
-                <th style={{ width: 200, backgroundColor: "#DBB5B5" }}>
-                  ပိသာပေါင်း
-                </th>
-              </tr>
-              {garage &&
-                concernLeaves.map((item) => {
-                  const concern = concernPayLeaf.filter(
-                    (pl) => pl.typeOfLeafId === item.id
-                  );
-                  const total = concern.reduce((tol, pay) => {
-                    return (tol += pay.viss);
-                  }, 0);
-                  return (
-                    <tr key={item.id}>
-                      <td style={{ textAlign: "center" }}>{item.name}</td>
-                      <td style={{ textAlign: "center" }}>{concern.length}</td>
-                      <td style={{ textAlign: "center" }}>{total}</td>
-                    </tr>
-                  );
-                })}
-            </table>
-          </Box>
+          {/* Enter Leaf */}
+          <LeafDateOne
+            concernLeafStock={concernLeafStock}
+            concernLeaves={concernLeaves}
+            garage={garage}
+          />
+          {/* Left Leaf */}
+          <LeafDateTwo
+            concernLeaves={concernLeaves}
+            concernPayLeaf={concernPayLeaf}
+            garage={garage}
+          />
         </Box>
 
         <Box sx={{ display: "flex", justifyContent: "space-around" }}>
-          <Box>
-            <Typography variant="h6" sx={{ mb: 2 }}>
-              ဖက်ထုတ်စာရင်း
-            </Typography>
-            <table border={1} className="table">
-              <tr>
-                <th style={{ width: 200, backgroundColor: "#DBB5B5" }}>
-                  ဖက်အမျိုးအစား
-                </th>
-                <th style={{ width: 200, backgroundColor: "#DBB5B5" }}>
-                  ပိုလုံးရေ
-                </th>
-                <th style={{ width: 200, backgroundColor: "#DBB5B5" }}>
-                  ပိသာပေါင်း
-                </th>
-              </tr>
-              {garage &&
-                concernLeaves.map((item) => {
-                  const findConcern = concernLeafTransfer.filter(
-                    (pl) => pl.typeOfLeafId === item.id
-                  );
-                  const concernBatch = findConcern.map((tl) => tl.batchNo);
-
-                  const total = leafStock
-                    .filter(
-                      (l) =>
-                        l.typeOfLeafId === item.id &&
-                        concernBatch.includes(l.batchNo)
-                    )
-                    .reduce((tol, l) => {
-                      return (tol += l.viss);
-                    }, 0);
-
-                  console.log("total", total);
-                  return (
-                    <tr key={item.id}>
-                      <td style={{ textAlign: "center" }}>{item.name}</td>
-                      <td style={{ textAlign: "center" }}>
-                        {concernBatch.length}
-                      </td>
-                      <td style={{ textAlign: "center" }}>{total}</td>
-                    </tr>
-                  );
-                })}
-            </table>
-          </Box>
-
-          <Box sx={{ ml: 5 }}>
-            <Typography variant="h6" sx={{ mb: 2 }}>
-              ကျန်ရှိစာရင်း
-            </Typography>
-            <table border={1} className="table">
-              <tr>
-                <th style={{ width: 200, backgroundColor: "#DBB5B5" }}>
-                  ဖက်အမျိုးအစား
-                </th>
-                <th style={{ width: 200, backgroundColor: "#DBB5B5" }}>
-                  ကျန်ရှိပိုနံပါတ်
-                </th>
-                <th style={{ width: 200, backgroundColor: "#DBB5B5" }}>
-                  ကျန်ရှိပိသာ
-                </th>
-              </tr>
-
-              {garage &&
-                concernLeaves.map((item) => {
-                  const leafStockData = leafStock
-                    .filter((l) => {
-                      const ldate = new Date(l.date);
-                      return (
-                        l.typeOfLeafId === item.id &&
-                        l.garageId === garage &&
-                        ldate.getTime() <= endDate.getTime() + 24
-                      );
-                    })
-                    .reduce((total, leaf) => {
-                      return (total += leaf.viss);
-                    }, 0);
-                  console.log("data", leafStockData);
-                  const findLeafTransferData = leafGarageTransfer.filter(
-                    (gl) => {
-                      const ldate = new Date(gl.date);
-                      return (
-                        gl.exitGarageId === garage &&
-                        gl.typeOfLeafId === item.id &&
-                        ldate.getTime() <= endDate.getTime() + 24
-                      );
-                    }
-                  );
-
-                  const findbatchNo = findLeafTransferData.map(
-                    (fd) => fd.batchNo
-                  );
-                  const leafTransferData = leafStock
-                    .filter((l) => {
-                      const ldate = new Date(l.date);
-                      return (
-                        l.typeOfLeafId === item.id &&
-                        l.garageId === garage &&
-                        findbatchNo.includes(l.batchNo) &&
-                        ldate.getTime() <= endDate.getTime() + 24
-                      );
-                    })
-                    .reduce((total, leaf) => {
-                      return (total += leaf.viss);
-                    }, 0);
-                  console.log("data2", leafTransferData);
-                  const findBatchs = leafStock
-                    .filter((l) => {
-                      const ldate = new Date(l.date);
-                      return (
-                        l.typeOfLeafId === item.id &&
-                        l.garageId === garage &&
-                        !findbatchNo.includes(l.batchNo) &&
-                        ldate.getTime() <= endDate.getTime() + 24
-                      );
-                    })
-                    .map((lb) => lb.batchNo);
-                  const findPayleaf = payLeaf.filter((p) => {
-                    const pdate = new Date(p.date);
-                    return (
-                      p.typeOfLeafId === item.id &&
-                      p.garageId === garage &&
-                      pdate.getTime() <= endDate.getTime() + 24
-                    );
-                  });
-                  const payLeafData = findPayleaf.reduce((tol, pl) => {
-                    return (tol += pl.viss);
-                  }, 0);
-                  const paybatchs = findPayleaf.map((p) => p.batchNo);
-                  const lastBatchs = findBatchs.filter(
-                    (pb) => !paybatchs.includes(pb)
-                  );
-                  return (
-                    <tr key={item.id}>
-                      <td style={{ textAlign: "center", height: 30 }}>
-                        {item.name}
-                      </td>
-                      <td style={{ textAlign: "center" }}>
-                        {lastBatchs.length}
-                      </td>
-                      <td style={{ textAlign: "center" }}>
-                        {leafStockData - (leafTransferData + payLeafData)}
-                      </td>
-                    </tr>
-                  );
-                })}
-            </table>
-          </Box>
+          {/* Transfer Leaf */}
+          <LeafDateThree
+            concernGarages={concernGarages}
+            concernLeafTransfer={concernLeafTransfer}
+            concernLeaves={concernLeaves}
+            garage={garage}
+          />
+          {/* Remind Leaf */}
+          <LeafDateFour
+            garage={garage}
+            concernLeaves={concernLeaves}
+            endDate={endDate}
+          />
         </Box>
       </AdminLayout>
     </>

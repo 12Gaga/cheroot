@@ -34,7 +34,7 @@ export default async function handler(
         workShopId,
       },
     });
-
+    let newRemainLeaf;
     const leftViss = await prisma.agentLeafViss.findFirst({
       where: { typeOfLeafId, agentId },
     });
@@ -45,9 +45,19 @@ export default async function handler(
         data: { viss: reduceViss },
         where: { typeOfLeafId, agentId },
       });
+
+      newRemainLeaf = await prisma.agentRemineLeaf.create({
+        data: {
+          agentId,
+          leafId: typeOfLeafId,
+          workShopId,
+          Viss: reduceViss,
+          date,
+        },
+      });
     }
 
-    return res.status(200).json({ newLeafDeduction });
+    return res.status(200).json({ newLeafDeduction, newRemainLeaf });
   }
   res.status(200).json("bad request");
 }

@@ -80,7 +80,7 @@ const DailyCashAdvance = () => {
   };
   console.log("exitdata", exitData);
   console.log("concerndata", concernData);
-  if (!concernOtherDeduction.length) return null;
+  // if (!concernOtherDeduction.length) return null;
   return (
     <>
       <AdminLayout>

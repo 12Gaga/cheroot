@@ -162,22 +162,6 @@ export const NewFormula = ({ open, setOpen }: Props) => {
 
           <Box sx={{ display: "flex", alignItems: "center", mt: 2 }}>
             <Typography sx={{ fontWeight: "bold", width: 150 }}>
-              အိတ်
-            </Typography>
-            <TextField
-              placeholder="အိတ်"
-              sx={{ bgcolor: "#EEE8CF" }}
-              onChange={(evt) => {
-                setNewFormula({
-                  ...newFormula,
-                  filterSizeBag: Number(evt.target.value),
-                });
-              }}
-            />
-          </Box>
-
-          <Box sx={{ display: "flex", alignItems: "center", mt: 2 }}>
-            <Typography sx={{ fontWeight: "bold", width: 150 }}>
               ဆေးစပ်အမျိုးအစား
             </Typography>
             <FormControl variant="filled" sx={{ width: 225 }}>
@@ -204,7 +188,7 @@ export const NewFormula = ({ open, setOpen }: Props) => {
 
           <Box sx={{ display: "flex", alignItems: "center", mt: 2 }}>
             <Typography sx={{ fontWeight: "bold", width: 150 }}>
-              အရေအတွက်
+              ဆေးလိပ်အရေအတွက်
             </Typography>
             <TextField
               placeholder="အရေအတွက်"
@@ -267,7 +251,6 @@ export const NewFormula = ({ open, setOpen }: Props) => {
               !newFormula.cherootQty ||
               !newFormula.typeOfFilterSizeId ||
               !newFormula.filterSizeQty ||
-              !newFormula.filterSizeBag ||
               !newFormula.typeOfTabaccoId ||
               !newFormula.tabaccoQty ||
               !newFormula.tin ||

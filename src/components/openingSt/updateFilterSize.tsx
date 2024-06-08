@@ -22,6 +22,7 @@ import {
   setIsLoading,
 } from "@/store/slices/filterSizeStock";
 import { LoadingButton } from "@mui/lab";
+import { TypeOfShop } from "@prisma/client";
 interface Props {
   updateOpen: boolean;
   setUpdateOpen: (value: boolean) => void;
@@ -63,6 +64,12 @@ const UpdateFilterSizeOpen = ({
   );
   const [updateFilterSizeStock, setUpdateFilterSizeStock] =
     useState<updateFilterSizeStock>(defaultValue);
+  const shopTiltes = useAppSelector((store) => store.shopTitle.item).filter(
+    (s) => s.workShopId === workShop?.id
+  );
+  const [showShop, setShowShop] = useState<TypeOfShop[]>([]);
+  const [titleId, setTitleId] = useState<number | null>(null);
+
   const { isLoading } = useAppSelector((store) => store.filterSizeStock);
   const dispatch = useAppDispatch();
 
@@ -80,6 +87,7 @@ const UpdateFilterSizeOpen = ({
         garageId: selectFilterSizeStock.garageId,
       });
     }
+    setShowShop(concernShop);
   }, [selectFilterSizeStock, updateOpen]);
 
   useEffect(() => {
@@ -105,17 +113,52 @@ const UpdateFilterSizeOpen = ({
       })
     );
   };
+  const handleShopTitle = (shopTitleId: number) => {
+    const data = concernShop.filter((s) => s.shopTitleId === shopTitleId);
+    setShowShop(data);
+    setTitleId(shopTitleId);
+  };
+
   if (!selectFilterSizeStock) return null;
   return (
     <>
-      <Dialog open={updateOpen} onClose={() => setUpdateOpen(false)}>
+      <Dialog
+        open={updateOpen}
+        onClose={() => {
+          setUpdateOpen(false);
+          setUpdateFilterSizeStock(defaultValue);
+        }}
+      >
         <DialogContent>
-          <Box sx={{ display: "flex", justifyContent: "flex-end", mr: 2 }}>
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "flex-end",
+              alignItems: "center",
+            }}
+          >
             <Typography sx={{ mr: 2, fontWeight: "bold" }}>ရက်စွဲ</Typography>
             <DatePicker
               selected={selecteddate}
               onChange={(date) => setSelectedDate(date as Date)}
             />
+          </Box>
+
+          <Box sx={{ mt: 2, mr: 3 }}>
+            <Typography sx={{ fontWeight: "bold" }}>ဆိုင်ခေါင်းစဉ်</Typography>
+            <FormControl variant="filled" sx={{ width: 350 }}>
+              <Select
+                value={titleId}
+                onChange={(evt) => handleShopTitle(Number(evt.target.value))}
+                sx={{ bgcolor: "#EEE8CF" }}
+              >
+                {shopTiltes.map((item) => (
+                  <MenuItem key={item.id} value={item.id}>
+                    <ListItemText primary={item.name} />
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
           </Box>
 
           <Box sx={{ mt: 2 }}>
@@ -151,11 +194,11 @@ const UpdateFilterSizeOpen = ({
               mt: 4,
             }}
           >
-            <Box sx={{ mt: 2, display: "flex", alignItems: "center" }}>
+            <Box sx={{ alignItems: "center" }}>
               <Typography sx={{ fontWeight: "bold", width: 150 }}>
                 ဝယ်ယူခဲ့သည့်ဆိုင်
               </Typography>
-              <FormControl variant="filled" sx={{ width: 225 }}>
+              <FormControl variant="filled" sx={{ width: 350 }}>
                 <Select
                   labelId="demo-simple-select-filled-label"
                   id="demo-simple-select-filled"
@@ -169,7 +212,7 @@ const UpdateFilterSizeOpen = ({
                   }}
                   sx={{ bgcolor: "#EEE8CF" }}
                 >
-                  {concernShop.map((item) => (
+                  {showShop.map((item) => (
                     <MenuItem key={item.id} value={item.id}>
                       <ListItemText primary={item.name} />
                     </MenuItem>

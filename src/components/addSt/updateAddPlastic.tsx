@@ -18,15 +18,12 @@ import {
 } from "@mui/material";
 import { useEffect, useState } from "react";
 import { LoadingButton } from "@mui/lab";
+import { updatePlasticAddStock } from "@/types/plasticStockType";
 import {
-  createNewPlasticAddStock,
-  updatePlasticAddStock,
-} from "@/types/plasticStockType";
-import {
-  CreatePlasticAddStock,
   UpdatedPlasticAddStock,
   setIsLoading,
 } from "@/store/slices/plasticStock";
+import { TypeOfShop } from "@prisma/client";
 
 interface Props {
   updateOpen: boolean;
@@ -73,6 +70,12 @@ const UpdateAddPlastic = ({
   );
   const [updatePlasticAddStock, setUpdatePlasticAddStock] =
     useState<updatePlasticAddStock>(defaultValue);
+  const shopTiltes = useAppSelector((store) => store.shopTitle.item).filter(
+    (s) => s.workShopId === workShop?.id
+  );
+  const [showShop, setShowShop] = useState<TypeOfShop[]>([]);
+  const [titleId, setTitleId] = useState<number | null>(null);
+
   const { isLoading } = useAppSelector((store) => store.plasticStock);
   const dispatch = useAppDispatch();
   const shops = useAppSelector((store) => store.typeOfShop.item);
@@ -94,6 +97,12 @@ const UpdateAddPlastic = ({
       })
     );
   };
+  const handleShopTitle = (shopTitleId: number) => {
+    const data = concernShop.filter((s) => s.shopTitleId === shopTitleId);
+    setShowShop(data);
+    setTitleId(shopTitleId);
+  };
+
   useEffect(() => {
     if (selectedPlasticAddStock && selectedPlasticStock) {
       setSelectedDate(selectedPlasticStock.date);
@@ -110,6 +119,7 @@ const UpdateAddPlastic = ({
         garageId: selectedPlasticStock.garageId,
       });
     }
+    setShowShop(concernShop);
   }, [selectedPlasticAddStock, selectedPlasticStock, updateOpen]);
   useEffect(() => {
     setUpdatePlasticAddStock({
@@ -122,14 +132,46 @@ const UpdateAddPlastic = ({
 
   return (
     <>
-      <Dialog open={updateOpen} onClose={() => setUpdateOpen(false)}>
+      <Dialog
+        open={updateOpen}
+        onClose={() => {
+          setUpdateOpen(false);
+          setUpdatePlasticAddStock(defaultValue);
+        }}
+      >
         <DialogContent>
-          <Box sx={{ display: "flex", justifyContent: "flex-end", mr: 2 }}>
-            <Typography sx={{ mr: 2, fontWeight: "bold" }}>ရက်စွဲ</Typography>
-            <DatePicker
-              selected={selecteddate}
-              onChange={(date) => setSelectedDate(date as Date)}
-            />
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "space-around",
+              alignItems: "center",
+            }}
+          >
+            <Box sx={{ mt: 2, mr: 3 }}>
+              <Typography sx={{ fontWeight: "bold" }}>
+                ဆိုင်ခေါင်းစဉ်
+              </Typography>
+              <FormControl variant="filled" sx={{ width: 300 }}>
+                <Select
+                  value={titleId}
+                  onChange={(evt) => handleShopTitle(Number(evt.target.value))}
+                  sx={{ bgcolor: "#EEE8CF" }}
+                >
+                  {shopTiltes.map((item) => (
+                    <MenuItem key={item.id} value={item.id}>
+                      <ListItemText primary={item.name} />
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+            </Box>
+            <Box>
+              <Typography sx={{ mr: 2, fontWeight: "bold" }}>ရက်စွဲ</Typography>
+              <DatePicker
+                selected={selecteddate}
+                onChange={(date) => setSelectedDate(date as Date)}
+              />
+            </Box>
           </Box>
           <Box
             sx={{
@@ -190,7 +232,7 @@ const UpdateAddPlastic = ({
                   }}
                   sx={{ bgcolor: "#EEE8CF" }}
                 >
-                  {concernShop.map((item) => (
+                  {showShop.map((item) => (
                     <MenuItem key={item.id} value={item.id}>
                       <ListItemText primary={item.name} />
                     </MenuItem>
@@ -265,22 +307,6 @@ const UpdateAddPlastic = ({
 
             <Box sx={{ display: "flex", alignItems: "center" }}>
               <Typography sx={{ fontWeight: "bold", width: 150 }}>
-                အရေအတွက်
-              </Typography>
-              <TextField
-                defaultValue={selectedPlasticStock.quantity}
-                placeholder="အရေအတွက်"
-                sx={{ bgcolor: "#EEE8CF" }}
-                onChange={(evt) => {
-                  setUpdatePlasticAddStock({
-                    ...updatePlasticAddStock,
-                    quantity: Number(evt.target.value),
-                  });
-                }}
-              />
-            </Box>
-            <Box sx={{ display: "flex", alignItems: "center" }}>
-              <Typography sx={{ fontWeight: "bold", width: 150 }}>
                 အိတ်
               </Typography>
               <TextField
@@ -291,6 +317,23 @@ const UpdateAddPlastic = ({
                   setUpdatePlasticAddStock({
                     ...updatePlasticAddStock,
                     bag: Number(evt.target.value),
+                  });
+                }}
+              />
+            </Box>
+
+            <Box sx={{ display: "flex", alignItems: "center" }}>
+              <Typography sx={{ fontWeight: "bold", width: 150 }}>
+                အရေအတွက်
+              </Typography>
+              <TextField
+                defaultValue={selectedPlasticStock.quantity}
+                placeholder="အရေအတွက်"
+                sx={{ bgcolor: "#EEE8CF" }}
+                onChange={(evt) => {
+                  setUpdatePlasticAddStock({
+                    ...updatePlasticAddStock,
+                    quantity: Number(evt.target.value),
                   });
                 }}
               />
