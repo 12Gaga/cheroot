@@ -1,3 +1,4 @@
+import { useAppSelector } from "@/store/hooks";
 import { Box, Typography } from "@mui/material";
 import { Garage, TabaccoTransferGarage, TypeOfTabacco } from "@prisma/client";
 
@@ -6,13 +7,46 @@ interface Props {
   concernTabacco: TypeOfTabacco[];
   concernGarages: Garage[];
   garage: number | null;
+  startDate: Date;
+  endDate: Date;
 }
 const TabaccoDateThree = ({
   concernGarages,
   concernTabacco,
   concernTabaccoTransferExit,
   garage,
+  startDate,
+  endDate,
 }: Props) => {
+  const tabaccoGarageTransfer = useAppSelector(
+    (store) => store.tabaccoTransfer.item
+  );
+  //start date
+  const exitStartExit = concernTabaccoTransferExit.filter(
+    (f) =>
+      new Date(f.date).toLocaleDateString() === startDate.toLocaleDateString()
+  );
+  let startExitArray: TabaccoTransferGarage[] = [];
+  if (!exitStartExit.length) {
+    startExitArray = tabaccoGarageTransfer.filter(
+      (f) =>
+        new Date(f.date).toLocaleDateString() ===
+          startDate.toLocaleDateString() && f.exitGarageId === garage
+    );
+  }
+  //end date
+  const exitEndExit = concernTabaccoTransferExit.filter(
+    (f) =>
+      new Date(f.date).toLocaleDateString() === endDate.toLocaleDateString()
+  );
+  let endExitArray: TabaccoTransferGarage[] = [];
+  if (!exitEndExit.length) {
+    endExitArray = tabaccoGarageTransfer.filter(
+      (f) =>
+        new Date(f.date).toLocaleDateString() ===
+          endDate.toLocaleDateString() && f.exitGarageId === garage
+    );
+  }
   return (
     <>
       <Box sx={{ mr: 4 }}>
@@ -32,6 +66,35 @@ const TabaccoDateThree = ({
             <th style={{ width: 200, backgroundColor: "#DBB5B5" }}>ပြည်</th>
             <th style={{ width: 200, backgroundColor: "#DBB5B5" }}>အိတ်</th>
           </tr>
+
+          {!exitStartExit.length &&
+            startExitArray.map((item) => {
+              const itemdate = new Date(item.date);
+              return (
+                <tr key={item.id}>
+                  <td style={{ textAlign: "center" }}>
+                    {itemdate.toLocaleDateString()}
+                  </td>
+                  <td style={{ textAlign: "center" }}>
+                    {
+                      concernGarages.find(
+                        (g) => g.id === item.enterenceGarageId
+                      )?.name
+                    }
+                  </td>
+                  <td style={{ textAlign: "center" }}>
+                    {
+                      concernTabacco.find((t) => t.id === item.typeOfTabaccoId)
+                        ?.name
+                    }
+                  </td>
+                  <td style={{ textAlign: "center" }}>{item.tin}</td>
+                  <td style={{ textAlign: "center" }}>{item.pyi}</td>
+                  <td style={{ textAlign: "center" }}>{item.bag}</td>
+                </tr>
+              );
+            })}
+
           {garage &&
             concernTabaccoTransferExit.map((item) => {
               const itemdate = new Date(item.date);
@@ -59,24 +122,71 @@ const TabaccoDateThree = ({
                 </tr>
               );
             })}
+
+          {!exitEndExit.length &&
+            endExitArray.map((item) => {
+              const itemdate = new Date(item.date);
+              return (
+                <tr key={item.id}>
+                  <td style={{ textAlign: "center" }}>
+                    {itemdate.toLocaleDateString()}
+                  </td>
+                  <td style={{ textAlign: "center" }}>
+                    {
+                      concernGarages.find(
+                        (g) => g.id === item.enterenceGarageId
+                      )?.name
+                    }
+                  </td>
+                  <td style={{ textAlign: "center" }}>
+                    {
+                      concernTabacco.find((t) => t.id === item.typeOfTabaccoId)
+                        ?.name
+                    }
+                  </td>
+                  <td style={{ textAlign: "center" }}>{item.tin}</td>
+                  <td style={{ textAlign: "center" }}>{item.pyi}</td>
+                  <td style={{ textAlign: "center" }}>{item.bag}</td>
+                </tr>
+              );
+            })}
+
           <tr>
             <td></td>
             <td></td>
             <td></td>
             <th style={{ backgroundColor: "#FFDB5C" }}>
-              {concernTabaccoTransferExit.reduce((tol, tt) => {
+              {startExitArray.reduce((tol, tt) => {
                 return (tol += tt.tin);
-              }, 0)}
+              }, 0) +
+                concernTabaccoTransferExit.reduce((tol, tt) => {
+                  return (tol += tt.tin);
+                }, 0) +
+                endExitArray.reduce((tol, tt) => {
+                  return (tol += tt.tin);
+                }, 0)}
             </th>
             <th style={{ backgroundColor: "#FFDB5C" }}>
-              {concernTabaccoTransferExit.reduce((tol, tt) => {
+              {startExitArray.reduce((tol, tt) => {
                 return (tol += tt.pyi);
-              }, 0)}
+              }, 0) +
+                concernTabaccoTransferExit.reduce((tol, tt) => {
+                  return (tol += tt.pyi);
+                }, 0) +
+                endExitArray.reduce((tol, tt) => {
+                  return (tol += tt.pyi);
+                }, 0)}
             </th>
             <th style={{ backgroundColor: "#FFDB5C" }}>
-              {concernTabaccoTransferExit.reduce((tol, tt) => {
+              {startExitArray.reduce((tol, tt) => {
                 return (tol += tt.bag);
-              }, 0)}
+              }, 0) +
+                concernTabaccoTransferExit.reduce((tol, tt) => {
+                  return (tol += tt.bag);
+                }, 0) +
+                endExitArray.reduce((tol, tt) => {
+                  return (tol += tt.bag);
+                }, 0)}
             </th>
           </tr>
         </table>

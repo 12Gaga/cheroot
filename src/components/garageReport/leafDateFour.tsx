@@ -64,7 +64,7 @@ const LeafDateFour = ({ garage, concernLeaves, endDate }: Props) => {
                 findLeafStockData.reduce((total, leaf) => {
                   return (total += leaf.viss);
                 }, 0) + endDateViss;
-              console.log("data", leafStockData);
+              console.log("data", findLeafStockData);
 
               //leaf Transfer
               const findLeafTransferData = leafGarageTransfer.filter((gl) => {
@@ -124,32 +124,36 @@ const LeafDateFour = ({ garage, concernLeaves, endDate }: Props) => {
 
               let findBatchs;
               if (!dataTransferArray.length) {
-                findBatchs = leafStock
+                const dataFindBatchs = findLeafStockData.filter((l) => {
+                  const ldate = new Date(l.date);
+                  return (
+                    l.typeOfLeafId === item.id &&
+                    l.garageId === garage &&
+                    !findbatchNo.includes(l.batchNo)
+                  );
+                });
+                findBatchs = dataFindBatchs
                   .filter((l) => {
-                    const ldate = new Date(l.date);
                     return (
                       l.typeOfLeafId === item.id &&
                       l.garageId === garage &&
-                      !findbatchNo.includes(l.batchNo) &&
-                      !findExitbatchNo.includes(l.batchNo) &&
-                      ldate.getTime() <= endDate.getTime()
+                      !findExitbatchNo.includes(l.batchNo)
                     );
                   })
                   .map((lb) => lb.batchNo);
               } else {
-                findBatchs = leafStock
+                findBatchs = findLeafStockData
                   .filter((l) => {
                     const ldate = new Date(l.date);
                     return (
                       l.typeOfLeafId === item.id &&
                       l.garageId === garage &&
-                      !findbatchNo.includes(l.batchNo) &&
-                      ldate.getTime() <= endDate.getTime()
+                      !findbatchNo.includes(l.batchNo)
                     );
                   })
                   .map((lb) => lb.batchNo);
               }
-
+              console.log("batch", findBatchs);
               //payLeaf
               const findPayleaf = payLeaf.filter((p) => {
                 const pdate = new Date(p.date);

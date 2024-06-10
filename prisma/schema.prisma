@@ -163,7 +163,7 @@ model TypeOfShop{
 model TypeOfLeaf{
   id Int @id @default(autoincrement())
   name String
-  price Int @default(0)
+  price Float @default(0)
   workShop WorkShop @relation(fields: [workShopId],references: [id])
   workShopId Int
   agentLeafViss AgentLeafViss[]
@@ -181,7 +181,7 @@ model TypeOfLeaf{
 model TypeOfFilterSize{
   id Int @id @default(autoincrement())
   name String
-  price Int @default(0)
+  price Float @default(0)
   workShop WorkShop @relation(fields: [workShopId],references: [id])
   workShopId Int
   addStock AddStock[]
@@ -198,7 +198,7 @@ model TypeOfFilterSize{
 model TypeOfTabacco{
   id Int @id @default(autoincrement())
   name String
-  price Int @default(0)
+  price Float @default(0)
   workShop WorkShop @relation(fields: [workShopId],references: [id])
   workShopId Int
   addStock AddStock[]
@@ -214,7 +214,7 @@ model TypeOfTabacco{
 model TypeOfLabel{
   id Int @id @default(autoincrement())
   name String
-  price Int @default(0)
+  price Float @default(0)
   workShop WorkShop @relation(fields: [workShopId],references: [id])
   workShopId Int
   addStock AddStock[]
@@ -328,7 +328,7 @@ model AgentLeafViss{
 model TypeOfCheroot{
   id Int @id @default(autoincrement())
   name String
-  price Int @default(0)
+  price Float @default(0)
   workShop WorkShop @relation(fields: [workShopId],references: [id])
   workShopId Int
   typeOfPacking TypeOfPacking[]
@@ -582,7 +582,7 @@ model PayOtherItem{
   typeOfTabaccoId Int
   tabaccoQty Int
   tabaccoTin Int
-  tabaccoPyi Int
+  tabaccoPyi Float
   tabaccoBag Int
   typeOfLabel TypeOfLabel @relation(fields: [typeOfLabelId],references: [id])
   typeOfLabelId Int
@@ -662,7 +662,7 @@ model ExtraPurchase{
   typeOfTabaccoId Int
   tabaccoQty Int  @default(0)
   tabaccoTin Int  @default(0)
-  tabaccoPyi Int  @default(0)
+  tabaccoPyi Float  @default(0)
   tabaccoBag Int  @default(0)
   tabaccoPrice Int  @default(0)
   tabaccoAmount Int  @default(0)
@@ -750,7 +750,7 @@ model Formula{
   typeOfTabaccoId Int
   tabaccoQty Int
   tabaccoTin Int
-  tabaccoPyi Int
+  tabaccoPyi Float
   workShop WorkShop @relation(fields: [workShopId],references: [id])
   workShopId Int
   isArchived Boolean @default(false)

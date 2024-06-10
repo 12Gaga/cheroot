@@ -1,3 +1,4 @@
+import { useAppSelector } from "@/store/hooks";
 import { Box, Typography } from "@mui/material";
 import {
   FilterSizeTransferGarage,
@@ -10,13 +11,46 @@ interface Props {
   concernGarages: Garage[];
   concernFilterTransferExit: FilterSizeTransferGarage[];
   garage: number | null;
+  startDate: Date;
+  endDate: Date;
 }
 const FilterDateThree = ({
   concernFilterSizes,
   concernFilterTransferExit,
   concernGarages,
   garage,
+  startDate,
+  endDate,
 }: Props) => {
+  const filterGarageTransfer = useAppSelector(
+    (store) => store.filterSizeTransfer.item
+  );
+  //start date
+  const exitStartExit = concernFilterTransferExit.filter(
+    (f) =>
+      new Date(f.date).toLocaleDateString() === startDate.toLocaleDateString()
+  );
+  let startExitArray: FilterSizeTransferGarage[] = [];
+  if (!exitStartExit.length) {
+    startExitArray = filterGarageTransfer.filter(
+      (f) =>
+        new Date(f.date).toLocaleDateString() ===
+          startDate.toLocaleDateString() && f.exitGarageId === garage
+    );
+  }
+  //end date
+  const exitEndExit = concernFilterTransferExit.filter(
+    (f) =>
+      new Date(f.date).toLocaleDateString() === endDate.toLocaleDateString()
+  );
+  let endExitArray: FilterSizeTransferGarage[] = [];
+  if (!exitEndExit.length) {
+    endExitArray = filterGarageTransfer.filter(
+      (f) =>
+        new Date(f.date).toLocaleDateString() ===
+          endDate.toLocaleDateString() && f.exitGarageId === garage
+    );
+  }
   return (
     <>
       <Box sx={{ mr: 4 }}>
@@ -35,8 +69,64 @@ const FilterDateThree = ({
             <th style={{ width: 200, backgroundColor: "#DBB5B5" }}>အရေအတွက်</th>
             <th style={{ width: 200, backgroundColor: "#DBB5B5" }}>အိတ်</th>
           </tr>
+          {!exitStartExit.length &&
+            startExitArray.map((item) => {
+              const itemdate = new Date(item.date);
+              return (
+                <tr key={item.id}>
+                  <td style={{ textAlign: "center" }}>
+                    {itemdate.toLocaleDateString()}
+                  </td>
+                  <td style={{ textAlign: "center" }}>
+                    {
+                      concernGarages.find(
+                        (g) => g.id === item.enterenceGarageId
+                      )?.name
+                    }
+                  </td>
+                  <td style={{ textAlign: "center" }}>
+                    {
+                      concernFilterSizes.find(
+                        (t) => t.id === item.typeOfFilterSizeId
+                      )?.name
+                    }
+                  </td>
+                  <td style={{ textAlign: "center" }}>{item.quantity}</td>
+                  <td style={{ textAlign: "center" }}>{item.bag}</td>
+                </tr>
+              );
+            })}
+
           {garage &&
             concernFilterTransferExit.map((item) => {
+              const itemdate = new Date(item.date);
+              return (
+                <tr key={item.id}>
+                  <td style={{ textAlign: "center" }}>
+                    {itemdate.toLocaleDateString()}
+                  </td>
+                  <td style={{ textAlign: "center" }}>
+                    {
+                      concernGarages.find(
+                        (g) => g.id === item.enterenceGarageId
+                      )?.name
+                    }
+                  </td>
+                  <td style={{ textAlign: "center" }}>
+                    {
+                      concernFilterSizes.find(
+                        (t) => t.id === item.typeOfFilterSizeId
+                      )?.name
+                    }
+                  </td>
+                  <td style={{ textAlign: "center" }}>{item.quantity}</td>
+                  <td style={{ textAlign: "center" }}>{item.bag}</td>
+                </tr>
+              );
+            })}
+
+          {!exitEndExit.length &&
+            endExitArray.map((item) => {
               const itemdate = new Date(item.date);
               return (
                 <tr key={item.id}>
@@ -67,14 +157,26 @@ const FilterDateThree = ({
             <td></td>
             <td></td>
             <th style={{ backgroundColor: "#FFDB5C" }}>
-              {concernFilterTransferExit.reduce((tol, tt) => {
+              {startExitArray.reduce((tol, tt) => {
                 return (tol += tt.quantity);
-              }, 0)}
+              }, 0) +
+                concernFilterTransferExit.reduce((tol, tt) => {
+                  return (tol += tt.quantity);
+                }, 0) +
+                endExitArray.reduce((tol, tt) => {
+                  return (tol += tt.quantity);
+                }, 0)}
             </th>
             <th style={{ backgroundColor: "#FFDB5C" }}>
-              {concernFilterTransferExit.reduce((tol, tt) => {
+              {startExitArray.reduce((tol, tt) => {
                 return (tol += tt.bag);
-              }, 0)}
+              }, 0) +
+                concernFilterTransferExit.reduce((tol, tt) => {
+                  return (tol += tt.bag);
+                }, 0) +
+                endExitArray.reduce((tol, tt) => {
+                  return (tol += tt.bag);
+                }, 0)}
             </th>
           </tr>
         </table>

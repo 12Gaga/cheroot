@@ -99,6 +99,14 @@ const ReturnCherootFive = ({
       totalNetAgentPayment: totalPay,
     });
   };
+  //payleaf
+  const payleaf = useAppSelector((store) => store.payLeaf.item);
+  const concernPayLeaf = payleaf.filter(
+    (item) =>
+      new Date(item.date).toLocaleDateString() ===
+      selectedDate.toLocaleDateString()
+  );
+
   useEffect(() => {
     setNewOtherDeduction({ ...newOtherDeduction, deductDate: ddate });
   }, [ddate]);
@@ -178,6 +186,10 @@ const ReturnCherootFive = ({
         <Box sx={{ width: 250, mt: 4 }}>
           <Typography sx={{ fontWeight: "bold" }}>ယူသောပိဿာ</Typography>
           <TextField
+            value={
+              concernPayLeaf.length &&
+              concernPayLeaf[concernPayLeaf.length - 1].netViss
+            }
             placeholder="ယူသောပိဿာ"
             sx={{ bgcolor: "#EEE8CF" }}
             onChange={() => {}}

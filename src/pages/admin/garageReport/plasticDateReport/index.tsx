@@ -35,18 +35,16 @@ const PlasticDateReport = () => {
       const itemdate = new Date(item.date);
       return (
         item.garageId === garageId &&
-        itemdate.getDate() >= startDate.getDate() &&
-        itemdate.getDate() <= endDate.getDate() &&
-        itemdate.getMonth() === startDate.getMonth()
+        itemdate.getTime() >= startDate.getTime() &&
+        itemdate.getTime() <= endDate.getTime()
       );
     });
     const datatwo = packing.filter((item) => {
       const itemdate = new Date(item.date);
       return (
         item.garageId === garageId &&
-        itemdate.getDate() >= startDate.getDate() &&
-        itemdate.getDate() <= endDate.getDate() &&
-        itemdate.getMonth() === startDate.getMonth()
+        itemdate.getTime() >= startDate.getTime() &&
+        itemdate.getTime() <= endDate.getTime()
       );
     });
 
@@ -60,18 +58,16 @@ const PlasticDateReport = () => {
       const itemdate = new Date(item.date);
       return (
         item.garageId === garage &&
-        itemdate.getDate() >= start.getDate() &&
-        itemdate.getDate() <= endDate.getDate() &&
-        itemdate.getMonth() === start.getMonth()
+        itemdate.getTime() >= start.getTime() &&
+        itemdate.getTime() <= endDate.getTime()
       );
     });
     const datatwo = packing.filter((item) => {
       const itemdate = new Date(item.date);
       return (
         item.garageId === garage &&
-        itemdate.getDate() >= start.getDate() &&
-        itemdate.getDate() <= endDate.getDate() &&
-        itemdate.getMonth() === start.getMonth()
+        itemdate.getTime() >= start.getTime() &&
+        itemdate.getTime() <= endDate.getTime()
       );
     });
     setPlasticStock(dataone);
@@ -84,18 +80,16 @@ const PlasticDateReport = () => {
       const itemdate = new Date(item.date);
       return (
         item.garageId === garage &&
-        itemdate.getDate() >= startDate.getDate() &&
-        itemdate.getDate() <= end.getDate() &&
-        itemdate.getMonth() === startDate.getMonth()
+        itemdate.getTime() >= startDate.getTime() &&
+        itemdate.getTime() <= end.getTime()
       );
     });
     const datatwo = packing.filter((item) => {
       const itemdate = new Date(item.date);
       return (
         item.garageId === garage &&
-        itemdate.getDate() >= startDate.getDate() &&
-        itemdate.getDate() <= end.getDate() &&
-        itemdate.getMonth() === startDate.getMonth()
+        itemdate.getTime() >= startDate.getTime() &&
+        itemdate.getTime() <= end.getTime()
       );
     });
 
@@ -173,12 +167,16 @@ const PlasticDateReport = () => {
             concernPlastic={concernPlastic}
             concernPlasticStock={concernPlasticStock}
             garage={garage}
+            startDate={startDate}
+            endDate={endDate}
           />
           {/* Left Plastic */}
           <PlasticDateTwo
             concernPacking={concernPacking}
             concernPlastic={concernPlastic}
             garage={garage}
+            startDate={startDate}
+            endDate={endDate}
           />
         </Box>
         <PlasticDateThree

@@ -54,45 +54,40 @@ const LabelDateReport = () => {
       const itemdate = new Date(item.date);
       return (
         item.garageId === garageId &&
-        itemdate.getDate() >= startDate.getDate() &&
-        itemdate.getDate() <= endDate.getDate() &&
-        itemdate.getMonth() === startDate.getMonth()
+        itemdate.getTime() >= startDate.getTime() &&
+        itemdate.getTime() <= endDate.getTime()
       );
     });
     const datatwo = labelGarageTransfer.filter((item) => {
       const itemdate = new Date(item.date);
       return (
         item.exitGarageId === garageId &&
-        itemdate.getDate() >= startDate.getDate() &&
-        itemdate.getDate() <= endDate.getDate() &&
-        itemdate.getMonth() === startDate.getMonth()
+        itemdate.getTime() >= startDate.getTime() &&
+        itemdate.getTime() <= endDate.getTime()
       );
     });
     const datathree = payOther.filter((item) => {
       const itemdate = new Date(item.date);
       return (
         item.garageId === garageId &&
-        itemdate.getDate() >= startDate.getDate() &&
-        itemdate.getDate() <= endDate.getDate() &&
-        itemdate.getMonth() === startDate.getMonth()
+        itemdate.getTime() >= startDate.getTime() &&
+        itemdate.getTime() <= endDate.getTime()
       );
     });
     const datafour = extraPurchase.filter((item) => {
       const itemdate = new Date(item.date);
       return (
         item.garageId === garageId &&
-        itemdate.getDate() >= startDate.getDate() &&
-        itemdate.getDate() <= endDate.getDate() &&
-        itemdate.getMonth() === startDate.getMonth()
+        itemdate.getTime() >= startDate.getTime() &&
+        itemdate.getTime() <= endDate.getTime()
       );
     });
     const datafive = labelGarageTransfer.filter((item) => {
       const itemdate = new Date(item.date);
       return (
         item.enterenceGarageId === garageId &&
-        itemdate.getDate() >= startDate.getDate() &&
-        itemdate.getDate() <= endDate.getDate() &&
-        itemdate.getMonth() === startDate.getMonth()
+        itemdate.getTime() >= startDate.getTime() &&
+        itemdate.getTime() <= endDate.getTime()
       );
     });
     setLabelStock(dataone);
@@ -108,45 +103,40 @@ const LabelDateReport = () => {
       const itemdate = new Date(item.date);
       return (
         item.garageId === garage &&
-        itemdate.getDate() >= start.getDate() &&
-        itemdate.getDate() <= endDate.getDate() &&
-        itemdate.getMonth() === start.getMonth()
+        itemdate.getTime() >= start.getTime() &&
+        itemdate.getTime() <= endDate.getTime()
       );
     });
     const datatwo = labelGarageTransfer.filter((item) => {
       const itemdate = new Date(item.date);
       return (
         item.exitGarageId === garage &&
-        itemdate.getDate() >= start.getDate() &&
-        itemdate.getDate() <= endDate.getDate() &&
-        itemdate.getMonth() === start.getMonth()
+        itemdate.getTime() >= start.getTime() &&
+        itemdate.getTime() <= endDate.getTime()
       );
     });
     const datathree = payOther.filter((item) => {
       const itemdate = new Date(item.date);
       return (
         item.garageId === garage &&
-        itemdate.getDate() >= start.getDate() &&
-        itemdate.getDate() <= endDate.getDate() &&
-        itemdate.getMonth() === start.getMonth()
+        itemdate.getTime() >= start.getTime() &&
+        itemdate.getTime() <= endDate.getTime()
       );
     });
     const datafour = extraPurchase.filter((item) => {
       const itemdate = new Date(item.date);
       return (
         item.garageId === garage &&
-        itemdate.getDate() >= start.getDate() &&
-        itemdate.getDate() <= endDate.getDate() &&
-        itemdate.getMonth() === start.getMonth()
+        itemdate.getTime() >= start.getTime() &&
+        itemdate.getTime() <= endDate.getTime()
       );
     });
     const datafive = labelGarageTransfer.filter((item) => {
       const itemdate = new Date(item.date);
       return (
         item.enterenceGarageId === garage &&
-        itemdate.getDate() >= start.getDate() &&
-        itemdate.getDate() <= endDate.getDate() &&
-        itemdate.getMonth() === start.getMonth()
+        itemdate.getTime() >= start.getTime() &&
+        itemdate.getTime() <= endDate.getTime()
       );
     });
     setLabelStock(dataone);
@@ -162,45 +152,40 @@ const LabelDateReport = () => {
       const itemdate = new Date(item.date);
       return (
         item.garageId === garage &&
-        itemdate.getDate() >= startDate.getDate() &&
-        itemdate.getDate() <= end.getDate() &&
-        itemdate.getMonth() === startDate.getMonth()
+        itemdate.getTime() >= startDate.getTime() &&
+        itemdate.getTime() <= end.getTime()
       );
     });
     const datatwo = labelGarageTransfer.filter((item) => {
       const itemdate = new Date(item.date);
       return (
         item.exitGarageId === garage &&
-        itemdate.getDate() >= startDate.getDate() &&
-        itemdate.getDate() <= end.getDate() &&
-        itemdate.getMonth() === startDate.getMonth()
+        itemdate.getTime() >= startDate.getTime() &&
+        itemdate.getTime() <= end.getTime()
       );
     });
     const datathree = payOther.filter((item) => {
       const itemdate = new Date(item.date);
       return (
         item.garageId === garage &&
-        itemdate.getDate() >= startDate.getDate() &&
-        itemdate.getDate() <= end.getDate() &&
-        itemdate.getMonth() === startDate.getMonth()
+        itemdate.getTime() >= startDate.getTime() &&
+        itemdate.getTime() <= end.getTime()
       );
     });
     const datafour = extraPurchase.filter((item) => {
       const itemdate = new Date(item.date);
       return (
         item.garageId === garage &&
-        itemdate.getDate() >= startDate.getDate() &&
-        itemdate.getDate() <= end.getDate() &&
-        itemdate.getMonth() === startDate.getMonth()
+        itemdate.getTime() >= startDate.getTime() &&
+        itemdate.getTime() <= end.getTime()
       );
     });
     const datafive = labelGarageTransfer.filter((item) => {
       const itemdate = new Date(item.date);
       return (
         item.enterenceGarageId === garage &&
-        itemdate.getDate() >= startDate.getDate() &&
-        itemdate.getDate() <= end.getDate() &&
-        itemdate.getMonth() === startDate.getMonth()
+        itemdate.getTime() >= startDate.getTime() &&
+        itemdate.getTime() <= end.getTime()
       );
     });
     setLabelStock(dataone);
@@ -283,6 +268,8 @@ const LabelDateReport = () => {
             concernLabelTransferEnter={concernLabelTransferEnter}
             concernLabels={concernLabels}
             garage={garage}
+            startDate={startDate}
+            endDate={endDate}
           />
           {/* Left Label */}
           <LabelDateTwo
@@ -290,6 +277,8 @@ const LabelDateReport = () => {
             concernLabels={concernLabels}
             concernPayOther={concernPayOther}
             garage={garage}
+            startDate={startDate}
+            endDate={endDate}
           />
         </Box>
 
@@ -300,6 +289,8 @@ const LabelDateReport = () => {
             concernLabelTransferExit={concernLabelTransferExit}
             concernLabels={concernLabels}
             garage={garage}
+            startDate={startDate}
+            endDate={endDate}
           />
           {/* Remind Label */}
           <LabelDateFour

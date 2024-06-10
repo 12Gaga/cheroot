@@ -11,7 +11,7 @@ import {
   Select,
   ListItemText,
 } from "@mui/material";
-import { Agent } from "@prisma/client";
+import { Agent, AgentLeafViss } from "@prisma/client";
 import { useState } from "react";
 
 const defaultValue: selectedAgent = {
@@ -31,19 +31,21 @@ interface Props {
 const PayLeafThree = ({ newPayLeaf, setNewPayLeaf }: Props) => {
   const workShop = useAppSelector((store) => store.workShop.selectedWorkShop);
   const [selectAgent, setSelectedAgent] = useState<selectedAgent>(defaultValue);
+  const [remainLeaf, setRemainLeaf] = useState<AgentLeafViss[]>([]);
   const agents = useAppSelector((store) => store.agent.item);
   const concernAgent = agents.filter(
     (item) => item.workShopId === workShop?.id
   );
   const agentsLeafViss = useAppSelector((store) => store.agentLeafViss.item);
-
+  const leaves = useAppSelector((store) => store.typeOfLeaf.item).filter(
+    (l) => l.workShopId === workShop?.id
+  );
   const handleAgent = (agentId: number) => {
     const agent = agents.find((item) => item.id === agentId) as Agent;
-    const concernAgentLeafViss = agentsLeafViss
-      .filter((item) => item.agentId === agentId)
-      .reduce((totalViss, agentViss) => {
-        return (totalViss += agentViss.viss);
-      }, 0);
+    const concernAgentLeafViss = agentsLeafViss.filter(
+      (item) => item.agentId === agentId
+    );
+    setRemainLeaf(concernAgentLeafViss);
 
     setNewPayLeaf({ ...newPayLeaf, agentId: agentId });
 
@@ -54,7 +56,6 @@ const PayLeafThree = ({ newPayLeaf, setNewPayLeaf }: Props) => {
       address: agent?.adderess,
       cashBig: agent.cashBalcanceBig,
       cashSmall: agent.cashBalcanceSmall,
-      totalLeafViss: concernAgentLeafViss,
     });
   };
   console.log("dfuhg", selectAgent);
@@ -77,10 +78,6 @@ const PayLeafThree = ({ newPayLeaf, setNewPayLeaf }: Props) => {
               id="demo-simple-select-filled"
               value={selectAgent.agentId}
               onChange={(evt) => {
-                // setSelectedAgent({
-                //   ...selectAgent,
-                //   agentId: Number(evt.target.value),
-                // });
                 handleAgent(Number(evt.target.value));
               }}
               sx={{ bgcolor: "#EEE8CF" }}
@@ -141,18 +138,22 @@ const PayLeafThree = ({ newPayLeaf, setNewPayLeaf }: Props) => {
             onChange={() => {}}
           />
         </Box>
-
-        <Box sx={{ display: "flex", alignItems: "center" }}>
-          <Typography sx={{ fontWeight: "bold", width: 150 }}>
-            ကျန်ပိဿာ
-          </Typography>
-          <TextField
-            value={selectAgent.totalLeafViss}
-            placeholder="ကျန်ပိဿာ"
-            sx={{ bgcolor: "#EEE8CF" }}
-            onChange={() => {}}
-          />
-        </Box>
+        {leaves.map((item) => {
+          const find = remainLeaf.find((a) => a.typeOfLeafId === item.id);
+          return (
+            <Box sx={{ display: "flex", alignItems: "center" }} key={item.id}>
+              <Typography sx={{ fontWeight: "bold", width: 150 }}>
+                {item.name}
+              </Typography>
+              <TextField
+                value={find?.viss}
+                placeholder={item.name}
+                sx={{ bgcolor: "#EEE8CF" }}
+                onChange={() => {}}
+              />
+            </Box>
+          );
+        })}
       </Box>
     </>
   );

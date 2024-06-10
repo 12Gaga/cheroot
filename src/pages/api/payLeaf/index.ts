@@ -62,9 +62,9 @@ export default async function handler(
     //   (totalViss, viss) => (totalViss += viss.viss),
     //   0
     // );
-    const leftViss = (await prisma.agentLeafViss.findFirst({
+    const leftViss = await prisma.agentLeafViss.findFirst({
       where: { typeOfLeafId, agentId },
-    })) as AgentLeafViss;
+    });
     let newRemainLeaf;
     if (leftViss) {
       const totalViss = netViss + leftViss.viss;

@@ -7,14 +7,44 @@ interface Props {
   concernLeaves: TypeOfLeaf[];
   concernGarages: Garage[];
   garage: number | null;
+  startDate: Date;
+  endDate: Date;
 }
 const LeafDateThree = ({
   concernLeafTransfer,
   concernLeaves,
   garage,
   concernGarages,
+  startDate,
+  endDate,
 }: Props) => {
   const leafStock = useAppSelector((store) => store.leafStock.item);
+  const leafGarageTransfer = useAppSelector((store) => store.leafTransfer.item);
+  const exitStart = concernLeafTransfer.filter(
+    (item) =>
+      new Date(item.date).toLocaleDateString() ===
+      startDate.toLocaleDateString()
+  );
+  let startArray: LeafTransferGarage[] = [];
+  if (!exitStart.length) {
+    startArray = leafGarageTransfer.filter(
+      (l) =>
+        new Date(l.date).toLocaleDateString() ===
+          startDate.toLocaleDateString() && l.exitGarageId === garage
+    );
+  }
+  const exitEnd = concernLeafTransfer.filter(
+    (item) =>
+      new Date(item.date).toLocaleDateString() === endDate.toLocaleDateString()
+  );
+  let endArray: LeafTransferGarage[] = [];
+  if (!exitEnd.length) {
+    endArray = leafGarageTransfer.filter(
+      (l) =>
+        new Date(l.date).toLocaleDateString() ===
+          endDate.toLocaleDateString() && l.exitGarageId === garage
+    );
+  }
   return (
     <>
       <Box sx={{ mr: 4 }}>
@@ -35,8 +65,75 @@ const LeafDateThree = ({
             </th>
             <th style={{ width: 200, backgroundColor: "#DBB5B5" }}>ပိဿာ</th>
           </tr>
+
+          {!exitStart.length &&
+            startArray.map((item) => {
+              const itemdate = new Date(item.date);
+              const finddata = leafStock.find(
+                (ls) =>
+                  ls.typeOfLeafId === item.typeOfLeafId &&
+                  ls.batchNo === item.batchNo &&
+                  ls.garageId === garage
+              );
+              return (
+                <tr key={item.id}>
+                  <td style={{ textAlign: "center" }}>
+                    {itemdate.toLocaleDateString()}
+                  </td>
+                  <td style={{ textAlign: "center" }}>
+                    {
+                      concernGarages.find(
+                        (g) => g.id === item.enterenceGarageId
+                      )?.name
+                    }
+                  </td>
+                  <td style={{ textAlign: "center" }}>
+                    {
+                      concernLeaves.find((t) => t.id === item.typeOfLeafId)
+                        ?.name
+                    }
+                  </td>
+                  <td style={{ textAlign: "center" }}>{item.batchNo}</td>
+                  <td style={{ textAlign: "center" }}>{finddata?.viss}</td>
+                </tr>
+              );
+            })}
+
           {garage &&
             concernLeafTransfer.map((item) => {
+              const itemdate = new Date(item.date);
+              const finddata = leafStock.find(
+                (ls) =>
+                  ls.typeOfLeafId === item.typeOfLeafId &&
+                  ls.batchNo === item.batchNo &&
+                  ls.garageId === garage
+              );
+              return (
+                <tr key={item.id}>
+                  <td style={{ textAlign: "center" }}>
+                    {itemdate.toLocaleDateString()}
+                  </td>
+                  <td style={{ textAlign: "center" }}>
+                    {
+                      concernGarages.find(
+                        (g) => g.id === item.enterenceGarageId
+                      )?.name
+                    }
+                  </td>
+                  <td style={{ textAlign: "center" }}>
+                    {
+                      concernLeaves.find((t) => t.id === item.typeOfLeafId)
+                        ?.name
+                    }
+                  </td>
+                  <td style={{ textAlign: "center" }}>{item.batchNo}</td>
+                  <td style={{ textAlign: "center" }}>{finddata?.viss}</td>
+                </tr>
+              );
+            })}
+
+          {!exitEnd.length &&
+            endArray.map((item) => {
               const itemdate = new Date(item.date);
               const finddata = leafStock.find(
                 (ls) =>
@@ -73,7 +170,7 @@ const LeafDateThree = ({
             <td></td>
             <td></td>
             <th style={{ backgroundColor: "#FFDB5C" }}>
-              {concernLeafTransfer
+              {startArray
                 .map((item) => {
                   return leafStock.find(
                     (ls) =>
@@ -84,7 +181,31 @@ const LeafDateThree = ({
                 })
                 .reduce((tol, viss) => {
                   return (tol += viss);
-                }, 0)}
+                }, 0) +
+                concernLeafTransfer
+                  .map((item) => {
+                    return leafStock.find(
+                      (ls) =>
+                        ls.typeOfLeafId === item.typeOfLeafId &&
+                        ls.batchNo === item.batchNo &&
+                        ls.garageId === garage
+                    )?.viss as number;
+                  })
+                  .reduce((tol, viss) => {
+                    return (tol += viss);
+                  }, 0) +
+                endArray
+                  .map((item) => {
+                    return leafStock.find(
+                      (ls) =>
+                        ls.typeOfLeafId === item.typeOfLeafId &&
+                        ls.batchNo === item.batchNo &&
+                        ls.garageId === garage
+                    )?.viss as number;
+                  })
+                  .reduce((tol, viss) => {
+                    return (tol += viss);
+                  }, 0)}
             </th>
           </tr>
         </table>

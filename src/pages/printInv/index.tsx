@@ -58,7 +58,6 @@ const Print = () => {
       />
       <h1>{value}</h1>
       <Button
-        className="print-btn"
         onClick={() => setValue("Korea")}
         variant="contained"
         sx={{ mt: 3, ml: 1 }}

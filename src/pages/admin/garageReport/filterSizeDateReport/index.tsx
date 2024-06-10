@@ -60,45 +60,40 @@ const FilterSizeDateReport = () => {
       const itemdate = new Date(item.date);
       return (
         item.garageId === garageId &&
-        itemdate.getDate() >= startDate.getDate() &&
-        itemdate.getDate() <= endDate.getDate() &&
-        itemdate.getMonth() === startDate.getMonth()
+        itemdate.getTime() >= startDate.getTime() &&
+        itemdate.getTime() <= endDate.getTime()
       );
     });
     const datatwo = filterGarageTransfer.filter((item) => {
       const itemdate = new Date(item.date);
       return (
         item.exitGarageId === garageId &&
-        itemdate.getDate() >= startDate.getDate() &&
-        itemdate.getDate() <= endDate.getDate() &&
-        itemdate.getMonth() === startDate.getMonth()
+        itemdate.getTime() >= startDate.getTime() &&
+        itemdate.getTime() <= endDate.getTime()
       );
     });
     const datathree = payOther.filter((item) => {
       const itemdate = new Date(item.date);
       return (
         item.garageId === garageId &&
-        itemdate.getDate() >= startDate.getDate() &&
-        itemdate.getDate() <= endDate.getDate() &&
-        itemdate.getMonth() === startDate.getMonth()
+        itemdate.getTime() >= startDate.getTime() &&
+        itemdate.getTime() <= endDate.getTime()
       );
     });
     const datafour = extraPurchase.filter((item) => {
       const itemdate = new Date(item.date);
       return (
         item.garageId === garageId &&
-        itemdate.getDate() >= startDate.getDate() &&
-        itemdate.getDate() <= endDate.getDate() &&
-        itemdate.getMonth() === startDate.getMonth()
+        itemdate.getTime() >= startDate.getTime() &&
+        itemdate.getTime() <= endDate.getTime()
       );
     });
     const datafive = filterGarageTransfer.filter((item) => {
       const itemdate = new Date(item.date);
       return (
         item.enterenceGarageId === garageId &&
-        itemdate.getDate() >= startDate.getDate() &&
-        itemdate.getDate() <= endDate.getDate() &&
-        itemdate.getMonth() === startDate.getMonth()
+        itemdate.getTime() >= startDate.getTime() &&
+        itemdate.getTime() <= endDate.getTime()
       );
     });
     setFilterSizeStock(dataone);
@@ -114,45 +109,40 @@ const FilterSizeDateReport = () => {
       const itemdate = new Date(item.date);
       return (
         item.garageId === garage &&
-        itemdate.getDate() >= start.getDate() &&
-        itemdate.getDate() <= endDate.getDate() &&
-        itemdate.getMonth() === start.getMonth()
+        itemdate.getTime() >= start.getTime() &&
+        itemdate.getTime() <= endDate.getTime()
       );
     });
     const datatwo = filterGarageTransfer.filter((item) => {
       const itemdate = new Date(item.date);
       return (
         item.exitGarageId === garage &&
-        itemdate.getDate() >= start.getDate() &&
-        itemdate.getDate() <= endDate.getDate() &&
-        itemdate.getMonth() === start.getMonth()
+        itemdate.getTime() >= start.getTime() &&
+        itemdate.getTime() <= endDate.getTime()
       );
     });
     const datathree = payOther.filter((item) => {
       const itemdate = new Date(item.date);
       return (
         item.garageId === garage &&
-        itemdate.getDate() >= start.getDate() &&
-        itemdate.getDate() <= endDate.getDate() &&
-        itemdate.getMonth() === start.getMonth()
+        itemdate.getTime() >= start.getTime() &&
+        itemdate.getTime() <= endDate.getTime()
       );
     });
     const datafour = extraPurchase.filter((item) => {
       const itemdate = new Date(item.date);
       return (
         item.garageId === garage &&
-        itemdate.getDate() >= start.getDate() &&
-        itemdate.getDate() <= endDate.getDate() &&
-        itemdate.getMonth() === start.getMonth()
+        itemdate.getTime() >= start.getTime() &&
+        itemdate.getTime() <= endDate.getTime()
       );
     });
     const datafive = filterGarageTransfer.filter((item) => {
       const itemdate = new Date(item.date);
       return (
         item.enterenceGarageId === garage &&
-        itemdate.getDate() >= start.getDate() &&
-        itemdate.getDate() <= endDate.getDate() &&
-        itemdate.getMonth() === start.getMonth()
+        itemdate.getTime() >= start.getTime() &&
+        itemdate.getTime() <= endDate.getTime()
       );
     });
     setFilterSizeStock(dataone);
@@ -168,45 +158,40 @@ const FilterSizeDateReport = () => {
       const itemdate = new Date(item.date);
       return (
         item.garageId === garage &&
-        itemdate.getDate() >= startDate.getDate() &&
-        itemdate.getDate() <= end.getDate() &&
-        itemdate.getMonth() === startDate.getMonth()
+        itemdate.getTime() >= startDate.getTime() &&
+        itemdate.getTime() <= end.getTime()
       );
     });
     const datatwo = filterGarageTransfer.filter((item) => {
       const itemdate = new Date(item.date);
       return (
         item.exitGarageId === garage &&
-        itemdate.getDate() >= startDate.getDate() &&
-        itemdate.getDate() <= end.getDate() &&
-        itemdate.getMonth() === startDate.getMonth()
+        itemdate.getTime() >= startDate.getTime() &&
+        itemdate.getTime() <= end.getTime()
       );
     });
     const datathree = payOther.filter((item) => {
       const itemdate = new Date(item.date);
       return (
         item.garageId === garage &&
-        itemdate.getDate() >= startDate.getDate() &&
-        itemdate.getDate() <= end.getDate() &&
-        itemdate.getMonth() === startDate.getMonth()
+        itemdate.getTime() >= startDate.getTime() &&
+        itemdate.getTime() <= end.getTime()
       );
     });
     const datafour = extraPurchase.filter((item) => {
       const itemdate = new Date(item.date);
       return (
         item.garageId === garage &&
-        itemdate.getDate() >= startDate.getDate() &&
-        itemdate.getDate() <= end.getDate() &&
-        itemdate.getMonth() === startDate.getMonth()
+        itemdate.getTime() >= startDate.getTime() &&
+        itemdate.getTime() <= end.getTime()
       );
     });
     const datafive = filterGarageTransfer.filter((item) => {
       const itemdate = new Date(item.date);
       return (
         item.enterenceGarageId === garage &&
-        itemdate.getDate() >= startDate.getDate() &&
-        itemdate.getDate() <= end.getDate() &&
-        itemdate.getMonth() === startDate.getMonth()
+        itemdate.getTime() >= startDate.getTime() &&
+        itemdate.getTime() <= end.getTime()
       );
     });
     setFilterSizeStock(dataone);
@@ -291,6 +276,8 @@ const FilterSizeDateReport = () => {
             concernFilterSizes={concernFilterSizes}
             concernFilterTransferEnter={concernFilterTransferEnter}
             garage={garage}
+            startDate={startDate}
+            endDate={endDate}
           />
 
           {/* Left FiterSize */}
@@ -299,6 +286,8 @@ const FilterSizeDateReport = () => {
             concernFilterSizes={concernFilterSizes}
             concernPayOther={concernPayOther}
             garage={garage}
+            startDate={startDate}
+            endDate={endDate}
           />
         </Box>
 
@@ -309,6 +298,8 @@ const FilterSizeDateReport = () => {
             concernFilterTransferExit={concernFilterTransferExit}
             garage={garage}
             concernGarages={concernGarages}
+            startDate={startDate}
+            endDate={endDate}
           />
           {/* Remine FilterSize */}
           <FilterDateFour

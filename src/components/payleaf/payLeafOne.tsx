@@ -12,6 +12,7 @@ import {
   SelectChangeEvent,
 } from "@mui/material";
 import { Leaf } from "@prisma/client";
+import { useState } from "react";
 import "react-datepicker/dist/react-datepicker.css";
 interface Props {
   newPayLeaf: createNewPayLeaf;
@@ -33,9 +34,11 @@ const PayLeafOne = ({
 }: Props) => {
   const leaves = useAppSelector((store) => store.typeOfLeaf.item);
   const concernLeaves = leaves.filter((item) => item.workShopId === workShopId);
+  const shop = useAppSelector((store) => store.typeOfShop.item);
   const leafTransfer = useAppSelector((store) => store.leafTransfer.item);
   const leafStock = useAppSelector((store) => store.leafStock.item);
   const payLeaf = useAppSelector((store) => store.payLeaf.item);
+  const [shops, setShops] = useState<number[]>([]);
   console.log("newLeaf", newPayLeaf);
 
   const handleChange = (evt: SelectChangeEvent<number[]>) => {
@@ -54,6 +57,10 @@ const PayLeafOne = ({
       netViss: Number(netViss),
       amount: Number(amount),
     });
+    const shopData = concernLeafStock
+      .filter((item) => selectBatchNo.includes(item.id))
+      .map((shop) => shop.shopId);
+    setShops(shopData);
     console.log("batch", newPayLeaf.batchNo);
   };
 
@@ -90,6 +97,7 @@ const PayLeafOne = ({
       ?.price as number;
     setNewPayLeaf({ ...newPayLeaf, price: concernPrice, typeOfLeafId: leafId });
   };
+
   console.log("leafid", newPayLeaf.typeOfLeafId);
   return (
     <>
@@ -103,6 +111,10 @@ const PayLeafOne = ({
         <Box sx={{ width: 250, mt: 2 }}>
           <Typography sx={{ fontWeight: "bold" }}>ဝယ်ယူခဲ့သည့်ဆိုင်</Typography>
           <TextField
+            value={shop
+              .filter((s) => shops.includes(s.id))
+              .map((sh) => sh.name)
+              .join(",")}
             placeholder="ဝယ်ယူခဲ့သည့်ဆိုင်"
             sx={{ bgcolor: "#EEE8CF" }}
             onChange={(evt) => {}}

@@ -1,6 +1,5 @@
 import { useAppSelector, useAppDispatch } from "@/store/hooks";
 import { setOpenSnackbar } from "@/store/slices/snackBar";
-import { CreateLeaf } from "@/store/slices/typeOfLeaf";
 import { setIsLoading } from "@/store/slices/workShop";
 import { createNewCheroot } from "@/types/cherootType";
 import {
@@ -44,7 +43,7 @@ const NewCheroot = ({ open, setOpen }: Props) => {
       })
     );
   };
-
+  console.log("price");
   return (
     <Dialog open={open} onClose={() => setOpen(false)}>
       <DialogTitle>ဆေးလိပ်အမျိုးအစားအသစ်ထည့်ခြင်း</DialogTitle>

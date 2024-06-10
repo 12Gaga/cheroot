@@ -3,6 +3,7 @@ import { Box, Button, Typography } from "@mui/material";
 import { useRouter } from "next/router";
 import { useRef } from "react";
 import Image from "next/image";
+import agentRemainLeaf from "@/store/slices/agentRemainLeaf";
 const Printing = () => {
   const tableRef = useRef(null);
   const router = useRouter();
@@ -45,13 +46,20 @@ const Printing = () => {
       itemdate.toLocaleDateString() === extraPurchaseDate.toLocaleDateString()
     );
   });
+  const workShopId = useAppSelector((store) => store.workShop.selectedWorkShop)
+    ?.id as number;
   const agent = useAppSelector((store) => store.agent.item);
   const leaves = useAppSelector((store) => store.typeOfLeaf.item);
+  const concernLeave = leaves.filter((l) => l.workShopId === workShopId);
   const cheroot = useAppSelector((store) => store.typeOfCheroot.item);
   const tabacco = useAppSelector((store) => store.typeOfTabacco.item);
   const filterSize = useAppSelector((store) => store.typeOfFilterSize.item);
   const label = useAppSelector((store) => store.typeOfLabel.item);
-
+  const agentRemainLeaf = useAppSelector((store) => store.agentReaminLeaf.item);
+  const remainBalance = otherDeduction.filter(
+    (item) => item.agentId === agentId
+  );
+  const remainLeaf = agentRemainLeaf.filter((leaf) => leaf.agentId === agentId);
   const handlePrint = () => {
     if (tableRef.current) {
       window.print();
@@ -65,7 +73,7 @@ const Printing = () => {
       <Box
         ref={tableRef}
         sx={{
-          width: "60%",
+          width: "45%",
           display: "flex",
           flexDirection: "column",
         }}
@@ -335,8 +343,11 @@ const Printing = () => {
           </tr>
 
           <tr>
-            <th></th>
-            <td></td>
+            <th>ကြိုတင်ငွေလက်ကျန် (အကြီး) </th>
+            <th style={{ color: "green" }}>
+              {remainBalance.length &&
+                remainBalance[remainBalance.length - 1].remainCashBig}
+            </th>
             <td></td>
             <th colSpan={2}>ကိုယ်စားလှယ်ဘောက်ဆူးပေးငွေ</th>
             <td></td>
@@ -344,8 +355,11 @@ const Printing = () => {
           </tr>
 
           <tr>
-            <th></th>
-            <td></td>
+            <th>ကြိုတင်ငွေလက်ကျန် (အသေး) </th>
+            <th style={{ color: "green" }}>
+              {remainBalance.length &&
+                remainBalance[remainBalance.length - 1].remainCashSmall}
+            </th>
             <td></td>
             <th colSpan={2}>စုစုပေါင်းကိုယ်စားလှယ်ရှင်းငွေ</th>
             <td></td>
@@ -353,6 +367,18 @@ const Printing = () => {
               {concernOtherDeduction?.totalNetAgentPayment}
             </th>
           </tr>
+          {concernLeave.map((item) => {
+            const data = remainLeaf.filter((l) => l.leafId === item.id);
+            return (
+              <tr>
+                <th>{item.name}(လက်ကျန်) </th>
+                <th style={{ color: "green" }}>
+                  {data.length && data[data.length - 1].Viss}
+                </th>
+                <td colSpan={5}></td>
+              </tr>
+            );
+          })}
         </table>
         <Typography
           sx={{

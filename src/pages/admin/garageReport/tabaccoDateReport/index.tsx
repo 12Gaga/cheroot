@@ -54,45 +54,40 @@ const TabaccoDateReport = () => {
       const itemdate = new Date(item.date);
       return (
         item.garageId === garageId &&
-        itemdate.getDate() >= startDate.getDate() &&
-        itemdate.getDate() <= endDate.getDate() &&
-        itemdate.getMonth() === startDate.getMonth()
+        itemdate.getTime() >= startDate.getTime() &&
+        itemdate.getTime() <= endDate.getTime()
       );
     });
     const datatwo = tabaccoGarageTransfer.filter((item) => {
       const itemdate = new Date(item.date);
       return (
         item.exitGarageId === garageId &&
-        itemdate.getDate() >= startDate.getDate() &&
-        itemdate.getDate() <= endDate.getDate() &&
-        itemdate.getMonth() === startDate.getMonth()
+        itemdate.getTime() >= startDate.getTime() &&
+        itemdate.getTime() <= endDate.getTime()
       );
     });
     const datathree = payOther.filter((item) => {
       const itemdate = new Date(item.date);
       return (
         item.garageId === garageId &&
-        itemdate.getDate() >= startDate.getDate() &&
-        itemdate.getDate() <= endDate.getDate() &&
-        itemdate.getMonth() === startDate.getMonth()
+        itemdate.getTime() >= startDate.getTime() &&
+        itemdate.getTime() <= endDate.getTime()
       );
     });
     const datafour = extraPurchase.filter((item) => {
       const itemdate = new Date(item.date);
       return (
         item.garageId === garageId &&
-        itemdate.getDate() >= startDate.getDate() &&
-        itemdate.getDate() <= endDate.getDate() &&
-        itemdate.getMonth() === startDate.getMonth()
+        itemdate.getTime() >= startDate.getTime() &&
+        itemdate.getTime() <= endDate.getTime()
       );
     });
     const datafive = tabaccoGarageTransfer.filter((item) => {
       const itemdate = new Date(item.date);
       return (
         item.enterenceGarageId === garageId &&
-        itemdate.getDate() >= startDate.getDate() &&
-        itemdate.getDate() <= endDate.getDate() &&
-        itemdate.getMonth() === startDate.getMonth()
+        itemdate.getTime() >= startDate.getTime() &&
+        itemdate.getTime() <= endDate.getTime()
       );
     });
     setTabaccoStock(dataone);
@@ -108,45 +103,40 @@ const TabaccoDateReport = () => {
       const itemdate = new Date(item.date);
       return (
         item.garageId === garage &&
-        itemdate.getDate() >= start.getDate() &&
-        itemdate.getDate() <= endDate.getDate() &&
-        itemdate.getMonth() === start.getMonth()
+        itemdate.getTime() >= start.getTime() &&
+        itemdate.getTime() <= endDate.getTime()
       );
     });
     const datatwo = tabaccoGarageTransfer.filter((item) => {
       const itemdate = new Date(item.date);
       return (
         item.exitGarageId === garage &&
-        itemdate.getDate() >= start.getDate() &&
-        itemdate.getDate() <= endDate.getDate() &&
-        itemdate.getMonth() === start.getMonth()
+        itemdate.getTime() >= start.getTime() &&
+        itemdate.getTime() <= endDate.getTime()
       );
     });
     const datathree = payOther.filter((item) => {
       const itemdate = new Date(item.date);
       return (
         item.garageId === garage &&
-        itemdate.getDate() >= start.getDate() &&
-        itemdate.getDate() <= endDate.getDate() &&
-        itemdate.getMonth() === start.getMonth()
+        itemdate.getTime() >= start.getTime() &&
+        itemdate.getTime() <= endDate.getTime()
       );
     });
     const datafour = extraPurchase.filter((item) => {
       const itemdate = new Date(item.date);
       return (
         item.garageId === garage &&
-        itemdate.getDate() >= start.getDate() &&
-        itemdate.getDate() <= endDate.getDate() &&
-        itemdate.getMonth() === start.getMonth()
+        itemdate.getTime() >= start.getTime() &&
+        itemdate.getTime() <= endDate.getTime()
       );
     });
     const datafive = tabaccoGarageTransfer.filter((item) => {
       const itemdate = new Date(item.date);
       return (
         item.enterenceGarageId === garage &&
-        itemdate.getDate() >= start.getDate() &&
-        itemdate.getDate() <= endDate.getDate() &&
-        itemdate.getMonth() === start.getMonth()
+        itemdate.getTime() >= start.getTime() &&
+        itemdate.getTime() <= endDate.getTime()
       );
     });
     setTabaccoStock(dataone);
@@ -162,45 +152,40 @@ const TabaccoDateReport = () => {
       const itemdate = new Date(item.date);
       return (
         item.garageId === garage &&
-        itemdate.getDate() >= startDate.getDate() &&
-        itemdate.getDate() <= end.getDate() &&
-        itemdate.getMonth() === startDate.getMonth()
+        itemdate.getTime() >= startDate.getTime() &&
+        itemdate.getTime() <= end.getTime()
       );
     });
     const datatwo = tabaccoGarageTransfer.filter((item) => {
       const itemdate = new Date(item.date);
       return (
         item.exitGarageId === garage &&
-        itemdate.getDate() >= startDate.getDate() &&
-        itemdate.getDate() <= end.getDate() &&
-        itemdate.getMonth() === startDate.getMonth()
+        itemdate.getTime() >= startDate.getTime() &&
+        itemdate.getTime() <= end.getTime()
       );
     });
     const datathree = payOther.filter((item) => {
       const itemdate = new Date(item.date);
       return (
         item.garageId === garage &&
-        itemdate.getDate() >= startDate.getDate() &&
-        itemdate.getDate() <= end.getDate() &&
-        itemdate.getMonth() === startDate.getMonth()
+        itemdate.getTime() >= startDate.getTime() &&
+        itemdate.getTime() <= end.getTime()
       );
     });
     const datafour = extraPurchase.filter((item) => {
       const itemdate = new Date(item.date);
       return (
         item.garageId === garage &&
-        itemdate.getDate() >= startDate.getDate() &&
-        itemdate.getDate() <= end.getDate() &&
-        itemdate.getMonth() === startDate.getMonth()
+        itemdate.getTime() >= startDate.getTime() &&
+        itemdate.getTime() <= end.getTime()
       );
     });
     const datafive = tabaccoGarageTransfer.filter((item) => {
       const itemdate = new Date(item.date);
       return (
         item.enterenceGarageId === garage &&
-        itemdate.getDate() >= startDate.getDate() &&
-        itemdate.getDate() <= end.getDate() &&
-        itemdate.getMonth() === startDate.getMonth()
+        itemdate.getTime() >= startDate.getTime() &&
+        itemdate.getTime() <= end.getTime()
       );
     });
     setTabaccoStock(dataone);
@@ -284,6 +269,8 @@ const TabaccoDateReport = () => {
             concernTabaccoStock={concernTabaccoStock}
             concernTabaccoTransferEnter={concernTabaccoTransferEnter}
             garage={garage}
+            startDate={startDate}
+            endDate={endDate}
           />
           {/* Left Tabacco */}
           <TabaccoDateTwo
@@ -291,6 +278,8 @@ const TabaccoDateReport = () => {
             concernPayOther={concernPayOther}
             concernTabacco={concernTabacco}
             garage={garage}
+            startDate={startDate}
+            endDate={endDate}
           />
         </Box>
         <Box sx={{ display: "flex", justifyContent: "space-around" }}>
@@ -300,6 +289,8 @@ const TabaccoDateReport = () => {
             concernTabacco={concernTabacco}
             concernTabaccoTransferExit={concernTabaccoTransferExit}
             garage={garage}
+            startDate={startDate}
+            endDate={endDate}
           />
           {/* Remind Tabacco */}
           <TabaccoDateFour

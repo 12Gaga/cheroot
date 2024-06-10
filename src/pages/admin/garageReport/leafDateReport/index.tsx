@@ -34,38 +34,47 @@ const LeafDateReport = () => {
   const [concernLeafTransfer, setLeafTransfer] = useState<LeafTransferGarage[]>(
     []
   );
+  const [concernLeafTransferEnter, setLeafTransferEnter] = useState<
+    LeafTransferGarage[]
+  >([]);
   const handleGarage = (garageId: number) => {
     const dataone = leafStock.filter((item) => {
       const itemdate = new Date(item.date);
       return (
         item.garageId === garageId &&
-        itemdate.getDate() >= startDate.getDate() &&
-        itemdate.getDate() <= endDate.getDate() &&
-        itemdate.getMonth() === startDate.getMonth()
+        itemdate.getTime() >= startDate.getTime() &&
+        itemdate.getTime() <= endDate.getTime()
       );
     });
     const datatwo = leafGarageTransfer.filter((item) => {
       const itemdate = new Date(item.date);
       return (
         item.exitGarageId === garageId &&
-        itemdate.getDate() >= startDate.getDate() &&
-        itemdate.getDate() <= endDate.getDate() &&
-        itemdate.getMonth() === startDate.getMonth()
+        itemdate.getTime() >= startDate.getTime() &&
+        itemdate.getTime() <= endDate.getTime()
       );
     });
     const datathree = payLeaf.filter((item) => {
       const itemdate = new Date(item.date);
       return (
         item.garageId === garageId &&
-        itemdate.getDate() >= startDate.getDate() &&
-        itemdate.getDate() <= endDate.getDate() &&
-        itemdate.getMonth() === startDate.getMonth()
+        itemdate.getTime() >= startDate.getTime() &&
+        itemdate.getTime() <= endDate.getTime()
+      );
+    });
+    const datafour = leafGarageTransfer.filter((item) => {
+      const itemdate = new Date(item.date);
+      return (
+        item.enterenceGarageId === garageId &&
+        itemdate.getTime() >= startDate.getTime() &&
+        itemdate.getTime() <= endDate.getTime()
       );
     });
     setLeafStock(dataone);
     setLeafTransfer(datatwo);
     setPayLeaf(datathree);
     setGarage(garageId);
+    setLeafTransferEnter(datafour);
   };
 
   const handleStartDate = (start: Date) => {
@@ -73,33 +82,39 @@ const LeafDateReport = () => {
       const itemdate = new Date(item.date);
       return (
         item.garageId === garage &&
-        itemdate.getDate() >= start.getDate() &&
-        itemdate.getDate() <= endDate.getDate() &&
-        itemdate.getMonth() === start.getMonth()
+        itemdate.getTime() >= start.getTime() &&
+        itemdate.getTime() <= endDate.getTime()
       );
     });
     const datatwo = leafGarageTransfer.filter((item) => {
       const itemdate = new Date(item.date);
       return (
         item.exitGarageId === garage &&
-        itemdate.getDate() >= start.getDate() &&
-        itemdate.getDate() <= endDate.getDate() &&
-        itemdate.getMonth() === start.getMonth()
+        itemdate.getTime() >= start.getTime() &&
+        itemdate.getTime() <= endDate.getTime()
       );
     });
     const datathree = payLeaf.filter((item) => {
       const itemdate = new Date(item.date);
       return (
         item.garageId === garage &&
-        itemdate.getDate() >= start.getDate() &&
-        itemdate.getDate() <= endDate.getDate() &&
-        itemdate.getMonth() === start.getMonth()
+        itemdate.getTime() >= start.getTime() &&
+        itemdate.getTime() <= endDate.getTime()
+      );
+    });
+    const datafour = leafGarageTransfer.filter((item) => {
+      const itemdate = new Date(item.date);
+      return (
+        item.enterenceGarageId === garage &&
+        itemdate.getTime() >= start.getTime() &&
+        itemdate.getTime() <= endDate.getTime()
       );
     });
     setLeafStock(dataone);
     setLeafTransfer(datatwo);
     setPayLeaf(datathree);
     setStartDate(start);
+    setLeafTransferEnter(datafour);
   };
 
   const handleEndDate = (end: Date) => {
@@ -107,38 +122,45 @@ const LeafDateReport = () => {
       const itemdate = new Date(item.date);
       return (
         item.garageId === garage &&
-        itemdate.getDate() >= startDate.getDate() &&
-        itemdate.getDate() <= end.getDate() &&
-        itemdate.getMonth() === startDate.getMonth()
+        itemdate.getTime() >= startDate.getTime() &&
+        itemdate.getTime() <= end.getTime()
       );
     });
     const datatwo = leafGarageTransfer.filter((item) => {
       const itemdate = new Date(item.date);
       return (
         item.exitGarageId === garage &&
-        itemdate.getDate() >= startDate.getDate() &&
-        itemdate.getDate() <= end.getDate() &&
-        itemdate.getMonth() === startDate.getMonth()
+        itemdate.getTime() >= startDate.getTime() &&
+        itemdate.getTime() <= end.getTime()
       );
     });
     const datathree = payLeaf.filter((item) => {
       const itemdate = new Date(item.date);
       return (
         item.garageId === garage &&
-        itemdate.getDate() >= startDate.getDate() &&
-        itemdate.getDate() <= end.getDate() &&
-        itemdate.getMonth() === startDate.getMonth()
+        itemdate.getTime() >= startDate.getTime() &&
+        itemdate.getTime() <= end.getTime()
+      );
+    });
+    const datafour = leafGarageTransfer.filter((item) => {
+      const itemdate = new Date(item.date);
+      return (
+        item.enterenceGarageId === garage &&
+        itemdate.getTime() >= startDate.getTime() &&
+        itemdate.getTime() <= end.getTime()
       );
     });
     setLeafStock(dataone);
     setLeafTransfer(datatwo);
     setPayLeaf(datathree);
     setEndDate(end);
+    setLeafTransferEnter(datafour);
   };
 
   console.log("leafStock", concernLeafStock);
   console.log("leafTransfer", concernLeafTransfer);
   console.log("payLeaf", concernPayLeaf);
+  console.log("leafTransferEnter", concernLeafTransferEnter);
   return (
     <>
       <AdminLayout>
@@ -205,13 +227,18 @@ const LeafDateReport = () => {
           <LeafDateOne
             concernLeafStock={concernLeafStock}
             concernLeaves={concernLeaves}
+            concernLeafTransferEnter={concernLeafTransferEnter}
             garage={garage}
+            startDate={startDate}
+            endDate={endDate}
           />
           {/* Left Leaf */}
           <LeafDateTwo
             concernLeaves={concernLeaves}
             concernPayLeaf={concernPayLeaf}
             garage={garage}
+            startDate={startDate}
+            endDate={endDate}
           />
         </Box>
 
@@ -222,6 +249,8 @@ const LeafDateReport = () => {
             concernLeafTransfer={concernLeafTransfer}
             concernLeaves={concernLeaves}
             garage={garage}
+            startDate={startDate}
+            endDate={endDate}
           />
           {/* Remind Leaf */}
           <LeafDateFour
