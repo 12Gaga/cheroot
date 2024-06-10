@@ -370,7 +370,7 @@ const Printing = () => {
           {concernLeave.map((item) => {
             const data = remainLeaf.filter((l) => l.leafId === item.id);
             return (
-              <tr>
+              <tr key={item.id}>
                 <th>{item.name}(လက်ကျန်) </th>
                 <th style={{ color: "green" }}>
                   {data.length && data[data.length - 1].Viss}
