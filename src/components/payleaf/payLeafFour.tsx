@@ -72,13 +72,16 @@ const PayLeafFour = ({
       (payStock.tabaccoTin * quantity) / payStock.cherootQty;
     const changeTabaccoPyi =
       (payStock.tabaccoPyi * quantity) / payStock.cherootQty;
+    const tolPyi = changeTabaccoTin * 16 + changeTabaccoPyi;
+    const tin = Math.floor(tolPyi / 16);
+    const pyi = tolPyi % 16;
     setNewPayStock({
       ...newPayStock,
       cherootQty: quantity,
       filterSizeQty: changeFilterSizeQty,
       tabaccoQty: quantity,
-      tabaccoTin: changeTabaccoTin,
-      tabaccoPyi: changeTabaccoPyi,
+      tabaccoTin: tin,
+      tabaccoPyi: pyi,
     });
   };
 

@@ -1,6 +1,6 @@
 import { useAppSelector } from "@/store/hooks";
 import { Box, Typography } from "@mui/material";
-import { TypeOfLeaf } from "@prisma/client";
+import { Leaf, TypeOfLeaf } from "@prisma/client";
 
 interface Props {
   garage: number | null;
@@ -47,15 +47,16 @@ const LeafDateFour = ({ garage, concernLeaves, endDate }: Props) => {
                   endDate.toLocaleDateString()
               );
               let endDateViss = 0;
+              let datums: Leaf[] = [];
               if (!dataArray.length) {
-                const datum = leafStock.filter(
+                datums = leafStock.filter(
                   (f) =>
                     new Date(f.date).toLocaleDateString() ===
                       endDate.toLocaleDateString() &&
                     f.typeOfLeafId === item.id &&
                     f.garageId === garage
                 );
-                endDateViss = datum.reduce((total, leaf) => {
+                endDateViss = datums.reduce((total, leaf) => {
                   return (total += leaf.viss);
                 }, 0);
               }
@@ -65,7 +66,7 @@ const LeafDateFour = ({ garage, concernLeaves, endDate }: Props) => {
                   return (total += leaf.viss);
                 }, 0) + endDateViss;
               console.log("data", findLeafStockData);
-
+              console.log("endData", datums);
               //leaf Transfer
               const findLeafTransferData = leafGarageTransfer.filter((gl) => {
                 const ldate = new Date(gl.date);
@@ -124,7 +125,8 @@ const LeafDateFour = ({ garage, concernLeaves, endDate }: Props) => {
 
               let findBatchs;
               if (!dataTransferArray.length) {
-                const dataFindBatchs = findLeafStockData.filter((l) => {
+                let dataFindBatchs: Leaf[] = [];
+                dataFindBatchs = findLeafStockData.filter((l) => {
                   const ldate = new Date(l.date);
                   return (
                     l.typeOfLeafId === item.id &&
@@ -132,6 +134,10 @@ const LeafDateFour = ({ garage, concernLeaves, endDate }: Props) => {
                     !findbatchNo.includes(l.batchNo)
                   );
                 });
+                datums.forEach((item) => {
+                  return dataFindBatchs.push(item);
+                });
+                console.log("two", dataFindBatchs);
                 findBatchs = dataFindBatchs
                   .filter((l) => {
                     return (
