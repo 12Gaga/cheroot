@@ -12,7 +12,7 @@ export default async function handler(
     console.log("workShopId", workShopId);
     const isValid =
       name &&
-      phoneNo &&
+      phoneNo != undefined &&
       address &&
       cashBig != undefined &&
       cashSmall != undefined;

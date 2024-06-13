@@ -114,7 +114,7 @@ body {
 
 @media print {
   .print-btn {
-    display: none;
+    opacity: 0;
   }
 }
 

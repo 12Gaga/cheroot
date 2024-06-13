@@ -68,10 +68,10 @@ const NewAgent = ({ open, setOpen }: Props) => {
             variant="contained"
             disabled={
               !newAgent.name ||
-              !newAgent.phoneNo ||
+              !newAgent.phoneNo === undefined ||
               !newAgent.address ||
-              !newAgent.cashBig ||
-              !newAgent.cashSmall
+              !newAgent.cashBig === undefined ||
+              !newAgent.cashSmall === undefined
             }
             onClick={handleClick}
             loading={isLoading}

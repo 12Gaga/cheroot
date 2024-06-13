@@ -3,7 +3,6 @@ import { Box, Button, Typography } from "@mui/material";
 import { useRouter } from "next/router";
 import { useRef } from "react";
 import Image from "next/image";
-import agentRemainLeaf from "@/store/slices/agentRemainLeaf";
 const Printing = () => {
   const tableRef = useRef(null);
   const router = useRouter();
