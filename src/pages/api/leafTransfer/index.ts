@@ -61,7 +61,7 @@ export default async function handler(
     //   )
     // );
     const concernLeaf = await prisma.leaf.findMany({
-      where: { typeOfLeafId, garageId: enterenceGarageId },
+      where: { typeOfLeafId, garageId: enterenceGarageId, isArchived: false },
     });
     let lastBatchNo =
       concernLeaf.length && concernLeaf[concernLeaf.length - 1].batchNo;

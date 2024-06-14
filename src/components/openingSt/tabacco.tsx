@@ -269,8 +269,8 @@ const TabaccoOpen = ({ open, setOpen }: Props) => {
             variant="contained"
             disabled={
               !newTabaccoStock.typeOfTabaccoId ||
-              !newTabaccoStock.tin ||
-              !newTabaccoStock.pyi ||
+              !newTabaccoStock.tin === undefined ||
+              !newTabaccoStock.pyi === undefined ||
               !newTabaccoStock.bag ||
               !newTabaccoStock.garageId ||
               !newTabaccoStock.shopId

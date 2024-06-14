@@ -58,10 +58,7 @@ const MonthlyLeafData = () => {
   };
   const handelDate = (date: Date) => {
     const exit = remainleaf.filter((item) => {
-      return (
-        new Date(item.date).getMonth() <= date.getMonth() - 1 &&
-        new Date(item.date).getFullYear() === date.getFullYear()
-      );
+      return new Date(item.date).getTime() < date.getTime();
     });
     console.log("exit", exit);
     if (exit.length) {
@@ -96,10 +93,10 @@ const MonthlyLeafData = () => {
   useEffect(() => {
     if (remainleaf.length) {
       const exit = remainleaf.filter((item) => {
-        return (
-          new Date(item.date).getMonth() <= selecteddate.getMonth() - 1 &&
-          new Date(item.date).getFullYear() === selecteddate.getFullYear()
-        );
+        const month = selecteddate.getMonth();
+        const year = selecteddate.getFullYear();
+        const dd = new Date(`${year},${month + 1},1`);
+        return new Date(item.date).getTime() < dd.getTime();
       });
       console.log("exit", exit);
       if (exit.length) {

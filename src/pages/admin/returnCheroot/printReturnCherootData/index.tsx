@@ -72,15 +72,15 @@ const Printing = () => {
       <Box
         ref={tableRef}
         sx={{
-          width: "45%",
+          width: "47%",
           display: "flex",
           flexDirection: "column",
         }}
       >
-        <Box sx={{ backgroundColor: "#ACD793", p: 1 }}>
+        <Box sx={{ backgroundColor: "#ACD793" }}>
           <Typography
-            variant="h5"
             sx={{ textAlign: "center", fontWeight: "bold" }}
+            variant="h6"
           >
             ရွှေဘို ဒေါ်မ ဆေးလိပ်လုပ်ငန်း
           </Typography>
@@ -95,8 +95,8 @@ const Printing = () => {
             <Image
               src="/cigaretteLogo.png"
               alt={"Logo"}
-              width={70}
-              height={35}
+              width={60}
+              height={30}
               style={{ borderRadius: "20%", border: "3px solid white" }}
             />
             <Box>
@@ -107,13 +107,11 @@ const Printing = () => {
           </Box>
         </Box>
 
-        <Box sx={{ display: "flex", justifyContent: "space-between", my: 2 }}>
+        <Box sx={{ display: "flex", justifyContent: "space-between", my: 1 }}>
           <Box sx={{ display: "flex", flexDirection: "column" }}>
             <Typography>
-              ကိုယ်စားလှယ်အမည် - {agent.find((a) => a.id === agentId)?.name}
-            </Typography>
-            <Typography>
-              နေရပ်လိပ်စာ - {agent.find((a) => a.id === agentId)?.adderess}
+              ကိုယ်စားလှယ်အမည် - {agent.find((a) => a.id === agentId)?.name} (
+              {agent.find((a) => a.id === agentId)?.adderess})
             </Typography>
           </Box>
           <Box>
@@ -143,10 +141,12 @@ const Printing = () => {
                   >
                     {cheroot.find((c) => c.id === item.typeOfCherootId)?.name}
                   </td>
-                  <td>{item.goodQty}</td>
-                  <td>{item.damage}</td>
-                  <td>{item.totalCherootQty}</td>
-                  <td>{item.goodPrice}</td>
+                  <td style={{ textAlign: "center" }}>{item.goodQty}</td>
+                  <td style={{ textAlign: "center" }}>{item.damage}</td>
+                  <td style={{ textAlign: "center" }}>
+                    {item.totalCherootQty}
+                  </td>
+                  <td style={{ textAlign: "center" }}>{item.goodPrice}</td>
                   <th>=</th>
                   <th>{item.amount}</th>
                 </tr>
@@ -156,21 +156,21 @@ const Printing = () => {
 
           <tr>
             <th style={{ backgroundColor: "#F6FAB9" }}>စုစုပေါင်း</th>
-            <td style={{ backgroundColor: "#F6FAB9" }}>
+            <th style={{ backgroundColor: "#F6FAB9" }}>
               {concernReturnCheroot.reduce((total, goodcheroot) => {
                 return (total += goodcheroot.goodQty);
               }, 0)}
-            </td>
-            <td style={{ backgroundColor: "#F6FAB9" }}>
+            </th>
+            <th style={{ backgroundColor: "#F6FAB9" }}>
               {concernReturnCheroot.reduce((total, damageCheroot) => {
                 return (total += damageCheroot.damage);
               }, 0)}
-            </td>
-            <td style={{ backgroundColor: "#F6FAB9" }}>
+            </th>
+            <th style={{ backgroundColor: "#F6FAB9" }}>
               {concernReturnCheroot.reduce((total, totalCheroot) => {
                 return (total += totalCheroot.totalCherootQty);
               }, 0)}
-            </td>
+            </th>
             <th style={{ backgroundColor: "#F6FAB9" }}></th>
             <th style={{ backgroundColor: "#F6FAB9" }}>=</th>
             <th style={{ backgroundColor: "#F6FAB9" }}>
@@ -195,12 +195,14 @@ const Printing = () => {
               <thead key={item.id}>
                 <tr>
                   <td></td>
-                  <td>
+                  <td style={{ textAlign: "center" }}>
                     {leaves.find((l) => l.id === item.typeOfLeafId)?.name}
                   </td>
-                  <td>{item.deductViss}</td>
-                  <td>{item.price}</td>
-                  <td>{item.deductionAmount}</td>
+                  <td style={{ textAlign: "center" }}>{item.deductViss}</td>
+                  <td style={{ textAlign: "center" }}>{item.price}</td>
+                  <td style={{ textAlign: "center" }}>
+                    {item.deductionAmount}
+                  </td>
                   <td></td>
                   <td></td>
                 </tr>
@@ -226,7 +228,9 @@ const Printing = () => {
             <td colSpan={2}>ကြိုယူခုနှိမ် (အသေး)</td>
             <td></td>
             <td></td>
-            <td>{concernOtherDeduction?.cashAdvanceSmallDeduction}</td>
+            <td style={{ textAlign: "center" }}>
+              {concernOtherDeduction?.cashAdvanceSmallDeduction}
+            </td>
             <td></td>
             <td></td>
           </tr>
@@ -235,76 +239,55 @@ const Printing = () => {
             <td colSpan={2}>ကြိုယူခုနှိမ် (အကြီး)</td>
             <td></td>
             <td></td>
-            <td>{concernOtherDeduction?.cashAdvanceBigDeduction}</td>
+            <td style={{ textAlign: "center" }}>
+              {concernOtherDeduction?.cashAdvanceBigDeduction}
+            </td>
             <td></td>
             <td></td>
           </tr>
 
           <tr>
             <th style={{ color: "red" }}>အခြားခုနှိမ်ခြင်း</th>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-          </tr>
-
-          {concernextraPurchase && (
-            <>
-              <tr>
-                <td>
+            {concernextraPurchase && (
+              <>
+                <th>
                   {
                     tabacco.find(
                       (t) => t.id === concernextraPurchase?.typeOfTabaccoId
                     )?.name
                   }
-                </td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td>{concernextraPurchase?.tabaccoAmount}</td>
-                <td></td>
-                <td></td>
-              </tr>
-
-              <tr>
-                <td>
+                </th>
+                <th>
                   {
                     filterSize.find(
                       (t) => t.id === concernextraPurchase?.typeOfFilterSizeId
                     )?.name
                   }
-                </td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td>{concernextraPurchase?.filterSizeAmount}</td>
-                <td></td>
-                <td></td>
-              </tr>
-
-              <tr>
-                <td>
+                </th>
+                <th>
                   {
                     label.find(
                       (t) => t.id === concernextraPurchase?.typeOfLabelId
                     )?.name
                   }
-                </td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td>{concernextraPurchase?.labelAmount}</td>
-                <td></td>
-                <td></td>
-              </tr>
+                </th>
+              </>
+            )}
+          </tr>
 
+          {concernextraPurchase && (
+            <>
               <tr>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
+                <th>သင့်ငွေ</th>
+                <td style={{ textAlign: "center" }}>
+                  {concernextraPurchase?.tabaccoAmount}
+                </td>
+                <td style={{ textAlign: "center" }}>
+                  {concernextraPurchase?.filterSizeAmount}
+                </td>
+                <td style={{ textAlign: "center" }}>
+                  {concernextraPurchase?.labelAmount}
+                </td>
                 <td></td>
                 <td></td>
                 <th>{concernextraPurchase?.totalAmount}</th>
@@ -366,19 +349,35 @@ const Printing = () => {
               {concernOtherDeduction?.totalNetAgentPayment}
             </th>
           </tr>
-          {concernLeave.map((item) => {
-            const data = remainLeaf.filter((l) => l.leafId === item.id);
-            return (
-              <tr key={item.id}>
-                <th>{item.name}(လက်ကျန်) </th>
-                <th style={{ color: "green" }}>
-                  {data.length && data[data.length - 1].Viss}
-                </th>
-                <td colSpan={5}></td>
-              </tr>
-            );
-          })}
         </table>
+        <Box sx={{ mt: 1 }}>
+          <table border={1} className="table">
+            <tr>
+              <th rowSpan={2} style={{ width: 225 }}>
+                ဖက်လက်ကျန် =
+              </th>
+              {concernLeave.map((item) => {
+                return (
+                  <th key={item.id} style={{ width: 60 }}>
+                    {item.name}
+                  </th>
+                );
+              })}
+            </tr>
+            <tr>
+              {concernLeave.map((item) => {
+                const data = remainLeaf.filter((l) => l.leafId === item.id);
+                return (
+                  <>
+                    <th style={{ color: "green" }} key={item.id}>
+                      {data.length && data[data.length - 1].Viss}
+                    </th>
+                  </>
+                );
+              })}
+            </tr>
+          </table>
+        </Box>
         <Typography
           sx={{
             color: "#240750",

@@ -45,12 +45,14 @@ const LeafReport = () => {
   const [selecteddate, setSelectedDate] = useState<Date>(new Date());
   const [dates, setDates] = useState<Date[]>([]);
   const handleAgent = (agentId: number) => {
-    const exit = remainleaf.filter(
-      (item) =>
-        item.agentId === agentId &&
-        new Date(item.date).getMonth() <= selecteddate.getMonth() - 1 &&
-        new Date(item.date).getFullYear() === selecteddate.getFullYear()
-    );
+    const exit = remainleaf.filter((item) => {
+      const month = selecteddate.getMonth();
+      const year = selecteddate.getFullYear();
+      const dd = new Date(`${year},${month + 1},1`);
+      return (
+        item.agentId === agentId && new Date(item.date).getTime() < dd.getTime()
+      );
+    });
     console.log("date", selecteddate.getMonth() - 1);
     console.log("exit", exit);
     if (exit.length) {
@@ -90,12 +92,9 @@ const LeafReport = () => {
     const exit = remainleaf.filter((item) => {
       console.log("date1", new Date(item.date).getMonth() - 1);
       return (
-        item.agentId === agent &&
-        new Date(item.date).getMonth() <= date.getMonth() - 1 &&
-        new Date(item.date).getFullYear() === date.getFullYear()
+        item.agentId === agent && new Date(item.date).getTime() < date.getTime()
       );
     });
-    console.log("date2", date.getMonth() - 1);
     console.log("exit", exit);
     if (exit.length) {
       setExitData(exit);

@@ -104,6 +104,7 @@ const ReturnCherootOne = ({
         <Box sx={{ width: 250, mt: 2 }}>
           <Typography sx={{ fontWeight: "bold" }}>အချောဆေးလိပ်</Typography>
           <TextField
+            className="good"
             placeholder="အချောဆေးလိပ်"
             sx={{ bgcolor: "#EEE8CF" }}
             onChange={(evt) => {
