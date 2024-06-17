@@ -40,6 +40,7 @@ export default async function handler(
             typeOfLeafId,
             batchNo: item.batchNo,
             totalViss: tolViss,
+            enterDate: item.date,
             workShopId,
             transferSeq,
           },
@@ -65,13 +66,14 @@ export default async function handler(
     });
     let lastBatchNo =
       concernLeaf.length && concernLeaf[concernLeaf.length - 1].batchNo;
+    const batch = lastBatchNo === 1000 ? 1 : (lastBatchNo += 1);
     const newLeafStock = await prisma.$transaction(
       realBatchNo.map((item) =>
         prisma.leaf.create({
           data: {
             date,
             typeOfLeafId,
-            batchNo: (lastBatchNo += 1),
+            batchNo: batch,
             viss: item.viss,
             garageId: enterenceGarageId,
             stockSeq: transferSeq,
@@ -116,6 +118,7 @@ export default async function handler(
             typeOfLeafId,
             batchNo: item.batchNo,
             totalViss: tolViss,
+            enterDate: item.date,
             workShopId,
             transferSeq,
           },

@@ -21,7 +21,7 @@ interface Props {
 
 const defaultValue: createNewAgent = {
   name: "",
-  phoneNo: undefined,
+  phoneNo: "",
   address: "",
   cashBig: 0,
   cashSmall: 0,
@@ -68,7 +68,7 @@ const NewAgent = ({ open, setOpen }: Props) => {
             variant="contained"
             disabled={
               !newAgent.name ||
-              !newAgent.phoneNo === undefined ||
+              !newAgent.phoneNo ||
               !newAgent.address ||
               !newAgent.cashBig === undefined ||
               !newAgent.cashSmall === undefined

@@ -36,7 +36,7 @@ const AgentOne = ({ newAgent, setNewAgent }: Props) => {
           placeholder="ဖုန်းနံပါတ်"
           sx={{ bgcolor: "#EEE8CF", width: 300 }}
           onChange={(evt) =>
-            setNewAgent({ ...newAgent, phoneNo: Number(evt.target.value) })
+            setNewAgent({ ...newAgent, phoneNo: evt.target.value })
           }
         />
       </Box>

@@ -9,7 +9,7 @@ export interface agentSlice {
 
 export interface createNewAgent extends BasicOption {
   name: string;
-  phoneNo: number | undefined;
+  phoneNo: string;
   address: string;
   cashBig: number | undefined;
   cashSmall: number | undefined;
@@ -18,7 +18,7 @@ export interface createNewAgent extends BasicOption {
 export interface updateAgent extends BasicOption {
   id: number | null;
   name: string;
-  phoneNo: number | undefined;
+  phoneNo: string;
   address: string;
   cashBig: number | undefined;
   cashSmall: number | undefined;

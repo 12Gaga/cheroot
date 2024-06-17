@@ -84,24 +84,30 @@ const LeafReport = () => {
                 const findbatchNo = findLeafTransferData.map(
                   (fd) => fd.batchNo
                 );
-                const leafTransferData = leafStock
+                const findDates = findLeafTransferData.map(
+                  (fd) => fd.enterDate
+                );
+                const transferdata = leafStock.filter(
+                  (l) => l.typeOfLeafId === item.id && l.garageId === garage
+                );
+                const leafTransferData = transferdata
                   .filter(
                     (l) =>
-                      l.typeOfLeafId === item.id &&
-                      l.garageId === garage &&
-                      findbatchNo.includes(l.batchNo)
+                      findbatchNo.includes(l.batchNo) &&
+                      findDates.includes(l.date)
                   )
                   .reduce((total, leaf) => {
                     return (total += leaf.viss);
                   }, 0);
-                const findBatchs = leafStock
-                  .filter(
-                    (l) =>
-                      l.typeOfLeafId === item.id &&
-                      l.garageId === garage &&
-                      !findbatchNo.includes(l.batchNo)
-                  )
-                  .map((lb) => lb.batchNo);
+                const findData = leafStock.filter(
+                  (l) => l.typeOfLeafId === item.id && l.garageId === garage
+                );
+                const findBatchs = findData.filter(
+                  (f) =>
+                    !findbatchNo.includes(f.batchNo) ||
+                    !findDates.includes(f.date)
+                );
+                console.log("dkg", findBatchs);
 
                 const findPayLeaf = payLeaf.filter(
                   (p) => p.typeOfLeafId === item.id && p.garageId === garage
@@ -110,15 +116,18 @@ const LeafReport = () => {
                   return (tol += pl.viss);
                 }, 0);
                 const paybatchs = findPayLeaf.map((p) => p.batchNo);
+                const payDates = findPayLeaf.map((p) => p.enterDate);
                 const lastBatchs = findBatchs.filter(
-                  (pb) => !paybatchs.includes(pb)
+                  (pb) =>
+                    !paybatchs.includes(pb.batchNo) ||
+                    !payDates.includes(pb.date)
                 );
                 return (
                   <tr key={item.id}>
                     <td style={{ textAlign: "center", height: 30 }}>
                       {item.name}
                     </td>
-                    <td>{lastBatchs.length}</td>
+                    <td style={{ textAlign: "center" }}>{lastBatchs.length}</td>
                     <td style={{ textAlign: "center" }}>
                       {leafStockData - (leafTransferData + payLeafData)}
                     </td>

@@ -175,7 +175,6 @@ const UpdateAddLeaf = ({
               </FormControl>
             </Box>
             <Box>
-              {" "}
               <Typography sx={{ mr: 2, fontWeight: "bold" }}>ရက်စွဲ</Typography>
               <DatePicker
                 selected={selecteddate}

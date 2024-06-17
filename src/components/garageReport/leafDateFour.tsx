@@ -65,7 +65,7 @@ const LeafDateFour = ({ garage, concernLeaves, endDate }: Props) => {
                 findLeafStockData.reduce((total, leaf) => {
                   return (total += leaf.viss);
                 }, 0) + endDateViss;
-              console.log("data", findLeafStockData);
+              console.log("data", leafStockData);
               console.log("endData", datums);
               //leaf Transfer
               const findLeafTransferData = leafGarageTransfer.filter((gl) => {
@@ -84,6 +84,7 @@ const LeafDateFour = ({ garage, concernLeaves, endDate }: Props) => {
               );
               let endDateTransferViss = 0;
               let findExitbatchNo: number[];
+              let findExitDates: Date[];
               if (!dataTransferArray.length) {
                 const datum = leafGarageTransfer.filter(
                   (f) =>
@@ -93,13 +94,15 @@ const LeafDateFour = ({ garage, concernLeaves, endDate }: Props) => {
                     f.exitGarageId === garage
                 );
                 findExitbatchNo = datum.map((fd) => fd.batchNo);
-                endDateTransferViss = leafStock
+                findExitDates = datum.map((fd) => fd.enterDate);
+                const exitdata = leafStock.filter((l) => {
+                  return l.typeOfLeafId === item.id && l.garageId === garage;
+                });
+                endDateTransferViss = exitdata
                   .filter((l) => {
-                    const ldate = new Date(l.date);
                     return (
-                      l.typeOfLeafId === item.id &&
-                      l.garageId === garage &&
-                      findExitbatchNo.includes(l.batchNo)
+                      findExitbatchNo.includes(l.batchNo) &&
+                      findExitDates.includes(l.date)
                     );
                   })
                   .reduce((total, leaf) => {
@@ -108,56 +111,54 @@ const LeafDateFour = ({ garage, concernLeaves, endDate }: Props) => {
               }
 
               const findbatchNo = findLeafTransferData.map((fd) => fd.batchNo);
+              const findDates = findLeafTransferData.map((fd) => fd.enterDate);
+              const transferData = leafStock.filter((l) => {
+                return l.typeOfLeafId === item.id && l.garageId === garage;
+              });
               const leafTransferData =
-                leafStock
-                  .filter((l) => {
-                    const ldate = new Date(l.date);
-                    return (
-                      l.typeOfLeafId === item.id &&
-                      l.garageId === garage &&
-                      findbatchNo.includes(l.batchNo)
-                    );
-                  })
-                  .reduce((total, leaf) => {
-                    return (total += leaf.viss);
+                transferData
+                  .filter(
+                    (l) =>
+                      findbatchNo.includes(l.batchNo) &&
+                      findDates.includes(l.date)
+                  )
+                  .reduce((tol, leaf) => {
+                    return (tol += leaf.viss);
                   }, 0) + endDateTransferViss;
-              console.log("data2", findLeafTransferData);
+              console.log("data2", leafTransferData);
 
               let findBatchs;
               if (!dataTransferArray.length) {
                 let dataFindBatchs: Leaf[] = [];
-                dataFindBatchs = findLeafStockData.filter((l) => {
-                  const ldate = new Date(l.date);
-                  return (
-                    l.typeOfLeafId === item.id &&
-                    l.garageId === garage &&
-                    !findbatchNo.includes(l.batchNo)
-                  );
-                });
+                // const dd = findLeafStockData.filter((l) => {
+                //   return l.typeOfLeafId === item.id && l.garageId === garage;
+                // });
+                dataFindBatchs = findLeafStockData.filter(
+                  (l) =>
+                    !findbatchNo.includes(l.batchNo) ||
+                    !findDates.includes(l.date)
+                );
                 datums.forEach((item) => {
                   return dataFindBatchs.push(item);
                 });
                 console.log("two", dataFindBatchs);
-                findBatchs = dataFindBatchs
-                  .filter((l) => {
-                    return (
-                      l.typeOfLeafId === item.id &&
-                      l.garageId === garage &&
-                      !findExitbatchNo.includes(l.batchNo)
-                    );
-                  })
-                  .map((lb) => lb.batchNo);
+                // const batchs = dataFindBatchs.filter((l) => {
+                //   return l.typeOfLeafId === item.id && l.garageId === garage;
+                // });
+                findBatchs = dataFindBatchs.filter(
+                  (l) =>
+                    !findExitbatchNo.includes(l.batchNo) ||
+                    !findExitDates.includes(l.date)
+                );
               } else {
-                findBatchs = findLeafStockData
-                  .filter((l) => {
-                    const ldate = new Date(l.date);
-                    return (
-                      l.typeOfLeafId === item.id &&
-                      l.garageId === garage &&
-                      !findbatchNo.includes(l.batchNo)
-                    );
-                  })
-                  .map((lb) => lb.batchNo);
+                // const batchs = findLeafStockData.filter((l) => {
+                //   return l.typeOfLeafId === item.id && l.garageId === garage;
+                // });
+                findBatchs = findLeafStockData.filter(
+                  (l) =>
+                    !findbatchNo.includes(l.batchNo) ||
+                    !findDates.includes(l.date)
+                );
               }
               console.log("batch", findBatchs);
               //payLeaf
@@ -177,6 +178,7 @@ const LeafDateFour = ({ garage, concernLeaves, endDate }: Props) => {
               );
               let endDatePayViss = 0;
               let findPaybatchNo: number[];
+              let payDates: Date[];
               if (!dataPayArray.length) {
                 const datum = payLeaf.filter((p) => {
                   const pdate = new Date(p.date);
@@ -190,6 +192,7 @@ const LeafDateFour = ({ garage, concernLeaves, endDate }: Props) => {
                   return (tol += pl.viss);
                 }, 0);
                 findPaybatchNo = datum.map((p) => p.batchNo);
+                payDates = datum.map((p) => p.enterDate);
               }
 
               const payLeafData =
@@ -200,16 +203,28 @@ const LeafDateFour = ({ garage, concernLeaves, endDate }: Props) => {
               let lastBatchs;
               if (!dataPayArray.length) {
                 const paybatchs = findPayleaf.map((p) => p.batchNo);
-                lastBatchs = findBatchs.filter(
+                const findPayDates = findPayleaf.map((p) => p.enterDate);
+                const lastdd = findBatchs.filter(
                   (pb) =>
-                    !paybatchs.includes(pb) && !findPaybatchNo.includes(pb)
+                    !paybatchs.includes(pb.batchNo) ||
+                    !findPayDates.includes(pb.date)
+                );
+                lastBatchs = lastdd.filter(
+                  (pb) =>
+                    !findPaybatchNo.includes(pb.batchNo) ||
+                    !payDates.includes(pb.date)
                 );
               } else {
                 const paybatchs = findPayleaf.map((p) => p.batchNo);
-                lastBatchs = findBatchs.filter((pb) => !paybatchs.includes(pb));
+                const findPayDates = findPayleaf.map((p) => p.enterDate);
+                lastBatchs = findBatchs.filter(
+                  (pb) =>
+                    !paybatchs.includes(pb.batchNo) ||
+                    !findPayDates.includes(pb.date)
+                );
               }
               console.log("data3", payLeafData);
-
+              console.log("dghlkgs", lastBatchs);
               return (
                 <tr key={item.id}>
                   <td style={{ textAlign: "center", height: 30 }}>

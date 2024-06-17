@@ -211,6 +211,25 @@ const GarageReport = [
   },
 ];
 
+const FilterTabLabelReport = [
+  {
+    label: "အစီခံလက်ကျန်",
+    url: "/admin/agentItemsReport",
+  },
+  {
+    label: "ဆေးစပ်လက်ကျန်",
+    url: "/admin/agentItemsReport/remainTabacco",
+  },
+  {
+    label: "တံဆိပ်လက်ကျန်",
+    url: "/admin/agentItemsReport/remainLabel",
+  },
+  {
+    label: "ပစ္စည်းလက်ကျန်အလျော်အစားပြုလုပ်ခြင်း",
+    url: "/admin/agentItemsReport/compensation",
+  },
+];
+
 const AdminLayout = ({ children }: Props) => {
   const { data: session } = useSession();
   const router = useRouter();
@@ -227,6 +246,7 @@ const AdminLayout = ({ children }: Props) => {
   const cashAdvanceReport = router.pathname.includes("cashAdvanceReport");
   const leafReport = router.pathname.includes("leafReport");
   const garageReport = router.pathname.includes("garageReport");
+  const agentItemReport = router.pathname.includes("agentItemsReport");
   const { selectedWorkShop, item: workShops } = useAppSelector(
     (store) => store.workShop
   );
@@ -263,6 +283,8 @@ const AdminLayout = ({ children }: Props) => {
     data = [...GarageReport];
   } else if (leafReport) {
     data = [...LeafReport];
+  } else if (agentItemReport) {
+    data = [...FilterTabLabelReport];
   }
 
   if (!session) return null;
@@ -344,6 +366,11 @@ const AdminLayout = ({ children }: Props) => {
             ဖက်စာရင်းစစ်ခြင်း
           </Typography>
         )}
+        {agentItemReport && (
+          <Typography variant="h5" sx={{ color: "white", fontWeight: "bold" }}>
+            ကိုယ်စားလှယ်ပစ္စည်းလက်ကျန်စစ်ခြင်း
+          </Typography>
+        )}
         <Box sx={{ display: "flex" }}>
           <Typography sx={{ color: "white", fontWeight: "bold", mt: 1 }}>
             {work?.name} /
@@ -394,7 +421,7 @@ const AdminLayout = ({ children }: Props) => {
               ))}
           </List>
         </Box>
-        <Box sx={{ px: 3, py: 2, width: "100%", height: "100%" }}>
+        <Box sx={{ px: 1.5, py: 2, width: "100%", height: "100%" }}>
           {children}
         </Box>
       </Box>

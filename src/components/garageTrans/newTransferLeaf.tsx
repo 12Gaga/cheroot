@@ -62,25 +62,28 @@ const NewTransferLeaf = ({ open, setOpen }: Props) => {
     const concernLeafStocks = leafStock.filter(
       (item) => item.garageId === exitId
     );
-    const transferBatchNo = leafTransfer
-      .filter(
-        (item) =>
-          item.exitGarageId === exitId &&
-          item.typeOfLeafId === transferLeaf.typeOfLeafId
-      )
-      .map((item) => item.batchNo);
-    const concerndata = concernLeafStocks.filter(
-      (item) => !transferBatchNo.includes(item.batchNo)
+    const findTransferData = leafTransfer.filter(
+      (item) =>
+        item.exitGarageId === exitId &&
+        item.typeOfLeafId === transferLeaf.typeOfLeafId
     );
-    const findPayBatch = payLeaf
-      .filter(
-        (item) =>
-          item.garageId === exitId &&
-          item.typeOfLeafId === transferLeaf.typeOfLeafId
-      )
-      .map((p) => p.batchNo);
+    const transferBatchNo = findTransferData.map((item) => item.batchNo);
+    const transferDates = findTransferData.map((item) => item.enterDate);
+    const concerndata = concernLeafStocks.filter(
+      (item) =>
+        !transferBatchNo.includes(item.batchNo) ||
+        !transferDates.includes(item.date)
+    );
+    const findPayData = payLeaf.filter(
+      (item) =>
+        item.garageId === exitId &&
+        item.typeOfLeafId === transferLeaf.typeOfLeafId
+    );
+    const findPayBatch = findPayData.map((p) => p.batchNo);
+    const payDates = findPayData.map((p) => p.enterDate);
     const lastconcernData = concerndata.filter(
-      (item) => !findPayBatch.includes(item.batchNo)
+      (item) =>
+        !findPayBatch.includes(item.batchNo) || !payDates.includes(item.date)
     );
     const concernBatch = lastconcernData.filter(
       (item) => item.typeOfLeafId === transferLeaf.typeOfLeafId
@@ -93,25 +96,28 @@ const NewTransferLeaf = ({ open, setOpen }: Props) => {
     const concernLeafStocks = leafStock.filter(
       (item) => item.garageId === transferLeaf.exitGarageId
     );
-    const transferBatchNo = leafTransfer
-      .filter(
-        (item) =>
-          item.exitGarageId === transferLeaf.exitGarageId &&
-          item.typeOfLeafId === leafId
-      )
-      .map((item) => item.batchNo);
-    const concerndata = concernLeafStocks.filter(
-      (item) => !transferBatchNo.includes(item.batchNo)
+    const findTransferData = leafTransfer.filter(
+      (item) =>
+        item.exitGarageId === transferLeaf.exitGarageId &&
+        item.typeOfLeafId === leafId
     );
-    const findPayBatch = payLeaf
-      .filter(
-        (item) =>
-          item.garageId === transferLeaf.exitGarageId &&
-          item.typeOfLeafId === leafId
-      )
-      .map((p) => p.batchNo);
+    const transferBatchNo = findTransferData.map((item) => item.batchNo);
+    const transferDates = findTransferData.map((item) => item.enterDate);
+    const concerndata = concernLeafStocks.filter(
+      (item) =>
+        !transferBatchNo.includes(item.batchNo) ||
+        !transferDates.includes(item.date)
+    );
+    const findPayData = payLeaf.filter(
+      (item) =>
+        item.garageId === transferLeaf.exitGarageId &&
+        item.typeOfLeafId === leafId
+    );
+    const findPayBatch = findPayData.map((p) => p.batchNo);
+    const payDates = findPayData.map((p) => p.enterDate);
     const lastconcernData = concerndata.filter(
-      (item) => !findPayBatch.includes(item.batchNo)
+      (item) =>
+        !findPayBatch.includes(item.batchNo) || !payDates.includes(item.date)
     );
     const batchNos = lastconcernData.filter(
       (item) => item.typeOfLeafId === leafId

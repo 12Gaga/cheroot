@@ -90,12 +90,13 @@ const AddLeaf = ({ open, setOpen }: Props) => {
         item.typeOfLeafId === leafId &&
         item.garageId === newLeafAddStock.garageId
     );
-    const batchno = leaf.length && leaf[leaf.length - 1].batchNo;
+    let batchno = leaf.length && leaf[leaf.length - 1].batchNo;
+    batchno = batchno === 1000 ? 1 : (batchno += 1);
     console.log("batcj", leaf);
     setNewLeafAddStock({
       ...newLeafAddStock,
       typeOfLeafId: leafId,
-      batchNo: batchno ? batchno + 1 : 1,
+      batchNo: batchno ? batchno : 1,
     });
   };
 
@@ -105,12 +106,13 @@ const AddLeaf = ({ open, setOpen }: Props) => {
         item.typeOfLeafId === newLeafAddStock.typeOfLeafId &&
         item.garageId === garageId
     );
-    const batchno = leaf.length && leaf[leaf.length - 1].batchNo;
+    let batchno = leaf.length && leaf[leaf.length - 1].batchNo;
+    batchno = batchno === 1000 ? 1 : (batchno += 1);
     console.log("batcj", leaf);
     setNewLeafAddStock({
       ...newLeafAddStock,
       garageId: garageId,
-      batchNo: batchno ? batchno + 1 : 1,
+      batchNo: batchno ? batchno : 1,
     });
   };
   const handleShopTitle = (shopTitleId: number) => {

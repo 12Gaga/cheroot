@@ -34,7 +34,7 @@ export default async function handler(
       warpingPlasticQty != undefined &&
       coverPlasticId &&
       coverPlasticQty != undefined &&
-      formOfPackingId != undefined &&
+      formOfPackingId &&
       quantity != undefined;
     if (!isValid) return res.status(405).send("bad requestsss");
 
@@ -86,7 +86,7 @@ export default async function handler(
       warpingPlasticQty != undefined &&
       coverPlasticId &&
       coverPlasticQty != undefined &&
-      formOfPackingId != undefined &&
+      formOfPackingId &&
       quantity != undefined;
     if (!isValid) return res.status(405).send("bad requestsss");
 

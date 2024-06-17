@@ -98,6 +98,11 @@ const btns = [
     title: "ကိုယ်စားလှယ်ဖက်စာရင်းစစ်ခြင်း",
     url: "/admin/leafReport",
   },
+  {
+    id: 20,
+    title: "ကိုယ်စားလှယ်ပစ္စည်းလက်ကျန်စစ်ခြင်း",
+    url: "/admin/agentItemsReport",
+  },
 ];
 
 const AdminRoute = () => {

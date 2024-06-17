@@ -1,5 +1,5 @@
 import { prisma } from "@/utils/db";
-import { AgentLeafViss } from "@prisma/client";
+import { nanoid } from "@reduxjs/toolkit";
 import type { NextApiRequest, NextApiResponse } from "next";
 
 export default async function handler(
@@ -52,6 +52,7 @@ export default async function handler(
             discountViss,
             price,
             amount,
+            enterDate: item.date,
             garageId,
             workShopId,
           },
@@ -66,6 +67,7 @@ export default async function handler(
       where: { typeOfLeafId, agentId },
     });
     let newRemainLeaf;
+    const seq = nanoid(5);
     if (leftViss) {
       const totalViss = netViss + leftViss.viss;
 
@@ -80,6 +82,7 @@ export default async function handler(
           leafId: typeOfLeafId,
           workShopId,
           Viss: totalViss,
+          seq,
           date,
         },
       });
@@ -87,7 +90,6 @@ export default async function handler(
       await prisma.agentLeafViss.create({
         data: { agentId, typeOfLeafId, viss: netViss, workShopId },
       });
-
       newRemainLeaf = await prisma.agentRemineLeaf.create({
         data: {
           agentId,
@@ -95,6 +97,7 @@ export default async function handler(
           workShopId,
           Viss: netViss,
           date,
+          seq,
         },
       });
     }

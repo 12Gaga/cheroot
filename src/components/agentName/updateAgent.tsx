@@ -25,7 +25,7 @@ interface Props {
 const defaultValue: updateAgent = {
   id: null,
   name: "",
-  phoneNo: undefined,
+  phoneNo: "",
   address: "",
   cashBig: 0,
   cashSmall: 0,
@@ -105,7 +105,7 @@ const UpdateAgent = ({ updateOpen, setUpdateOpen, selectedId }: Props) => {
               onChange={(evt) =>
                 setUpdateAgent({
                   ...updateAgent,
-                  phoneNo: Number(evt.target.value),
+                  phoneNo: evt.target.value,
                 })
               }
             />

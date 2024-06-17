@@ -287,11 +287,11 @@ const NewPackingData = ({ open, setOpen }: Props) => {
             !packingData.typeOfCherootId ||
             !packingData.typeOfPackingId ||
             !packingData.packingPlasticId ||
-            !packingData.packingPlasticQty ||
+            !packingData.packingPlasticQty === undefined ||
             !packingData.warpingPlasticId ||
-            !packingData.warpingPlasticQty ||
+            !packingData.warpingPlasticQty === undefined ||
             !packingData.coverPlasticId ||
-            !packingData.coverPlasticQty ||
+            !packingData.coverPlasticQty === undefined ||
             !packingData.formOfPackingId ||
             !packingData.quantity
           }

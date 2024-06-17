@@ -5,7 +5,6 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import {
   Box,
-  Button,
   FormControl,
   ListItemText,
   MenuItem,
@@ -54,25 +53,28 @@ const PayLeaf = () => {
 
   const handleGarage = (garageId: number) => {
     const data = leafStock.filter((item) => item.garageId === garageId);
-    const transferBatchNo = leafTransfer
-      .filter(
-        (item) =>
-          item.exitGarageId === garageId &&
-          item.typeOfLeafId === newPayLeaf.typeOfLeafId
-      )
-      .map((item) => item.batchNo);
-    const concerndata = data.filter(
-      (item) => !transferBatchNo.includes(item.batchNo)
+    const findTransferData = leafTransfer.filter(
+      (item) =>
+        item.exitGarageId === garageId &&
+        item.typeOfLeafId === newPayLeaf.typeOfLeafId
     );
-    const findPayBatch = payLeaf
-      .filter(
-        (item) =>
-          item.garageId === garageId &&
-          item.typeOfLeafId === newPayLeaf.typeOfLeafId
-      )
-      .map((p) => p.batchNo);
+    const transferBatchNo = findTransferData.map((item) => item.batchNo);
+    const transferDates = findTransferData.map((item) => item.enterDate);
+    const concerndata = data.filter(
+      (item) =>
+        !transferBatchNo.includes(item.batchNo) ||
+        !transferDates.includes(item.date)
+    );
+    const findPayData = payLeaf.filter(
+      (item) =>
+        item.garageId === garageId &&
+        item.typeOfLeafId === newPayLeaf.typeOfLeafId
+    );
+    const findPayBatch = findPayData.map((p) => p.batchNo);
+    const payDates = findPayData.map((p) => p.enterDate);
     const lastconcernData = concerndata.filter(
-      (item) => !findPayBatch.includes(item.batchNo)
+      (item) =>
+        !findPayBatch.includes(item.batchNo) || !payDates.includes(item.date)
     );
 
     const batchNo = lastconcernData.filter(
