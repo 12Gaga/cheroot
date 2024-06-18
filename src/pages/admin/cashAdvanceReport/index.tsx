@@ -1,5 +1,6 @@
 import AdminLayout from "@/components/adminLayout";
 import { useAppSelector } from "@/store/hooks";
+import { setAgentRemainCash } from "@/store/slices/agentRemainCash";
 import { TheaterComedyOutlined } from "@mui/icons-material";
 import {
   Box,
@@ -9,7 +10,7 @@ import {
   MenuItem,
   ListItemText,
 } from "@mui/material";
-import { OtherDeduction } from "@prisma/client";
+import { AgentRemainCash, OtherDeduction } from "@prisma/client";
 import { useState } from "react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
@@ -22,17 +23,24 @@ const DailyCashAdvance = () => {
   );
   const agents = useAppSelector((store) => store.agent.item);
   const concernAgent = agents.filter((a) => a.workShopId === workShopId);
-  const [exitData, setExitData] = useState<OtherDeduction | undefined>(
-    undefined
+  const [exitData, setExitData] = useState<AgentRemainCash[]>([]);
+  const [concernRemainCash, setConcernRemainCash] = useState<AgentRemainCash[]>(
+    []
   );
+  const remainCash = useAppSelector(
+    (store) => store.agentReaminCash.item
+  ).filter((rc) => rc.workShopId === workShopId);
   const [concernData, setConcernData] = useState<OtherDeduction[]>([]);
   const [agent, setAgent] = useState<number | null>(null);
   const [selecteddate, setSelectedDate] = useState<Date>(new Date());
+
   const handleAgent = (agentId: number) => {
-    const exit = concernOtherDeduction.filter((item) => {
+    const exit = remainCash.filter((item) => {
       const month = selecteddate.getMonth();
       const year = selecteddate.getFullYear();
       const dd = new Date(`${year},${month + 1},1`);
+      console.log("agebtdate", new Date(item.date).getTime());
+      console.log("dd", dd.getTime());
       return (
         item.agentId === agentId && new Date(item.date).getTime() < dd.getTime()
       );
@@ -40,10 +48,17 @@ const DailyCashAdvance = () => {
     console.log("date", selecteddate.getMonth() - 1);
     console.log("exit", exit);
     if (exit.length) {
-      setExitData(exit[exit.length - 1]);
+      setExitData(exit);
     } else {
-      setExitData(undefined);
+      setExitData([]);
     }
+
+    const dataone = remainCash.filter(
+      (item) =>
+        item.agentId === agentId &&
+        new Date(item.date).getMonth() === selecteddate.getMonth() &&
+        new Date(item.date).getFullYear() === selecteddate.getFullYear()
+    );
 
     const data = concernOtherDeduction.filter(
       (item) =>
@@ -52,11 +67,12 @@ const DailyCashAdvance = () => {
         new Date(item.date).getFullYear() === selecteddate.getFullYear()
     );
     setConcernData(data);
+    setConcernRemainCash(dataone);
     setAgent(agentId);
   };
 
   const handelDate = (date: Date) => {
-    const exit = concernOtherDeduction.filter((item) => {
+    const exit = remainCash.filter((item) => {
       console.log("date1", new Date(item.date).getMonth() - 1);
       return (
         item.agentId === agent && new Date(item.date).getTime() < date.getTime()
@@ -65,10 +81,17 @@ const DailyCashAdvance = () => {
     console.log("date2", date.getMonth() - 1);
     console.log("exit", exit);
     if (exit.length) {
-      setExitData(exit[exit.length - 1]);
+      setExitData(exit);
     } else {
-      setExitData(undefined);
+      setExitData([]);
     }
+
+    const dataone = remainCash.filter(
+      (item) =>
+        item.agentId === agent &&
+        new Date(item.date).getMonth() === date.getMonth() &&
+        new Date(item.date).getFullYear() === date.getFullYear()
+    );
 
     const dateData = concernOtherDeduction.filter(
       (item) =>
@@ -77,8 +100,10 @@ const DailyCashAdvance = () => {
         item.agentId === agent
     );
     setConcernData(dateData);
+    setConcernRemainCash(dataone);
   };
   console.log("exitdata", exitData);
+  console.log("concerb", concernRemainCash);
   console.log("concerndata", concernData);
   // if (!concernOtherDeduction.length) return null;
   return (
@@ -171,26 +196,30 @@ const DailyCashAdvance = () => {
                 စာရင်းဖွင့်လက်ကျန်ငွေ
               </th>
               <th>
-                {exitData
-                  ? exitData.remainCashBig
-                  : agents.find((a) => a.id === agent)?.cashBalcanceBig}
+                {exitData.length
+                  ? exitData[exitData.length - 1].remainCashBig
+                  : concernRemainCash.length &&
+                    concernRemainCash[0].remainCashBig}
               </th>
               <th>
-                {exitData
-                  ? exitData.remainCashSmall
-                  : agents.find((a) => a.id === agent)?.cashBalcanceSmall}
+                {exitData.length
+                  ? exitData[exitData.length - 1].remainCashSmall
+                  : concernRemainCash.length &&
+                    concernRemainCash[0].remainCashSmall}
               </th>
               <th></th>
               <th></th>
               <th>
-                {exitData
-                  ? exitData.remainCashBig
-                  : agents.find((a) => a.id === agent)?.cashBalcanceBig}
+                {exitData.length
+                  ? exitData[exitData.length - 1].remainCashBig
+                  : concernRemainCash.length &&
+                    concernRemainCash[0].remainCashBig}
               </th>
               <th>
-                {exitData
-                  ? exitData.remainCashSmall
-                  : agents.find((a) => a.id === agent)?.cashBalcanceSmall}
+                {exitData.length
+                  ? exitData[exitData.length - 1].remainCashSmall
+                  : concernRemainCash.length &&
+                    concernRemainCash[0].remainCashSmall}
               </th>
             </tr>
 
@@ -262,22 +291,22 @@ const DailyCashAdvance = () => {
               <tr>
                 <td style={{ height: 30 }}></td>
                 <th style={{ backgroundColor: "#FFDB5C" }}>
-                  {exitData
-                    ? exitData.remainCashBig
-                    : (agents.find((a) => a.id === agent)
-                        ?.cashBalcanceBig as number) +
-                      concernData.reduce((total, c) => {
-                        return (total += c.cashAdvanceBig);
-                      }, 0)}
+                  {exitData.length
+                    ? exitData[exitData.length - 1].remainCashBig
+                    : concernRemainCash.length &&
+                      concernRemainCash[0].remainCashBig +
+                        concernData.reduce((total, c) => {
+                          return (total += c.cashAdvanceBig);
+                        }, 0)}
                 </th>
                 <th style={{ backgroundColor: "#FFDB5C" }}>
-                  {exitData
-                    ? exitData.remainCashSmall
-                    : (agents.find((a) => a.id === agent)
-                        ?.cashBalcanceSmall as number) +
-                      concernData.reduce((total, c) => {
-                        return (total += c.cashAdvanceSmall);
-                      }, 0)}
+                  {exitData.length
+                    ? exitData[exitData.length - 1].remainCashSmall
+                    : concernRemainCash.length &&
+                      concernRemainCash[0].remainCashSmall +
+                        concernData.reduce((total, c) => {
+                          return (total += c.cashAdvanceSmall);
+                        }, 0)}
                 </th>
                 <th style={{ backgroundColor: "#FFDB5C" }}>
                   {concernData.reduce((total, c) => {
@@ -290,13 +319,15 @@ const DailyCashAdvance = () => {
                   }, 0)}
                 </th>
                 <th style={{ backgroundColor: "#FFDB5C" }}>
-                  {concernData.length
-                    ? concernData[concernData.length - 1].remainCashBig
+                  {concernRemainCash.length
+                    ? concernRemainCash[concernRemainCash.length - 1]
+                        .remainCashBig
                     : 0}
                 </th>
                 <th style={{ backgroundColor: "#FFDB5C" }}>
-                  {concernData.length
-                    ? concernData[concernData.length - 1].remainCashSmall
+                  {concernRemainCash.length
+                    ? concernRemainCash[concernRemainCash.length - 1]
+                        .remainCashSmall
                     : 0}
                 </th>
               </tr>

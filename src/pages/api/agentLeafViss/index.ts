@@ -1,4 +1,5 @@
 import { prisma } from "@/utils/db";
+import { nanoid } from "@reduxjs/toolkit";
 import type { NextApiRequest, NextApiResponse } from "next";
 
 export default async function handler(
@@ -21,8 +22,9 @@ export default async function handler(
         viss,
       },
     });
+    const seq = nanoid(5);
     const newRemainLeaf = await prisma.agentRemineLeaf.create({
-      data: { agentId, leafId: typeOfLeafId, workShopId, Viss: viss },
+      data: { agentId, leafId: typeOfLeafId, workShopId, Viss: viss, seq },
     });
     return res.status(200).json({ newAgentLeafViss, newRemainLeaf });
   } else if (method === "PUT") {

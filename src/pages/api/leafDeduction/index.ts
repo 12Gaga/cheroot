@@ -1,5 +1,6 @@
 import { prisma } from "@/utils/db";
 import { AgentLeafViss } from "@prisma/client";
+import { nanoid } from "@reduxjs/toolkit";
 import type { NextApiRequest, NextApiResponse } from "next";
 
 export default async function handler(
@@ -22,7 +23,7 @@ export default async function handler(
       deductionAmount != undefined;
 
     if (!isValid) return res.status(405).send("bad requesttttt");
-
+    const seq = nanoid(5);
     const newLeafDeduction = await prisma.leafDeduction.create({
       data: {
         date,
@@ -31,6 +32,7 @@ export default async function handler(
         deductViss,
         deductionAmount,
         price,
+        seq,
         workShopId,
       },
     });
@@ -52,6 +54,7 @@ export default async function handler(
           leafId: typeOfLeafId,
           workShopId,
           Viss: reduceViss,
+          seq,
           date,
         },
       });

@@ -1,7 +1,7 @@
 import AdminLayout from "@/components/adminLayout";
 import { useAppSelector } from "@/store/hooks";
 import { Box, Typography } from "@mui/material";
-import { OtherDeduction } from "@prisma/client";
+import { AgentRemainCash, OtherDeduction } from "@prisma/client";
 import { useEffect, useState } from "react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
@@ -13,7 +13,13 @@ const MonthlyCashAdvanceReport = () => {
     (item) => item.workShopId === workShopId
   );
   const agents = useAppSelector((store) => store.agent.item);
-  const [exitData, setExitData] = useState<OtherDeduction[]>([]);
+  const [exitData, setExitData] = useState<AgentRemainCash[]>([]);
+  const [concernRemainCash, setConcernRemainCash] = useState<AgentRemainCash[]>(
+    []
+  );
+  const remainCash = useAppSelector(
+    (store) => store.agentReaminCash.item
+  ).filter((rc) => rc.workShopId === workShopId);
   const [concernData, setConcernData] = useState<OtherDeduction[]>([]);
   const [selecteddate, setSelectedDate] = useState<Date>(new Date());
   const [agentId, setAgentId] = useState<number[]>([]);
@@ -28,7 +34,7 @@ const MonthlyCashAdvanceReport = () => {
   };
 
   const handelDate = (date: Date) => {
-    const exit = concernOtherDeduction.filter((item) => {
+    const exit = remainCash.filter((item) => {
       return new Date(item.date).getTime() < date.getTime();
     });
     console.log("exit", exit);
@@ -38,18 +44,25 @@ const MonthlyCashAdvanceReport = () => {
       setExitData([]);
     }
 
+    const dataone = remainCash.filter(
+      (item) =>
+        new Date(item.date).getMonth() === date.getMonth() &&
+        new Date(item.date).getFullYear() === date.getFullYear()
+    );
+
     const dateData = concernOtherDeduction.filter(
       (item) =>
         new Date(item.date).getMonth() === date.getMonth() &&
         new Date(item.date).getFullYear() === date.getFullYear()
     );
     setConcernData(dateData);
+    setConcernRemainCash(dataone);
     handelAgent(dateData);
   };
 
   useEffect(() => {
-    if (concernOtherDeduction.length) {
-      const exit = concernOtherDeduction.filter((item) => {
+    if (remainCash.length) {
+      const exit = remainCash.filter((item) => {
         const month = selecteddate.getMonth();
         const year = selecteddate.getFullYear();
         const dd = new Date(`${year},${month + 1},1`);
@@ -62,12 +75,19 @@ const MonthlyCashAdvanceReport = () => {
         setExitData([]);
       }
 
+      const dataone = remainCash.filter(
+        (item) =>
+          new Date(item.date).getMonth() === selecteddate.getMonth() &&
+          new Date(item.date).getFullYear() === selecteddate.getFullYear()
+      );
+
       const dateData = concernOtherDeduction.filter(
         (item) =>
           new Date(item.date).getMonth() === selecteddate.getMonth() &&
           new Date(item.date).getFullYear() === selecteddate.getFullYear()
       );
       setConcernData(dateData);
+      setConcernRemainCash(dataone);
       handelAgent(dateData);
     }
   }, [otherDeduction]);
@@ -139,9 +159,15 @@ const MonthlyCashAdvanceReport = () => {
               const lastDatum =
                 findLastData.length && findLastData[findLastData.length - 1];
 
+              const findLast = concernRemainCash.filter(
+                (i) => i.agentId === item
+              );
+              const last = findLast.length && findLast[0];
+
               const findConcernLastData = concernData.filter(
                 (a) => a.agentId === item
               );
+
               const concernLastDatum =
                 findConcernLastData.length &&
                 findConcernLastData[findConcernLastData.length - 1];
@@ -161,20 +187,20 @@ const MonthlyCashAdvanceReport = () => {
                   <td style={{ textAlign: "center" }}>
                     {lastDatum
                       ? lastDatum.remainCashBig
-                      : (agents.find((a) => a.id === item)
-                          ?.cashBalcanceBig as number) +
-                        findConcernLastData.reduce((total, concern) => {
-                          return (total += concern.cashAdvanceBig);
-                        }, 0)}
+                      : last &&
+                        last.remainCashBig +
+                          findConcernLastData.reduce((total, concern) => {
+                            return (total += concern.cashAdvanceBig);
+                          }, 0)}
                   </td>
                   <td style={{ textAlign: "center" }}>
                     {lastDatum
                       ? lastDatum.remainCashSmall
-                      : (agents.find((a) => a.id === item)
-                          ?.cashBalcanceSmall as number) +
-                        findConcernLastData.reduce((total, concern) => {
-                          return (total += concern.cashAdvanceSmall);
-                        }, 0)}
+                      : last &&
+                        last.remainCashSmall +
+                          findConcernLastData.reduce((total, concern) => {
+                            return (total += concern.cashAdvanceSmall);
+                          }, 0)}
                   </td>
                   <td style={{ textAlign: "center" }}>
                     {findConcernLastData.reduce((total, c) => {
@@ -210,17 +236,22 @@ const MonthlyCashAdvanceReport = () => {
                       findLastData.length &&
                       findLastData[findLastData.length - 1];
 
+                    const findLast = concernRemainCash.filter(
+                      (i) => i.agentId === item
+                    );
+                    const last = findLast.length && findLast[0];
+
                     const findConcernLastData = concernData.filter(
                       (a) => a.agentId === item
                     );
 
                     return lastDatum
                       ? lastDatum.remainCashBig
-                      : (((agents.find((a) => a.id === item)
-                          ?.cashBalcanceBig as number) +
-                          findConcernLastData.reduce((total, concern) => {
-                            return (total += concern.cashAdvanceBig);
-                          }, 0)) as number);
+                      : ((last &&
+                          last.remainCashBig +
+                            findConcernLastData.reduce((total, concern) => {
+                              return (total += concern.cashAdvanceBig);
+                            }, 0)) as number);
                   })
                   .reduce((tol: number, c) => {
                     return (tol += c as number);
@@ -238,17 +269,22 @@ const MonthlyCashAdvanceReport = () => {
                       findLastData.length &&
                       findLastData[findLastData.length - 1];
 
+                    const findLast = concernRemainCash.filter(
+                      (i) => i.agentId === item
+                    );
+                    const last = findLast.length && findLast[0];
+
                     const findConcernLastData = concernData.filter(
                       (a) => a.agentId === item
                     );
 
                     return lastDatum
                       ? lastDatum.remainCashSmall
-                      : (((agents.find((a) => a.id === item)
-                          ?.cashBalcanceSmall as number) +
-                          findConcernLastData.reduce((total, concern) => {
-                            return (total += concern.cashAdvanceSmall);
-                          }, 0)) as number);
+                      : ((last &&
+                          last.remainCashSmall +
+                            findConcernLastData.reduce((total, concern) => {
+                              return (total += concern.cashAdvanceSmall);
+                            }, 0)) as number);
                   })
                   .reduce((tol: number, c) => {
                     return (tol += c as number);
@@ -269,7 +305,7 @@ const MonthlyCashAdvanceReport = () => {
                   .map((item) => {
                     const exit = concernData.find((c) => c.agentId === item);
                     if (!exit) return null;
-                    const findConcernLastData = concernData.filter(
+                    const findConcernLastData = concernRemainCash.filter(
                       (a) => a.agentId === item
                     );
                     const concernLastDatum =
@@ -288,7 +324,7 @@ const MonthlyCashAdvanceReport = () => {
                   .map((item) => {
                     const exit = concernData.find((c) => c.agentId === item);
                     if (!exit) return null;
-                    const findConcernLastData = concernData.filter(
+                    const findConcernLastData = concernRemainCash.filter(
                       (a) => a.agentId === item
                     );
                     const concernLastDatum =

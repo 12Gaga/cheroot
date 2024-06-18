@@ -68,8 +68,8 @@ const ReturnCherootSlice = createSlice({
     setLoadingReturnCheroot: (state, action: PayloadAction<boolean>) => {
       state.isLoading = action.payload;
     },
-    addReturnCheroot: (state, action: PayloadAction<ReturnReadyCheroot>) => {
-      state.item = [...state.item, action.payload];
+    addReturnCheroot: (state, action: PayloadAction<ReturnReadyCheroot[]>) => {
+      state.item = [...state.item, ...action.payload];
     },
   },
 });

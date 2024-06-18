@@ -1,5 +1,6 @@
 import { prisma } from "@/utils/db";
 import { AgentLeafViss } from "@prisma/client";
+import { nanoid } from "@reduxjs/toolkit";
 import type { NextApiRequest, NextApiResponse } from "next";
 
 export default async function handler(
@@ -54,7 +55,7 @@ export default async function handler(
       totalAmount != undefined &&
       garageId;
     if (!isValid) return res.status(405).send("bad request");
-
+    const seq = nanoid(5);
     const newExtraPurchase = await prisma.extraPurchase.create({
       data: {
         date,
@@ -80,8 +81,16 @@ export default async function handler(
         workShopId,
       },
     });
-
-    return res.status(200).json({ newExtraPurchase });
+    const newExtraPurchaseSummary = await prisma.extraPurchaseSummery.create({
+      data: {
+        date,
+        agentId,
+        tolPrice: totalAmount,
+        purchaseSeq: seq,
+        workShopId,
+      },
+    });
+    return res.status(200).json({ newExtraPurchase, newExtraPurchaseSummary });
   }
   res.status(200).json("bad request");
 }

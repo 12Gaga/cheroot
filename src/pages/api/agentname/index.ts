@@ -1,6 +1,6 @@
 import { prisma } from "@/utils/db";
 import type { NextApiRequest, NextApiResponse } from "next";
-
+import { nanoid } from "@reduxjs/toolkit";
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
@@ -28,7 +28,17 @@ export default async function handler(
         workShopId,
       },
     });
-    return res.status(200).json({ newAgent });
+    const seq = nanoid(5);
+    const newRemainCash = await prisma.agentRemainCash.create({
+      data: {
+        agentId: newAgent.id,
+        remainCashBig: cashBig,
+        remainCashSmall: cashSmall,
+        seq,
+        workShopId,
+      },
+    });
+    return res.status(200).json({ newAgent, newRemainCash });
   } else if (method === "PUT") {
     const { name, phoneNo, address, cashBig, cashSmall, id } = req.body;
     const isValid =

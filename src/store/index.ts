@@ -58,7 +58,9 @@ import cherootInstallmentReducer from "./slices/cherootInstallment";
 import packingDataReducer from "./slices/packingData";
 import closingDataReducer from "./slices/closing";
 import agentRemainLeafReducer from "./slices/agentRemainLeaf";
+import agentRemainCashReducer from "./slices/agentRemainCash";
 import shopTilteReducer from "./slices/typeOfShopTitle";
+import extraPurchaseSummaryReducer from "./slices/extraPurchaseSummery";
 
 export const store = configureStore({
   reducer: {
@@ -121,7 +123,9 @@ export const store = configureStore({
     packingData: packingDataReducer,
     closing: closingDataReducer,
     agentReaminLeaf: agentRemainLeafReducer,
+    agentReaminCash: agentRemainCashReducer,
     shopTitle: shopTilteReducer,
+    extraPurchaseSummary: extraPurchaseSummaryReducer,
   },
 });
 

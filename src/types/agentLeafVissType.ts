@@ -1,9 +1,15 @@
-import { AgentLeafViss } from "@prisma/client";
+import { AgentLeafViss, AgentRemainCash } from "@prisma/client";
 import { BasicOption } from "./appType";
 import { AgentRemineLeaf } from "@prisma/client";
 
 export interface RemainLeaf {
   item: AgentRemineLeaf[];
+  isLoading: boolean;
+  error: null | string;
+}
+
+export interface RemainCash {
+  item: AgentRemainCash[];
   isLoading: boolean;
   error: null | string;
 }

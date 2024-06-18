@@ -8,8 +8,25 @@ const Printing = () => {
   const router = useRouter();
   const dispatch = useAppDispatch();
   const { date, deductDate } = router.query;
-  const cherootDate = new Date(date as string);
-  const extraPurchaseDate = new Date(deductDate as string);
+  console.log("date1", date);
+  console.log("date2", deductDate);
+  const findCherootDate = new Date(date as string);
+  const findExtraPurchaseDate = new Date(deductDate as string);
+  const cherootMonth = findCherootDate.getMonth();
+  const cherootYear = findCherootDate.getFullYear();
+  const cherootDay = findCherootDate.getDate();
+  const cherootDate = new Date(
+    `${cherootYear},${cherootMonth + 1},${cherootDay - 1}`
+  );
+
+  const extraMonth = findExtraPurchaseDate.getMonth();
+  const extraYear = findExtraPurchaseDate.getFullYear();
+  const extraDay = findExtraPurchaseDate.getDate();
+  const extraPurchaseDate = new Date(
+    `${extraYear},${extraMonth + 1},${extraDay - 1}`
+  );
+  console.log("cherootdate1", cherootDate);
+  console.log("cherootdate2", extraPurchaseDate);
   const agentId = Number(router.query.agentId);
   const returnCheroot = useAppSelector((store) => store.returnCheroot.item);
   const concernReturnCheroot = returnCheroot.filter((item) => {
@@ -55,9 +72,9 @@ const Printing = () => {
   const filterSize = useAppSelector((store) => store.typeOfFilterSize.item);
   const label = useAppSelector((store) => store.typeOfLabel.item);
   const agentRemainLeaf = useAppSelector((store) => store.agentReaminLeaf.item);
-  const remainBalance = otherDeduction.filter(
-    (item) => item.agentId === agentId
-  );
+  const remainBalance = useAppSelector(
+    (store) => store.agentReaminCash.item
+  ).filter((item) => item.agentId === agentId);
   const remainLeaf = agentRemainLeaf.filter((leaf) => leaf.agentId === agentId);
   const handlePrint = () => {
     if (tableRef.current) {

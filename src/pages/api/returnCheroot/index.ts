@@ -1,4 +1,5 @@
 import { prisma } from "@/utils/db";
+import { nanoid } from "@reduxjs/toolkit";
 import type { NextApiRequest, NextApiResponse } from "next";
 
 export default async function handler(
@@ -29,7 +30,7 @@ export default async function handler(
       goodPrice != undefined &&
       amount != undefined;
     if (!isValid) return res.status(405).send("bad request");
-
+    const seq = nanoid(5);
     const newReturnCheroot = await prisma.returnReadyCheroot.create({
       data: {
         date,
@@ -40,6 +41,7 @@ export default async function handler(
         totalCherootQty,
         goodPrice,
         amount,
+        seq,
         workShopId,
       },
     });

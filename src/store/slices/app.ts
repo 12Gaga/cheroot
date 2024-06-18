@@ -58,6 +58,8 @@ import { setBagoPlasticInstallment } from "./bagoPlasticInstallment";
 import { setPackingData } from "./packingData";
 import { setAgentRemainLeaf } from "./agentRemainLeaf";
 import { setShopTitle } from "./typeOfShopTitle";
+import { setAgentRemainCash } from "./agentRemainCash";
+import { setExtraPurchaseSummery } from "./extraPurchaseSummery";
 
 const initialState: appSlice = {
   init: false,
@@ -129,7 +131,9 @@ export const fetchApp = createAsyncThunk(
         cherootTransfer,
         packingData,
         agentReaminLeaf,
+        agentRemainCash,
         shopTitle,
+        extraPurchaseSummary,
       } = dataFromServer;
       thunkApi.dispatch(setInit(true));
       thunkApi.dispatch(setIndustry(industry));
@@ -190,7 +194,9 @@ export const fetchApp = createAsyncThunk(
       thunkApi.dispatch(setCherootTransfer(cherootTransfer));
       thunkApi.dispatch(setPackingData(packingData));
       thunkApi.dispatch(setAgentRemainLeaf(agentReaminLeaf));
+      thunkApi.dispatch(setAgentRemainCash(agentRemainCash));
       thunkApi.dispatch(setShopTitle(shopTitle));
+      thunkApi.dispatch(setExtraPurchaseSummery(extraPurchaseSummary));
       onSuccess && onSuccess();
     } catch (err) {
       onError && onError(err);

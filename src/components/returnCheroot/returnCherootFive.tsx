@@ -22,7 +22,9 @@ const ReturnCherootFive = ({
 }: Props) => {
   const [ddate, setDate] = useState<Date>(new Date());
   console.log("date", ddate);
-  const extraPurchase = useAppSelector((store) => store.extraPurchase.item);
+  const extraPurchase = useAppSelector(
+    (store) => store.extraPurchaseSummary.item
+  );
   //find leftVissOfSelectAgent
   const agentsLeafViss = useAppSelector((store) => store.agentLeafViss.item);
   const leftViss = agentsLeafViss
@@ -38,25 +40,48 @@ const ReturnCherootFive = ({
         item.agentId === newOtherDeduction.agentId &&
         itemdate.toLocaleDateString() === date.toLocaleDateString()
       );
-    })?.totalAmount as number;
-    const agentPay =
-      totalCherootAmount -
-      totalLeafAmount -
-      (newOtherDeduction.cashAdvanceSmallDeduction +
-        newOtherDeduction.cashAdvanceBigDeduction +
-        exitPurchase);
-    const totalPay =
-      agentPay +
-      newOtherDeduction.cashAdvanceBig +
-      newOtherDeduction.cashAdvanceSmall +
-      newOtherDeduction.bonusPayment;
-    setNewOtherDeduction({
-      ...newOtherDeduction,
-      otherDeduction: exitPurchase ? exitPurchase : 0,
-      netAgentPayment: agentPay,
-      totalNetAgentPayment: totalPay,
-      deductDate: date,
     });
+    if (exitPurchase) {
+      const agentPay =
+        totalCherootAmount -
+        totalLeafAmount -
+        (newOtherDeduction.cashAdvanceSmallDeduction +
+          newOtherDeduction.cashAdvanceBigDeduction +
+          exitPurchase.tolPrice);
+      const totalPay =
+        agentPay +
+        newOtherDeduction.cashAdvanceBig +
+        newOtherDeduction.cashAdvanceSmall +
+        newOtherDeduction.bonusPayment;
+      setNewOtherDeduction({
+        ...newOtherDeduction,
+        otherDeduction: exitPurchase.tolPrice,
+        netAgentPayment: agentPay,
+        totalNetAgentPayment: totalPay,
+        deductDate: date,
+        purchaseSeq: exitPurchase.purchaseSeq,
+      });
+    } else {
+      const agentPay =
+        totalCherootAmount -
+        totalLeafAmount -
+        (newOtherDeduction.cashAdvanceSmallDeduction +
+          newOtherDeduction.cashAdvanceBigDeduction +
+          0);
+      const totalPay =
+        agentPay +
+        newOtherDeduction.cashAdvanceBig +
+        newOtherDeduction.cashAdvanceSmall +
+        newOtherDeduction.bonusPayment;
+      setNewOtherDeduction({
+        ...newOtherDeduction,
+        otherDeduction: 0,
+        netAgentPayment: agentPay,
+        totalNetAgentPayment: totalPay,
+        deductDate: date,
+      });
+    }
+
     setDate(date);
   };
   //change bigCashDeduction
@@ -118,14 +143,14 @@ const ReturnCherootFive = ({
         item.agentId === newOtherDeduction.agentId &&
         itemdate.toLocaleDateString() === selectedDate.toLocaleDateString()
       );
-    })?.totalAmount;
+    });
     if (exit) {
       const agentPay =
         totalCherootAmount -
         totalLeafAmount -
         (newOtherDeduction.cashAdvanceSmallDeduction +
           newOtherDeduction.cashAdvanceBigDeduction +
-          exit);
+          exit.tolPrice);
 
       const totalPay =
         agentPay +
@@ -134,9 +159,10 @@ const ReturnCherootFive = ({
         newOtherDeduction.bonusPayment;
       setNewOtherDeduction({
         ...newOtherDeduction,
-        otherDeduction: exit,
+        otherDeduction: exit.tolPrice,
         netAgentPayment: agentPay,
         totalNetAgentPayment: totalPay,
+        purchaseSeq: exit.purchaseSeq,
       });
     } else {
       setNewOtherDeduction({

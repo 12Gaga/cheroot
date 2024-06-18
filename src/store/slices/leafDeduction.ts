@@ -70,8 +70,8 @@ const LeafDeductionSlice = createSlice({
     setLoadingLeafDeduction: (state, action: PayloadAction<boolean>) => {
       state.isLoading = action.payload;
     },
-    addLeafDeduction: (state, action: PayloadAction<LeafDeduction>) => {
-      state.item = [...state.item, action.payload];
+    addLeafDeduction: (state, action: PayloadAction<LeafDeduction[]>) => {
+      state.item = [...state.item, ...action.payload];
     },
   },
 });

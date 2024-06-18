@@ -7,6 +7,7 @@ import {
 import Config from "@/utils/config";
 import { Agent, WorkShop } from "@prisma/client";
 import { PayloadAction, createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { addAgentRemainCash } from "./agentRemainCash";
 
 const initialState: agentSlice = {
   item: [],
@@ -31,8 +32,9 @@ export const CreateAgent = createAsyncThunk(
           body: JSON.stringify({ name, phoneNo, address, cashBig, cashSmall }),
         }
       );
-      const { newAgent } = await response.json();
+      const { newAgent, newRemainCash } = await response.json();
       thunkApi.dispatch(addAgent(newAgent));
+      thunkApi.dispatch(addAgentRemainCash(newRemainCash));
       onSuccess && onSuccess();
     } catch (err) {
       onError && onError();

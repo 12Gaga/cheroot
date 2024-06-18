@@ -5,6 +5,7 @@ import {
 import Config from "@/utils/config";
 import { ExtraPurchase } from "@prisma/client";
 import { PayloadAction, createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { addExtraPurchaseSummery } from "./extraPurchaseSummery";
 
 const initialState: extraPurchaseSlice = {
   item: [],
@@ -72,8 +73,10 @@ export const CreateExtraPurchase = createAsyncThunk(
           }),
         }
       );
-      const { newExtraPurchase } = await response.json();
+      const { newExtraPurchase, newExtraPurchaseSummary } =
+        await response.json();
       thunkApi.dispatch(addExtraPurchase(newExtraPurchase));
+      thunkApi.dispatch(addExtraPurchaseSummery(newExtraPurchaseSummary));
       onSuccess && onSuccess();
     } catch (err) {
       onError && onError();

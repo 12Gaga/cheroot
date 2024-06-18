@@ -18,12 +18,19 @@ const AgentRemainLeaf = createSlice({
     setIsLoading: (state, action: PayloadAction<boolean>) => {
       state.isLoading = action.payload;
     },
-    addAgentRemainLeaf: (state, action: PayloadAction<AgentRemineLeaf>) => {
+    addAgentRemainLeaf: (state, action: PayloadAction<AgentRemineLeaf[]>) => {
+      state.item = [...action.payload];
+    },
+    addAgentSingleLeaf: (state, action: PayloadAction<AgentRemineLeaf>) => {
       state.item = [...state.item, action.payload];
     },
   },
 });
 
-export const { setAgentRemainLeaf, setIsLoading, addAgentRemainLeaf } =
-  AgentRemainLeaf.actions;
+export const {
+  setAgentRemainLeaf,
+  setIsLoading,
+  addAgentRemainLeaf,
+  addAgentSingleLeaf,
+} = AgentRemainLeaf.actions;
 export default AgentRemainLeaf.reducer;

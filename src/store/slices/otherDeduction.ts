@@ -5,6 +5,11 @@ import {
 import Config from "@/utils/config";
 import { OtherDeduction } from "@prisma/client";
 import { PayloadAction, createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { addAgentRemainCash } from "./agentRemainCash";
+import { addReturnCheroot } from "./returnCheroot";
+import { addLeafDeduction } from "./leafDeduction";
+import { addAgentRemainLeaf } from "./agentRemainLeaf";
+import { deleteExtraPurchseSummary } from "./extraPurchaseSummery";
 
 const initialState: otherDeductionSlice = {
   item: [],
@@ -16,6 +21,8 @@ export const CreateOtherDeduction = createAsyncThunk(
   "otherDeduction/CreateOtherDeduction",
   async (option: createNewOtherDeduction, thunkApi) => {
     const {
+      cheroots,
+      leaf,
       date,
       agentId,
       cashAdvanceBigDeduction,
@@ -26,6 +33,7 @@ export const CreateOtherDeduction = createAsyncThunk(
       netAgentPayment,
       bonusPayment,
       totalNetAgentPayment,
+      purchaseSeq,
       onSuccess,
       onError,
     } = option;
@@ -39,6 +47,8 @@ export const CreateOtherDeduction = createAsyncThunk(
             "content-type": "application/json",
           },
           body: JSON.stringify({
+            cheroots,
+            leaf,
             date,
             agentId,
             cashAdvanceBigDeduction,
@@ -49,11 +59,23 @@ export const CreateOtherDeduction = createAsyncThunk(
             netAgentPayment,
             bonusPayment,
             totalNetAgentPayment,
+            purchaseSeq,
           }),
         }
       );
-      const { newOtherDeduction } = await response.json();
+      const {
+        newOtherDeduction,
+        newRemainCash,
+        newReturnCheroot,
+        newLeafDeduction,
+        newRemainLeaf,
+      } = await response.json();
       thunkApi.dispatch(addOtherDeduction(newOtherDeduction));
+      thunkApi.dispatch(addAgentRemainCash(newRemainCash));
+      thunkApi.dispatch(addReturnCheroot(newReturnCheroot));
+      thunkApi.dispatch(addLeafDeduction(newLeafDeduction));
+      thunkApi.dispatch(addAgentRemainLeaf(newRemainLeaf));
+      thunkApi.dispatch(deleteExtraPurchseSummary(purchaseSeq));
       onSuccess && onSuccess();
     } catch (err) {
       onError && onError();

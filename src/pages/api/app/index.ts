@@ -378,6 +378,14 @@ export default async function handler(
     const shopTitle = await prisma.shopTitle.findMany({
       where: { workShopId: { in: workShopIds }, isArchived: false },
     });
+    //57. find agentRemainCash
+    const agentRemainCash = await prisma.agentRemainCash.findMany({
+      where: { workShopId: { in: workShopIds }, isArchived: false },
+    });
+    //58. find extraPurchaseSummary
+    const extraPurchaseSummary = await prisma.extraPurchaseSummery.findMany({
+      where: { workShopId: { in: workShopIds }, isArchived: false },
+    });
     return res.json({
       industry,
       workShop,
@@ -435,7 +443,9 @@ export default async function handler(
       cherootTransfer,
       packingData,
       agentReaminLeaf,
+      agentRemainCash,
       shopTitle,
+      extraPurchaseSummary,
     });
   }
 }

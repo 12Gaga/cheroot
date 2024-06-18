@@ -10,6 +10,7 @@ import {
   CreateLeafDeduction,
   setLoadingLeafDeduction,
 } from "@/store/slices/leafDeduction";
+import { setOtherDeduction } from "@/store/slices/otherDeduction";
 import {
   CreateReturnCheroot,
   setLoadingReturnCheroot,
@@ -47,6 +48,8 @@ const defaultLeafDeduction: createNewLeafDeduction = {
 };
 
 const defaultOtherDeduction: createNewOtherDeduction = {
+  cheroots: [],
+  leaf: [],
   date: null,
   deductDate: null,
   agentId: undefined,
@@ -58,6 +61,7 @@ const defaultOtherDeduction: createNewOtherDeduction = {
   netAgentPayment: 0,
   bonusPayment: 0,
   totalNetAgentPayment: 0,
+  purchaseSeq: "",
 };
 
 const ReturnCheroot = () => {
@@ -83,6 +87,11 @@ const ReturnCheroot = () => {
     useState<createNewOtherDeduction>(defaultOtherDeduction);
   const [totalCherootAmount, setTotalCherootAmount] = useState<number>(0);
   const [totalLeafAmount, setTotalLeafAmount] = useState<number>(0);
+  const [collectCheroot, setCollectCheroot] = useState<
+    createNewReturnCheroot[]
+  >([]);
+  const [collectLeaf, setCollectLeaf] = useState<createNewLeafDeduction[]>([]);
+
   useEffect(() => {
     setNewReturnCheroot({ ...newReturnCheroot, date: selecteddate });
     setNewLeafDeduction({ ...newLeafDeduction, date: selecteddate });
@@ -92,7 +101,9 @@ const ReturnCheroot = () => {
       deductDate: selecteddate,
     });
   }, [selecteddate]);
-  console.log("otjew", newOtherDeduction);
+  console.log("cheroot", collectCheroot);
+  console.log("leaf", collectLeaf);
+  console.log("deduction", newOtherDeduction);
   if (!session) return;
   return (
     <>
@@ -142,24 +153,32 @@ const ReturnCheroot = () => {
             <LoadingButton
               variant="contained"
               onClick={() => {
-                dispatch(setLoadingReturnCheroot(true));
-                dispatch(
-                  CreateReturnCheroot({
-                    ...newReturnCheroot,
-                    onSuccess: () => {
-                      dispatch(
-                        setOpenSnackbar({
-                          message: "Add Return Cheroot success",
-                        })
-                      );
-                      dispatch(setLoadingReturnCheroot(false));
-                      setNo(no + 1);
-                      setTotalCherootAmount(
-                        totalCherootAmount + newReturnCheroot.amount
-                      );
-                    },
-                  })
+                setNewOtherDeduction({
+                  ...newOtherDeduction,
+                  cheroots: [...newOtherDeduction.cheroots, newReturnCheroot],
+                });
+                setNo(no + 1);
+                setTotalCherootAmount(
+                  totalCherootAmount + newReturnCheroot.amount
                 );
+                // dispatch(setLoadingReturnCheroot(true));
+                // dispatch(
+                //   CreateReturnCheroot({
+                //     ...newReturnCheroot,
+                //     onSuccess: () => {
+                //       dispatch(
+                //         setOpenSnackbar({
+                //           message: "Add Return Cheroot success",
+                //         })
+                //       );
+                //       dispatch(setLoadingReturnCheroot(false));
+                //       setNo(no + 1);
+                //       setTotalCherootAmount(
+                //         totalCherootAmount + newReturnCheroot.amount
+                //       );
+                //     },
+                //   })
+                // );
               }}
               loading={cherootLoading}
             >
@@ -212,23 +231,30 @@ const ReturnCheroot = () => {
         <LoadingButton
           variant="contained"
           onClick={() => {
-            dispatch(setLoadingLeafDeduction(true));
-            dispatch(
-              CreateLeafDeduction({
-                ...newLeafDeduction,
-                onSuccess: () => {
-                  dispatch(
-                    setOpenSnackbar({
-                      message: "Add Leaf Deduction success",
-                    })
-                  );
-                  dispatch(setLoadingLeafDeduction(false));
-                  setTotalLeafAmount(
-                    totalLeafAmount + newLeafDeduction.deductionAmount
-                  );
-                },
-              })
+            setNewOtherDeduction({
+              ...newOtherDeduction,
+              leaf: [...newOtherDeduction.leaf, newLeafDeduction],
+            });
+            setTotalLeafAmount(
+              totalLeafAmount + newLeafDeduction.deductionAmount
             );
+            // dispatch(setLoadingLeafDeduction(true));
+            // dispatch(
+            //   CreateLeafDeduction({
+            //     ...newLeafDeduction,
+            //     onSuccess: () => {
+            //       dispatch(
+            //         setOpenSnackbar({
+            //           message: "Add Leaf Deduction success",
+            //         })
+            //       );
+            //       dispatch(setLoadingLeafDeduction(false));
+            //       setTotalLeafAmount(
+            //         totalLeafAmount + newLeafDeduction.deductionAmount
+            //       );
+            //     },
+            //   })
+            // );
           }}
           loading={leafDeductionLoading}
         >

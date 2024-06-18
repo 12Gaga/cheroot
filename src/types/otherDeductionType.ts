@@ -1,5 +1,7 @@
 import { OtherDeduction } from "@prisma/client";
 import { BasicOption } from "./appType";
+import { createNewReturnCheroot } from "./returnCherootType";
+import { createNewLeafDeduction } from "./leafDeductionType";
 
 export interface otherDeductionSlice {
   item: OtherDeduction[];
@@ -8,6 +10,8 @@ export interface otherDeductionSlice {
 }
 
 export interface createNewOtherDeduction extends BasicOption {
+  cheroots: createNewReturnCheroot[];
+  leaf: createNewLeafDeduction[];
   date: Date | null;
   deductDate: Date | null;
   agentId: number | undefined;
@@ -19,4 +23,5 @@ export interface createNewOtherDeduction extends BasicOption {
   netAgentPayment: number;
   bonusPayment: number;
   totalNetAgentPayment: number;
+  purchaseSeq: string;
 }
