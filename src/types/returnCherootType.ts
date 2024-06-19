@@ -16,4 +16,5 @@ export interface createNewReturnCheroot extends BasicOption {
   totalCherootQty: number;
   goodPrice: number;
   amount: number;
+  reduceBandle: number | undefined;
 }

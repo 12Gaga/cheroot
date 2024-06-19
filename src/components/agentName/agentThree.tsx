@@ -29,11 +29,11 @@ const AgentThree = ({ newAgentLeafViss, setNewAgentLeafViss }: Props) => {
     <>
       <Box>
         <Box>
-          <Box sx={{ width: 300, mt: 2 }}>
+          <Box sx={{ mt: 2 }}>
             <Typography sx={{ fontWeight: "bold" }}>
               ကိုယ်စားလှယ်အမည်
             </Typography>
-            <FormControl variant="filled" sx={{ width: 225 }}>
+            <FormControl variant="filled" sx={{ width: 300 }}>
               <Select
                 labelId="demo-simple-select-filled-label"
                 id="demo-simple-select-filled"
@@ -55,9 +55,9 @@ const AgentThree = ({ newAgentLeafViss, setNewAgentLeafViss }: Props) => {
             </FormControl>
           </Box>
 
-          <Box sx={{ width: 300, mt: 2 }}>
+          <Box sx={{ mt: 2 }}>
             <Typography sx={{ fontWeight: "bold" }}>ဖက်အမျိုးအစား</Typography>
-            <FormControl variant="filled" sx={{ width: 225 }}>
+            <FormControl variant="filled" sx={{ width: 300 }}>
               <Select
                 labelId="demo-simple-select-filled-label"
                 id="demo-simple-select-filled"
@@ -79,11 +79,11 @@ const AgentThree = ({ newAgentLeafViss, setNewAgentLeafViss }: Props) => {
             </FormControl>
           </Box>
 
-          <Box sx={{ width: 300, mt: 2 }}>
+          <Box sx={{ mt: 2 }}>
             <Typography sx={{ fontWeight: "bold" }}>ဖက်ပိဿာ</Typography>
             <TextField
               placeholder="ဖက်ပိဿာ"
-              sx={{ bgcolor: "#EEE8CF" }}
+              sx={{ bgcolor: "#EEE8CF", width: 300 }}
               onChange={(evt) =>
                 setNewAgentLeafViss({
                   ...newAgentLeafViss,

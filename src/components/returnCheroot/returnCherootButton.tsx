@@ -44,6 +44,13 @@ const ReturnCherootButton = ({ newOtherDeduction }: Props) => {
         <LoadingButton
           loading={isLoading}
           variant="contained"
+          disabled={
+            !newOtherDeduction.cashAdvanceBigDeduction === undefined ||
+            !newOtherDeduction.cashAdvanceSmallDeduction === undefined ||
+            !newOtherDeduction.cashAdvanceBig === undefined ||
+            !newOtherDeduction.cashAdvanceSmall === undefined ||
+            !newOtherDeduction.bonusPayment === undefined
+          }
           sx={{
             bgcolor: "#E55252",
             mr: 2,

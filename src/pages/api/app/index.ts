@@ -386,6 +386,18 @@ export default async function handler(
     const extraPurchaseSummary = await prisma.extraPurchaseSummery.findMany({
       where: { workShopId: { in: workShopIds }, isArchived: false },
     });
+    //59. find agentRemainFilterSize
+    const agentRemainFilterSize = await prisma.agentLeftFilterSize.findMany({
+      where: { workShopId: { in: workShopIds }, isArchived: false },
+    });
+    //60. find agentRemainTabacco
+    const agentRemainTabacco = await prisma.agentLeftTabacco.findMany({
+      where: { workShopId: { in: workShopIds }, isArchived: false },
+    });
+    //61. find agentRemainLabel
+    const agentRemainLabel = await prisma.agentLeftLabel.findMany({
+      where: { workShopId: { in: workShopIds }, isArchived: false },
+    });
     return res.json({
       industry,
       workShop,
@@ -446,6 +458,9 @@ export default async function handler(
       agentRemainCash,
       shopTitle,
       extraPurchaseSummary,
+      agentRemainFilterSize,
+      agentRemainTabacco,
+      agentRemainLabel,
     });
   }
 }

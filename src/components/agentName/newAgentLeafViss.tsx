@@ -52,7 +52,13 @@ const NewAgentLeafViss = ({ open, setOpen }: Props) => {
   };
   return (
     <>
-      <Dialog open={open} onClose={() => setOpen(false)}>
+      <Dialog
+        open={open}
+        onClose={() => {
+          setOpen(false);
+          setNewAgentLeafViss(defaultValue);
+        }}
+      >
         <DialogTitle>ဖက်လက်ကျန်ထည့်စာရင်း</DialogTitle>
         <DialogContent>
           <Box sx={{ display: "flex", mt: 2 }}>

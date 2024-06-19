@@ -1,8 +1,9 @@
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { Box, Button, Typography } from "@mui/material";
 import { useRouter } from "next/router";
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
 import Image from "next/image";
+import { fetchApp } from "@/store/slices/app";
 const Printing = () => {
   const tableRef = useRef(null);
   const router = useRouter();
@@ -10,21 +11,22 @@ const Printing = () => {
   const { date, deductDate } = router.query;
   console.log("date1", date);
   console.log("date2", deductDate);
-  const findCherootDate = new Date(date as string);
-  const findExtraPurchaseDate = new Date(deductDate as string);
-  const cherootMonth = findCherootDate.getMonth();
-  const cherootYear = findCherootDate.getFullYear();
-  const cherootDay = findCherootDate.getDate();
-  const cherootDate = new Date(
-    `${cherootYear},${cherootMonth + 1},${cherootDay - 1}`
-  );
-
-  const extraMonth = findExtraPurchaseDate.getMonth();
-  const extraYear = findExtraPurchaseDate.getFullYear();
-  const extraDay = findExtraPurchaseDate.getDate();
-  const extraPurchaseDate = new Date(
-    `${extraYear},${extraMonth + 1},${extraDay - 1}`
-  );
+  const cherootDate = new Date(date as string);
+  const extraPurchaseDate = new Date(deductDate as string);
+  // const findCherootDate = new Date(date as string);
+  // const findExtraPurchaseDate = new Date(deductDate as string);
+  // const cherootMonth = findCherootDate.getMonth();
+  // const cherootYear = findCherootDate.getFullYear();
+  // const cherootDay = findCherootDate.getDate();
+  // const cherootDate = new Date(
+  //   `${cherootYear},${cherootMonth + 1},${cherootDay - 1}`
+  // );
+  // const extraMonth = findExtraPurchaseDate.getMonth();
+  // const extraYear = findExtraPurchaseDate.getFullYear();
+  // const extraDay = findExtraPurchaseDate.getDate();
+  // const extraPurchaseDate = new Date(
+  //   `${extraYear},${extraMonth + 1},${extraDay - 1}`
+  // );
   console.log("cherootdate1", cherootDate);
   console.log("cherootdate2", extraPurchaseDate);
   const agentId = Number(router.query.agentId);
@@ -82,6 +84,10 @@ const Printing = () => {
     }
   };
   console.log("consern", concernextraPurchase);
+
+  useEffect(() => {
+    dispatch(fetchApp({}));
+  }, []);
 
   if (!date || !deductDate || !agentId) return null;
   return (

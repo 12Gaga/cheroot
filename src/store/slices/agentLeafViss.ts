@@ -7,7 +7,7 @@ import {
 import Config from "@/utils/config";
 import { AgentLeafViss } from "@prisma/client";
 import { PayloadAction, createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { addAgentSingleLeaf } from "./agentRemainLeaf";
+import { addAgentRemainLeaf } from "./agentRemainLeaf";
 
 const initialState: agentLeafVissSlice = {
   item: [],
@@ -33,7 +33,7 @@ export const CreateAgentLeafViss = createAsyncThunk(
       );
       const { newAgentLeafViss, newRemainLeaf } = await response.json();
       thunkApi.dispatch(addAgentLeafViss(newAgentLeafViss));
-      thunkApi.dispatch(addAgentSingleLeaf(newRemainLeaf));
+      thunkApi.dispatch(addAgentRemainLeaf(newRemainLeaf));
       onSuccess && onSuccess();
     } catch (err) {
       onError && onError();

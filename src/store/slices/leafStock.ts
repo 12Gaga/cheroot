@@ -242,23 +242,27 @@ export const CreateLoopLeafAddStock = createAsyncThunk(
       onSuccess,
       onError,
     } = option;
+    const workShopId = localStorage.getItem("selectedWorkShopId");
     try {
-      const response = await fetch(`${Config.apiBaseUrl}/leafStock?loop=1`, {
-        method: "POST",
-        headers: {
-          "content-type": "application/json",
-        },
-        body: JSON.stringify({
-          date,
-          invNo,
-          carNo,
-          typeOfLeafId,
-          batchNo,
-          viss,
-          garageId,
-          shopId,
-        }),
-      });
+      const response = await fetch(
+        `${Config.apiBaseUrl}/leafStock?loop=1&workShopId=${workShopId}`,
+        {
+          method: "POST",
+          headers: {
+            "content-type": "application/json",
+          },
+          body: JSON.stringify({
+            date,
+            invNo,
+            carNo,
+            typeOfLeafId,
+            batchNo,
+            viss,
+            garageId,
+            shopId,
+          }),
+        }
+      );
       const { newleafLoopAddStock, newLoopAddStock } = await response.json();
       thunkApi.dispatch(addLoopStock(newleafLoopAddStock));
       thunkApi.dispatch(addAddLoopStock(newLoopAddStock));

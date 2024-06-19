@@ -1,4 +1,5 @@
 import { prisma } from "@/utils/db";
+import { WorkShop } from "@prisma/client";
 import { nanoid } from "@reduxjs/toolkit";
 import type { NextApiRequest, NextApiResponse } from "next";
 
@@ -21,6 +22,7 @@ export default async function handler(
         garageId,
         shopId,
       } = req.body;
+      const workShopId = Number(req.query.workShopId);
       const isValid =
         date &&
         invNo != undefined &&
@@ -54,11 +56,26 @@ export default async function handler(
           data: { date, invNo, carNo, typeOfLeafId, garageId, stockSeq },
         });
       }
+      const workshop = (await prisma.workShop.findFirst({
+        where: { id: workShopId },
+      })) as WorkShop;
+      const concernWorkshops = await prisma.workShop.findMany({
+        where: {
+          cigratteIndustryId: workshop.cigratteIndustryId,
+          isArchived: false,
+        },
+      });
+      const concernWorkShopIds = concernWorkshops.map((w) => w.id);
+      const concernGarageIds = (
+        await prisma.garage.findMany({
+          where: { workShopId: { in: concernWorkShopIds }, isArchived: false },
+        })
+      ).map((g) => g.id);
       const newleafLoopAddStock = await prisma.leaf.findMany({
-        where: { isArchived: false },
+        where: { garageId: { in: concernGarageIds }, isArchived: false },
       });
       const newLoopAddStock = await prisma.addStock.findMany({
-        where: { isArchived: false },
+        where: { garageId: { in: concernGarageIds }, isArchived: false },
       });
       return res.status(200).json({ newleafLoopAddStock, newLoopAddStock });
     } else if (!invNo) {

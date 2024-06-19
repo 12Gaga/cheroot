@@ -6,21 +6,11 @@ import ReturnCherootSix from "@/components/returnCheroot/returnCherootSix";
 import ReturnCherootThree from "@/components/returnCheroot/returnCherootThree";
 import ReturnCherootTwo from "@/components/returnCheroot/returnCherootTwo";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
-import {
-  CreateLeafDeduction,
-  setLoadingLeafDeduction,
-} from "@/store/slices/leafDeduction";
-import { setOtherDeduction } from "@/store/slices/otherDeduction";
-import {
-  CreateReturnCheroot,
-  setLoadingReturnCheroot,
-} from "@/store/slices/returnCheroot";
-import { setOpenSnackbar } from "@/store/slices/snackBar";
 import { createNewLeafDeduction } from "@/types/leafDeductionType";
 import { createNewOtherDeduction } from "@/types/otherDeductionType";
 import { createNewReturnCheroot } from "@/types/returnCherootType";
 import { LoadingButton } from "@mui/lab";
-import { Box, Button, Typography } from "@mui/material";
+import { Box, Button, TextField, Typography } from "@mui/material";
 import { OtherDeduction } from "@prisma/client";
 import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
@@ -36,6 +26,7 @@ const defaultReturnCheroot: createNewReturnCheroot = {
   totalCherootQty: 0,
   goodPrice: 0,
   amount: 0,
+  reduceBandle: undefined,
 };
 
 const defaultLeafDeduction: createNewLeafDeduction = {
@@ -129,7 +120,7 @@ const ReturnCheroot = () => {
         />
       </Box>
 
-      <Box sx={{ display: "flex", mt: 2 }}>
+      <Box sx={{ display: "flex", my: 2.5 }}>
         <Box
           sx={{
             width: "75%",
@@ -149,41 +140,60 @@ const ReturnCheroot = () => {
             setNewReturnCheroot={setNewReturnCheroot}
             totalAmount={totalCherootAmount}
           />
-          <Box sx={{ display: "flex", justifyContent: "flex-end", mr: 2 }}>
-            <LoadingButton
-              variant="contained"
-              onClick={() => {
-                setNewOtherDeduction({
-                  ...newOtherDeduction,
-                  cheroots: [...newOtherDeduction.cheroots, newReturnCheroot],
-                });
-                setNo(no + 1);
-                setTotalCherootAmount(
-                  totalCherootAmount + newReturnCheroot.amount
-                );
-                // dispatch(setLoadingReturnCheroot(true));
-                // dispatch(
-                //   CreateReturnCheroot({
-                //     ...newReturnCheroot,
-                //     onSuccess: () => {
-                //       dispatch(
-                //         setOpenSnackbar({
-                //           message: "Add Return Cheroot success",
-                //         })
-                //       );
-                //       dispatch(setLoadingReturnCheroot(false));
-                //       setNo(no + 1);
-                //       setTotalCherootAmount(
-                //         totalCherootAmount + newReturnCheroot.amount
-                //       );
-                //     },
-                //   })
-                // );
-              }}
-              loading={cherootLoading}
-            >
-              သိမ်းမည်
-            </LoadingButton>
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+            }}
+          >
+            <Box sx={{ ml: 4 }}>
+              <Typography sx={{ fontWeight: "bold" }}>
+                နှုတ်မည့်တံဆိပ်လိပ်
+              </Typography>
+              <TextField
+                placeholder="နှုတ်မည့်တံဆိပ်လိပ်"
+                sx={{ bgcolor: "#EEE8CF", width: 220 }}
+                onChange={(evt) =>
+                  setNewReturnCheroot({
+                    ...newReturnCheroot,
+                    reduceBandle: Number(evt.target.value),
+                  })
+                }
+              />
+            </Box>
+            <Box sx={{ display: "flex", justifyContent: "flex-end", mr: 2 }}>
+              <LoadingButton
+                variant="contained"
+                disabled={
+                  !newReturnCheroot.agentId ||
+                  !newReturnCheroot.damage ||
+                  !newReturnCheroot.goodQty ||
+                  !newReturnCheroot.typeOfCherootId ||
+                  newReturnCheroot.reduceBandle === undefined
+                }
+                onClick={() => {
+                  setNewOtherDeduction({
+                    ...newOtherDeduction,
+                    cheroots: [...newOtherDeduction.cheroots, newReturnCheroot],
+                  });
+                  setNo(no + 1);
+                  setTotalCherootAmount(
+                    totalCherootAmount + newReturnCheroot.amount
+                  );
+                  setNewReturnCheroot({
+                    ...newReturnCheroot,
+                    typeOfCherootId: undefined,
+                    goodQty: 0,
+                    damage: 0,
+                    reduceBandle: undefined,
+                  });
+                }}
+                loading={cherootLoading}
+              >
+                သိမ်းမည်
+              </LoadingButton>
+            </Box>
           </Box>
         </Box>
 
@@ -230,6 +240,11 @@ const ReturnCheroot = () => {
       <Box sx={{ display: "flex", justifyContent: "flex-end", mt: 2 }}>
         <LoadingButton
           variant="contained"
+          disabled={
+            !newLeafDeduction.typeOfLeafId ||
+            !newLeafDeduction.deductViss ||
+            !newLeafDeduction.agentId
+          }
           onClick={() => {
             setNewOtherDeduction({
               ...newOtherDeduction,
@@ -238,23 +253,11 @@ const ReturnCheroot = () => {
             setTotalLeafAmount(
               totalLeafAmount + newLeafDeduction.deductionAmount
             );
-            // dispatch(setLoadingLeafDeduction(true));
-            // dispatch(
-            //   CreateLeafDeduction({
-            //     ...newLeafDeduction,
-            //     onSuccess: () => {
-            //       dispatch(
-            //         setOpenSnackbar({
-            //           message: "Add Leaf Deduction success",
-            //         })
-            //       );
-            //       dispatch(setLoadingLeafDeduction(false));
-            //       setTotalLeafAmount(
-            //         totalLeafAmount + newLeafDeduction.deductionAmount
-            //       );
-            //     },
-            //   })
-            // );
+            setNewLeafDeduction({
+              ...newLeafDeduction,
+              typeOfLeafId: undefined,
+              deductViss: 0,
+            });
           }}
           loading={leafDeductionLoading}
         >

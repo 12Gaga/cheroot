@@ -33,6 +33,7 @@ export const CreateOtherDeduction = createAsyncThunk(
       netAgentPayment,
       bonusPayment,
       totalNetAgentPayment,
+      reduceBandle,
       purchaseSeq,
       onSuccess,
       onError,
@@ -59,6 +60,7 @@ export const CreateOtherDeduction = createAsyncThunk(
             netAgentPayment,
             bonusPayment,
             totalNetAgentPayment,
+            reduceBandle,
             purchaseSeq,
           }),
         }
@@ -68,13 +70,11 @@ export const CreateOtherDeduction = createAsyncThunk(
         newRemainCash,
         newReturnCheroot,
         newLeafDeduction,
-        newRemainLeaf,
       } = await response.json();
       thunkApi.dispatch(addOtherDeduction(newOtherDeduction));
       thunkApi.dispatch(addAgentRemainCash(newRemainCash));
       thunkApi.dispatch(addReturnCheroot(newReturnCheroot));
       thunkApi.dispatch(addLeafDeduction(newLeafDeduction));
-      thunkApi.dispatch(addAgentRemainLeaf(newRemainLeaf));
       thunkApi.dispatch(deleteExtraPurchseSummary(purchaseSeq));
       onSuccess && onSuccess();
     } catch (err) {

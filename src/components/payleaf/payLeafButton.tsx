@@ -35,6 +35,12 @@ const PayLeafButton = ({ newPayLeaf, setNewPayLeaf, defaultValue }: Props) => {
         <LoadingButton
           loading={isLoading}
           variant="contained"
+          disabled={
+            !newPayLeaf.garageId ||
+            !newPayLeaf.agentId ||
+            !newPayLeaf.typeOfLeafId ||
+            !newPayLeaf.batchNo.length
+          }
           sx={{
             bgcolor: "#E55252",
             mr: 2,

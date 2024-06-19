@@ -230,6 +230,29 @@ const FilterTabLabelReport = [
   },
 ];
 
+const AgentConcernData = [
+  {
+    label: "ကိုယ်စားလှယ်အမည်",
+    url: "/admin/name",
+  },
+  {
+    label: "ဖက်လက်ကျန်",
+    url: "/admin/name/leafViss",
+  },
+  {
+    label: "အစီခံလက်ကျန်",
+    url: "/admin/name/remainFilterSize",
+  },
+  {
+    label: "ဆေးစပ်လက်ကျန်",
+    url: "/admin/name/remainTabacco",
+  },
+  {
+    label: "တံဆိပ်လက်ကျန်",
+    url: "/admin/name/remainLabel",
+  },
+];
+
 const AdminLayout = ({ children }: Props) => {
   const { data: session } = useSession();
   const router = useRouter();
@@ -247,6 +270,7 @@ const AdminLayout = ({ children }: Props) => {
   const leafReport = router.pathname.includes("leafReport");
   const garageReport = router.pathname.includes("garageReport");
   const agentItemReport = router.pathname.includes("agentItemsReport");
+  const agentConcernData = router.pathname.includes("name");
   const { selectedWorkShop, item: workShops } = useAppSelector(
     (store) => store.workShop
   );
@@ -285,6 +309,8 @@ const AdminLayout = ({ children }: Props) => {
     data = [...LeafReport];
   } else if (agentItemReport) {
     data = [...FilterTabLabelReport];
+  } else if (agentConcernData) {
+    data = [...AgentConcernData];
   }
 
   if (!session) return null;
@@ -369,6 +395,11 @@ const AdminLayout = ({ children }: Props) => {
         {agentItemReport && (
           <Typography variant="h5" sx={{ color: "white", fontWeight: "bold" }}>
             ကိုယ်စားလှယ်ပစ္စည်းလက်ကျန်စစ်ခြင်း
+          </Typography>
+        )}
+        {agentConcernData && (
+          <Typography variant="h5" sx={{ color: "white", fontWeight: "bold" }}>
+            ကိုယ်စားလှယ်အမည်စာရင်း
           </Typography>
         )}
         <Box sx={{ display: "flex" }}>

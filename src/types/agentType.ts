@@ -30,7 +30,7 @@ export interface deleteAgent extends BasicOption {
 
 export interface selectedAgent {
   agentId: number | undefined;
-  phoneNo: number | undefined;
+  phoneNo: string;
   address: string;
   cashBig: number | undefined;
   cashSmall: number | undefined;

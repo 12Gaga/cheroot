@@ -6,21 +6,19 @@ import { useSession } from "next-auth/react";
 import React, { useState } from "react";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
-import UpdateAgentLeafViss from "@/components/agentName/updateAgentLeafViss";
-import DeleteAgentLeafViss from "@/components/agentName/deleteAgentLeafViss";
 import AdminLayout from "@/components/adminLayout";
-const AgentLeafVissPage = () => {
+import NewAgentRemainFilterSize from "@/components/agentName/newAgentRemainFilter";
+import NewAgentRemainTabacco from "@/components/agentName/newAgentRemainTabacco";
+const AgentRemainTabaccoPage = () => {
   const { data: session } = useSession();
   const [open, setOpen] = useState<boolean>(false);
   const agent = useAppSelector((store) => store.agent.item);
   const workShop = useAppSelector((store) => store.workShop.selectedWorkShop);
   const concetnAgent = agent.filter((item) => item.workShopId === workShop?.id);
-  const leaves = useAppSelector((store) => store.typeOfLeaf.item);
-  const concernLeaves = leaves.filter(
-    (item) => item.workShopId === workShop?.id
-  );
-  const leafViss = useAppSelector((store) => store.agentLeafViss.item);
-  const concernLeafViss = leafViss.filter(
+  const tabaccos = useAppSelector((store) => store.typeOfTabacco.item);
+  const cheroots = useAppSelector((store) => store.typeOfCheroot.item);
+  const leftTabacco = useAppSelector((store) => store.agentRemainTabacco.item);
+  const concernLeftTabacco = leftTabacco.filter(
     (item) => item.workShopId === workShop?.id
   );
   const [updateOpen, setUpdateOpen] = useState<boolean>(false);
@@ -32,7 +30,7 @@ const AgentLeafVissPage = () => {
     <>
       <AdminLayout>
         <Typography variant="h6" sx={{ textAlign: "center" }}>
-          ဖက်လက်ကျန်ထည့်ခြင်း
+          ဆေးစပ်လက်ကျန်ထည့်ခြင်း
         </Typography>
 
         <Box sx={{ display: "flex", justifyContent: "flex-end" }}>
@@ -50,11 +48,13 @@ const AgentLeafVissPage = () => {
               <tr style={{ border: "1px solid" }}>
                 <th>စဉ်</th>
                 <th>အမည်</th>
-                <th>ဖက်အမျိုးအစား</th>
-                <th>ပိဿာ</th>
+                <th>ဆေးလိပ်အမျိုးအစား</th>
+                <th>ဆေးစပ်အမျိုးအစား</th>
+                <th>လက်ကျန်(တင်း)</th>
+                <th>လက်ကျန်(ပြည်)</th>
               </tr>
             </thead>
-            {concernLeafViss.map((item) => (
+            {concernLeftTabacco.map((item) => (
               <thead key={item.id}>
                 <tr style={{ border: "1px solid" }}>
                   <td>{(no += 1)}</td>
@@ -62,12 +62,13 @@ const AgentLeafVissPage = () => {
                     {concetnAgent.find((a) => a.id === item.agentId)?.name}
                   </td>
                   <td>
-                    {
-                      concernLeaves.find((l) => l.id === item.typeOfLeafId)
-                        ?.name
-                    }
+                    {cheroots.find((a) => a.id === item.typeOfCherootId)?.name}
                   </td>
-                  <td>{item.viss}</td>
+                  <td>
+                    {tabaccos.find((f) => f.id === item.typeOfTabaccoId)?.name}
+                  </td>
+                  <td>{item.tin}</td>
+                  <td>{item.pyi}</td>
                   {/* <td
                     onClick={() => {
                       setUpdateOpen(true), setSelectId(item.id);
@@ -87,19 +88,9 @@ const AgentLeafVissPage = () => {
             ))}
           </table>
         </Box>
-        <NewAgentLeafViss open={open} setOpen={setOpen} />
-        <UpdateAgentLeafViss
-          updateOpen={updateOpen}
-          setUpdateOpen={setUpdateOpen}
-          selectedId={selectId}
-        />
-        <DeleteAgentLeafViss
-          deleteOpen={deleteOpen}
-          setDeleteOpen={setDeleteOpen}
-          selectedId={selectId}
-        />
+        <NewAgentRemainTabacco open={open} setOpen={setOpen} />
       </AdminLayout>
     </>
   );
 };
-export default AgentLeafVissPage;
+export default AgentRemainTabaccoPage;

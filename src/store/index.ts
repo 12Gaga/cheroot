@@ -61,6 +61,9 @@ import agentRemainLeafReducer from "./slices/agentRemainLeaf";
 import agentRemainCashReducer from "./slices/agentRemainCash";
 import shopTilteReducer from "./slices/typeOfShopTitle";
 import extraPurchaseSummaryReducer from "./slices/extraPurchaseSummery";
+import agentRemainFilterReducer from "./slices/agentRemainFilter";
+import agentRemainTabaccoReducer from "./slices/agentRemainTabacco";
+import agetnRemainLabelReducer from "./slices/agentRemainLabel";
 
 export const store = configureStore({
   reducer: {
@@ -126,6 +129,9 @@ export const store = configureStore({
     agentReaminCash: agentRemainCashReducer,
     shopTitle: shopTilteReducer,
     extraPurchaseSummary: extraPurchaseSummaryReducer,
+    agentRemainFilter: agentRemainFilterReducer,
+    agentRemainTabacco: agentRemainTabaccoReducer,
+    agentRemainLabel: agetnRemainLabelReducer,
   },
 });
 

@@ -60,6 +60,9 @@ import { setAgentRemainLeaf } from "./agentRemainLeaf";
 import { setShopTitle } from "./typeOfShopTitle";
 import { setAgentRemainCash } from "./agentRemainCash";
 import { setExtraPurchaseSummery } from "./extraPurchaseSummery";
+import { setAgentRemainFilter } from "./agentRemainFilter";
+import { setAgentRemainTabacco } from "./agentRemainTabacco";
+import { setAgentRemainLabel } from "./agentRemainLabel";
 
 const initialState: appSlice = {
   init: false,
@@ -134,6 +137,9 @@ export const fetchApp = createAsyncThunk(
         agentRemainCash,
         shopTitle,
         extraPurchaseSummary,
+        agentRemainFilterSize,
+        agentRemainTabacco,
+        agentRemainLabel,
       } = dataFromServer;
       thunkApi.dispatch(setInit(true));
       thunkApi.dispatch(setIndustry(industry));
@@ -197,6 +203,9 @@ export const fetchApp = createAsyncThunk(
       thunkApi.dispatch(setAgentRemainCash(agentRemainCash));
       thunkApi.dispatch(setShopTitle(shopTitle));
       thunkApi.dispatch(setExtraPurchaseSummery(extraPurchaseSummary));
+      thunkApi.dispatch(setAgentRemainFilter(agentRemainFilterSize));
+      thunkApi.dispatch(setAgentRemainTabacco(agentRemainTabacco));
+      thunkApi.dispatch(setAgentRemainLabel(agentRemainLabel));
       onSuccess && onSuccess();
     } catch (err) {
       onError && onError(err);

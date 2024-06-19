@@ -1,6 +1,5 @@
 import { Leaf } from "@prisma/client";
 import { BasicOption } from "./appType";
-import typeOfShop from "@/store/slices/typeOfShop";
 
 export interface leafStockSlice {
   item: Leaf[];

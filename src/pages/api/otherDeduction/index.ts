@@ -1,12 +1,7 @@
 import { createNewLeafDeduction } from "@/types/leafDeductionType";
 import { createNewReturnCheroot } from "@/types/returnCherootType";
 import { prisma } from "@/utils/db";
-import {
-  Agent,
-  AgentLeafViss,
-  AgentRemineLeaf,
-  WorkShop,
-} from "@prisma/client";
+import { Agent } from "@prisma/client";
 import { nanoid } from "@reduxjs/toolkit";
 import type { NextApiRequest, NextApiResponse } from "next";
 
@@ -139,7 +134,7 @@ export default async function handler(
       )
     );
     //remain leaf
-    leaf.map(async (l) => {
+    leaf.forEach(async (l) => {
       const leftViss = await prisma.agentLeafViss.findFirst({
         where: { typeOfLeafId: l.typeOfLeafId, agentId },
       });
@@ -164,18 +159,65 @@ export default async function handler(
       });
     });
 
-    const workshop = (await prisma.workShop.findFirst({
-      where: { id: workShopId },
-    })) as WorkShop;
-    const concernWorkshops = await prisma.workShop.findMany({
-      where: {
-        cigratteIndustryId: workshop.cigratteIndustryId,
-        isArchived: false,
-      },
+    //remain filterSize
+    cheroot.forEach(async (c) => {
+      const leftQuantity = await prisma.agentLeftFilterSize.findFirst({
+        where: { agentId, typeOfCherootId: c.typeOfCherootId },
+      });
+
+      if (!leftQuantity) return;
+      const formula = await prisma.formula.findFirst({
+        where: { typeOfCherootId: c.typeOfCherootId },
+      });
+      if (!formula) return;
+      const qty =
+        (formula.filterSizeQty * c.totalCherootQty) / formula.cherootQty;
+
+      const remainQty = leftQuantity.quantity - qty;
+      await prisma.agentLeftFilterSize.updateMany({
+        data: { quantity: remainQty },
+        where: { agentId, typeOfCherootId: c.typeOfCherootId },
+      });
     });
-    const concernWorkShopIds = concernWorkshops.map((w) => w.id);
-    const newRemainLeaf = await prisma.agentRemineLeaf.findMany({
-      where: { workShopId: { in: concernWorkShopIds }, isArchived: false },
+
+    //remain Tabacco
+    cheroot.forEach(async (c) => {
+      const leftTabacco = await prisma.agentLeftTabacco.findFirst({
+        where: { agentId, typeOfCherootId: c.typeOfCherootId },
+      });
+
+      if (!leftTabacco) return;
+      const formula = await prisma.formula.findFirst({
+        where: { typeOfCherootId: c.typeOfCherootId },
+      });
+      if (!formula) return;
+      const tin = (formula.tabaccoTin * c.totalCherootQty) / formula.cherootQty;
+      const pyi = (formula.tabaccoPyi * c.totalCherootQty) / formula.cherootQty;
+      const tolPyi = tin * 16 + pyi;
+      const leftTolPyi = leftTabacco.tin * 16 + leftTabacco.pyi;
+      const Pyi = leftTolPyi - tolPyi;
+      const remainTin = Math.floor(Pyi / 16);
+      const remainPyi = Pyi % 16;
+      await prisma.agentLeftTabacco.updateMany({
+        data: { tin: remainTin, pyi: remainPyi },
+        where: { agentId, typeOfCherootId: c.typeOfCherootId },
+      });
+    });
+
+    //remain Label
+    cheroot.forEach(async (c) => {
+      const leftBandle = await prisma.agentLeftLabel.findFirst({
+        where: { agentId, typeOfCherootId: c.typeOfCherootId },
+      });
+
+      if (!leftBandle) return;
+      if (c.reduceBandle === undefined) return;
+      const remainBandle = leftBandle.bandle - c.reduceBandle;
+
+      await prisma.agentLeftLabel.updateMany({
+        data: { bandle: remainBandle },
+        where: { agentId, typeOfCherootId: c.typeOfCherootId },
+      });
     });
 
     return res.status(200).json({
@@ -183,7 +225,6 @@ export default async function handler(
       newRemainCash,
       newReturnCheroot,
       newLeafDeduction,
-      newRemainLeaf,
     });
   }
   res.status(400).json("bad request");

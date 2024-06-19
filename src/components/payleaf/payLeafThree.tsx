@@ -16,7 +16,7 @@ import { useState } from "react";
 
 const defaultValue: selectedAgent = {
   agentId: undefined,
-  phoneNo: undefined,
+  phoneNo: "",
   address: "",
   cashBig: 0,
   cashSmall: 0,
@@ -140,6 +140,7 @@ const PayLeafThree = ({ newPayLeaf, setNewPayLeaf }: Props) => {
         </Box>
         {leaves.map((item) => {
           const find = remainLeaf.find((a) => a.typeOfLeafId === item.id);
+          if (!find) return null;
           return (
             <Box sx={{ display: "flex", alignItems: "center" }} key={item.id}>
               <Typography sx={{ fontWeight: "bold", width: 150 }}>

@@ -261,6 +261,7 @@ const ExtraPurchase = () => {
         <LoadingButton
           variant="contained"
           loading={isLoading}
+          disabled={!newExtraPurchase.agentId || !newExtraPurchase.garageId}
           sx={{
             bgcolor: "#D83E3E",
             width: 220,
