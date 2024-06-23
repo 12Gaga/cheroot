@@ -75,9 +75,9 @@ const FilterSizeAdd = () => {
       return itemDate.toLocaleDateString() === date.toLocaleDateString();
     });
     const leafSeq = dataone.map((item) => item.stockSeq);
-    const datatwo = filterSizeAddStockConcern.filter((item) =>
-      leafSeq.includes(item.stockSeq)
-    );
+    const datatwo = filterSizeAddStockConcern
+      .filter((item) => leafSeq.includes(item.stockSeq))
+      .sort((a, b) => a.id - b.id);
     setFilterStocks(dataone);
     setAddStocks(datatwo);
     setSelecting({ ...selecting, typeOfFilterSize: null, typeOfShop: null });
@@ -88,9 +88,9 @@ const FilterSizeAdd = () => {
       (item) => item.typeOfFilterSizeId === filterId
     );
     const filterSeq = dataone.map((item) => item.stockSeq);
-    const datatwo = filterSizeAddStockConcern.filter((item) =>
-      filterSeq.includes(item.stockSeq)
-    );
+    const datatwo = filterSizeAddStockConcern
+      .filter((item) => filterSeq.includes(item.stockSeq))
+      .sort((a, b) => a.id - b.id);
     setFilterStocks(dataone);
     setAddStocks(datatwo);
     console.log("leaf", addstocks);
@@ -104,9 +104,9 @@ const FilterSizeAdd = () => {
   const handleshop = (shopid: number) => {
     const dataone = concernStock.filter((item) => item.shopId === shopid);
     const shopSeq = dataone.map((item) => item.stockSeq);
-    const datatwo = filterSizeAddStockConcern.filter((item) =>
-      shopSeq.includes(item.stockSeq)
-    );
+    const datatwo = filterSizeAddStockConcern
+      .filter((item) => shopSeq.includes(item.stockSeq))
+      .sort((a, b) => a.id - b.id);
     setFilterStocks(dataone);
     setAddStocks(datatwo);
     setSelecting({ ...selecting, typeOfShop: shopid, typeOfFilterSize: null });
@@ -114,18 +114,20 @@ const FilterSizeAdd = () => {
 
   useEffect(() => {
     if (filterSizeAddStockConcern.length) {
-      const data = filterSizeAddStockConcern.filter((item) => {
-        const itemDate = new Date(item.date);
-        return (
-          itemDate.toLocaleDateString() === selecteddate.toLocaleDateString()
-        );
-      });
+      const data = filterSizeAddStockConcern
+        .filter((item) => {
+          const itemDate = new Date(item.date);
+          return (
+            itemDate.toLocaleDateString() === selecteddate.toLocaleDateString()
+          );
+        })
+        .sort((a, b) => a.id - b.id);
       console.log("date", data);
       setAddStocks(data);
       setFilterStocks(concernStock);
     }
   }, [addStock]);
-
+  let no = 0;
   return (
     <>
       <AdminLayout>
@@ -156,7 +158,7 @@ const FilterSizeAdd = () => {
           </Box>
           <Box sx={{ width: 300 }}>
             <Box sx={{ mt: 2, display: "flex", alignItems: "center" }}>
-              <Typography sx={{ fontWeight: "bold", width: 150 }}>
+              <Typography sx={{ fontWeight: "bold", width: 200 }}>
                 အဆီခံအမျိုးအစား
               </Typography>
               <FormControl variant="filled" sx={{ width: 225 }}>
@@ -214,67 +216,72 @@ const FilterSizeAdd = () => {
         </Box>
 
         <table border={1}>
-          <thead>
-            <tr style={{ border: "1px solid" }}>
-              <th>နေ့စွဲ</th>
-              <th>ဘောက်ချာနံပါတ်</th>
-              <th>ကားနံပါတ်</th>
-              <th>အဆီခံအမျိုးအစား</th>
-              <th>အရေအတွက်</th>
-              <th>အိတ်</th>
-              <th>ဝယ်ယူခဲ့သည့်ဆိုင်အမည်</th>
-            </tr>
-          </thead>
+          <tr>
+            <th style={{ width: 50 }}>စဉ်</th>
+            <th style={{ width: 150 }}>နေ့စွဲ</th>
+            <th style={{ width: 150 }}>ဘောက်ချာနံပါတ်</th>
+            <th style={{ width: 150 }}>ကားနံပါတ်</th>
+            <th style={{ width: 150 }}>အဆီခံအမျိုးအစား</th>
+            <th style={{ width: 150 }}>အရေအတွက်</th>
+            <th style={{ width: 150 }}>အိတ်</th>
+            <th style={{ width: 200 }}>ဝယ်ယူခဲ့သည့်ဆိုင်အမည်</th>
+          </tr>
+
           {addstocks.map((item) => {
             const itemdate = new Date(item.date);
             return (
-              <thead key={item.id}>
-                <tr style={{ border: "1px solid" }}>
-                  <td>{itemdate.toLocaleDateString()}</td>
-                  <td>{item.invNo}</td>
-                  <td>{item.carNo}</td>
-                  {filterStocks.map((i) => {
-                    const idate = new Date(i.date);
-                    if (
-                      itemdate.toLocaleDateString() ===
-                        idate.toLocaleDateString() &&
-                      item.typeOfFilterSizeId === i.typeOfFilterSizeId &&
-                      item.stockSeq === i.stockSeq
-                    ) {
-                      return (
-                        <>
-                          <td>
-                            {
-                              filterSizes.find(
-                                (f) => f.id === i.typeOfFilterSizeId
-                              )?.name
-                            }
-                          </td>
-                          <td>{i.quantity}</td>
-                          <td>{i.bag}</td>
-                          <td>{shop.find((s) => s.id === i.shopId)?.name}</td>
-                          <td
-                            onClick={() => {
-                              setUpdateOpen(true),
-                                setSelectStockSeq(item.stockSeq);
-                            }}
-                          >
-                            {<EditIcon />}
-                          </td>
-                          <td
-                            onClick={() => {
-                              setDeleteOpen(true),
-                                setSelectStockSeq(item.stockSeq);
-                            }}
-                          >
-                            {<DeleteIcon />}
-                          </td>
-                        </>
-                      );
-                    }
-                  })}
-                </tr>
-              </thead>
+              <tr key={item.id}>
+                <th>{(no += 1)}</th>
+                <td style={{ textAlign: "center" }}>
+                  {itemdate.toLocaleDateString()}
+                </td>
+                <td style={{ textAlign: "center" }}>{item.invNo}</td>
+                <td style={{ textAlign: "center" }}>{item.carNo}</td>
+                {filterStocks.map((i) => {
+                  const idate = new Date(i.date);
+                  if (
+                    itemdate.toLocaleDateString() ===
+                      idate.toLocaleDateString() &&
+                    item.typeOfFilterSizeId === i.typeOfFilterSizeId &&
+                    item.stockSeq === i.stockSeq
+                  ) {
+                    return (
+                      <>
+                        <td style={{ textAlign: "center" }}>
+                          {
+                            filterSizes.find(
+                              (f) => f.id === i.typeOfFilterSizeId
+                            )?.name
+                          }
+                        </td>
+                        <td style={{ textAlign: "center" }}>{i.quantity}</td>
+                        <td style={{ textAlign: "center" }}>{i.bag}</td>
+                        <td style={{ textAlign: "center" }}>
+                          {shop.find((s) => s.id === i.shopId)?.name}
+                        </td>
+                        <td
+                          style={{ textAlign: "center", width: 50 }}
+                          onClick={() => {
+                            setUpdateOpen(true),
+                              setSelectStockSeq(item.stockSeq);
+                          }}
+                        >
+                          {<EditIcon />}
+                        </td>
+                        <td
+                          style={{ textAlign: "center", width: 50 }}
+                          onClick={() => {
+                            setDeleteOpen(true),
+                              setSelectStockSeq(item.stockSeq);
+                          }}
+                        >
+                          {<DeleteIcon />}
+                        </td>
+                      </>
+                    );
+                  }
+                })}
+              </tr>
             );
           })}
         </table>

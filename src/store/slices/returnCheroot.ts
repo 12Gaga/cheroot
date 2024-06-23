@@ -71,9 +71,16 @@ const ReturnCherootSlice = createSlice({
     addReturnCheroot: (state, action: PayloadAction<ReturnReadyCheroot[]>) => {
       state.item = [...state.item, ...action.payload];
     },
+    deletedReturnCheroot: (state, action: PayloadAction<string>) => {
+      state.item = state.item.filter((item) => item.seq != action.payload);
+    },
   },
 });
 
-export const { setReturnCheroot, setLoadingReturnCheroot, addReturnCheroot } =
-  ReturnCherootSlice.actions;
+export const {
+  setReturnCheroot,
+  setLoadingReturnCheroot,
+  addReturnCheroot,
+  deletedReturnCheroot,
+} = ReturnCherootSlice.actions;
 export default ReturnCherootSlice.reducer;

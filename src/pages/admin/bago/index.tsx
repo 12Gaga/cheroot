@@ -46,38 +46,46 @@ const Bago = () => {
 
   const concernShop = shops.filter((item) => item.workShopId === workshop?.id);
   const handleDate = (date: Date) => {
-    const data = concernBagoLeaf.filter((item) => {
-      const itemdate = new Date(item.date);
-      return itemdate.toLocaleDateString() === date.toLocaleDateString();
-    });
+    const data = concernBagoLeaf
+      .filter((item) => {
+        const itemdate = new Date(item.date);
+        return itemdate.toLocaleDateString() === date.toLocaleDateString();
+      })
+      .sort((a, b) => a.id - b.id);
     setBagoLeaf(data);
     setSelecting({ ...selecting, typeOfLeaf: null, typeOfShop: null });
   };
 
   const handleLeaf = (leafId: number) => {
-    const data = concernBagoLeaf.filter((item) => item.typeOfLeafId === leafId);
+    const data = concernBagoLeaf
+      .filter((item) => item.typeOfLeafId === leafId)
+      .sort((a, b) => a.id - b.id);
     setBagoLeaf(data);
     setSelecting({ ...selecting, typeOfLeaf: leafId, typeOfShop: null });
   };
 
   const handleshop = (shopid: number) => {
-    const data = concernBagoLeaf.filter((item) => item.shopId === shopid);
+    const data = concernBagoLeaf
+      .filter((item) => item.shopId === shopid)
+      .sort((a, b) => a.id - b.id);
     setBagoLeaf(data);
     setSelecting({ ...selecting, typeOfShop: shopid, typeOfLeaf: null });
   };
 
   useEffect(() => {
     if (concernBagoLeaf.length) {
-      const data = concernBagoLeaf.filter((item) => {
-        const itemDate = new Date(item.date);
-        return (
-          itemDate.toLocaleDateString() === selecteddate.toLocaleDateString()
-        );
-      });
+      const data = concernBagoLeaf
+        .filter((item) => {
+          const itemDate = new Date(item.date);
+          return (
+            itemDate.toLocaleDateString() === selecteddate.toLocaleDateString()
+          );
+        })
+        .sort((a, b) => a.id - b.id);
       setBagoLeaf(data);
     }
   }, [bagoLeaves]);
-
+  let no = 0;
   return (
     <>
       <AdminLayout>
@@ -165,46 +173,50 @@ const Bago = () => {
           />
         </Box>
         <table border={1}>
-          <thead>
-            <tr style={{ border: "1px solid" }}>
-              <th>နေ့စွဲ</th>
-              <th>ဆိုင်နာမည်</th>
-              <th>ဖက်အမျိုးအစား</th>
-              <th>ကုန်ချိန်</th>
-              <th>နှုန်း</th>
-              <th>စုစုပေါင်းငွေ</th>
-            </tr>
-          </thead>
+          <tr>
+            <th style={{ width: 50 }}>စဉ်</th>
+            <th style={{ width: 150 }}>နေ့စွဲ</th>
+            <th style={{ width: 150 }}>ဆိုင်နာမည်</th>
+            <th style={{ width: 150 }}>ဖက်အမျိုးအစား</th>
+            <th style={{ width: 150 }}>ကုန်ချိန်</th>
+            <th style={{ width: 150 }}>နှုန်း</th>
+            <th style={{ width: 150 }}>စုစုပေါင်းငွေ</th>
+          </tr>
           {bagoLeaf.map((item) => {
             const itemdate = new Date(item.date);
             return (
               <>
-                <thead key={item.id}>
-                  <tr style={{ border: "1px solid" }}>
-                    <td>{itemdate.toLocaleDateString()}</td>
-                    <td>{shops.find((s) => s.id === item.shopId)?.name}</td>
-                    <td>
-                      {leaves.find((l) => l.id === item.typeOfLeafId)?.name}
-                    </td>
-                    <td>{item.netWeight}</td>
-                    <td>{item.netPrice}</td>
-                    <td>{item.totalPrice}</td>
-                    <td
-                      onClick={() => {
-                        setUpdateOpen(true), setSelectId(item.id);
-                      }}
-                    >
-                      {<EditIcon />}
-                    </td>
-                    <td
-                      onClick={() => {
-                        setDeleteOpen(true), setSelectId(item.id);
-                      }}
-                    >
-                      {<DeleteIcon />}
-                    </td>
-                  </tr>
-                </thead>
+                <tr key={item.id}>
+                  <th style={{ height: 25 }}>{(no += 1)}</th>
+                  <td style={{ textAlign: "center" }}>
+                    {itemdate.toLocaleDateString()}
+                  </td>
+                  <td style={{ textAlign: "center" }}>
+                    {shops.find((s) => s.id === item.shopId)?.name}
+                  </td>
+                  <td style={{ textAlign: "center" }}>
+                    {leaves.find((l) => l.id === item.typeOfLeafId)?.name}
+                  </td>
+                  <td style={{ textAlign: "center" }}>{item.netWeight}</td>
+                  <td style={{ textAlign: "center" }}>{item.netPrice}</td>
+                  <td style={{ textAlign: "center" }}>{item.totalPrice}</td>
+                  <td
+                    style={{ textAlign: "center", width: 50 }}
+                    onClick={() => {
+                      setUpdateOpen(true), setSelectId(item.id);
+                    }}
+                  >
+                    {<EditIcon />}
+                  </td>
+                  <td
+                    style={{ textAlign: "center", width: 50 }}
+                    onClick={() => {
+                      setDeleteOpen(true), setSelectId(item.id);
+                    }}
+                  >
+                    {<DeleteIcon />}
+                  </td>
+                </tr>
               </>
             );
           })}

@@ -19,3 +19,7 @@ export interface createNewPayLeaf extends BasicOption {
   amount: number;
   garageId: number | undefined;
 }
+
+export interface deletePayLeaf extends BasicOption {
+  seq: string;
+}

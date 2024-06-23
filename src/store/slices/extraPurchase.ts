@@ -1,5 +1,6 @@
 import {
   createNewExtraPurchase,
+  deleteExtraPurchase,
   extraPurchaseSlice,
 } from "@/types/extraPurchaseType";
 import Config from "@/utils/config";
@@ -19,6 +20,7 @@ export const CreateExtraPurchase = createAsyncThunk(
     const {
       date,
       agentId,
+      typeOfCherootId,
       typeOfFilterSizeId,
       filterSizeQty,
       filterSizeBag,
@@ -52,6 +54,7 @@ export const CreateExtraPurchase = createAsyncThunk(
           body: JSON.stringify({
             date,
             agentId,
+            typeOfCherootId,
             typeOfFilterSizeId,
             filterSizeQty,
             filterSizeBag,
@@ -84,6 +87,25 @@ export const CreateExtraPurchase = createAsyncThunk(
   }
 );
 
+export const DeletedExtraPurchase = createAsyncThunk(
+  "extraPurchase/DeletedExtraPurchase",
+  async (option: deleteExtraPurchase, thunkApi) => {
+    const { purchaseSeq, onSuccess, onError } = option;
+    try {
+      const response = await fetch(
+        `${Config.apiBaseUrl}/extraPurchase?purchaseSeq=${purchaseSeq}`,
+        {
+          method: "DELETE",
+        }
+      );
+      thunkApi.dispatch(deletedExtraPurchase(purchaseSeq));
+      onSuccess && onSuccess();
+    } catch (err) {
+      onError && onError();
+    }
+  }
+);
+
 const ExtraPurchaseSlice = createSlice({
   name: "extraPurchase",
   initialState,
@@ -97,9 +119,18 @@ const ExtraPurchaseSlice = createSlice({
     addExtraPurchase: (state, action: PayloadAction<ExtraPurchase>) => {
       state.item = [...state.item, action.payload];
     },
+    deletedExtraPurchase: (state, action: PayloadAction<string>) => {
+      state.item = state.item.filter(
+        (item) => item.purchaseSeq != action.payload
+      );
+    },
   },
 });
 
-export const { setExtraPurchase, setIsLoading, addExtraPurchase } =
-  ExtraPurchaseSlice.actions;
+export const {
+  setExtraPurchase,
+  setIsLoading,
+  addExtraPurchase,
+  deletedExtraPurchase,
+} = ExtraPurchaseSlice.actions;
 export default ExtraPurchaseSlice.reducer;

@@ -213,6 +213,22 @@ const GarageReport = [
 
 const FilterTabLabelReport = [
   {
+    label: "ဖက်အလျော်အစားစာရင်း",
+    url: "/admin/agentItemsReport/leafCompensation",
+  },
+  {
+    label: "အစီခံအလျော်အစားစာရင်း",
+    url: "/admin/agentItemsReport/filterCompensation",
+  },
+  {
+    label: "ဆေးစပ်အလျော်အစားစာရင်း",
+    url: "/admin/agentItemsReport/tabaccoCompensation",
+  },
+  {
+    label: "တံဆိပ်အလျော်အစားစာရင်း",
+    url: "/admin/agentItemsReport/labelCompensation",
+  },
+  {
     label: "အစီခံလက်ကျန်",
     url: "/admin/agentItemsReport",
   },
@@ -223,10 +239,6 @@ const FilterTabLabelReport = [
   {
     label: "တံဆိပ်လက်ကျန်",
     url: "/admin/agentItemsReport/remainLabel",
-  },
-  {
-    label: "ပစ္စည်းလက်ကျန်အလျော်အစားပြုလုပ်ခြင်း",
-    url: "/admin/agentItemsReport/compensation",
   },
 ];
 
@@ -253,6 +265,25 @@ const AgentConcernData = [
   },
 ];
 
+const extraPurPayLeafPayStock = [
+  {
+    label: "ဖက်ပေးစာရင်းစစ်ခြင်း",
+    url: "/admin/extraItemReport",
+  },
+  {
+    label: "ပစ္စည်းပေးစာရင်းစစ်ခြင်း",
+    url: "/admin/extraItemReport/stockPayData",
+  },
+  {
+    label: "ထပ်ဝယ်စာရင်းစစ်ခြင်း",
+    url: "/admin/extraItemReport/extraPurchaseData",
+  },
+  {
+    label: "ကိုယ်စားလှယ်ဆေးလိပ်အဝင်စာရင်း",
+    url: "/admin/extraItemReport/returnCherootData",
+  },
+];
+
 const AdminLayout = ({ children }: Props) => {
   const { data: session } = useSession();
   const router = useRouter();
@@ -271,6 +302,7 @@ const AdminLayout = ({ children }: Props) => {
   const garageReport = router.pathname.includes("garageReport");
   const agentItemReport = router.pathname.includes("agentItemsReport");
   const agentConcernData = router.pathname.includes("name");
+  const extraItemReport = router.pathname.includes("extraItemReport");
   const { selectedWorkShop, item: workShops } = useAppSelector(
     (store) => store.workShop
   );
@@ -311,6 +343,8 @@ const AdminLayout = ({ children }: Props) => {
     data = [...FilterTabLabelReport];
   } else if (agentConcernData) {
     data = [...AgentConcernData];
+  } else if (extraItemReport) {
+    data = [...extraPurPayLeafPayStock];
   }
 
   if (!session) return null;
@@ -400,6 +434,11 @@ const AdminLayout = ({ children }: Props) => {
         {agentConcernData && (
           <Typography variant="h5" sx={{ color: "white", fontWeight: "bold" }}>
             ကိုယ်စားလှယ်အမည်စာရင်း
+          </Typography>
+        )}
+        {extraItemReport && (
+          <Typography variant="h5" sx={{ color: "white", fontWeight: "bold" }}>
+            ဖက်ပေးပစ္စည်းပေးထပ်ဝယ်စာရင်းစစ်ခြင်း
           </Typography>
         )}
         <Box sx={{ display: "flex" }}>

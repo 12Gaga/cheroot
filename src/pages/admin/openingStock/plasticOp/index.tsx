@@ -23,13 +23,14 @@ const OpeningPlastic = () => {
     (item) => item.garageId === garage?.id
   );
   const addStockStockSeq = concernAddStocks.map((item) => item.stockSeq);
-  const concernPlastic = concernPlasticStocks.filter(
-    (item) => !addStockStockSeq.includes(item.stockSeq)
-  );
+  const concernPlastic = concernPlasticStocks
+    .filter((item) => !addStockStockSeq.includes(item.stockSeq))
+    .sort((a, b) => a.id - b.id);
   const shop = useAppSelector((store) => store.typeOfShop.item);
   const [updateOpen, setUpdateOpen] = useState<boolean>(false);
   const [deleteOpen, setDeleteOpen] = useState<boolean>(false);
   const [selectId, setSelectId] = useState<number>(0);
+  let no = 0;
   if (!session) return null;
   return (
     <>
@@ -52,44 +53,49 @@ const OpeningPlastic = () => {
 
         <Box>
           <table border={1}>
-            <thead>
-              <tr style={{ border: "1px solid" }}>
-                <th>နေ့စွဲ</th>
-                <th>ပလပ်စတစ်အမျိုးအစား</th>
-                <th>အရေအတွက်</th>
-                <th>အိတ်</th>
-                <th>ဝယ်ယူခဲ့သည့်ဆိုင်အမည်</th>
-              </tr>
-            </thead>
+            <tr>
+              <th style={{ width: 50 }}>စဉ်</th>
+              <th style={{ width: 150 }}>နေ့စွဲ</th>
+              <th style={{ width: 200 }}>ပလပ်စတစ်အမျိုးအစား</th>
+              <th style={{ width: 150 }}>အရေအတွက်</th>
+              <th style={{ width: 150 }}>အိတ်</th>
+              <th style={{ width: 200 }}>ဝယ်ယူခဲ့သည့်ဆိုင်အမည်</th>
+            </tr>
+
             {concernPlastic.map((item) => {
               const itemdate = new Date(item.date);
               return (
-                <thead key={item.id}>
-                  <tr style={{ border: "1px solid" }}>
-                    <td>{itemdate.toLocaleDateString()}</td>
-                    <td>
-                      {plastics.find((p) => p.id === item.plasticId)?.name}
-                    </td>
+                <tr key={item.id}>
+                  <th>{(no += 1)}</th>
+                  <td style={{ textAlign: "center" }}>
+                    {itemdate.toLocaleDateString()}
+                  </td>
+                  <td style={{ textAlign: "center" }}>
+                    {plastics.find((p) => p.id === item.plasticId)?.name}
+                  </td>
 
-                    <td>{item.quantity}</td>
-                    <td>{item.bag}</td>
-                    <td>{shop.find((s) => s.id === item.shopId)?.name}</td>
-                    <td
-                      onClick={() => {
-                        setUpdateOpen(true), setSelectId(item.id);
-                      }}
-                    >
-                      {<EditIcon />}
-                    </td>
-                    <td
-                      onClick={() => {
-                        setDeleteOpen(true), setSelectId(item.id);
-                      }}
-                    >
-                      {<DeleteIcon />}
-                    </td>
-                  </tr>
-                </thead>
+                  <td style={{ textAlign: "center" }}>{item.quantity}</td>
+                  <td style={{ textAlign: "center" }}>{item.bag}</td>
+                  <td style={{ textAlign: "center" }}>
+                    {shop.find((s) => s.id === item.shopId)?.name}
+                  </td>
+                  <td
+                    style={{ textAlign: "center", width: 50 }}
+                    onClick={() => {
+                      setUpdateOpen(true), setSelectId(item.id);
+                    }}
+                  >
+                    {<EditIcon />}
+                  </td>
+                  <td
+                    style={{ textAlign: "center", width: 50 }}
+                    onClick={() => {
+                      setDeleteOpen(true), setSelectId(item.id);
+                    }}
+                  >
+                    {<DeleteIcon />}
+                  </td>
+                </tr>
               );
             })}
           </table>

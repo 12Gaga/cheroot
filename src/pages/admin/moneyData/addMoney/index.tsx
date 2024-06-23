@@ -26,24 +26,29 @@ const AddMoney = () => {
   const [replenishmetnt, setReplenishment] = useState<ReplenishmentMoney[]>([]);
 
   const handleDate = (date: Date) => {
-    const data = concernReplenishment.filter((item) => {
-      const itemDate = new Date(item.date);
-      return itemDate.toLocaleDateString() === date.toLocaleDateString();
-    });
+    const data = concernReplenishment
+      .filter((item) => {
+        const itemDate = new Date(item.date);
+        return itemDate.toLocaleDateString() === date.toLocaleDateString();
+      })
+      .sort((a, b) => a.id - b.id);
     setReplenishment(data);
   };
 
   useEffect(() => {
     if (concernReplenishment.length) {
-      const data = concernReplenishment.filter((item) => {
-        const itemDate = new Date(item.date);
-        return (
-          itemDate.toLocaleDateString() === selecteddate.toLocaleDateString()
-        );
-      });
+      const data = concernReplenishment
+        .filter((item) => {
+          const itemDate = new Date(item.date);
+          return (
+            itemDate.toLocaleDateString() === selecteddate.toLocaleDateString()
+          );
+        })
+        .sort((a, b) => a.id - b.id);
       setReplenishment(data);
     }
   }, [replenishment]);
+  let no = 0;
   return (
     <>
       <AdminLayout>
@@ -75,35 +80,37 @@ const AddMoney = () => {
         </Box>
 
         <table border={1}>
-          <thead>
-            <tr style={{ border: "1px solid" }}>
-              <th>နေ့စွဲ</th>
-              <th>ပမာဏ</th>
-            </tr>
-          </thead>
+          <tr>
+            <th style={{ width: 50 }}>စဉ်</th>
+            <th style={{ width: 150 }}>နေ့စွဲ</th>
+            <th style={{ width: 150 }}>ပမာဏ</th>
+          </tr>
           {replenishmetnt.map((item) => {
             const itemdate = new Date(item.date);
             return (
-              <thead key={item.id}>
-                <tr style={{ border: "1px solid" }}>
-                  <td>{itemdate.toLocaleDateString()}</td>
-                  <td>{item.amount}</td>
-                  <td
-                    onClick={() => {
-                      setUpdateOpen(true), setSelectId(item.id);
-                    }}
-                  >
-                    {<EditIcon />}
-                  </td>
-                  <td
-                    onClick={() => {
-                      setDeleteOpen(true), setSelectId(item.id);
-                    }}
-                  >
-                    {<DeleteIcon />}
-                  </td>
-                </tr>
-              </thead>
+              <tr key={item.id}>
+                <th style={{ height: 25 }}>{(no += 1)}</th>
+                <td style={{ textAlign: "center" }}>
+                  {itemdate.toLocaleDateString()}
+                </td>
+                <td style={{ textAlign: "center" }}>{item.amount}</td>
+                <td
+                  style={{ textAlign: "center", width: 50 }}
+                  onClick={() => {
+                    setUpdateOpen(true), setSelectId(item.id);
+                  }}
+                >
+                  {<EditIcon />}
+                </td>
+                <td
+                  style={{ textAlign: "center", width: 50 }}
+                  onClick={() => {
+                    setDeleteOpen(true), setSelectId(item.id);
+                  }}
+                >
+                  {<DeleteIcon />}
+                </td>
+              </tr>
             );
           })}
         </table>

@@ -28,24 +28,29 @@ const TaungyiQuitStocks = () => {
   const [exitStock, setExitStock] = useState<TaungyiQuitStock[]>([]);
 
   const handleDate = (date: Date) => {
-    const data = concernTaungyiExitStock.filter((item) => {
-      const itemDate = new Date(item.date);
-      return itemDate.toLocaleDateString() === date.toLocaleDateString();
-    });
+    const data = concernTaungyiExitStock
+      .filter((item) => {
+        const itemDate = new Date(item.date);
+        return itemDate.toLocaleDateString() === date.toLocaleDateString();
+      })
+      .sort((a, b) => a.id - b.id);
     setExitStock(data);
   };
 
   useEffect(() => {
     if (concernTaungyiExitStock.length) {
-      const data = concernTaungyiExitStock.filter((item) => {
-        const itemDate = new Date(item.date);
-        return (
-          itemDate.toLocaleDateString() === selecteddate.toLocaleDateString()
-        );
-      });
+      const data = concernTaungyiExitStock
+        .filter((item) => {
+          const itemDate = new Date(item.date);
+          return (
+            itemDate.toLocaleDateString() === selecteddate.toLocaleDateString()
+          );
+        })
+        .sort((a, b) => a.id - b.id);
       setExitStock(data);
     }
   }, [taungyiExitStock]);
+  let no = 0;
   return (
     <>
       <AdminLayout>
@@ -90,40 +95,44 @@ const TaungyiQuitStocks = () => {
         </Box>
 
         <table border={1}>
-          <thead>
-            <tr style={{ border: "1px solid" }}>
-              <th>နေ့စွဲ</th>
-              <th>ထုတ်ပေးသောသိုလှောင်ရုံ</th>
-              <th>လုံးရေ</th>
-              <th>ကုန်ချိန်</th>
-            </tr>
-          </thead>
+          <tr>
+            <th style={{ width: 50 }}>စဉ်</th>
+            <th style={{ width: 150 }}>နေ့စွဲ</th>
+            <th style={{ width: 200 }}>ထုတ်ပေးသောသိုလှောင်ရုံ</th>
+            <th style={{ width: 150 }}>လုံးရေ</th>
+            <th style={{ width: 150 }}>ကုန်ချိန်</th>
+          </tr>
           {exitStock.map((item) => {
             const itemdate = new Date(item.date);
             return (
               <>
-                <thead key={item.id}>
-                  <tr style={{ border: "1px solid" }}>
-                    <td>{itemdate.toLocaleDateString()}</td>
-                    <td>{stores.find((s) => s.id === item.storeId)?.name}</td>
-                    <td>{item.tolBatchNo}</td>
-                    <td>{item.netWeight}</td>
-                    <td
-                      onClick={() => {
-                        setUpdateOpen(true), setSelectId(item.id);
-                      }}
-                    >
-                      {<EditIcon />}
-                    </td>
-                    <td
-                      onClick={() => {
-                        setDeleteOpen(true), setSelectId(item.id);
-                      }}
-                    >
-                      {<DeleteIcon />}
-                    </td>
-                  </tr>
-                </thead>
+                <tr key={item.id}>
+                  <th>{(no += 1)}</th>
+                  <td style={{ textAlign: "center" }}>
+                    {itemdate.toLocaleDateString()}
+                  </td>
+                  <td style={{ textAlign: "center" }}>
+                    {stores.find((s) => s.id === item.storeId)?.name}
+                  </td>
+                  <td style={{ textAlign: "center" }}>{item.tolBatchNo}</td>
+                  <td style={{ textAlign: "center" }}>{item.netWeight}</td>
+                  <td
+                    style={{ textAlign: "center", width: 50 }}
+                    onClick={() => {
+                      setUpdateOpen(true), setSelectId(item.id);
+                    }}
+                  >
+                    {<EditIcon />}
+                  </td>
+                  <td
+                    style={{ textAlign: "center", width: 50 }}
+                    onClick={() => {
+                      setDeleteOpen(true), setSelectId(item.id);
+                    }}
+                  >
+                    {<DeleteIcon />}
+                  </td>
+                </tr>
               </>
             );
           })}

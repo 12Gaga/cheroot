@@ -11,7 +11,12 @@ import UpdateGarage from "@/components/asign/updateGarage";
 import DeleteGarage from "@/components/asign/deleteGarage";
 const Garage = () => {
   const [open, setOpen] = useState<boolean>(false);
+  const workShopId = useAppSelector((store) => store.workShop.selectedWorkShop)
+    ?.id as number;
   const garages = useAppSelector((store) => store.garage.item);
+  const concernGarage = garages
+    .filter((item) => item.workShopId === workShopId)
+    .sort((a, b) => a.id - b.id);
   const { selectedGarage } = useAppSelector((store) => store.garage);
   const dispatch = useDispatch();
   const [updateOpen, setUpdateOpen] = useState<boolean>(false);
@@ -50,7 +55,7 @@ const Garage = () => {
         </Box>
 
         <Box sx={{ display: "flex", flexWrap: "wrap" }}>
-          {garages.map((item) => {
+          {concernGarage.map((item) => {
             const selected = item.id === selectedGarage?.id ? true : false;
             const workShopId = localStorage.getItem("selectedWorkShopId");
             const isAvailable =

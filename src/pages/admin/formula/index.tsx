@@ -19,9 +19,9 @@ const Formula = () => {
   const tabaccos = useAppSelector((store) => store.typeOfTabacco.item);
   const workShop = useAppSelector((store) => store.workShop.selectedWorkShop);
   const formula = useAppSelector((store) => store.formula.item);
-  const concernFormula = formula.filter(
-    (item) => item.workShopId === workShop?.id
-  );
+  const concernFormula = formula
+    .filter((item) => item.workShopId === workShop?.id)
+    .sort((a, b) => a.id - b.id);
   const { selectedWorkShop, item: workShops } = useAppSelector(
     (store) => store.workShop
   );
@@ -34,7 +34,7 @@ const Formula = () => {
   const [updateOpen, setUpdateOpen] = useState<boolean>(false);
   const [deleteOpen, setDeleteOpen] = useState<boolean>(false);
   const [selectId, setSelectId] = useState<number>(0);
-
+  let no = 0;
   if (!session) return null;
   return (
     <>
@@ -75,56 +75,56 @@ const Formula = () => {
         />
       </Box>
 
-      <Box>
+      <Box sx={{ ml: 5 }}>
         <table border={1}>
-          <thead>
-            <tr style={{ border: "1px solid" }}>
-              <th>ဆေးလိပ်အမျိုးအစား</th>
-              <th>ဆေးလိပ်အရေအတွက်</th>
-              <th>အဆီခံအမျိုးအစား</th>
-              <th>အဆီခံအရေအတွက်</th>
-              <th>ဆေးစပ်အမျိုးအစား</th>
-              <th>အရေအတွက်</th>
-              <th>တင်း</th>
-              <th>ပြည်</th>
-            </tr>
-          </thead>
+          <tr>
+            <th style={{ width: 50 }}>စဉ်</th>
+            <th style={{ width: 150 }}>ဆေးလိပ်အမျိုးအစား</th>
+            <th style={{ width: 150 }}>ဆေးလိပ်အရေအတွက်</th>
+            <th style={{ width: 150 }}>အဆီခံအမျိုးအစား</th>
+            <th style={{ width: 150 }}>အဆီခံအရေအတွက်</th>
+            <th style={{ width: 150 }}>ဆေးစပ်အမျိုးအစား</th>
+            <th style={{ width: 150 }}>အရေအတွက်</th>
+            <th style={{ width: 150 }}>တင်း</th>
+            <th style={{ width: 150 }}>ပြည်</th>
+          </tr>
           {concernFormula.map((item) => (
-            <thead key={item.id}>
-              <tr style={{ border: "1px solid" }}>
-                <td>
-                  {cheroots.find((c) => c.id === item.typeOfCherootId)?.name}
-                </td>
-                <td>{item.cherootQty}</td>
-                <td>
-                  {
-                    filterSizes.find((f) => f.id === item.typeOfFilterSizeId)
-                      ?.name
-                  }
-                </td>
-                <td>{item.filterSizeQty}</td>
-                <td>
-                  {tabaccos.find((f) => f.id === item.typeOfTabaccoId)?.name}
-                </td>
-                <td>{item.tabaccoQty}</td>
-                <td>{item.tabaccoTin}</td>
-                <td>{item.tabaccoPyi}</td>
-                <td
-                  onClick={() => {
-                    setUpdateOpen(true), setSelectId(item.id);
-                  }}
-                >
-                  {<EditIcon />}
-                </td>
-                <td
-                  onClick={() => {
-                    setDeleteOpen(true), setSelectId(item.id);
-                  }}
-                >
-                  {<DeleteIcon />}
-                </td>
-              </tr>
-            </thead>
+            <tr key={item.id}>
+              <th style={{ height: 25 }}>{(no += 1)}</th>
+              <td style={{ textAlign: "center" }}>
+                {cheroots.find((c) => c.id === item.typeOfCherootId)?.name}
+              </td>
+              <td style={{ textAlign: "center" }}>{item.cherootQty}</td>
+              <td style={{ textAlign: "center" }}>
+                {
+                  filterSizes.find((f) => f.id === item.typeOfFilterSizeId)
+                    ?.name
+                }
+              </td>
+              <td style={{ textAlign: "center" }}>{item.filterSizeQty}</td>
+              <td style={{ textAlign: "center" }}>
+                {tabaccos.find((f) => f.id === item.typeOfTabaccoId)?.name}
+              </td>
+              <td style={{ textAlign: "center" }}>{item.tabaccoQty}</td>
+              <td style={{ textAlign: "center" }}>{item.tabaccoTin}</td>
+              <td style={{ textAlign: "center" }}>{item.tabaccoPyi}</td>
+              <td
+                style={{ textAlign: "center", width: 50 }}
+                onClick={() => {
+                  setUpdateOpen(true), setSelectId(item.id);
+                }}
+              >
+                {<EditIcon />}
+              </td>
+              <td
+                style={{ textAlign: "center", width: 50 }}
+                onClick={() => {
+                  setDeleteOpen(true), setSelectId(item.id);
+                }}
+              >
+                {<DeleteIcon />}
+              </td>
+            </tr>
           ))}
         </table>
       </Box>

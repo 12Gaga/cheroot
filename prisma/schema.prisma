@@ -94,6 +94,7 @@ model WorkShop{
   compensationFilterSize CompensationFilterSize[]
   compensationTabacco CompensationTabacco[]
   compensationLabel CompensationLabel[]
+  compensationLeaf CompensationLeaf[]
   isArchived Boolean @default(false)
 }
 
@@ -123,6 +124,7 @@ model Agent{
   compensationFilterSize CompensationFilterSize[]
   compensationTabacco CompensationTabacco[]
   compensationLabel CompensationLabel[]
+  compensationLeaf CompensationLeaf[]
   isArchived Boolean @default(false)
 }
 
@@ -190,6 +192,7 @@ model TypeOfLeaf{
   leafTransferGarage LeafTransferGarage[]
   bagoLeafPurchase BagoLeafPurchase[] 
   agentRemineLeaf AgentRemineLeaf[]
+  compensationLeaf CompensationLeaf[]
   isArchived Boolean @default(false)
   isAvariabled Boolean @default(false)
 }
@@ -363,6 +366,7 @@ model TypeOfCheroot{
   compensationFilterSize CompensationFilterSize[]
   compensationTabacco CompensationTabacco[]
   compensationLabel CompensationLabel[]
+  extraPurchase ExtraPurchase[]
   isArchived Boolean @default(false)
   isAvariabled Boolean @default(false)
 }
@@ -570,11 +574,12 @@ model PayLeaf{
   viss Int
   discountViss Int @default(0)
   netViss Int
-  price Int 
-  amount Int 
+  price Float 
+  amount Float 
   garage Garage @relation(fields: [garageId],references: [id])
   garageId Int
   enterDate DateTime
+  seq String
   workShop WorkShop @relation(fields: [workShopId],references: [id])
   workShopId Int
   isArchived Boolean @default(false)
@@ -631,9 +636,10 @@ model ReturnReadyCheroot{
   goodQty Int
   damage Int
   totalCherootQty Int
-  goodPrice Int
-  amount Int
+  goodPrice Float
+  amount Float
   seq String
+  reduceBandle Float
   workShop WorkShop @relation(fields: [workShopId],references: [id])
   workShopId Int
   isArchived Boolean @default(false)
@@ -647,8 +653,8 @@ model LeafDeduction{
   typeOfLeaf TypeOfLeaf @relation(fields: [typeOfLeafId],references: [id])
   typeOfLeafId Int
   deductViss Int
-  price Int 
-  deductionAmount Int
+  price Float 
+  deductionAmount Float
   seq String
   workShop WorkShop @relation(fields: [workShopId],references: [id])
   workShopId Int
@@ -662,15 +668,16 @@ model OtherDeduction{
   agentId Int
   cashAdvanceBigDeduction Int
   cashAdvanceSmallDeduction Int
-  otherDeduction Int
+  otherDeduction Float
   cashAdvanceBig Int
   cashAdvanceSmall Int
-  netAgentPayment Int
+  netAgentPayment Float
   bonusPayment Int @default(0)
-  totalNetAgentPayment Int
+  totalNetAgentPayment Float
   remainCashBig Int @default(0)
   remainCashSmall Int @default(0)
   seq String
+  deductSeq String
   workShop WorkShop @relation(fields: [workShopId],references: [id])
   workShopId Int
   isArchived Boolean @default(false)
@@ -681,6 +688,8 @@ model ExtraPurchase{
   date DateTime
   agent Agent @relation(fields: [agentId],references: [id])
   agentId Int
+  typeOfCheroot TypeOfCheroot @relation(fields: [typeOfCherootId],references: [id])
+  typeOfCherootId Int 
   typeOfFilterSize TypeOfFilterSize @relation(fields: [typeOfFilterSizeId],references: [id])
   typeOfFilterSizeId Int
   filterSizeQty Int @default(0)
@@ -701,6 +710,7 @@ model ExtraPurchase{
   labelPrice Float  @default(0)
   labelAmount Float  @default(0)
   totalAmount Float  @default(0)
+  purchaseSeq String
   garage Garage @relation(fields: [garageId],references: [id])
   garageId Int
   workShop WorkShop @relation(fields: [workShopId],references: [id])
@@ -1043,6 +1053,26 @@ model AgentLeftLabel{
   isArchived Boolean @default(false)
 }
 
+model CompensationLeaf{
+  id Int @id @default(autoincrement())
+  date DateTime @default(now())
+  agent Agent @relation(fields: [agentId],references: [id])
+  agentId Int
+  typeOfLeaf TypeOfLeaf @relation(fields: [typeOfLeafId],references: [id])
+  typeOfLeafId Int 
+  remainViss Int
+  compensationViss Int
+  takeMoneyViss Int
+  leafPrice Float
+  tolAmount Float
+  addCashBig Int
+  addCashsmall Int
+  inCash Int
+  workShop WorkShop @relation(fields: [workShopId],references: [id])
+  workShopId Int
+  isArchived Boolean @default(false)
+}
+
 model CompensationFilterSize{
   id Int @id @default(autoincrement())
   date DateTime @default(now())
@@ -1055,6 +1085,9 @@ model CompensationFilterSize{
   takeMoneyQty Int
   filterPrice Float
   tolAmount Float
+  addCashBig Int
+  addCashsmall Int
+  inCash Int
   workShop WorkShop @relation(fields: [workShopId],references: [id])
   workShopId Int
   isArchived Boolean @default(false)
@@ -1072,6 +1105,9 @@ model CompensationTabacco{
   takeMoneyPyi Float
   tabaccoPrice Float
   tolAmount Float
+  addCashBig Int
+  addCashsmall Int
+  inCash Int
   workShop WorkShop @relation(fields: [workShopId],references: [id])
   workShopId Int
   isArchived Boolean @default(false)
@@ -1089,6 +1125,9 @@ model CompensationLabel{
   takeMoneyBandle Float
   labelPrice Float
   tolAmount Float
+  addCashBig Int
+  addCashsmall Int
+  inCash Int
   workShop WorkShop @relation(fields: [workShopId],references: [id])
   workShopId Int
   isArchived Boolean @default(false)

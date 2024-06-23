@@ -27,24 +27,29 @@ const DailyExpenses = () => {
   const [expenses, setExpenses] = useState<DailyExpensive[]>([]);
 
   const handleDate = (date: Date) => {
-    const data = concernDailyExpensive.filter((item) => {
-      const itemDate = new Date(item.date);
-      return itemDate.toLocaleDateString() === date.toLocaleDateString();
-    });
+    const data = concernDailyExpensive
+      .filter((item) => {
+        const itemDate = new Date(item.date);
+        return itemDate.toLocaleDateString() === date.toLocaleDateString();
+      })
+      .sort((a, b) => a.id - b.id);
     setExpenses(data);
   };
 
   useEffect(() => {
     if (concernDailyExpensive.length) {
-      const data = concernDailyExpensive.filter((item) => {
-        const itemDate = new Date(item.date);
-        return (
-          itemDate.toLocaleDateString() === selecteddate.toLocaleDateString()
-        );
-      });
+      const data = concernDailyExpensive
+        .filter((item) => {
+          const itemDate = new Date(item.date);
+          return (
+            itemDate.toLocaleDateString() === selecteddate.toLocaleDateString()
+          );
+        })
+        .sort((a, b) => a.id - b.id);
       setExpenses(data);
     }
   }, [dailyExpensives]);
+  let no = 0;
   return (
     <>
       <AdminLayout>
@@ -75,41 +80,44 @@ const DailyExpenses = () => {
           />
         </Box>
         <table border={1}>
-          <thead>
-            <tr style={{ border: "1px solid" }}>
-              <th>နေ့စွဲ</th>
-              <th>စာရင်းခေါင်းစဉ်</th>
-              <th>အကြောင်းအရာ</th>
-              <th>ပမာဏ</th>
-            </tr>
-          </thead>
+          <tr>
+            <th style={{ width: 50 }}>စဉ်</th>
+            <th style={{ width: 150 }}>နေ့စွဲ</th>
+            <th style={{ width: 150 }}>စာရင်းခေါင်းစဉ်</th>
+            <th style={{ width: 150 }}>အကြောင်းအရာ</th>
+            <th style={{ width: 150 }}>ပမာဏ</th>
+          </tr>
+
           {expenses.map((item) => {
             const itemdate = new Date(item.date);
             return (
-              <thead key={item.id}>
-                <tr style={{ border: "1px solid" }}>
-                  <td>{itemdate.toLocaleDateString()}</td>
-                  <td>
-                    {titles.find((t) => t.id === item.expensiveLabelId)?.name}
-                  </td>
-                  <td>{item.content}</td>
-                  <td>{item.amount}</td>
-                  <td
-                    onClick={() => {
-                      setUpdateOpen(true), setSelectId(item.id);
-                    }}
-                  >
-                    {<EditIcon />}
-                  </td>
-                  <td
-                    onClick={() => {
-                      setDeleteOpen(true), setSelectId(item.id);
-                    }}
-                  >
-                    {<DeleteIcon />}
-                  </td>
-                </tr>
-              </thead>
+              <tr key={item.id}>
+                <th style={{ height: 25 }}>{(no += 1)}</th>
+                <td style={{ textAlign: "center" }}>
+                  {itemdate.toLocaleDateString()}
+                </td>
+                <td style={{ textAlign: "center" }}>
+                  {titles.find((t) => t.id === item.expensiveLabelId)?.name}
+                </td>
+                <td style={{ textAlign: "center" }}>{item.content}</td>
+                <td style={{ textAlign: "center" }}>{item.amount}</td>
+                <td
+                  style={{ textAlign: "center", width: 50 }}
+                  onClick={() => {
+                    setUpdateOpen(true), setSelectId(item.id);
+                  }}
+                >
+                  {<EditIcon />}
+                </td>
+                <td
+                  style={{ textAlign: "center", width: 50 }}
+                  onClick={() => {
+                    setDeleteOpen(true), setSelectId(item.id);
+                  }}
+                >
+                  {<DeleteIcon />}
+                </td>
+              </tr>
             );
           })}
         </table>

@@ -8,8 +8,13 @@ import HomeWorkIcon from "@mui/icons-material/HomeWork";
 import UpdateTitle from "@/components/money/updateTitle";
 import DeleteTitle from "@/components/money/deleteTitle";
 const MoneyData = () => {
+  const workShopId = useAppSelector((store) => store.workShop.selectedWorkShop)
+    ?.id as number;
   const [open, setOpen] = useState<boolean>(false);
   const titles = useAppSelector((store) => store.expensiveLabel.item);
+  const concernTiltes = titles
+    .filter((item) => item.workShopId === workShopId)
+    .sort((a, b) => a.id - b.id);
   const [updateOpen, setUpdateOpen] = useState<boolean>(false);
   const [deleteOpen, setDeleteOpen] = useState<boolean>(false);
   const [selectId, setSelectId] = useState<number>(0);
@@ -44,10 +49,7 @@ const MoneyData = () => {
           </Button>
         </Box>
         <Box sx={{ display: "flex", flexWrap: "wrap" }}>
-          {titles.map((item) => {
-            const workShopId = localStorage.getItem("selectedWorkShopId");
-            const exit = item.workShopId === Number(workShopId);
-            if (!exit) return null;
+          {concernTiltes.map((item) => {
             return (
               <ItemCard
                 key={item.id}

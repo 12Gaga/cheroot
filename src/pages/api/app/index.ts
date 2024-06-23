@@ -398,6 +398,24 @@ export default async function handler(
     const agentRemainLabel = await prisma.agentLeftLabel.findMany({
       where: { workShopId: { in: workShopIds }, isArchived: false },
     });
+    //62. find compensationLeaf
+    const compensationLeaf = await prisma.compensationLeaf.findMany({
+      where: { workShopId: { in: workShopIds }, isArchived: false },
+    });
+    //63. find compensationFilterSize
+    const compensationFilterSize = await prisma.compensationFilterSize.findMany(
+      {
+        where: { workShopId: { in: workShopIds }, isArchived: false },
+      }
+    );
+    //64. find compensationTabacco
+    const compensationTabacco = await prisma.compensationTabacco.findMany({
+      where: { workShopId: { in: workShopIds }, isArchived: false },
+    });
+    //65. find compensationLabel
+    const compensationLabel = await prisma.compensationLabel.findMany({
+      where: { workShopId: { in: workShopIds }, isArchived: false },
+    });
     return res.json({
       industry,
       workShop,
@@ -461,6 +479,10 @@ export default async function handler(
       agentRemainFilterSize,
       agentRemainTabacco,
       agentRemainLabel,
+      compensationLeaf,
+      compensationFilterSize,
+      compensationTabacco,
+      compensationLabel,
     });
   }
 }

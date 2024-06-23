@@ -9,7 +9,12 @@ import UpdateTabacco from "@/components/asign/updateTabacco";
 import DeleteTabacco from "@/components/asign/deleteTabacco";
 const TypeTabacco = () => {
   const [open, setOpen] = useState<boolean>(false);
+  const workShopId = useAppSelector((store) => store.workShop.selectedWorkShop)
+    ?.id as number;
   const tabacco = useAppSelector((store) => store.typeOfTabacco.item);
+  const concernTabacco = tabacco
+    .filter((item) => item.workShopId === workShopId)
+    .sort((a, b) => a.id - b.id);
   const [updateOpen, setUpdateOpen] = useState<boolean>(false);
   const [deleteOpen, setDeleteOpen] = useState<boolean>(false);
   const [selectId, setSelectId] = useState<number>(0);
@@ -46,10 +51,7 @@ const TypeTabacco = () => {
         </Box>
 
         <Box sx={{ display: "flex", flexWrap: "wrap" }}>
-          {tabacco.map((item) => {
-            const workShopId = localStorage.getItem("selectedWorkShopId");
-            const exit = item.workShopId === Number(workShopId);
-            if (!exit) return null;
+          {concernTabacco.map((item) => {
             return (
               <ItemCard
                 key={item.id}

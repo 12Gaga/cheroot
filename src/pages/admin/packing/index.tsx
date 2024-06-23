@@ -9,7 +9,12 @@ import UpdateTypeOfPacking from "@/components/pack/updateTypeOfPacking";
 import DeleteTypeOfPacking from "@/components/pack/deleteTypeOfPacking";
 const Packing = () => {
   const [open, setOpen] = useState<boolean>(false);
+  const workShopId = useAppSelector((store) => store.workShop.selectedWorkShop)
+    ?.id as number;
   const typeOfPackings = useAppSelector((store) => store.typeOfPacking.item);
+  const concernTypeOfPacking = typeOfPackings
+    .filter((t) => t.workShopId === workShopId)
+    .sort((a, b) => a.id - b.id);
   const [updateOpen, setUpdateOpen] = useState<boolean>(false);
   const [deleteOpen, setDeleteOpen] = useState<boolean>(false);
   const [selectId, setSelectId] = useState<number>(0);
@@ -45,10 +50,7 @@ const Packing = () => {
         </Box>
 
         <Box sx={{ display: "flex", flexWrap: "wrap" }}>
-          {typeOfPackings.map((item) => {
-            const workShopId = localStorage.getItem("selectedWorkShopId");
-            const exit = item.workShopId === Number(workShopId);
-            if (!exit) return null;
+          {concernTypeOfPacking.map((item) => {
             return (
               <ItemCard
                 key={item.id}

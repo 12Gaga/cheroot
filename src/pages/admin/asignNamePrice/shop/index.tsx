@@ -10,7 +10,12 @@ import DeleteShop from "@/components/asign/deleteShop";
 
 const Shop = () => {
   const [open, setOpen] = useState<boolean>(false);
+  const workShopId = useAppSelector((store) => store.workShop.selectedWorkShop)
+    ?.id as number;
   const shops = useAppSelector((store) => store.typeOfShop.item);
+  const concernShop = shops
+    .filter((item) => item.workShopId === workShopId)
+    .sort((a, b) => a.id - b.id);
   const [updateOpen, setUpdateOpen] = useState<boolean>(false);
   const [deleteOpen, setDeleteOpen] = useState<boolean>(false);
   const [selectId, setSelectId] = useState<number>(0);
@@ -47,10 +52,7 @@ const Shop = () => {
         </Box>
 
         <Box sx={{ display: "flex", flexWrap: "wrap" }}>
-          {shops.map((item) => {
-            const workShopId = localStorage.getItem("selectedWorkShopId");
-            const exit = item.workShopId === Number(workShopId);
-            if (!exit) return null;
+          {concernShop.map((item) => {
             return (
               <ItemCard
                 key={item.id}

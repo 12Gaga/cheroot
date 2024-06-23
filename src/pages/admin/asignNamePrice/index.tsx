@@ -3,17 +3,24 @@ import NewLeaf from "@/components/asign/newLeaf";
 import ItemCard from "@/components/itemCard";
 import { useAppSelector } from "@/store/hooks";
 import { Box, Button, Typography } from "@mui/material";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import SpaIcon from "@mui/icons-material/Spa";
 import UpdateLeaf from "@/components/asign/updateLeaf";
 import DeleteLeaf from "@/components/asign/deleteLeaf";
+import { TypeOfLeaf } from "@prisma/client";
 const AsignNamePrice = () => {
   const [open, setOpen] = useState<boolean>(false);
+  const workShopId = useAppSelector((store) => store.workShop.selectedWorkShop)
+    ?.id as number;
   const leaves = useAppSelector((store) => store.typeOfLeaf.item);
+  const concernLeaf = leaves
+    .filter((item) => item.workShopId === workShopId)
+    .sort((a, b) => a.id - b.id);
   const [updateOpen, setUpdateOpen] = useState<boolean>(false);
   const [deleteOpen, setDeleteOpen] = useState<boolean>(false);
   const [selectId, setSelectId] = useState<number>(0);
   console.log("id", selectId);
+  let sortLeaves: TypeOfLeaf[] = [];
   return (
     <>
       <AdminLayout>
@@ -47,10 +54,7 @@ const AsignNamePrice = () => {
         </Box>
 
         <Box sx={{ display: "flex", flexWrap: "wrap" }}>
-          {leaves.map((item) => {
-            const workShopId = localStorage.getItem("selectedWorkShopId");
-            const exit = item.workShopId === Number(workShopId);
-            if (!exit) return null;
+          {concernLeaf.map((item) => {
             return (
               <>
                 <ItemCard

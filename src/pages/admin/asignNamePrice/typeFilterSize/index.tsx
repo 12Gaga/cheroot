@@ -9,7 +9,12 @@ import UpdateFilterSize from "@/components/asign/updateFilterSize";
 import DeleteFilterSize from "@/components/asign/deleteFilterSize";
 const TypeFilterSize = () => {
   const [open, setOpen] = useState<boolean>(false);
+  const workShopId = useAppSelector((store) => store.workShop.selectedWorkShop)
+    ?.id as number;
   const filterSizes = useAppSelector((store) => store.typeOfFilterSize.item);
+  const concernFilter = filterSizes
+    .filter((item) => item.workShopId === workShopId)
+    .sort((a, b) => a.id - b.id);
   const [updateOpen, setUpdateOpen] = useState<boolean>(false);
   const [deleteOpen, setDeleteOpen] = useState<boolean>(false);
   const [selectId, setSelectId] = useState<number>(0);
@@ -45,10 +50,7 @@ const TypeFilterSize = () => {
           </Button>
         </Box>
         <Box sx={{ display: "flex", flexWrap: "wrap" }}>
-          {filterSizes.map((item) => {
-            const workShopId = localStorage.getItem("selectedWorkShopId");
-            const exit = item.workShopId === Number(workShopId);
-            if (!exit) return null;
+          {concernFilter.map((item) => {
             return (
               <ItemCard
                 key={item.id}

@@ -41,34 +41,40 @@ const TaungyiAddStock = () => {
   const [addstock, setAddStock] = useState<TaungyiEnterStock[]>([]);
 
   const handleDate = (date: Date) => {
-    const data = concernTaungyiEnterStock.filter((item) => {
-      const itemDate = new Date(item.date);
-      return itemDate.toLocaleDateString() === date.toLocaleDateString();
-    });
+    const data = concernTaungyiEnterStock
+      .filter((item) => {
+        const itemDate = new Date(item.date);
+        return itemDate.toLocaleDateString() === date.toLocaleDateString();
+      })
+      .sort((a, b) => a.id - b.id);
     setAddStock(data);
     setBanquet(null);
   };
 
   const handleBanquet = (banquetId: number) => {
-    const data = concernTaungyiEnterStock.filter((item) => {
-      return item.banquetId === banquetId;
-    });
+    const data = concernTaungyiEnterStock
+      .filter((item) => {
+        return item.banquetId === banquetId;
+      })
+      .sort((a, b) => a.id - b.id);
     setAddStock(data);
     setBanquet(banquetId);
   };
 
   useEffect(() => {
     if (concernTaungyiEnterStock.length) {
-      const data = concernTaungyiEnterStock.filter((item) => {
-        const itemDate = new Date(item.date);
-        return (
-          itemDate.toLocaleDateString() === selecteddate.toLocaleDateString()
-        );
-      });
+      const data = concernTaungyiEnterStock
+        .filter((item) => {
+          const itemDate = new Date(item.date);
+          return (
+            itemDate.toLocaleDateString() === selecteddate.toLocaleDateString()
+          );
+        })
+        .sort((a, b) => a.id - b.id);
       setAddStock(data);
     }
   }, [taungyiEnterStock]);
-
+  let no = 0;
   return (
     <>
       <AdminLayout>
@@ -121,7 +127,6 @@ const TaungyiAddStock = () => {
             variant="contained"
             sx={{
               bgcolor: "#E55252",
-              mt: 3,
               width: 320,
               height: 50,
               fontSize: 18,
@@ -139,54 +144,58 @@ const TaungyiAddStock = () => {
         </Box>
 
         <table border={1}>
-          <thead>
-            <tr style={{ border: "1px solid" }}>
-              <th>နေ့စွဲ</th>
-              <th>ထည့်သွင်းသိုလှောင်ရုံ</th>
-              <th>ပွဲရုံအမည်</th>
-              <th>လုံးရေ</th>
-              <th>ကုန်ချိန်</th>
-              <th>နှုန်း</th>
-              <th>ကုန်ချိန်သင့်ငွေ</th>
-              <th>ထုတ်ပိုးခ</th>
-              <th>ထုတ်ပိုးသင့်ငွေ</th>
-              <th>စုစုပေါင်းသင့်ငွေ</th>
-            </tr>
-          </thead>
+          <tr>
+            <th style={{ width: 50 }}>စဉ်</th>
+            <th style={{ width: 150 }}>နေ့စွဲ</th>
+            <th style={{ width: 150 }}>ထည့်သွင်းသိုလှောင်ရုံ</th>
+            <th style={{ width: 150 }}>ပွဲရုံအမည်</th>
+            <th style={{ width: 150 }}>လုံးရေ</th>
+            <th style={{ width: 150 }}>ကုန်ချိန်</th>
+            <th style={{ width: 150 }}>နှုန်း</th>
+            <th style={{ width: 150 }}>ကုန်ချိန်သင့်ငွေ</th>
+            <th style={{ width: 150 }}>ထုတ်ပိုးခ</th>
+            <th style={{ width: 150 }}>ထုတ်ပိုးသင့်ငွေ</th>
+            <th style={{ width: 150 }}>စုစုပေါင်းသင့်ငွေ</th>
+          </tr>
           {addstock.map((item) => {
             const itemdate = new Date(item.date);
             return (
               <>
-                <thead key={item.id}>
-                  <tr style={{ border: "1px solid" }}>
-                    <td>{itemdate.toLocaleDateString()}</td>
-                    <td>{stores.find((s) => s.id === item.storeId)?.name}</td>
-                    <td>
-                      {banquets.find((f) => f.id === item.banquetId)?.name}
-                    </td>
-                    <td>{item.tolBatchNo}</td>
-                    <td>{item.netWeight}</td>
-                    <td>{item.netPrice}</td>
-                    <td>{item.tolNetPrice}</td>
-                    <td>{item.packingFees}</td>
-                    <td>{item.tolPackingFees}</td>
-                    <td>{item.totalPrice}</td>
-                    <td
-                      onClick={() => {
-                        setUpdateOpen(true), setSelectId(item.id);
-                      }}
-                    >
-                      {<EditIcon />}
-                    </td>
-                    <td
-                      onClick={() => {
-                        setDeleteOpen(true), setSelectId(item.id);
-                      }}
-                    >
-                      {<DeleteIcon />}
-                    </td>
-                  </tr>
-                </thead>
+                <tr key={item.id}>
+                  <th>{(no += 1)}</th>
+                  <td style={{ textAlign: "center" }}>
+                    {itemdate.toLocaleDateString()}
+                  </td>
+                  <td style={{ textAlign: "center" }}>
+                    {stores.find((s) => s.id === item.storeId)?.name}
+                  </td>
+                  <td style={{ textAlign: "center" }}>
+                    {banquets.find((f) => f.id === item.banquetId)?.name}
+                  </td>
+                  <td style={{ textAlign: "center" }}>{item.tolBatchNo}</td>
+                  <td style={{ textAlign: "center" }}>{item.netWeight}</td>
+                  <td style={{ textAlign: "center" }}>{item.netPrice}</td>
+                  <td style={{ textAlign: "center" }}>{item.tolNetPrice}</td>
+                  <td style={{ textAlign: "center" }}>{item.packingFees}</td>
+                  <td style={{ textAlign: "center" }}>{item.tolPackingFees}</td>
+                  <td style={{ textAlign: "center" }}>{item.totalPrice}</td>
+                  <td
+                    style={{ textAlign: "center", width: 50 }}
+                    onClick={() => {
+                      setUpdateOpen(true), setSelectId(item.id);
+                    }}
+                  >
+                    {<EditIcon />}
+                  </td>
+                  <td
+                    style={{ textAlign: "center", width: 50 }}
+                    onClick={() => {
+                      setDeleteOpen(true), setSelectId(item.id);
+                    }}
+                  >
+                    {<DeleteIcon />}
+                  </td>
+                </tr>
               </>
             );
           })}

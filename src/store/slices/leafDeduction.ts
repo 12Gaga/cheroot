@@ -73,9 +73,16 @@ const LeafDeductionSlice = createSlice({
     addLeafDeduction: (state, action: PayloadAction<LeafDeduction[]>) => {
       state.item = [...state.item, ...action.payload];
     },
+    deletedLeafDeduction: (state, action: PayloadAction<string>) => {
+      state.item = state.item.filter((item) => item.seq != action.payload);
+    },
   },
 });
 
-export const { setLeafDeduction, setLoadingLeafDeduction, addLeafDeduction } =
-  LeafDeductionSlice.actions;
+export const {
+  setLeafDeduction,
+  setLoadingLeafDeduction,
+  addLeafDeduction,
+  deletedLeafDeduction,
+} = LeafDeductionSlice.actions;
 export default LeafDeductionSlice.reducer;

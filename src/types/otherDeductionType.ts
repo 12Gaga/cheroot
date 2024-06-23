@@ -25,3 +25,7 @@ export interface createNewOtherDeduction extends BasicOption {
   totalNetAgentPayment: number;
   purchaseSeq: string;
 }
+
+export interface deleteOtherDeduction extends BasicOption {
+  seq: string;
+}

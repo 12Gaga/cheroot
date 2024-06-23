@@ -75,9 +75,9 @@ const TabaccoAdd = () => {
       return itemDate.toLocaleDateString() === date.toLocaleDateString();
     });
     const leafSeq = dataone.map((item) => item.stockSeq);
-    const datatwo = tabaccoAddStockConcern.filter((item) =>
-      leafSeq.includes(item.stockSeq)
-    );
+    const datatwo = tabaccoAddStockConcern
+      .filter((item) => leafSeq.includes(item.stockSeq))
+      .sort((a, b) => a.id - b.id);
     setTabaaccoStocks(dataone);
     setAddStocks(datatwo);
     setSelecting({ ...selecting, typeOfTabacco: null, typeOfShop: null });
@@ -88,9 +88,9 @@ const TabaccoAdd = () => {
       (item) => item.typeOfTabaccoId === tabaccoId
     );
     const tabaccoSeq = dataone.map((item) => item.stockSeq);
-    const datatwo = tabaccoAddStockConcern.filter((item) =>
-      tabaccoSeq.includes(item.stockSeq)
-    );
+    const datatwo = tabaccoAddStockConcern
+      .filter((item) => tabaccoSeq.includes(item.stockSeq))
+      .sort((a, b) => a.id - b.id);
     setTabaaccoStocks(dataone);
     setAddStocks(datatwo);
     console.log("leaf", addstocks);
@@ -100,9 +100,9 @@ const TabaccoAdd = () => {
   const handleshop = (shopid: number) => {
     const dataone = concernStock.filter((item) => item.shopId === shopid);
     const shopSeq = dataone.map((item) => item.stockSeq);
-    const datatwo = tabaccoAddStockConcern.filter((item) =>
-      shopSeq.includes(item.stockSeq)
-    );
+    const datatwo = tabaccoAddStockConcern
+      .filter((item) => shopSeq.includes(item.stockSeq))
+      .sort((a, b) => a.id - b.id);
     setTabaaccoStocks(dataone);
     setAddStocks(datatwo);
     setSelecting({ ...selecting, typeOfShop: shopid, typeOfTabacco: null });
@@ -110,18 +110,20 @@ const TabaccoAdd = () => {
 
   useEffect(() => {
     if (tabaccoAddStockConcern.length) {
-      const data = tabaccoAddStockConcern.filter((item) => {
-        const itemDate = new Date(item.date);
-        return (
-          itemDate.toLocaleDateString() === selecteddate.toLocaleDateString()
-        );
-      });
+      const data = tabaccoAddStockConcern
+        .filter((item) => {
+          const itemDate = new Date(item.date);
+          return (
+            itemDate.toLocaleDateString() === selecteddate.toLocaleDateString()
+          );
+        })
+        .sort((a, b) => a.id - b.id);
       console.log("date", data);
       setAddStocks(data);
       setTabaaccoStocks(concernStock);
     }
   }, [addStock]);
-
+  let no = 0;
   return (
     <>
       <AdminLayout>
@@ -152,7 +154,7 @@ const TabaccoAdd = () => {
           </Box>
           <Box sx={{ width: 300 }}>
             <Box sx={{ mt: 2, display: "flex", alignItems: "center" }}>
-              <Typography sx={{ fontWeight: "bold", width: 150 }}>
+              <Typography sx={{ fontWeight: "bold", width: 200 }}>
                 ဆေးစပ်အမျိုးအစား
               </Typography>
               <FormControl variant="filled" sx={{ width: 225 }}>
@@ -200,7 +202,7 @@ const TabaccoAdd = () => {
           </Box>
         </Box>
 
-        <Box sx={{ display: "flex", justifyContent: "flex-end" }}>
+        <Box sx={{ display: "flex", justifyContent: "flex-end", mb: 2 }}>
           <AddBoxIcon
             onClick={() => {
               setOpen(true);
@@ -210,68 +212,73 @@ const TabaccoAdd = () => {
         </Box>
 
         <table border={1}>
-          <thead>
-            <tr style={{ border: "1px solid" }}>
-              <th>နေ့စွဲ</th>
-              <th>ဘောက်ချာနံပါတ်</th>
-              <th>ကားနံပါတ်</th>
-              <th>ဆေးစပ်အမျိုးအစား</th>
-              <th>တင်း</th>
-              <th>ပြည်</th>
-              <th>အိတ်</th>
-              <th>ဝယ်ယူခဲ့သည့်ဆိုင်အမည်</th>
-            </tr>
-          </thead>
+          <tr>
+            <th style={{ width: 50 }}>စဉ်</th>
+            <th style={{ width: 150 }}>နေ့စွဲ</th>
+            <th style={{ width: 150 }}>ဘောက်ချာနံပါတ်</th>
+            <th style={{ width: 150 }}>ကားနံပါတ်</th>
+            <th style={{ width: 150 }}>ဆေးစပ်အမျိုးအစား</th>
+            <th style={{ width: 150 }}>တင်း</th>
+            <th style={{ width: 150 }}>ပြည်</th>
+            <th style={{ width: 150 }}>အိတ်</th>
+            <th style={{ width: 200 }}>ဝယ်ယူခဲ့သည့်ဆိုင်အမည်</th>
+          </tr>
+
           {addstocks.map((item) => {
             const itemDate = new Date(item.date);
             return (
-              <thead key={item.id}>
-                <tr style={{ border: "1px solid" }}>
-                  <td>{itemDate.toLocaleDateString()}</td>
-                  <td>{item.invNo}</td>
-                  <td>{item.carNo}</td>
-                  {tabaccostocks.map((i) => {
-                    const iDate = new Date(i.date);
-                    if (
-                      itemDate.toLocaleDateString() ===
-                        iDate.toLocaleDateString() &&
-                      item.typeOfTabaccoId === i.typeOfTabaccoId &&
-                      item.stockSeq === i.stockSeq
-                    ) {
-                      return (
-                        <>
-                          <td>
-                            {
-                              tabaccos.find((l) => l.id === i.typeOfTabaccoId)
-                                ?.name
-                            }
-                          </td>
-                          <td>{i.tin}</td>
-                          <td>{i.pyi}</td>
-                          <td>{i.bag}</td>
-                          <td>{shop.find((s) => s.id === i.shopId)?.name}</td>
-                          <td
-                            onClick={() => {
-                              setUpdateOpen(true),
-                                setSelectStockSeq(item.stockSeq);
-                            }}
-                          >
-                            {<EditIcon />}
-                          </td>
-                          <td
-                            onClick={() => {
-                              setDeleteOpen(true),
-                                setSelectStockSeq(item.stockSeq);
-                            }}
-                          >
-                            {<DeleteIcon />}
-                          </td>
-                        </>
-                      );
-                    }
-                  })}
-                </tr>
-              </thead>
+              <tr key={item.id}>
+                <th>{(no += 1)}</th>
+                <td style={{ textAlign: "center" }}>
+                  {itemDate.toLocaleDateString()}
+                </td>
+                <td style={{ textAlign: "center" }}>{item.invNo}</td>
+                <td style={{ textAlign: "center" }}>{item.carNo}</td>
+                {tabaccostocks.map((i) => {
+                  const iDate = new Date(i.date);
+                  if (
+                    itemDate.toLocaleDateString() ===
+                      iDate.toLocaleDateString() &&
+                    item.typeOfTabaccoId === i.typeOfTabaccoId &&
+                    item.stockSeq === i.stockSeq
+                  ) {
+                    return (
+                      <>
+                        <td style={{ textAlign: "center" }}>
+                          {
+                            tabaccos.find((l) => l.id === i.typeOfTabaccoId)
+                              ?.name
+                          }
+                        </td>
+                        <td style={{ textAlign: "center" }}>{i.tin}</td>
+                        <td style={{ textAlign: "center" }}>{i.pyi}</td>
+                        <td style={{ textAlign: "center" }}>{i.bag}</td>
+                        <td style={{ textAlign: "center" }}>
+                          {shop.find((s) => s.id === i.shopId)?.name}
+                        </td>
+                        <td
+                          style={{ textAlign: "center", width: 50 }}
+                          onClick={() => {
+                            setUpdateOpen(true),
+                              setSelectStockSeq(item.stockSeq);
+                          }}
+                        >
+                          {<EditIcon />}
+                        </td>
+                        <td
+                          style={{ textAlign: "center", width: 50 }}
+                          onClick={() => {
+                            setDeleteOpen(true),
+                              setSelectStockSeq(item.stockSeq);
+                          }}
+                        >
+                          {<DeleteIcon />}
+                        </td>
+                      </>
+                    );
+                  }
+                })}
+              </tr>
             );
           })}
         </table>

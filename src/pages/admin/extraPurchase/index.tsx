@@ -27,6 +27,7 @@ import "react-datepicker/dist/react-datepicker.css";
 const defaultValue: createNewExtraPurchase = {
   date: null,
   agentId: undefined,
+  typeOfCherootId: undefined,
   typeOfFilterSizeId: undefined,
   filterSizeQty: 0,
   filterSizeBag: 0,
@@ -58,6 +59,9 @@ const ExtraPurchase = () => {
   const [selecteddate, setSelectedDate] = useState<Date>(new Date());
   const agent = useAppSelector((store) => store.agent.item);
   const concernAgent = agent.filter((item) => item.workShopId === workShop);
+  const cheroots = useAppSelector((store) => store.typeOfCheroot.item).filter(
+    (c) => c.workShopId === workShop
+  );
   const garage = useAppSelector((store) => store.garage.item);
   const concernGarage = garage.filter((item) => item.workShopId === workShop);
   const filterSize = useAppSelector((store) => store.typeOfFilterSize.item);
@@ -68,7 +72,7 @@ const ExtraPurchase = () => {
   const concernTabacco = tabacco.filter((item) => item.workShopId === workShop);
   const label = useAppSelector((store) => store.typeOfLabel.item);
   const concernLabel = label.filter((item) => item.workShopId === workShop);
-
+  const formula = useAppSelector((store) => store.formula.item);
   const handleClick = () => {
     dispatch(setIsLoading(true));
     dispatch(
@@ -81,6 +85,23 @@ const ExtraPurchase = () => {
         },
       })
     );
+  };
+
+  const handleCheroot = (cherootId: number) => {
+    const findFormula = formula.find((f) => f.typeOfCherootId === cherootId);
+    setNewExtraPurchase({
+      ...newExtraPurchase,
+      typeOfFilterSizeId: findFormula
+        ? findFormula.typeOfFilterSizeId
+        : concernFilterSize[0].id,
+      typeOfTabaccoId: findFormula
+        ? findFormula.typeOfTabaccoId
+        : concernTabacco[0].id,
+      typeOfCherootId: findFormula
+        ? findFormula.typeOfCherootId
+        : concernTabacco[0].id,
+      date: selecteddate,
+    });
   };
 
   useEffect(() => {
@@ -194,6 +215,37 @@ const ExtraPurchase = () => {
         </Box>
       </Box>
 
+      <Box
+        sx={{
+          width: 400,
+          mt: 2,
+          ml: 2,
+          display: "flex",
+          alignItems: "center",
+        }}
+      >
+        <Typography sx={{ fontWeight: "bold", mr: 2 }}>
+          ဆေးလိပ်အမျိုးအစား
+        </Typography>
+        <FormControl variant="filled" sx={{ width: 225 }}>
+          <Select
+            labelId="demo-simple-select-filled-label"
+            id="demo-simple-select-filled"
+            value={newExtraPurchase?.typeOfCherootId}
+            onChange={(evt) => {
+              handleCheroot(Number(evt.target.value));
+            }}
+            sx={{ bgcolor: "#EEE8CF" }}
+          >
+            {cheroots.map((item) => (
+              <MenuItem key={item.id} value={item.id}>
+                <ListItemText primary={item.name} />
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
+      </Box>
+
       <Typography
         variant="h6"
         sx={{
@@ -261,7 +313,11 @@ const ExtraPurchase = () => {
         <LoadingButton
           variant="contained"
           loading={isLoading}
-          disabled={!newExtraPurchase.agentId || !newExtraPurchase.garageId}
+          disabled={
+            !newExtraPurchase.agentId ||
+            !newExtraPurchase.garageId ||
+            !newExtraPurchase.typeOfCherootId
+          }
           sx={{
             bgcolor: "#D83E3E",
             width: 220,

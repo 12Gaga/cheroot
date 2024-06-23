@@ -153,9 +153,9 @@ const NewPackingData = ({ open, setOpen }: Props) => {
             />
           </Box>
 
-          <Box sx={{ mt: 2, display: "flex" }}>
-            <Box>
-              <Typography sx={{ fontWeight: "bold" }}>
+          <Box sx={{ mt: 2 }}>
+            <Box sx={{ display: "flex", alignItems: "center" }}>
+              <Typography sx={{ fontWeight: "bold", width: 150 }}>
                 ဆေးလိပ်အရေအတွက်
               </Typography>
               <TextField
@@ -164,11 +164,9 @@ const NewPackingData = ({ open, setOpen }: Props) => {
                 onChange={() => {}}
               />
             </Box>
-            <Box sx={{ my: 3, display: "flex", alignItems: "center", ml: 2 }}>
-              <Typography sx={{ fontWeight: "bold", width: 80 }}>
-                ဂိုထောင်
-              </Typography>
-              <FormControl variant="filled" sx={{ width: 225 }}>
+            <Box sx={{ my: 3 }}>
+              <Typography sx={{ fontWeight: "bold" }}>ဂိုထောင်</Typography>
+              <FormControl variant="filled" sx={{ width: 300 }}>
                 <Select
                   labelId="demo-simple-select-filled-label"
                   id="demo-simple-select-filled"

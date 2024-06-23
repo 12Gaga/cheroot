@@ -17,6 +17,7 @@ const LayoutAdmin = ({ children }: Props) => {
     if (session && !init) {
       dispatch(fetchApp({}));
     }
+    console.log("call app");
   }, [session]);
 
   return (

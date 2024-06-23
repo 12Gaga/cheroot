@@ -1,4 +1,4 @@
-import { ExtraPurchase, Leaf, PayLeaf } from "@prisma/client";
+import { ExtraPurchase, ExtraPurchaseSummery } from "@prisma/client";
 import { BasicOption } from "./appType";
 
 export interface extraPurchaseSlice {
@@ -7,9 +7,16 @@ export interface extraPurchaseSlice {
   error: null | string;
 }
 
+export interface extraPurchaseSummerySlice {
+  item: ExtraPurchaseSummery[];
+  isLoading: boolean;
+  error: null | string;
+}
+
 export interface createNewExtraPurchase extends BasicOption {
   date: Date | null;
   agentId: number | undefined;
+  typeOfCherootId: number | undefined;
   typeOfFilterSizeId: number | undefined;
   filterSizeQty: number;
   filterSizeBag: number;
@@ -28,4 +35,8 @@ export interface createNewExtraPurchase extends BasicOption {
   labelAmount: number;
   totalAmount: number;
   garageId: number | undefined;
+}
+
+export interface deleteExtraPurchase extends BasicOption {
+  purchaseSeq: string;
 }

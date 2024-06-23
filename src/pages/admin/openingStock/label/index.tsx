@@ -23,13 +23,14 @@ const FilterSize = () => {
     (item) => item.garageId === garage?.id
   );
   const addStockStockSeq = concernAddStocks.map((item) => item.stockSeq);
-  const concernLabel = concernLabelStock.filter(
-    (item) => !addStockStockSeq.includes(item.stockSeq)
-  );
+  const concernLabel = concernLabelStock
+    .filter((item) => !addStockStockSeq.includes(item.stockSeq))
+    .sort((a, b) => a.id - b.id);
   const shop = useAppSelector((store) => store.typeOfShop.item);
   const [updateOpen, setUpdateOpen] = useState<boolean>(false);
   const [deleteOpen, setDeleteOpen] = useState<boolean>(false);
   const [selectId, setSelectId] = useState<number>(0);
+  let no = 0;
   if (!session) return null;
   return (
     <>
@@ -52,41 +53,46 @@ const FilterSize = () => {
 
         <Box>
           <table border={1}>
-            <thead>
-              <tr style={{ border: "1px solid" }}>
-                <th>နေ့စွဲ</th>
-                <th>တံဆိပ်အမျိုးအစား</th>
-                <th>လိပ်</th>
-                <th>ဝယ်ယူခဲ့သည့်ဆိုင်အမည်</th>
-              </tr>
-            </thead>
+            <tr>
+              <th style={{ width: 50 }}>စဉ်</th>
+              <th style={{ width: 150 }}>နေ့စွဲ</th>
+              <th style={{ width: 150 }}>တံဆိပ်အမျိုးအစား</th>
+              <th style={{ width: 150 }}>လိပ်</th>
+              <th style={{ width: 200 }}>ဝယ်ယူခဲ့သည့်ဆိုင်အမည်</th>
+            </tr>
+
             {concernLabel.map((item) => {
               const itemdate = new Date(item.date);
               return (
-                <thead key={item.id}>
-                  <tr style={{ border: "1px solid" }}>
-                    <td>{itemdate.toLocaleDateString()}</td>
-                    <td>
-                      {labels.find((f) => f.id === item.typeOfLabelId)?.name}
-                    </td>
-                    <td>{item.bandle}</td>
-                    <td>{shop.find((s) => s.id === item.shopId)?.name}</td>
-                    <td
-                      onClick={() => {
-                        setUpdateOpen(true), setSelectId(item.id);
-                      }}
-                    >
-                      {<EditIcon />}
-                    </td>
-                    <td
-                      onClick={() => {
-                        setDeleteOpen(true), setSelectId(item.id);
-                      }}
-                    >
-                      {<DeleteIcon />}
-                    </td>
-                  </tr>
-                </thead>
+                <tr key={item.id}>
+                  <th>{(no += 1)}</th>
+                  <td style={{ textAlign: "center" }}>
+                    {itemdate.toLocaleDateString()}
+                  </td>
+                  <td style={{ textAlign: "center" }}>
+                    {labels.find((f) => f.id === item.typeOfLabelId)?.name}
+                  </td>
+                  <td style={{ textAlign: "center" }}>{item.bandle}</td>
+                  <td style={{ textAlign: "center" }}>
+                    {shop.find((s) => s.id === item.shopId)?.name}
+                  </td>
+                  <td
+                    style={{ textAlign: "center", width: 50 }}
+                    onClick={() => {
+                      setUpdateOpen(true), setSelectId(item.id);
+                    }}
+                  >
+                    {<EditIcon />}
+                  </td>
+                  <td
+                    style={{ textAlign: "center", width: 50 }}
+                    onClick={() => {
+                      setDeleteOpen(true), setSelectId(item.id);
+                    }}
+                  >
+                    {<DeleteIcon />}
+                  </td>
+                </tr>
               );
             })}
           </table>

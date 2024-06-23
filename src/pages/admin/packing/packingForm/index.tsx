@@ -9,7 +9,12 @@ import UpdateFormOfPacking from "@/components/pack/updateFormOfPacking";
 import DeleteFormOfPacking from "@/components/pack/deleteFormOfPacking";
 const PackingForm = () => {
   const [open, setOpen] = useState<boolean>(false);
+  const workShopId = useAppSelector((store) => store.workShop.selectedWorkShop)
+    ?.id as number;
   const formOfPackings = useAppSelector((store) => store.formOfPacking.item);
+  const concernFormOfPacking = formOfPackings
+    .filter((f) => f.workShopId === workShopId)
+    .sort((a, b) => a.id - b.id);
   const [updateOpen, setUpdateOpen] = useState<boolean>(false);
   const [deleteOpen, setDeleteOpen] = useState<boolean>(false);
   const [selectId, setSelectId] = useState<number>(0);
@@ -45,10 +50,7 @@ const PackingForm = () => {
         </Box>
 
         <Box sx={{ display: "flex", flexWrap: "wrap" }}>
-          {formOfPackings.map((item) => {
-            const workShopId = localStorage.getItem("selectedWorkShopId");
-            const exit = item.workShopId === Number(workShopId);
-            if (!exit) return null;
+          {concernFormOfPacking.map((item) => {
             return (
               <ItemCard
                 key={item.id}

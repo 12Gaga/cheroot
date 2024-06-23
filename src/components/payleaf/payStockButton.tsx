@@ -16,7 +16,6 @@ interface Props {
 const PayStockButton = ({
   newPayStock,
   setNewPayStock,
-  workShopId,
   defaultValue,
 }: Props) => {
   const router = useRouter();
@@ -37,9 +36,16 @@ const PayStockButton = ({
   };
   return (
     <>
-      <Box sx={{ display: "flex", justifyContent: "flex-end", mt: 4 }}>
+      <Box sx={{ display: "flex", justifyContent: "flex-end", my: 3 }}>
         <LoadingButton
           loading={isLoading}
+          variant="contained"
+          disabled={
+            !newPayStock.agentId ||
+            !newPayStock.garageId ||
+            !newPayStock.typeOfCherootId ||
+            !newPayStock.typeOfLabelId
+          }
           sx={{
             bgcolor: "#E55252",
             mr: 2,
@@ -47,7 +53,6 @@ const PayStockButton = ({
             height: 40,
             fontSize: 18,
             borderRadius: 10,
-            color: "white",
             "&:hover": {
               bgcolor: "#FCB500",
               color: "white",

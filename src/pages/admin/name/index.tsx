@@ -15,9 +15,9 @@ const NamePage = () => {
   const [open, setOpen] = useState<boolean>(false);
   const agents = useAppSelector((store) => store.agent.item);
   const workShop = useAppSelector((store) => store.workShop.selectedWorkShop);
-  const concetnAgent = agents.filter(
-    (item) => item.workShopId === workShop?.id
-  );
+  const concetnAgent = agents
+    .filter((item) => item.workShopId === workShop?.id)
+    .sort((a, b) => a.id - b.id);
   const [updateOpen, setUpdateOpen] = useState<boolean>(false);
   const [deleteOpen, setDeleteOpen] = useState<boolean>(false);
   const [selectId, setSelectId] = useState<number>(0);
@@ -40,26 +40,26 @@ const NamePage = () => {
 
         <Box>
           <table border={1}>
-            <thead>
-              <tr style={{ border: "1px solid" }}>
-                <th>စဉ်</th>
-                <th>အမည်</th>
-                <th>နေရပ်လိပ်စာ</th>
-                <th>ဖုန်းနံပါတ်</th>
-                <th>လက်ကျန်ငွေ(အကြီး)</th>
-                <th>လက်ကျန်ငွေ(အသေး)</th>
-              </tr>
-            </thead>
+            <tr>
+              <th style={{ width: 50 }}>စဉ်</th>
+              <th style={{ width: 150 }}>အမည်</th>
+              <th style={{ width: 150 }}>နေရပ်လိပ်စာ</th>
+              <th style={{ width: 150 }}>ဖုန်းနံပါတ်</th>
+              <th style={{ width: 150 }}>လက်ကျန်ငွေ(အကြီး)</th>
+              <th style={{ width: 150 }}>လက်ကျန်ငွေ(အသေး)</th>
+            </tr>
+
             {concetnAgent.map((item) => (
-              <thead key={item.name}>
-                <tr style={{ border: "1px solid" }}>
-                  <td>{(no += 1)}</td>
-                  <td>{item.name}</td>
-                  <td>{item.adderess}</td>
-                  <td>{item.phoneNo}</td>
-                  <td>{item.cashBalcanceBig}</td>
-                  <td>{item.cashBalcanceSmall}</td>
-                  {/* <td
+              <tr key={item.name}>
+                <th style={{ height: 25 }}>{(no += 1)}</th>
+                <td style={{ textAlign: "center" }}>{item.name}</td>
+                <td style={{ textAlign: "center" }}>{item.adderess}</td>
+                <td style={{ textAlign: "center" }}>{item.phoneNo}</td>
+                <td style={{ textAlign: "center" }}>{item.cashBalcanceBig}</td>
+                <td style={{ textAlign: "center" }}>
+                  {item.cashBalcanceSmall}
+                </td>
+                {/* <td
                     onClick={() => {
                       setUpdateOpen(true), setSelectId(item.id);
                     }}
@@ -73,8 +73,7 @@ const NamePage = () => {
                   >
                     {<DeleteIcon />}
                   </td> */}
-                </tr>
-              </thead>
+              </tr>
             ))}
           </table>
         </Box>

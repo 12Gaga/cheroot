@@ -64,6 +64,10 @@ import extraPurchaseSummaryReducer from "./slices/extraPurchaseSummery";
 import agentRemainFilterReducer from "./slices/agentRemainFilter";
 import agentRemainTabaccoReducer from "./slices/agentRemainTabacco";
 import agetnRemainLabelReducer from "./slices/agentRemainLabel";
+import compensationLeafReducer from "./slices/compensationLeaf";
+import compensationFilterReducer from "./slices/compensationFilterSize";
+import compensationTabaccoReducer from "./slices/compensationTabacco";
+import compensationLabelReducer from "./slices/compensationLabel";
 
 export const store = configureStore({
   reducer: {
@@ -132,6 +136,10 @@ export const store = configureStore({
     agentRemainFilter: agentRemainFilterReducer,
     agentRemainTabacco: agentRemainTabaccoReducer,
     agentRemainLabel: agetnRemainLabelReducer,
+    compensationLeaf: compensationLeafReducer,
+    compensationFilter: compensationFilterReducer,
+    compensationTabacco: compensationTabaccoReducer,
+    compensationLabel: compensationLabelReducer,
   },
 });
 

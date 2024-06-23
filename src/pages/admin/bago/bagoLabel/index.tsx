@@ -46,18 +46,20 @@ const BagoLabel = () => {
 
   const concernShop = shops.filter((item) => item.workShopId === workshop?.id);
   const handleDate = (date: Date) => {
-    const data = concernBagoLabel.filter((item) => {
-      const itemdate = new Date(item.date);
-      return itemdate.toLocaleDateString() === date.toLocaleDateString();
-    });
+    const data = concernBagoLabel
+      .filter((item) => {
+        const itemdate = new Date(item.date);
+        return itemdate.toLocaleDateString() === date.toLocaleDateString();
+      })
+      .sort((a, b) => a.id - b.id);
     setBagoLabel(data);
     setSelecting({ ...selecting, typeOfLabel: null, typeOfShop: null });
   };
 
   const handleLabel = (labelId: number) => {
-    const data = concernBagoLabel.filter(
-      (item) => item.typeOfLabelId === labelId
-    );
+    const data = concernBagoLabel
+      .filter((item) => item.typeOfLabelId === labelId)
+      .sort((a, b) => a.id - b.id);
     setBagoLabel(data);
     setSelecting({
       ...selecting,
@@ -67,23 +69,27 @@ const BagoLabel = () => {
   };
 
   const handleshop = (shopid: number) => {
-    const data = concernBagoLabel.filter((item) => item.shopId === shopid);
+    const data = concernBagoLabel
+      .filter((item) => item.shopId === shopid)
+      .sort((a, b) => a.id - b.id);
     setBagoLabel(data);
     setSelecting({ ...selecting, typeOfShop: shopid, typeOfLabel: null });
   };
 
   useEffect(() => {
     if (concernBagoLabel.length) {
-      const data = concernBagoLabel.filter((item) => {
-        const itemDate = new Date(item.date);
-        return (
-          itemDate.toLocaleDateString() === selecteddate.toLocaleDateString()
-        );
-      });
+      const data = concernBagoLabel
+        .filter((item) => {
+          const itemDate = new Date(item.date);
+          return (
+            itemDate.toLocaleDateString() === selecteddate.toLocaleDateString()
+          );
+        })
+        .sort((a, b) => a.id - b.id);
       setBagoLabel(data);
     }
   }, [bagoLabels]);
-
+  let no = 0;
   return (
     <>
       <AdminLayout>
@@ -112,7 +118,7 @@ const BagoLabel = () => {
               }}
             />
           </Box>
-          <Box sx={{ width: 300 }}>
+          <Box sx={{}}>
             <Box sx={{ mt: 2, display: "flex", alignItems: "center" }}>
               <Typography sx={{ fontWeight: "bold", width: 150 }}>
                 တံဆိပ်အမျိုးအစား
@@ -171,44 +177,48 @@ const BagoLabel = () => {
           />
         </Box>
         <table border={1}>
-          <thead>
-            <tr style={{ border: "1px solid" }}>
-              <th>နေ့စွဲ</th>
-              <th>ဆိုင်နာမည်</th>
-              <th>တံဆိပ်အမျိုးအစား</th>
-              <th>လိပ်</th>
-              <th>စုစုပေါင်းငွေ</th>
-            </tr>
-          </thead>
+          <tr>
+            <th style={{ width: 50 }}>စဉ်</th>
+            <th style={{ width: 150 }}>နေ့စွဲ</th>
+            <th style={{ width: 150 }}>ဆိုင်နာမည်</th>
+            <th style={{ width: 150 }}>တံဆိပ်အမျိုးအစား</th>
+            <th style={{ width: 150 }}>လိပ်</th>
+            <th style={{ width: 150 }}>စုစုပေါင်းငွေ</th>
+          </tr>
           {bagoLabel.map((item) => {
             const itemdate = new Date(item.date);
             return (
               <>
-                <thead key={item.id}>
-                  <tr style={{ border: "1px solid" }}>
-                    <td>{itemdate.toLocaleDateString()}</td>
-                    <td>{shops.find((s) => s.id === item.shopId)?.name}</td>
-                    <td>
-                      {labels.find((l) => l.id === item.typeOfLabelId)?.name}
-                    </td>
-                    <td>{item.bandle}</td>
-                    <td>{item.totalPrice}</td>
-                    <td
-                      onClick={() => {
-                        setUpdateOpen(true), setSelectId(item.id);
-                      }}
-                    >
-                      {<EditIcon />}
-                    </td>
-                    <td
-                      onClick={() => {
-                        setDeleteOpen(true), setSelectId(item.id);
-                      }}
-                    >
-                      {<DeleteIcon />}
-                    </td>
-                  </tr>
-                </thead>
+                <tr key={item.id}>
+                  <th>{(no += 1)}</th>
+                  <td style={{ textAlign: "center" }}>
+                    {itemdate.toLocaleDateString()}
+                  </td>
+                  <td style={{ textAlign: "center" }}>
+                    {shops.find((s) => s.id === item.shopId)?.name}
+                  </td>
+                  <td style={{ textAlign: "center" }}>
+                    {labels.find((l) => l.id === item.typeOfLabelId)?.name}
+                  </td>
+                  <td style={{ textAlign: "center" }}>{item.bandle}</td>
+                  <td style={{ textAlign: "center" }}>{item.totalPrice}</td>
+                  <td
+                    style={{ textAlign: "center", width: 50 }}
+                    onClick={() => {
+                      setUpdateOpen(true), setSelectId(item.id);
+                    }}
+                  >
+                    {<EditIcon />}
+                  </td>
+                  <td
+                    style={{ textAlign: "center", width: 50 }}
+                    onClick={() => {
+                      setDeleteOpen(true), setSelectId(item.id);
+                    }}
+                  >
+                    {<DeleteIcon />}
+                  </td>
+                </tr>
               </>
             );
           })}

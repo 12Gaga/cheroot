@@ -10,11 +10,16 @@ import {
   Select,
   Typography,
 } from "@mui/material";
-import { AgentRemineLeaf, LeafDeduction, PayLeaf } from "@prisma/client";
+import {
+  AgentRemineLeaf,
+  CompensationLeaf,
+  LeafDeduction,
+  PayLeaf,
+} from "@prisma/client";
 import { useState } from "react";
-import { exit } from "process";
 
 const LeafReport = () => {
+  let no = 0;
   const workShopId = useAppSelector((store) => store.workShop.selectedWorkShop)
     ?.id as number;
   const remainleaf = useAppSelector(
@@ -26,13 +31,15 @@ const LeafReport = () => {
   const leafDeduction = useAppSelector(
     (store) => store.leafDeduction.item
   ).filter((ld) => ld.workShopId === workShopId);
-  const leaves = useAppSelector((store) => store.typeOfLeaf.item).filter(
-    (l) => l.workShopId === workShopId
-  );
+  const leaves = useAppSelector((store) => store.typeOfLeaf.item)
+    .filter((l) => l.workShopId === workShopId)
+    .sort((a, b) => a.id - b.id);
   const agents = useAppSelector((store) => store.agent.item).filter(
     (a) => a.workShopId === workShopId
   );
-
+  const compensation = useAppSelector(
+    (store) => store.compensationLeaf.item
+  ).filter((ps) => ps.workShopId === workShopId);
   const [exitData, setExitData] = useState<AgentRemineLeaf[]>([]);
   const [concernRemainLeaf, setConcernRemainLeaf] = useState<AgentRemineLeaf[]>(
     []
@@ -43,6 +50,9 @@ const LeafReport = () => {
   );
   const [agent, setAgent] = useState<number | null>(null);
   const [selecteddate, setSelectedDate] = useState<Date>(new Date());
+  const [compensationLeaf, setCompensationLeaf] = useState<CompensationLeaf[]>(
+    []
+  );
   const [dates, setDates] = useState<Date[]>([]);
 
   const handleAgent = (agentId: number) => {
@@ -62,12 +72,14 @@ const LeafReport = () => {
       setExitData([]);
     }
 
-    const data = remainleaf.filter(
-      (item) =>
-        item.agentId === agentId &&
-        new Date(item.date).getMonth() === selecteddate.getMonth() &&
-        new Date(item.date).getFullYear() === selecteddate.getFullYear()
-    );
+    const data = remainleaf
+      .filter(
+        (item) =>
+          item.agentId === agentId &&
+          new Date(item.date).getMonth() === selecteddate.getMonth() &&
+          new Date(item.date).getFullYear() === selecteddate.getFullYear()
+      )
+      .sort((a, b) => a.id - b.id);
 
     const datatwo = payLeaf.filter(
       (item) =>
@@ -82,10 +94,19 @@ const LeafReport = () => {
         new Date(item.date).getMonth() === selecteddate.getMonth() &&
         new Date(item.date).getFullYear() === selecteddate.getFullYear()
     );
+    const concernCompensation = compensation
+      .filter(
+        (item) =>
+          new Date(item.date).getMonth() === selecteddate.getMonth() &&
+          new Date(item.date).getFullYear() === selecteddate.getFullYear() &&
+          item.agentId === agentId
+      )
+      .sort((a, b) => a.id - b.id);
     filterDates(data);
     setConcernRemainLeaf(data);
     setConcernPayLeaf(datatwo);
     setConcernLeafDeduct(datathree);
+    setCompensationLeaf(concernCompensation);
     setAgent(agentId);
   };
 
@@ -103,12 +124,14 @@ const LeafReport = () => {
       setExitData([]);
     }
 
-    const dateData = remainleaf.filter(
-      (item) =>
-        new Date(item.date).getMonth() === date.getMonth() &&
-        new Date(item.date).getFullYear() === date.getFullYear() &&
-        item.agentId === agent
-    );
+    const dateData = remainleaf
+      .filter(
+        (item) =>
+          new Date(item.date).getMonth() === date.getMonth() &&
+          new Date(item.date).getFullYear() === date.getFullYear() &&
+          item.agentId === agent
+      )
+      .sort((a, b) => a.id - b.id);
     const datatwo = payLeaf.filter(
       (item) =>
         item.agentId === agent &&
@@ -122,10 +145,19 @@ const LeafReport = () => {
         new Date(item.date).getMonth() === date.getMonth() &&
         new Date(item.date).getFullYear() === date.getFullYear()
     );
+    const concernCompensation = compensation
+      .filter(
+        (item) =>
+          new Date(item.date).getMonth() === date.getMonth() &&
+          new Date(item.date).getFullYear() === date.getFullYear() &&
+          item.agentId === agent
+      )
+      .sort((a, b) => a.id - b.id);
     filterDates(dateData);
     setConcernRemainLeaf(dateData);
     setConcernPayLeaf(datatwo);
     setConcernLeafDeduct(datathree);
+    setCompensationLeaf(concernCompensation);
   };
 
   const filterDates = (data: AgentRemineLeaf[]) => {
@@ -270,69 +302,72 @@ const LeafReport = () => {
               })}
             </tr>
 
-            {dates.map((item) => {
-              const exit = concernRemainLeaf.find(
-                (c) =>
-                  new Date(c.date).toLocaleDateString() ==
-                  item.toLocaleDateString()
-              );
-              if (!exit) return null;
-              const itemdate = new Date(exit.date);
-              return (
-                <tr key={item.toString()}>
-                  <td style={{ textAlign: "center" }}>
-                    {itemdate.toLocaleDateString()}
-                  </td>
-                  {leaves.map((l) => {
-                    const findRemainData = concernRemainLeaf.filter(
-                      (rd) =>
-                        new Date(rd.date).toLocaleDateString() ===
-                          item.toLocaleDateString() && rd.leafId === l.id
-                    );
+            {dates
+              .sort((a, b) => a.getTime() - b.getTime())
+              .map((item) => {
+                const exit = concernRemainLeaf.find(
+                  (c) =>
+                    new Date(c.date).toLocaleDateString() ==
+                    item.toLocaleDateString()
+                );
+                if (!exit) return null;
+                const itemdate = new Date(exit.date);
+                return (
+                  <tr key={item.toString()}>
+                    <td style={{ textAlign: "center" }}>
+                      {itemdate.toLocaleDateString()}
+                    </td>
+                    {leaves.map((l) => {
+                      const findRemainData = concernRemainLeaf.filter(
+                        (rd) =>
+                          new Date(rd.date).toLocaleDateString() ===
+                            item.toLocaleDateString() && rd.leafId === l.id
+                      );
 
-                    const findPayData = concernPayLeaf.filter(
-                      (pl) =>
-                        new Date(pl.date).toLocaleDateString() ===
-                          item.toLocaleDateString() && pl.typeOfLeafId === l.id
-                    );
-                    const findDeductData = concernLeafDeduct
-                      .filter(
-                        (ld) =>
-                          new Date(ld.date).toLocaleDateString() ===
+                      const findPayData = concernPayLeaf.filter(
+                        (pl) =>
+                          new Date(pl.date).toLocaleDateString() ===
                             item.toLocaleDateString() &&
-                          ld.typeOfLeafId === l.id
-                      )
-                      .reduce((tol, leaf) => {
-                        return (tol += leaf.deductViss);
-                      }, 0);
-                    return (
-                      <>
-                        <td
-                          key={l.id}
-                          style={{ textAlign: "center", height: 25 }}
-                        >
-                          {findPayData.length &&
-                            findPayData[findPayData.length - 1].netViss}
-                        </td>
-                        <td key={l.id} style={{ textAlign: "center" }}>
-                          {findDeductData}
-                        </td>
-                        <td
-                          style={{
-                            backgroundColor: "#FFD0D0",
-                            textAlign: "center",
-                          }}
-                          key={l.id}
-                        >
-                          {findRemainData.length &&
-                            findRemainData[findRemainData.length - 1].Viss}
-                        </td>
-                      </>
-                    );
-                  })}
-                </tr>
-              );
-            })}
+                          pl.typeOfLeafId === l.id
+                      );
+                      const findDeductData = concernLeafDeduct
+                        .filter(
+                          (ld) =>
+                            new Date(ld.date).toLocaleDateString() ===
+                              item.toLocaleDateString() &&
+                            ld.typeOfLeafId === l.id
+                        )
+                        .reduce((tol, leaf) => {
+                          return (tol += leaf.deductViss);
+                        }, 0);
+                      return (
+                        <>
+                          <td
+                            key={l.id}
+                            style={{ textAlign: "center", height: 25 }}
+                          >
+                            {findPayData.length &&
+                              findPayData[findPayData.length - 1].netViss}
+                          </td>
+                          <td key={l.id} style={{ textAlign: "center" }}>
+                            {findDeductData}
+                          </td>
+                          <td
+                            style={{
+                              backgroundColor: "#FFD0D0",
+                              textAlign: "center",
+                            }}
+                            key={l.id}
+                          >
+                            {findRemainData.length &&
+                              findRemainData[findRemainData.length - 1].Viss}
+                          </td>
+                        </>
+                      );
+                    })}
+                  </tr>
+                );
+              })}
 
             <tr>
               <td></td>
@@ -374,6 +409,57 @@ const LeafReport = () => {
                   </>
                 );
               })}
+            </tr>
+          </table>
+        </Box>
+
+        <Box sx={{ mt: 10 }}>
+          <Typography sx={{ fontSize: "20px", mb: 1, color: "#059212" }}>
+            ဖက်အလျော်အစား
+          </Typography>
+          <table border={1}>
+            <tr>
+              <th style={{ width: 50, backgroundColor: "#95D2B3" }}>စဉ်</th>
+              <th style={{ width: 150, backgroundColor: "#95D2B3" }}>နေ့စွဲ</th>
+              <th style={{ width: 150, backgroundColor: "#95D2B3" }}>
+                ဖက်အမျိုးအစား
+              </th>
+              <th style={{ width: 150, backgroundColor: "#95D2B3" }}>
+                လျှော်ပေးပိဿာ
+              </th>
+              <th style={{ width: 150, backgroundColor: "#95D2B3" }}>
+                ရော်ပိဿာ
+              </th>
+            </tr>
+            {compensationLeaf.map((item) => {
+              return (
+                <tr key={item.id}>
+                  <th>{(no += 1)}</th>
+                  <td style={{ textAlign: "center" }}>
+                    {new Date(item.date).toLocaleDateString()}
+                  </td>
+                  <td style={{ textAlign: "center" }}>
+                    {leaves.find((c) => c.id === item.typeOfLeafId)?.name}
+                  </td>
+                  <td style={{ textAlign: "center" }}>
+                    {item.compensationViss}
+                  </td>
+                  <td style={{ textAlign: "center" }}>{item.takeMoneyViss}</td>
+                </tr>
+              );
+            })}
+            <tr>
+              <td colSpan={3}></td>
+              <td style={{ textAlign: "center", backgroundColor: "#FFDA78" }}>
+                {compensationLeaf.reduce((tol, co) => {
+                  return (tol += co.compensationViss);
+                }, 0)}
+              </td>
+              <td style={{ textAlign: "center", backgroundColor: "#FFDA78" }}>
+                {compensationLeaf.reduce((tol, co) => {
+                  return (tol += co.takeMoneyViss);
+                }, 0)}
+              </td>
             </tr>
           </table>
         </Box>

@@ -1,4 +1,8 @@
-import { createNewPayStock, payStockSlice } from "@/types/payStockType";
+import {
+  createNewPayStock,
+  deletePayStock,
+  payStockSlice,
+} from "@/types/payStockType";
 import Config from "@/utils/config";
 import { PayLeaf, PayOtherItem, TypeOfLeaf } from "@prisma/client";
 import { PayloadAction, createAsyncThunk, createSlice } from "@reduxjs/toolkit";
@@ -70,6 +74,22 @@ export const CreatePayStock = createAsyncThunk(
   }
 );
 
+export const DeletedPayStock = createAsyncThunk(
+  "payStock/DeletedPayStock",
+  async (option: deletePayStock, thunkApi) => {
+    const { id, onSuccess, onError } = option;
+    try {
+      const response = await fetch(`${Config.apiBaseUrl}/payStock?id=${id}`, {
+        method: "DELETE",
+      });
+      thunkApi.dispatch(deletedPayStock(id));
+      onSuccess && onSuccess();
+    } catch (err) {
+      onError && onError();
+    }
+  }
+);
+
 const PayStockSlice = createSlice({
   name: "payStock",
   initialState,
@@ -83,8 +103,12 @@ const PayStockSlice = createSlice({
     addPayStock: (state, action: PayloadAction<PayOtherItem>) => {
       state.item = [...state.item, action.payload];
     },
+    deletedPayStock: (state, action: PayloadAction<number>) => {
+      state.item = state.item.filter((item) => item.id != action.payload);
+    },
   },
 });
 
-export const { setPayStock, setIsLoading, addPayStock } = PayStockSlice.actions;
+export const { setPayStock, setIsLoading, addPayStock, deletedPayStock } =
+  PayStockSlice.actions;
 export default PayStockSlice.reducer;

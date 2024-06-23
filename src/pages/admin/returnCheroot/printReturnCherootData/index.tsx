@@ -8,61 +8,30 @@ const Printing = () => {
   const tableRef = useRef(null);
   const router = useRouter();
   const dispatch = useAppDispatch();
-  const { date, deductDate } = router.query;
-  console.log("date1", date);
-  console.log("date2", deductDate);
-  const cherootDate = new Date(date as string);
-  const extraPurchaseDate = new Date(deductDate as string);
-  // const findCherootDate = new Date(date as string);
-  // const findExtraPurchaseDate = new Date(deductDate as string);
-  // const cherootMonth = findCherootDate.getMonth();
-  // const cherootYear = findCherootDate.getFullYear();
-  // const cherootDay = findCherootDate.getDate();
-  // const cherootDate = new Date(
-  //   `${cherootYear},${cherootMonth + 1},${cherootDay - 1}`
-  // );
-  // const extraMonth = findExtraPurchaseDate.getMonth();
-  // const extraYear = findExtraPurchaseDate.getFullYear();
-  // const extraDay = findExtraPurchaseDate.getDate();
-  // const extraPurchaseDate = new Date(
-  //   `${extraYear},${extraMonth + 1},${extraDay - 1}`
-  // );
-  console.log("cherootdate1", cherootDate);
-  console.log("cherootdate2", extraPurchaseDate);
+  const seq = router.query.seq as string;
+  const deductSeq = router.query.deductSeq as string;
+  console.log("seq", seq);
+  console.log("deductSeq", deductSeq);
   const agentId = Number(router.query.agentId);
   const returnCheroot = useAppSelector((store) => store.returnCheroot.item);
   const concernReturnCheroot = returnCheroot.filter((item) => {
     const itemdate = new Date(item.date);
-    return (
-      item.agentId === agentId &&
-      itemdate.toLocaleDateString() === cherootDate.toLocaleDateString()
-    );
+    return item.agentId === agentId && item.seq === seq;
   });
   const leafDeduction = useAppSelector((store) => store.leafDeduction.item);
   const concernLeafDeduction = leafDeduction.filter((item) => {
     const itemdate = new Date(item.date);
-    return (
-      item.agentId === agentId &&
-      itemdate.toLocaleDateString() === cherootDate.toLocaleDateString()
-    );
+    return item.agentId === agentId && item.seq === seq;
   });
   const otherDeduction = useAppSelector((store) => store.otherDeduction.item);
   const concernOtherDeduction = otherDeduction.find((item) => {
     const itemdate = new Date(item.date);
-    return (
-      item.agentId === agentId &&
-      itemdate.toLocaleDateString() === cherootDate.toLocaleDateString()
-    );
+    return item.agentId === agentId && item.seq === seq;
   });
   const extraPurchase = useAppSelector((store) => store.extraPurchase.item);
   const concernextraPurchase = extraPurchase.find((item) => {
     const itemdate = new Date(item.date);
-    console.log("itemdate", itemdate.toLocaleDateString());
-    console.log("ddate", extraPurchaseDate.toLocaleDateString());
-    return (
-      item.agentId === agentId &&
-      itemdate.toLocaleDateString() === extraPurchaseDate.toLocaleDateString()
-    );
+    return item.agentId === agentId && item.purchaseSeq === deductSeq;
   });
   const workShopId = useAppSelector((store) => store.workShop.selectedWorkShop)
     ?.id as number;
@@ -89,7 +58,7 @@ const Printing = () => {
     dispatch(fetchApp({}));
   }, []);
 
-  if (!date || !deductDate || !agentId) return null;
+  if (!seq || !agentId) return null;
   return (
     <>
       <Box
@@ -138,7 +107,10 @@ const Printing = () => {
             </Typography>
           </Box>
           <Box>
-            <Typography>ရက်စွဲ - {cherootDate.toLocaleDateString()}</Typography>
+            <Typography>
+              ရက်စွဲ -
+              {new Date(concernReturnCheroot[0].date).toLocaleDateString()}
+            </Typography>
           </Box>
         </Box>
 
@@ -149,9 +121,13 @@ const Printing = () => {
               <th style={{ backgroundColor: "#FEAE6F" }}>အချော</th>
               <th style={{ backgroundColor: "#FEAE6F" }}>အကျ</th>
               <th style={{ backgroundColor: "#FEAE6F" }}>စုစုပေါင်း</th>
-              <th style={{ backgroundColor: "#FEAE6F" }}>အချောနှုန်း</th>
+              <th style={{ backgroundColor: "#FEAE6F", width: 100 }}>
+                အချောနှုန်း
+              </th>
               <th style={{ backgroundColor: "#FEAE6F" }}></th>
-              <th style={{ backgroundColor: "#FEAE6F" }}>သင့်ငွေ</th>
+              <th style={{ backgroundColor: "#FEAE6F", width: 130 }}>
+                သင့်ငွေ
+              </th>
             </tr>
           </thead>
 

@@ -13,9 +13,9 @@ const GarageTransfer = () => {
   const [open, setOpen] = useState<boolean>(false);
   const workShop = useAppSelector((store) => store.workShop.selectedWorkShop);
   const leafTransfers = useAppSelector((store) => store.leafTransfer.item);
-  const concernLeafTransfer = leafTransfers.filter(
-    (item) => item.workShopId === workShop?.id
-  );
+  const concernLeafTransfer = leafTransfers
+    .filter((item) => item.workShopId === workShop?.id)
+    .sort((a, b) => a.id - b.id);
   const garage = useAppSelector((store) => store.garage.item);
   const leaves = useAppSelector((store) => store.typeOfLeaf.item);
   const [updateOpen, setUpdateOpen] = useState<boolean>(false);
@@ -26,22 +26,26 @@ const GarageTransfer = () => {
   const [leafTransfer, setLeafTransfer] = useState<LeafTransferGarage[]>([]);
 
   const handleDate = (date: Date) => {
-    const data = concernLeafTransfer.filter((item) => {
-      const itemDate = new Date(item.date);
-      return itemDate.toLocaleDateString() === date.toLocaleDateString();
-    });
+    const data = concernLeafTransfer
+      .filter((item) => {
+        const itemDate = new Date(item.date);
+        return itemDate.toLocaleDateString() === date.toLocaleDateString();
+      })
+      .sort((a, b) => a.id - b.id);
     setLeafTransfer(data);
     handelSeqs(data);
   };
   useEffect(() => {
     if (concernLeafTransfer.length) {
-      const concern = concernLeafTransfer.filter((item) => {
-        const itemDate = new Date(item.date);
-        console.log("date", itemDate);
-        return (
-          itemDate.toLocaleDateString() === selecteddate.toLocaleDateString()
-        );
-      });
+      const concern = concernLeafTransfer
+        .filter((item) => {
+          const itemDate = new Date(item.date);
+          console.log("date", itemDate);
+          return (
+            itemDate.toLocaleDateString() === selecteddate.toLocaleDateString()
+          );
+        })
+        .sort((a, b) => a.id - b.id);
       setLeafTransfer(concern);
       handelSeqs(concern);
     }
@@ -57,6 +61,7 @@ const GarageTransfer = () => {
       }
     });
   };
+  let no = 0;
   console.log("leaf", leafTransfer);
   console.log("seqs", seqs);
   return (
@@ -89,16 +94,15 @@ const GarageTransfer = () => {
           />
         </Box>
         <table border={1}>
-          <thead>
-            <tr style={{ border: "1px solid" }}>
-              <th>နေ့စွဲ</th>
-              <th>အထွက်ဂိုထောင်</th>
-              <th>အဝင်ဂိုထောင်</th>
-              <th>ဖက်အမျိုးအစား</th>
-              <th>ပိုနံပါတ်</th>
-              <th>ပိသာ</th>
-            </tr>
-          </thead>
+          <tr>
+            <th style={{ width: 50 }}>စဉ်</th>
+            <th style={{ width: 150 }}>နေ့စွဲ</th>
+            <th style={{ width: 150 }}>အထွက်ဂိုထောင်</th>
+            <th style={{ width: 150 }}>အဝင်ဂိုထောင်</th>
+            <th style={{ width: 150 }}>ဖက်အမျိုးအစား</th>
+            <th style={{ width: 150 }}>ပိုနံပါတ်</th>
+            <th style={{ width: 150 }}>ပိသာ</th>
+          </tr>
           {seqs.map((item) => {
             const exit = leafTransfer.find((c) => c.transferSeq == item);
             if (!exit) return null;
@@ -107,12 +111,12 @@ const GarageTransfer = () => {
             );
             return (
               <>
-                <thead
-                  key={leafTransfer.find((c) => c.transferSeq == item)?.id}
-                ></thead>
-                <tr style={{ border: "1px solid" }}>
-                  <td>{itemdate.toLocaleDateString()}</td>
-                  <td>
+                <tr key={leafTransfer.find((c) => c.transferSeq == item)?.id}>
+                  <th>{(no += 1)}</th>
+                  <td style={{ textAlign: "center" }}>
+                    {itemdate.toLocaleDateString()}
+                  </td>
+                  <td style={{ textAlign: "center" }}>
                     {
                       garage.find(
                         (g) =>
@@ -122,7 +126,7 @@ const GarageTransfer = () => {
                       )?.name
                     }
                   </td>
-                  <td>
+                  <td style={{ textAlign: "center" }}>
                     {
                       garage.find(
                         (g) =>
@@ -132,7 +136,7 @@ const GarageTransfer = () => {
                       )?.name
                     }
                   </td>
-                  <td>
+                  <td style={{ textAlign: "center" }}>
                     {
                       leaves.find(
                         (l) =>
@@ -148,10 +152,11 @@ const GarageTransfer = () => {
                       .map((m) => m.batchNo)
                       .join(",")}
                   </td>
-                  <td>
+                  <td style={{ textAlign: "center" }}>
                     {leafTransfer.find((c) => c.transferSeq == item)?.totalViss}
                   </td>
                   <td
+                    style={{ textAlign: "center", width: 50 }}
                     onClick={() => {
                       setDeleteOpen(true),
                         setSelectSeq(

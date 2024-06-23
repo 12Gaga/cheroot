@@ -25,9 +25,9 @@ const CherootInstallment = () => {
     (store) => store.cherootInstallment.item
   );
   const locations = useAppSelector((store) => store.conveyLocation.item);
-  const concernCherootInstallment = cherootInstallment.filter(
-    (item) => item.workShopId === workshop?.id
-  );
+  const concernCherootInstallment = cherootInstallment
+    .filter((item) => item.workShopId === workshop?.id)
+    .sort((a, b) => a.id - b.id);
   const [updateOpen, setUpdateOpen] = useState<boolean>(false);
   const [deleteOpen, setDeleteOpen] = useState<boolean>(false);
   const [selectId, setSelectId] = useState<number>(0);
@@ -42,18 +42,22 @@ const CherootInstallment = () => {
   >([]);
 
   const handleDate = (date: Date) => {
-    const data = concernCherootInstallment.filter((item) => {
-      const itemDate = new Date(item.date);
-      return itemDate.toLocaleDateString() === date.toLocaleDateString();
-    });
+    const data = concernCherootInstallment
+      .filter((item) => {
+        const itemDate = new Date(item.date);
+        return itemDate.toLocaleDateString() === date.toLocaleDateString();
+      })
+      .sort((a, b) => a.id - b.id);
     setCherootInstall(data);
     setLocation(null);
   };
 
   const handleLocation = (locationid: number) => {
-    const data = concernCherootInstallment.filter((item) => {
-      return item.conveyLocationId === locationid;
-    });
+    const data = concernCherootInstallment
+      .filter((item) => {
+        return item.conveyLocationId === locationid;
+      })
+      .sort((a, b) => a.id - b.id);
     setCherootInstall(data);
     setLocation(locationid);
   };
@@ -61,6 +65,7 @@ const CherootInstallment = () => {
   useEffect(() => {
     setCherootInstall(concernCherootInstallment);
   }, [cherootInstallment]);
+  let no = 0;
   return (
     <>
       <AdminLayout>
@@ -131,47 +136,51 @@ const CherootInstallment = () => {
         </Box>
 
         <table border={1}>
-          <thead>
-            <tr style={{ border: "1px solid" }}>
-              <th>နေ့စွဲ</th>
-              <th>မြို့နာမည်</th>
-              <th>ရရန်ကျန်ငွေ</th>
-              <th>သွင်းငွေ</th>
-              <th>ကျန်ငွေ</th>
-            </tr>
-          </thead>
+          <tr>
+            <th style={{ width: 50 }}>စဉ်</th>
+            <th style={{ width: 150 }}>နေ့စွဲ</th>
+            <th style={{ width: 150 }}>မြို့နာမည်</th>
+            <th style={{ width: 150 }}>ရရန်ကျန်ငွေ</th>
+            <th style={{ width: 150 }}>သွင်းငွေ</th>
+            <th style={{ width: 150 }}>ကျန်ငွေ</th>
+          </tr>
           {cherootInstall.map((item) => {
             const itemdate = new Date(item.date);
             return (
               <>
-                <thead key={item.id}>
-                  <tr style={{ border: "1px solid" }}>
-                    <td>{itemdate.toLocaleDateString()}</td>
-                    <td>
-                      {
-                        locations.find((l) => l.id === item.conveyLocationId)
-                          ?.name
-                      }
-                    </td>
-                    <td>{item.cashBalance}</td>
-                    <td>{item.payBalance}</td>
-                    <td>{item.cashBalance - item.payBalance}</td>
-                    <td
-                      onClick={() => {
-                        setUpdateOpen(true), setSelectId(item.id);
-                      }}
-                    >
-                      {<EditIcon />}
-                    </td>
-                    <td
-                      onClick={() => {
-                        setDeleteOpen(true), setSelectId(item.id);
-                      }}
-                    >
-                      {<DeleteIcon />}
-                    </td>
-                  </tr>
-                </thead>
+                <tr key={item.id}>
+                  <th>{(no += 1)}</th>
+                  <td style={{ textAlign: "center" }}>
+                    {itemdate.toLocaleDateString()}
+                  </td>
+                  <td style={{ textAlign: "center" }}>
+                    {
+                      locations.find((l) => l.id === item.conveyLocationId)
+                        ?.name
+                    }
+                  </td>
+                  <td style={{ textAlign: "center" }}>{item.cashBalance}</td>
+                  <td style={{ textAlign: "center" }}>{item.payBalance}</td>
+                  <td style={{ textAlign: "center" }}>
+                    {item.cashBalance - item.payBalance}
+                  </td>
+                  <td
+                    style={{ textAlign: "center", width: 50 }}
+                    onClick={() => {
+                      setUpdateOpen(true), setSelectId(item.id);
+                    }}
+                  >
+                    {<EditIcon />}
+                  </td>
+                  <td
+                    style={{ textAlign: "center", width: 50 }}
+                    onClick={() => {
+                      setDeleteOpen(true), setSelectId(item.id);
+                    }}
+                  >
+                    {<DeleteIcon />}
+                  </td>
+                </tr>
               </>
             );
           })}

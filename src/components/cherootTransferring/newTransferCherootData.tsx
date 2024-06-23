@@ -48,12 +48,12 @@ const NewTransferCherootData = ({ open, setOpen }: Props) => {
     useState<addCherootTransfer>(defaultValue);
   const workshop = useAppSelector((store) => store.workShop.selectedWorkShop);
   const locations = useAppSelector((store) => store.conveyLocation.item);
-  const concernLocations = locations.filter(
-    (item) => item.workShopId === workshop?.id
-  );
-  const concernCheroots = useAppSelector(
-    (store) => store.typeOfCheroot.item
-  ).filter((item) => item.workShopId === workshop?.id);
+  const concernLocations = locations
+    .filter((item) => item.workShopId === workshop?.id)
+    .sort((a, b) => a.id - b.id);
+  const concernCheroots = useAppSelector((store) => store.typeOfCheroot.item)
+    .filter((item) => item.workShopId === workshop?.id)
+    .sort((a, b) => a.id - b.id);
   const typeOfPacking = useAppSelector((store) => store.typeOfPacking.item);
   const formOfPacking = useAppSelector((store) => store.formOfPacking.item);
   const [concernPackingType, setConcernPackingType] = useState<TypeOfPacking[]>(

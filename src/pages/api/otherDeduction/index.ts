@@ -75,6 +75,7 @@ export default async function handler(
         remainCashBig: bigCash,
         remainCashSmall: smallCash,
         seq,
+        deductSeq: purchaseSeq,
         workShopId,
       },
     });
@@ -109,6 +110,7 @@ export default async function handler(
             damage: ch.damage,
             amount: ch.amount,
             seq,
+            reduceBandle: ch.reduceBandle ? ch.reduceBandle : 0,
             workShopId,
           },
         })
@@ -133,6 +135,7 @@ export default async function handler(
         })
       )
     );
+
     //remain leaf
     leaf.forEach(async (l) => {
       const leftViss = await prisma.agentLeafViss.findFirst({
@@ -225,7 +228,164 @@ export default async function handler(
       newRemainCash,
       newReturnCheroot,
       newLeafDeduction,
+      seq,
     });
+  } else if (method === "DELETE") {
+    const seq = req.query.seq as string;
+    const isValid = seq;
+    if (!isValid) return res.status(405).send("bad request");
+    const findOtherDeduction = await prisma.otherDeduction.findFirst({
+      where: { seq },
+    });
+    const findRetrunCheroot = await prisma.returnReadyCheroot.findMany({
+      where: { seq },
+    });
+    const findLeafDeduction = await prisma.leafDeduction.findMany({
+      where: { seq },
+    });
+    const newSeq = nanoid(5);
+    // remain Cash
+    if (findOtherDeduction) {
+      const agent = (await prisma.agent.findFirst({
+        where: { id: findOtherDeduction.agentId },
+      })) as Agent;
+      const bigCash =
+        findOtherDeduction.cashAdvanceBigDeduction +
+        (agent.cashBalcanceBig - findOtherDeduction.cashAdvanceBig);
+      const smallCash =
+        findOtherDeduction.cashAdvanceSmallDeduction +
+        (agent.cashBalcanceSmall - findOtherDeduction.cashAdvanceSmall);
+      await prisma.agent.updateMany({
+        data: { cashBalcanceBig: bigCash, cashBalcanceSmall: smallCash },
+        where: { id: findOtherDeduction.agentId },
+      });
+
+      const newRemainCash = await prisma.agentRemainCash.create({
+        data: {
+          agentId: findOtherDeduction.agentId,
+          remainCashBig: bigCash,
+          remainCashSmall: smallCash,
+          seq: newSeq,
+          workShopId: findOtherDeduction.agentId,
+        },
+      });
+      //undo extrapurchaseSummary
+      if (findOtherDeduction.deductSeq) {
+        await prisma.extraPurchaseSummery.updateMany({
+          where: { purchaseSeq: findOtherDeduction.deductSeq },
+          data: { isArchived: false },
+        });
+      }
+    }
+
+    //remain leaf
+    findLeafDeduction.forEach(async (l) => {
+      const leftViss = await prisma.agentLeafViss.findFirst({
+        where: { typeOfLeafId: l.typeOfLeafId, agentId: l.agentId },
+      });
+      if (!leftViss) return;
+
+      const reduceViss = leftViss.viss + l.deductViss;
+
+      await prisma.agentLeafViss.updateMany({
+        data: { viss: reduceViss },
+        where: { typeOfLeafId: l.typeOfLeafId, agentId: l.agentId },
+      });
+
+      await prisma.agentRemineLeaf.create({
+        data: {
+          agentId: l.agentId,
+          leafId: Number(l.typeOfLeafId),
+          workShopId: l.workShopId,
+          Viss: reduceViss,
+          seq: newSeq,
+        },
+      });
+    });
+
+    //remain filterSize
+    findRetrunCheroot.forEach(async (c) => {
+      const leftQuantity = await prisma.agentLeftFilterSize.findFirst({
+        where: { agentId: c.agentId, typeOfCherootId: c.typeOfCherootId },
+      });
+
+      if (!leftQuantity) return;
+      const formula = await prisma.formula.findFirst({
+        where: { typeOfCherootId: c.typeOfCherootId },
+      });
+      if (!formula) return;
+      const qty =
+        (formula.filterSizeQty * c.totalCherootQty) / formula.cherootQty;
+
+      const remainQty = leftQuantity.quantity + qty;
+      await prisma.agentLeftFilterSize.updateMany({
+        data: { quantity: remainQty },
+        where: { agentId: c.agentId, typeOfCherootId: c.typeOfCherootId },
+      });
+    });
+
+    //remain Tabacco
+    findRetrunCheroot.forEach(async (c) => {
+      const leftTabacco = await prisma.agentLeftTabacco.findFirst({
+        where: { agentId: c.agentId, typeOfCherootId: c.typeOfCherootId },
+      });
+
+      if (!leftTabacco) return;
+      const formula = await prisma.formula.findFirst({
+        where: { typeOfCherootId: c.typeOfCherootId },
+      });
+      if (!formula) return;
+      const tin = (formula.tabaccoTin * c.totalCherootQty) / formula.cherootQty;
+      const pyi = (formula.tabaccoPyi * c.totalCherootQty) / formula.cherootQty;
+      const tolPyi = tin * 16 + pyi;
+      const leftTolPyi = leftTabacco.tin * 16 + leftTabacco.pyi;
+      const Pyi = leftTolPyi + tolPyi;
+      const remainTin = Math.floor(Pyi / 16);
+      const remainPyi = Pyi % 16;
+      await prisma.agentLeftTabacco.updateMany({
+        data: { tin: remainTin, pyi: remainPyi },
+        where: { agentId: c.agentId, typeOfCherootId: c.typeOfCherootId },
+      });
+    });
+
+    //remain Label
+    findRetrunCheroot.forEach(async (c) => {
+      const leftBandle = await prisma.agentLeftLabel.findFirst({
+        where: { agentId: c.agentId, typeOfCherootId: c.typeOfCherootId },
+      });
+
+      if (!leftBandle) return;
+      if (c.reduceBandle === undefined) return;
+      const remainBandle = leftBandle.bandle + c.reduceBandle;
+
+      await prisma.agentLeftLabel.updateMany({
+        data: { bandle: remainBandle },
+        where: { agentId: c.agentId, typeOfCherootId: c.typeOfCherootId },
+      });
+    });
+    //delete otherdeduction & returnCheroot & leafDeduction
+    await prisma.otherDeduction.updateMany({
+      where: { seq },
+      data: { isArchived: true },
+    });
+    await prisma.returnReadyCheroot.updateMany({
+      where: { seq },
+      data: { isArchived: true },
+    });
+    await prisma.leafDeduction.updateMany({
+      where: { seq },
+      data: { isArchived: true },
+    });
+    //delete remainLeaf & remainCash
+    await prisma.agentRemineLeaf.updateMany({
+      where: { seq },
+      data: { isArchived: true },
+    });
+    await prisma.agentRemainCash.updateMany({
+      where: { seq },
+      data: { isArchived: true },
+    });
+    return res.status(200).send("ok");
   }
   res.status(400).json("bad request");
 }

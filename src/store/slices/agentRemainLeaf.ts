@@ -21,9 +21,16 @@ const AgentRemainLeaf = createSlice({
     addAgentRemainLeaf: (state, action: PayloadAction<AgentRemineLeaf>) => {
       state.item = [...state.item, action.payload];
     },
+    deletedAgentRemainLeaf: (state, action: PayloadAction<string>) => {
+      state.item = state.item.filter((item) => item.seq != action.payload);
+    },
   },
 });
 
-export const { setAgentRemainLeaf, setIsLoading, addAgentRemainLeaf } =
-  AgentRemainLeaf.actions;
+export const {
+  setAgentRemainLeaf,
+  setIsLoading,
+  addAgentRemainLeaf,
+  deletedAgentRemainLeaf,
+} = AgentRemainLeaf.actions;
 export default AgentRemainLeaf.reducer;

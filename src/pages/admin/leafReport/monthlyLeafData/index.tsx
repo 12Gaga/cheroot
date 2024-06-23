@@ -17,9 +17,9 @@ const MonthlyLeafData = () => {
   const leafDeduction = useAppSelector(
     (store) => store.leafDeduction.item
   ).filter((ld) => ld.workShopId === workShopId);
-  const leaves = useAppSelector((store) => store.typeOfLeaf.item).filter(
-    (l) => l.workShopId === workShopId
-  );
+  const leaves = useAppSelector((store) => store.typeOfLeaf.item)
+    .filter((l) => l.workShopId === workShopId)
+    .sort((a, b) => a.id - b.id);
   const agents = useAppSelector((store) => store.agent.item).filter(
     (a) => a.workShopId === workShopId
   );

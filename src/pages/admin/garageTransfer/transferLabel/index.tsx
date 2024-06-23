@@ -39,33 +39,38 @@ const TransferLabel = () => {
   const [labelTransfer, setLabelTransfer] = useState<LabelTransferGarage[]>([]);
 
   const handleDate = (date: Date) => {
-    const data = concernLabelTransfer.filter((item) => {
-      const itemDate = new Date(item.date);
-      return itemDate.toLocaleDateString() === date.toLocaleDateString();
-    });
+    const data = concernLabelTransfer
+      .filter((item) => {
+        const itemDate = new Date(item.date);
+        return itemDate.toLocaleDateString() === date.toLocaleDateString();
+      })
+      .sort((a, b) => a.id - b.id);
     setLabelTransfer(data);
     setLabel(null);
   };
 
   const handelLabel = (labelId: number) => {
-    const data = concernLabelTransfer.filter(
-      (item) => item.typeOfLabelId === labelId
-    );
+    const data = concernLabelTransfer
+      .filter((item) => item.typeOfLabelId === labelId)
+      .sort((a, b) => a.id - b.id);
     setLabelTransfer(data);
     setLabel(labelId);
   };
 
   useEffect(() => {
     if (concernLabelTransfer.length) {
-      const data = concernLabelTransfer.filter((item) => {
-        const itemDate = new Date(item.date);
-        return (
-          itemDate.toLocaleDateString() === selecteddate.toLocaleDateString()
-        );
-      });
+      const data = concernLabelTransfer
+        .filter((item) => {
+          const itemDate = new Date(item.date);
+          return (
+            itemDate.toLocaleDateString() === selecteddate.toLocaleDateString()
+          );
+        })
+        .sort((a, b) => a.id - b.id);
       setLabelTransfer(data);
     }
   }, [labelTransfers]);
+  let no = 0;
   return (
     <>
       <AdminLayout>
@@ -87,7 +92,7 @@ const TransferLabel = () => {
               }}
             />
           </Box>
-          <Box sx={{ width: 300 }}>
+          <Box sx={{}}>
             <Box sx={{ mt: 2, display: "flex", alignItems: "center" }}>
               <Typography sx={{ fontWeight: "bold", width: 150 }}>
                 တံဆိပ်အမျိုးအစား
@@ -122,51 +127,50 @@ const TransferLabel = () => {
           />
         </Box>
         <table border={1}>
-          <thead>
-            <tr style={{ border: "1px solid" }}>
-              <th>နေ့စွဲ</th>
-              <th>အထွက်ဂိုထောင်</th>
-              <th>အဝင်ဂိုထောင်</th>
-              <th>တံဆိပ်အမျိုးအစား</th>
-              <th>လိပ်</th>
-            </tr>
-          </thead>
+          <tr>
+            <th style={{ width: 50 }}>စဉ်</th>
+            <th style={{ width: 150 }}>နေ့စွဲ</th>
+            <th style={{ width: 150 }}>အထွက်ဂိုထောင်</th>
+            <th style={{ width: 150 }}>အဝင်ဂိုထောင်</th>
+            <th style={{ width: 150 }}>တံဆိပ်အမျိုးအစား</th>
+            <th style={{ width: 150 }}>လိပ်</th>
+          </tr>
           {labelTransfer.map((item) => {
             const itemdate = new Date(item.date);
             return (
               <>
-                <thead key={item.id}>
-                  <tr style={{ border: "1px solid" }}>
-                    <td>{itemdate.toLocaleDateString()}</td>
-                    <td>
-                      {garage.find((g) => g.id === item.exitGarageId)?.name}
-                    </td>
-                    <td>
-                      {
-                        garage.find((g) => g.id === item.enterenceGarageId)
-                          ?.name
-                      }
-                    </td>
-                    <td>
-                      {labels.find((f) => f.id === item.typeOfLabelId)?.name}
-                    </td>
-                    <td>{item.bandle}</td>
-                    <td
-                      onClick={() => {
-                        setUpdateOpen(true), setSelectId(item.id);
-                      }}
-                    >
-                      {<EditIcon />}
-                    </td>
-                    <td
-                      onClick={() => {
-                        setDeleteOpen(true), setSelectId(item.id);
-                      }}
-                    >
-                      {<DeleteIcon />}
-                    </td>
-                  </tr>
-                </thead>
+                <tr key={item.id}>
+                  <th>{(no += 1)}</th>
+                  <td style={{ textAlign: "center" }}>
+                    {itemdate.toLocaleDateString()}
+                  </td>
+                  <td style={{ textAlign: "center" }}>
+                    {garage.find((g) => g.id === item.exitGarageId)?.name}
+                  </td>
+                  <td style={{ textAlign: "center" }}>
+                    {garage.find((g) => g.id === item.enterenceGarageId)?.name}
+                  </td>
+                  <td style={{ textAlign: "center" }}>
+                    {labels.find((f) => f.id === item.typeOfLabelId)?.name}
+                  </td>
+                  <td style={{ textAlign: "center" }}>{item.bandle}</td>
+                  <td
+                    style={{ textAlign: "center", width: 50 }}
+                    onClick={() => {
+                      setUpdateOpen(true), setSelectId(item.id);
+                    }}
+                  >
+                    {<EditIcon />}
+                  </td>
+                  <td
+                    style={{ textAlign: "center", width: 50 }}
+                    onClick={() => {
+                      setDeleteOpen(true), setSelectId(item.id);
+                    }}
+                  >
+                    {<DeleteIcon />}
+                  </td>
+                </tr>
               </>
             );
           })}

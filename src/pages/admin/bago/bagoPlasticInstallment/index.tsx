@@ -30,9 +30,9 @@ const BagoPlasticInstallments = () => {
     (store) => store.bagoPlasticInstallment.item
   );
   const shops = useAppSelector((store) => store.typeOfShop.item);
-  const concernBagoInstallment = bagoInstallment.filter(
-    (item) => item.workShopId === workshop?.id
-  );
+  const concernBagoInstallment = bagoInstallment
+    .filter((item) => item.workShopId === workshop?.id)
+    .sort((a, b) => a.id - b.id);
   const [updateOpen, setUpdateOpen] = useState<boolean>(false);
   const [deleteOpen, setDeleteOpen] = useState<boolean>(false);
   const [selectId, setSelectId] = useState<number>(0);
@@ -45,18 +45,22 @@ const BagoPlasticInstallments = () => {
   >([]);
 
   const handleDate = (date: Date) => {
-    const data = concernBagoInstallment.filter((item) => {
-      const itemDate = new Date(item.date);
-      return itemDate.toLocaleDateString() === date.toLocaleDateString();
-    });
+    const data = concernBagoInstallment
+      .filter((item) => {
+        const itemDate = new Date(item.date);
+        return itemDate.toLocaleDateString() === date.toLocaleDateString();
+      })
+      .sort((a, b) => a.id - b.id);
     setPlasticInstall(data);
     setShop(null);
   };
 
   const handleShop = (shopId: number) => {
-    const data = concernBagoInstallment.filter((item) => {
-      return item.shopId === shopId;
-    });
+    const data = concernBagoInstallment
+      .filter((item) => {
+        return item.shopId === shopId;
+      })
+      .sort((a, b) => a.id - b.id);
     setPlasticInstall(data);
     setShop(shopId);
   };
@@ -64,6 +68,7 @@ const BagoPlasticInstallments = () => {
   useEffect(() => {
     setPlasticInstall(concernBagoInstallment);
   }, [bagoInstallment]);
+  let no = 0;
   return (
     <>
       <AdminLayout>
@@ -129,42 +134,48 @@ const BagoPlasticInstallments = () => {
           />
         </Box>
         <table border={1}>
-          <thead>
-            <tr style={{ border: "1px solid" }}>
-              <th>နေ့စွဲ</th>
-              <th>ဆိုင်နာမည်</th>
-              <th>ပေးရန်ကျန်ငွေ</th>
-              <th>သွင်းငွေ</th>
-              <th>လက်ကျန်ငွေ</th>
-            </tr>
-          </thead>
+          <tr>
+            <th style={{ width: 50 }}>စဉ်</th>
+            <th style={{ width: 150 }}>နေ့စွဲ</th>
+            <th style={{ width: 150 }}>ဆိုင်နာမည်</th>
+            <th style={{ width: 150 }}>ပေးရန်ကျန်ငွေ</th>
+            <th style={{ width: 150 }}>သွင်းငွေ</th>
+            <th style={{ width: 150 }}>လက်ကျန်ငွေ</th>
+          </tr>
           {plasticInstall.map((item) => {
             const itemdate = new Date(item.date);
             return (
               <>
-                <thead key={item.id}>
-                  <tr style={{ border: "1px solid" }}>
-                    <td>{itemdate.toLocaleDateString()}</td>
-                    <td>{shops.find((s) => s.id === item.shopId)?.name}</td>
-                    <td>{item.cashBalance}</td>
-                    <td>{item.payBalance}</td>
-                    <td>{item.cashBalance - item.payBalance}</td>
-                    <td
-                      onClick={() => {
-                        setUpdateOpen(true), setSelectId(item.id);
-                      }}
-                    >
-                      {<EditIcon />}
-                    </td>
-                    <td
-                      onClick={() => {
-                        setDeleteOpen(true), setSelectId(item.id);
-                      }}
-                    >
-                      {<DeleteIcon />}
-                    </td>
-                  </tr>
-                </thead>
+                <tr key={item.id}>
+                  <th>{(no += 1)}</th>
+                  <td style={{ textAlign: "center" }}>
+                    {itemdate.toLocaleDateString()}
+                  </td>
+                  <td style={{ textAlign: "center" }}>
+                    {shops.find((s) => s.id === item.shopId)?.name}
+                  </td>
+                  <td style={{ textAlign: "center" }}>{item.cashBalance}</td>
+                  <td style={{ textAlign: "center" }}>{item.payBalance}</td>
+                  <td style={{ textAlign: "center" }}>
+                    {item.cashBalance - item.payBalance}
+                  </td>
+                  <td
+                    style={{ textAlign: "center", width: 50 }}
+                    onClick={() => {
+                      setUpdateOpen(true), setSelectId(item.id);
+                    }}
+                  >
+                    {<EditIcon />}
+                  </td>
+                  <td
+                    style={{ textAlign: "center", width: 50 }}
+                    onClick={() => {
+                      setDeleteOpen(true), setSelectId(item.id);
+                    }}
+                  >
+                    {<DeleteIcon />}
+                  </td>
+                </tr>
               </>
             );
           })}

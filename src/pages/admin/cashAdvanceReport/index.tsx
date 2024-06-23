@@ -1,7 +1,5 @@
 import AdminLayout from "@/components/adminLayout";
 import { useAppSelector } from "@/store/hooks";
-import { setAgentRemainCash } from "@/store/slices/agentRemainCash";
-import { TheaterComedyOutlined } from "@mui/icons-material";
 import {
   Box,
   Typography,
@@ -10,11 +8,19 @@ import {
   MenuItem,
   ListItemText,
 } from "@mui/material";
-import { AgentRemainCash, OtherDeduction } from "@prisma/client";
+import {
+  AgentRemainCash,
+  CompensationFilterSize,
+  CompensationLabel,
+  CompensationLeaf,
+  CompensationTabacco,
+  OtherDeduction,
+} from "@prisma/client";
 import { useState } from "react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 const DailyCashAdvance = () => {
+  let no = 0;
   const workShopId = useAppSelector((store) => store.workShop.selectedWorkShop)
     ?.id as number;
   const otherDeduction = useAppSelector((store) => store.otherDeduction.item);
@@ -30,7 +36,28 @@ const DailyCashAdvance = () => {
   const remainCash = useAppSelector(
     (store) => store.agentReaminCash.item
   ).filter((rc) => rc.workShopId === workShopId);
+  const compensationLeaf = useAppSelector(
+    (store) => store.compensationLeaf.item
+  ).filter((ps) => ps.workShopId === workShopId);
+  const compensationFilter = useAppSelector(
+    (store) => store.compensationFilter.item
+  ).filter((ps) => ps.workShopId === workShopId);
+  const compensationTabacco = useAppSelector(
+    (store) => store.compensationTabacco.item
+  ).filter((ps) => ps.workShopId === workShopId);
+  const compensationLabel = useAppSelector(
+    (store) => store.compensationLabel.item
+  ).filter((ps) => ps.workShopId === workShopId);
+
   const [concernData, setConcernData] = useState<OtherDeduction[]>([]);
+  const [concernLeaf, setConcernLeaf] = useState<CompensationLeaf[]>([]);
+  const [concernFilter, setConcernFilter] = useState<CompensationFilterSize[]>(
+    []
+  );
+  const [concernTabacco, setConcernTabacco] = useState<CompensationTabacco[]>(
+    []
+  );
+  const [concernLabel, setConcernLabel] = useState<CompensationLabel[]>([]);
   const [agent, setAgent] = useState<number | null>(null);
   const [selecteddate, setSelectedDate] = useState<Date>(new Date());
 
@@ -60,14 +87,53 @@ const DailyCashAdvance = () => {
         new Date(item.date).getFullYear() === selecteddate.getFullYear()
     );
 
-    const data = concernOtherDeduction.filter(
-      (item) =>
-        item.agentId === agentId &&
-        new Date(item.date).getMonth() === selecteddate.getMonth() &&
-        new Date(item.date).getFullYear() === selecteddate.getFullYear()
-    );
+    const data = concernOtherDeduction
+      .filter(
+        (item) =>
+          item.agentId === agentId &&
+          new Date(item.date).getMonth() === selecteddate.getMonth() &&
+          new Date(item.date).getFullYear() === selecteddate.getFullYear()
+      )
+      .sort((a, b) => a.id - b.id);
+
+    const leafCompensation = compensationLeaf
+      .filter(
+        (item) =>
+          new Date(item.date).getMonth() === selecteddate.getMonth() &&
+          new Date(item.date).getFullYear() === selecteddate.getFullYear() &&
+          item.agentId === agentId
+      )
+      .sort((a, b) => a.id - b.id);
+    const filterCompensation = compensationFilter
+      .filter(
+        (item) =>
+          new Date(item.date).getMonth() === selecteddate.getMonth() &&
+          new Date(item.date).getFullYear() === selecteddate.getFullYear() &&
+          item.agentId === agentId
+      )
+      .sort((a, b) => a.id - b.id);
+    const tabaccoCompensation = compensationTabacco
+      .filter(
+        (item) =>
+          new Date(item.date).getMonth() === selecteddate.getMonth() &&
+          new Date(item.date).getFullYear() === selecteddate.getFullYear() &&
+          item.agentId === agentId
+      )
+      .sort((a, b) => a.id - b.id);
+    const labelCompensation = compensationLabel
+      .filter(
+        (item) =>
+          new Date(item.date).getMonth() === selecteddate.getMonth() &&
+          new Date(item.date).getFullYear() === selecteddate.getFullYear() &&
+          item.agentId === agentId
+      )
+      .sort((a, b) => a.id - b.id);
     setConcernData(data);
     setConcernRemainCash(dataone);
+    setConcernLeaf(leafCompensation);
+    setConcernFilter(filterCompensation);
+    setConcernTabacco(tabaccoCompensation);
+    setConcernLabel(labelCompensation);
     setAgent(agentId);
   };
 
@@ -93,14 +159,53 @@ const DailyCashAdvance = () => {
         new Date(item.date).getFullYear() === date.getFullYear()
     );
 
-    const dateData = concernOtherDeduction.filter(
-      (item) =>
-        new Date(item.date).getMonth() === date.getMonth() &&
-        new Date(item.date).getFullYear() === date.getFullYear() &&
-        item.agentId === agent
-    );
+    const dateData = concernOtherDeduction
+      .filter(
+        (item) =>
+          new Date(item.date).getMonth() === date.getMonth() &&
+          new Date(item.date).getFullYear() === date.getFullYear() &&
+          item.agentId === agent
+      )
+      .sort((a, b) => a.id - b.id);
+
+    const leafCompensation = compensationLeaf
+      .filter(
+        (item) =>
+          new Date(item.date).getMonth() === date.getMonth() &&
+          new Date(item.date).getFullYear() === date.getFullYear() &&
+          item.agentId === agent
+      )
+      .sort((a, b) => a.id - b.id);
+    const filterCompensation = compensationFilter
+      .filter(
+        (item) =>
+          new Date(item.date).getMonth() === date.getMonth() &&
+          new Date(item.date).getFullYear() === date.getFullYear() &&
+          item.agentId === agent
+      )
+      .sort((a, b) => a.id - b.id);
+    const tabaccoCompensation = compensationTabacco
+      .filter(
+        (item) =>
+          new Date(item.date).getMonth() === date.getMonth() &&
+          new Date(item.date).getFullYear() === date.getFullYear() &&
+          item.agentId === agent
+      )
+      .sort((a, b) => a.id - b.id);
+    const labelCompensation = compensationLabel
+      .filter(
+        (item) =>
+          new Date(item.date).getMonth() === date.getMonth() &&
+          new Date(item.date).getFullYear() === date.getFullYear() &&
+          item.agentId === agent
+      )
+      .sort((a, b) => a.id - b.id);
     setConcernData(dateData);
     setConcernRemainCash(dataone);
+    setConcernLeaf(leafCompensation);
+    setConcernFilter(filterCompensation);
+    setConcernTabacco(tabaccoCompensation);
+    setConcernLabel(labelCompensation);
   };
   console.log("exitdata", exitData);
   console.log("concerb", concernRemainCash);
@@ -332,6 +437,54 @@ const DailyCashAdvance = () => {
                 </th>
               </tr>
             )}
+          </table>
+        </Box>
+        <Box sx={{ mt: 10 }}>
+          <Typography sx={{ fontSize: "20px", mb: 1, color: "#059212" }}>
+            အလျော်အစား
+          </Typography>
+          <table border={1}>
+            <tr>
+              <th style={{ width: 50, backgroundColor: "#95D2B3" }}>စဉ်</th>
+              <th style={{ width: 150, backgroundColor: "#95D2B3" }}>
+                ငွေ(အကြီး)
+              </th>
+              <th style={{ width: 150, backgroundColor: "#95D2B3" }}>
+                ငွေ(အသေး)
+              </th>
+            </tr>
+
+            <tr>
+              <th>{(no += 1)}</th>
+              <td style={{ textAlign: "center" }}>
+                {concernLeaf.reduce((tol, leaf) => {
+                  return (tol += leaf.addCashBig);
+                }, 0) +
+                  concernFilter.reduce((tol, filter) => {
+                    return (tol += filter.addCashBig);
+                  }, 0) +
+                  concernTabacco.reduce((tol, tab) => {
+                    return (tol += tab.addCashBig);
+                  }, 0) +
+                  concernLabel.reduce((tol, label) => {
+                    return (tol += label.addCashBig);
+                  }, 0)}
+              </td>
+              <td style={{ textAlign: "center" }}>
+                {concernLeaf.reduce((tol, leaf) => {
+                  return (tol += leaf.addCashsmall);
+                }, 0) +
+                  concernFilter.reduce((tol, filter) => {
+                    return (tol += filter.addCashsmall);
+                  }, 0) +
+                  concernTabacco.reduce((tol, tab) => {
+                    return (tol += tab.addCashsmall);
+                  }, 0) +
+                  concernLabel.reduce((tol, label) => {
+                    return (tol += label.addCashsmall);
+                  }, 0)}
+              </td>
+            </tr>
           </table>
         </Box>
       </AdminLayout>

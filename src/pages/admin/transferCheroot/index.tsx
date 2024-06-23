@@ -10,7 +10,12 @@ import DeleteLocation from "@/components/cherootTransferring/deleteLocation";
 
 const TransferCheroot = () => {
   const [open, setOpen] = useState<boolean>(false);
+  const workShopId = useAppSelector((store) => store.workShop.selectedWorkShop)
+    ?.id as number;
   const locations = useAppSelector((store) => store.conveyLocation.item);
+  const concernLocation = locations
+    .filter((l) => l.workShopId === workShopId)
+    .sort((a, b) => a.id - b.id);
   const [updateOpen, setUpdateOpen] = useState<boolean>(false);
   const [deleteOpen, setDeleteOpen] = useState<boolean>(false);
   const [selectId, setSelectId] = useState<number>(0);
@@ -46,10 +51,7 @@ const TransferCheroot = () => {
         </Box>
 
         <Box sx={{ display: "flex", flexWrap: "wrap" }}>
-          {locations.map((item) => {
-            const workShopId = localStorage.getItem("selectedWorkShopId");
-            const exit = item.workShopId === Number(workShopId);
-            if (!exit) return null;
+          {concernLocation.map((item) => {
             return (
               <ItemCard
                 key={item.id}

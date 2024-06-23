@@ -10,7 +10,12 @@ import DeleteCheroot from "@/components/asign/deleteCheroot";
 
 const TypeCheroot = () => {
   const [open, setOpen] = useState<boolean>(false);
+  const workShopId = useAppSelector((store) => store.workShop.selectedWorkShop)
+    ?.id as number;
   const cheroots = useAppSelector((store) => store.typeOfCheroot.item);
+  const concernCheroot = cheroots
+    .filter((item) => item.workShopId === workShopId)
+    .sort((a, b) => a.id - b.id);
   const [updateOpen, setUpdateOpen] = useState<boolean>(false);
   const [deleteOpen, setDeleteOpen] = useState<boolean>(false);
   const [selectId, setSelectId] = useState<number>(0);
@@ -47,10 +52,7 @@ const TypeCheroot = () => {
         </Box>
 
         <Box sx={{ display: "flex", flexWrap: "wrap" }}>
-          {cheroots.map((item) => {
-            const workShopId = localStorage.getItem("selectedWorkShopId");
-            const exit = item.workShopId === Number(workShopId);
-            if (!exit) return null;
+          {concernCheroot.map((item) => {
             return (
               <ItemCard
                 key={item.id}

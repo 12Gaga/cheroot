@@ -50,18 +50,20 @@ const BagoFilterSize = () => {
 
   const concernShop = shops.filter((item) => item.workShopId === workshop?.id);
   const handleDate = (date: Date) => {
-    const data = concernBagoFilterSizes.filter((item) => {
-      const itemdate = new Date(item.date);
-      return itemdate.toLocaleDateString() === date.toLocaleDateString();
-    });
+    const data = concernBagoFilterSizes
+      .filter((item) => {
+        const itemdate = new Date(item.date);
+        return itemdate.toLocaleDateString() === date.toLocaleDateString();
+      })
+      .sort((a, b) => a.id - b.id);
     setBagoFilterSize(data);
     setSelecting({ ...selecting, typeOfFilterSize: null, typeOfShop: null });
   };
 
   const handleFilter = (filterSizeId: number) => {
-    const data = concernBagoFilterSizes.filter(
-      (item) => item.typeOfFilterSizeId === filterSizeId
-    );
+    const data = concernBagoFilterSizes
+      .filter((item) => item.typeOfFilterSizeId === filterSizeId)
+      .sort((a, b) => a.id - b.id);
     setBagoFilterSize(data);
     setSelecting({
       ...selecting,
@@ -71,25 +73,27 @@ const BagoFilterSize = () => {
   };
 
   const handleshop = (shopid: number) => {
-    const data = concernBagoFilterSizes.filter(
-      (item) => item.shopId === shopid
-    );
+    const data = concernBagoFilterSizes
+      .filter((item) => item.shopId === shopid)
+      .sort((a, b) => a.id - b.id);
     setBagoFilterSize(data);
     setSelecting({ ...selecting, typeOfShop: shopid, typeOfFilterSize: null });
   };
 
   useEffect(() => {
     if (concernBagoFilterSizes.length) {
-      const data = concernBagoFilterSizes.filter((item) => {
-        const itemDate = new Date(item.date);
-        return (
-          itemDate.toLocaleDateString() === selecteddate.toLocaleDateString()
-        );
-      });
+      const data = concernBagoFilterSizes
+        .filter((item) => {
+          const itemDate = new Date(item.date);
+          return (
+            itemDate.toLocaleDateString() === selecteddate.toLocaleDateString()
+          );
+        })
+        .sort((a, b) => a.id - b.id);
       setBagoFilterSize(data);
     }
   }, [bagoFilterSizes]);
-
+  let no = 0;
   return (
     <>
       <AdminLayout>
@@ -118,7 +122,7 @@ const BagoFilterSize = () => {
               }}
             />
           </Box>
-          <Box sx={{ width: 300 }}>
+          <Box sx={{}}>
             <Box sx={{ mt: 2, display: "flex", alignItems: "center" }}>
               <Typography sx={{ fontWeight: "bold", width: 150 }}>
                 အဆီခံအမျိုးအစား
@@ -177,50 +181,53 @@ const BagoFilterSize = () => {
           />
         </Box>
         <table border={1}>
-          <thead>
-            <tr style={{ border: "1px solid" }}>
-              <th>နေ့စွဲ</th>
-              <th>ဆိုင်နာမည်</th>
-              <th>အဆီခံအမျိုးအစား</th>
-              <th>အရေအတွက်</th>
-              <th>အိတ်</th>
-              <th>စုစုပေါင်းငွေ</th>
-            </tr>
-          </thead>
+          <tr>
+            <th style={{ width: 50 }}>စဉ်</th>
+            <th style={{ width: 150 }}>နေ့စွဲ</th>
+            <th style={{ width: 150 }}>ဆိုင်နာမည်</th>
+            <th style={{ width: 150 }}>အဆီခံအမျိုးအစား</th>
+            <th style={{ width: 150 }}>အရေအတွက်</th>
+            <th style={{ width: 150 }}>အိတ်</th>
+            <th style={{ width: 150 }}>စုစုပေါင်းငွေ</th>
+          </tr>
           {bagoFilerSize.map((item) => {
             const itemdate = new Date(item.date);
             return (
               <>
-                <thead key={item.id}>
-                  <tr style={{ border: "1px solid" }}>
-                    <td>{itemdate.toLocaleDateString()}</td>
-                    <td>{shops.find((s) => s.id === item.shopId)?.name}</td>
-                    <td>
-                      {
-                        filterSizes.find(
-                          (f) => f.id === item.typeOfFilterSizeId
-                        )?.name
-                      }
-                    </td>
-                    <td>{item.quantity}</td>
-                    <td>{item.bag}</td>
-                    <td>{item.totalPrice}</td>
-                    <td
-                      onClick={() => {
-                        setUpdateOpen(true), setSelectId(item.id);
-                      }}
-                    >
-                      {<EditIcon />}
-                    </td>
-                    <td
-                      onClick={() => {
-                        setDeleteOpen(true), setSelectId(item.id);
-                      }}
-                    >
-                      {<DeleteIcon />}
-                    </td>
-                  </tr>
-                </thead>
+                <tr key={item.id}>
+                  <th>{(no += 1)}</th>
+                  <td style={{ textAlign: "center" }}>
+                    {itemdate.toLocaleDateString()}
+                  </td>
+                  <td style={{ textAlign: "center" }}>
+                    {shops.find((s) => s.id === item.shopId)?.name}
+                  </td>
+                  <td style={{ textAlign: "center" }}>
+                    {
+                      filterSizes.find((f) => f.id === item.typeOfFilterSizeId)
+                        ?.name
+                    }
+                  </td>
+                  <td style={{ textAlign: "center" }}>{item.quantity}</td>
+                  <td style={{ textAlign: "center" }}>{item.bag}</td>
+                  <td style={{ textAlign: "center" }}>{item.totalPrice}</td>
+                  <td
+                    style={{ textAlign: "center", width: 50 }}
+                    onClick={() => {
+                      setUpdateOpen(true), setSelectId(item.id);
+                    }}
+                  >
+                    {<EditIcon />}
+                  </td>
+                  <td
+                    style={{ textAlign: "center", width: 50 }}
+                    onClick={() => {
+                      setDeleteOpen(true), setSelectId(item.id);
+                    }}
+                  >
+                    {<DeleteIcon />}
+                  </td>
+                </tr>
               </>
             );
           })}

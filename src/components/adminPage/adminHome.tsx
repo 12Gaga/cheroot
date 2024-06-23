@@ -103,6 +103,11 @@ const btns = [
     title: "ကိုယ်စားလှယ်ပစ္စည်းလက်ကျန်စစ်ခြင်း",
     url: "/admin/agentItemsReport",
   },
+  {
+    id: 20,
+    title: "ဖက်ပေးပစ္စည်းပေးထပ်ဝယ်စာရင်းစစ်ခြင်း",
+    url: "/admin/extraItemReport",
+  },
 ];
 
 const AdminRoute = () => {

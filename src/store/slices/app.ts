@@ -63,6 +63,10 @@ import { setExtraPurchaseSummery } from "./extraPurchaseSummery";
 import { setAgentRemainFilter } from "./agentRemainFilter";
 import { setAgentRemainTabacco } from "./agentRemainTabacco";
 import { setAgentRemainLabel } from "./agentRemainLabel";
+import { setCompensationLeaf } from "./compensationLeaf";
+import { setCompensationFilterSize } from "./compensationFilterSize";
+import { setCompensationTabacco } from "./compensationTabacco";
+import { setCompensationLabel } from "./compensationLabel";
 
 const initialState: appSlice = {
   init: false,
@@ -140,6 +144,10 @@ export const fetchApp = createAsyncThunk(
         agentRemainFilterSize,
         agentRemainTabacco,
         agentRemainLabel,
+        compensationLeaf,
+        compensationFilterSize,
+        compensationTabacco,
+        compensationLabel,
       } = dataFromServer;
       thunkApi.dispatch(setInit(true));
       thunkApi.dispatch(setIndustry(industry));
@@ -206,6 +214,10 @@ export const fetchApp = createAsyncThunk(
       thunkApi.dispatch(setAgentRemainFilter(agentRemainFilterSize));
       thunkApi.dispatch(setAgentRemainTabacco(agentRemainTabacco));
       thunkApi.dispatch(setAgentRemainLabel(agentRemainLabel));
+      thunkApi.dispatch(setCompensationLeaf(compensationLeaf));
+      thunkApi.dispatch(setCompensationFilterSize(compensationFilterSize));
+      thunkApi.dispatch(setCompensationTabacco(compensationTabacco));
+      thunkApi.dispatch(setCompensationLabel(compensationLabel));
       onSuccess && onSuccess();
     } catch (err) {
       onError && onError(err);

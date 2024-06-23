@@ -85,11 +85,13 @@ const AddLeaf = ({ open, setOpen }: Props) => {
   };
 
   const handelLeaf = (leafId: number) => {
-    const leaf = leafstock.filter(
-      (item) =>
-        item.typeOfLeafId === leafId &&
-        item.garageId === newLeafAddStock.garageId
-    );
+    const leaf = leafstock
+      .filter(
+        (item) =>
+          item.typeOfLeafId === leafId &&
+          item.garageId === newLeafAddStock.garageId
+      )
+      .sort((a, b) => a.id - b.id);
     let batchno = leaf.length && leaf[leaf.length - 1].batchNo;
     batchno = batchno === 1000 ? 1 : (batchno += 1);
     console.log("batcj", leaf);
@@ -101,11 +103,13 @@ const AddLeaf = ({ open, setOpen }: Props) => {
   };
 
   const handelGarage = (garageId: number) => {
-    const leaf = leafstock.filter(
-      (item) =>
-        item.typeOfLeafId === newLeafAddStock.typeOfLeafId &&
-        item.garageId === garageId
-    );
+    const leaf = leafstock
+      .filter(
+        (item) =>
+          item.typeOfLeafId === newLeafAddStock.typeOfLeafId &&
+          item.garageId === garageId
+      )
+      .sort((a, b) => a.id - b.id);
     let batchno = leaf.length && leaf[leaf.length - 1].batchNo;
     batchno = batchno === 1000 ? 1 : (batchno += 1);
     console.log("batcj", leaf);

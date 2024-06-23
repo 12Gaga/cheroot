@@ -74,9 +74,9 @@ const AddStocks = () => {
       return itemDate.toLocaleDateString() === date.toLocaleDateString();
     });
     const leafSeq = dataone.map((item) => item.stockSeq);
-    const datatwo = leafAddStockConcern.filter((item) =>
-      leafSeq.includes(item.stockSeq)
-    );
+    const datatwo = leafAddStockConcern
+      .filter((item) => leafSeq.includes(item.stockSeq))
+      .sort((a, b) => a.id - b.id);
     setLeafStocks(dataone);
     setAddStocks(datatwo);
     setSelecting({ ...selecting, typeOfLeaf: null, typeOfShop: null });
@@ -85,9 +85,9 @@ const AddStocks = () => {
   const handleLeaf = (leafId: number) => {
     const dataone = concernStock.filter((item) => item.typeOfLeafId === leafId);
     const leafSeq = dataone.map((item) => item.stockSeq);
-    const datatwo = leafAddStockConcern.filter((item) =>
-      leafSeq.includes(item.stockSeq)
-    );
+    const datatwo = leafAddStockConcern
+      .filter((item) => leafSeq.includes(item.stockSeq))
+      .sort((a, b) => a.id - b.id);
     setLeafStocks(dataone);
     setAddStocks(datatwo);
     console.log("leaf", addstocks);
@@ -97,9 +97,9 @@ const AddStocks = () => {
   const handleshop = (shopid: number) => {
     const dataone = concernStock.filter((item) => item.shopId === shopid);
     const shopSeq = dataone.map((item) => item.stockSeq);
-    const datatwo = leafAddStockConcern.filter((item) =>
-      shopSeq.includes(item.stockSeq)
-    );
+    const datatwo = leafAddStockConcern
+      .filter((item) => shopSeq.includes(item.stockSeq))
+      .sort((a, b) => a.id - b.id);
     setLeafStocks(dataone);
     setAddStocks(datatwo);
     setSelecting({ ...selecting, typeOfShop: shopid, typeOfLeaf: null });
@@ -107,16 +107,20 @@ const AddStocks = () => {
 
   useEffect(() => {
     if (leafAddStockConcern.length) {
-      const data = leafAddStockConcern.filter((item) => {
-        const itemDate = new Date(item.date);
-        return (
-          itemDate.toLocaleDateString() === selecteddate.toLocaleDateString()
-        );
-      });
+      const data = leafAddStockConcern
+        .filter((item) => {
+          const itemDate = new Date(item.date);
+          return (
+            itemDate.toLocaleDateString() === selecteddate.toLocaleDateString()
+          );
+        })
+        .sort((a, b) => a.id - b.id);
       setAddStocks(data);
       setLeafStocks(concernStock);
     }
   }, [addStock]);
+
+  let no = 0;
   return (
     <>
       <AdminLayout>
@@ -205,64 +209,68 @@ const AddStocks = () => {
         </Box>
 
         <table border={1}>
-          <thead>
-            <tr style={{ border: "1px solid" }}>
-              <th>နေ့စွဲ</th>
-              <th>ဘောက်ချာနံပါတ်</th>
-              <th>ကားနံပါတ်</th>
-              <th>ဖက်အမျိုးအစား</th>
-              <th>ပိုနံပါတ်</th>
-              <th>ပိဿာ</th>
-              <th>ဝယ်ယူခဲ့သည့်ဆိုင်အမည်</th>
-            </tr>
-          </thead>
+          <tr>
+            <th style={{ width: 50 }}>စဉ်</th>
+            <th style={{ width: 150 }}>နေ့စွဲ</th>
+            <th style={{ width: 150 }}>ဘောက်ချာနံပါတ်</th>
+            <th style={{ width: 150 }}>ကားနံပါတ်</th>
+            <th style={{ width: 150 }}>ဖက်အမျိုးအစား</th>
+            <th style={{ width: 150 }}>ပိုနံပါတ်</th>
+            <th style={{ width: 150 }}>ပိဿာ</th>
+            <th style={{ width: 200 }}>ဝယ်ယူခဲ့သည့်ဆိုင်အမည်</th>
+          </tr>
 
           {addstocks.map((item) => {
             const itemDate = new Date(item.date);
             return (
-              <thead key={item.id}>
-                <tr style={{ border: "1px solid" }}>
-                  <td>{itemDate.toLocaleDateString()}</td>
-                  <td>{item.invNo}</td>
-                  <td>{item.carNo}</td>
-                  {leafstocks.map((i) => {
-                    const iDate = new Date(i.date);
-                    if (
-                      itemDate.toLocaleDateString() ===
-                        iDate.toLocaleDateString() &&
-                      item.typeOfLeafId === i.typeOfLeafId &&
-                      item.stockSeq === i.stockSeq
-                    ) {
-                      return (
-                        <>
-                          <td>
-                            {leaves.find((l) => l.id === i.typeOfLeafId)?.name}
-                          </td>
-                          <td>{i.batchNo}</td>
-                          <td>{i.viss}</td>
-                          <td>{shop.find((s) => s.id === i.shopId)?.name}</td>
-                          <td
-                            onClick={() => {
-                              setUpdateOpen(true),
-                                setSelectStockSeq(item.stockSeq);
-                            }}
-                          >
-                            {<EditIcon />}
-                          </td>
-                          <td
-                            onClick={() => {
-                              setDeleteOpen(true),
-                                setSelectStockSeq(item.stockSeq);
-                            }}
-                          >
-                            {<DeleteIcon />}
-                          </td>
-                        </>
-                      );
-                    }
-                  })}
-                </tr>
-              </thead>
+              <tr key={item.id}>
+                <th>{(no += 1)}</th>
+                <td style={{ textAlign: "center" }}>
+                  {itemDate.toLocaleDateString()}
+                </td>
+                <td style={{ textAlign: "center" }}>{item.invNo}</td>
+                <td style={{ textAlign: "center" }}>{item.carNo}</td>
+                {leafstocks.map((i) => {
+                  const iDate = new Date(i.date);
+                  if (
+                    itemDate.toLocaleDateString() ===
+                      iDate.toLocaleDateString() &&
+                    item.typeOfLeafId === i.typeOfLeafId &&
+                    item.stockSeq === i.stockSeq
+                  ) {
+                    return (
+                      <>
+                        <td style={{ textAlign: "center" }}>
+                          {leaves.find((l) => l.id === i.typeOfLeafId)?.name}
+                        </td>
+                        <td style={{ textAlign: "center" }}>{i.batchNo}</td>
+                        <td style={{ textAlign: "center" }}>{i.viss}</td>
+                        <td style={{ textAlign: "center" }}>
+                          {shop.find((s) => s.id === i.shopId)?.name}
+                        </td>
+                        <td
+                          style={{ textAlign: "center", width: 50 }}
+                          onClick={() => {
+                            setUpdateOpen(true),
+                              setSelectStockSeq(item.stockSeq);
+                          }}
+                        >
+                          {<EditIcon />}
+                        </td>
+                        <td
+                          style={{ textAlign: "center", width: 50 }}
+                          onClick={() => {
+                            setDeleteOpen(true),
+                              setSelectStockSeq(item.stockSeq);
+                          }}
+                        >
+                          {<DeleteIcon />}
+                        </td>
+                      </>
+                    );
+                  }
+                })}
+              </tr>
             );
           })}
         </table>

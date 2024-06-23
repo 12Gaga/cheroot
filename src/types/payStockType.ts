@@ -26,6 +26,10 @@ export interface createNewPayStock extends BasicOption {
   garageId: number | undefined;
 }
 
+export interface deletePayStock extends BasicOption {
+  id: number;
+}
+
 export interface payStock {
   cherootQty: number;
   filterSizeQty: number;

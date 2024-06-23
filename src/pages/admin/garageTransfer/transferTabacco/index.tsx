@@ -44,33 +44,38 @@ const TransferTabacco = () => {
   >([]);
 
   const handleDate = (date: Date) => {
-    const data = concernTabaccoTransfer.filter((item) => {
-      const itemDate = new Date(item.date);
-      return itemDate.toLocaleDateString() === date.toLocaleDateString();
-    });
+    const data = concernTabaccoTransfer
+      .filter((item) => {
+        const itemDate = new Date(item.date);
+        return itemDate.toLocaleDateString() === date.toLocaleDateString();
+      })
+      .sort((a, b) => a.id - b.id);
     setTabaccoTransfer(data);
     setTabacco(null);
   };
 
   const handelTabacco = (tabaccoId: number) => {
-    const data = concernTabaccoTransfer.filter(
-      (item) => item.typeOfTabaccoId === tabaccoId
-    );
+    const data = concernTabaccoTransfer
+      .filter((item) => item.typeOfTabaccoId === tabaccoId)
+      .sort((a, b) => a.id - b.id);
     setTabaccoTransfer(data);
     setTabacco(tabaccoId);
   };
 
   useEffect(() => {
     if (concernTabaccoTransfer.length) {
-      const data = concernTabaccoTransfer.filter((item) => {
-        const itemDate = new Date(item.date);
-        return (
-          itemDate.toLocaleDateString() === selecteddate.toLocaleDateString()
-        );
-      });
+      const data = concernTabaccoTransfer
+        .filter((item) => {
+          const itemDate = new Date(item.date);
+          return (
+            itemDate.toLocaleDateString() === selecteddate.toLocaleDateString()
+          );
+        })
+        .sort((a, b) => a.id - b.id);
       setTabaccoTransfer(data);
     }
   }, [tabaccoTransfers]);
+  let no = 0;
   return (
     <>
       <AdminLayout>
@@ -92,7 +97,7 @@ const TransferTabacco = () => {
               }}
             />
           </Box>
-          <Box sx={{ width: 300 }}>
+          <Box sx={{}}>
             <Box sx={{ mt: 2, display: "flex", alignItems: "center" }}>
               <Typography sx={{ fontWeight: "bold", width: 150 }}>
                 ဆေးစပ်အမျိုးအစား
@@ -127,58 +132,54 @@ const TransferTabacco = () => {
           />
         </Box>
         <table border={1}>
-          <thead>
-            <tr style={{ border: "1px solid" }}>
-              <th>နေ့စွဲ</th>
-              <th>အထွက်ဂိုထောင်</th>
-              <th>အဝင်ဂိုထောင်</th>
-              <th>ဆေးစပ်အမျိုးအစား</th>
-              <th>တင်း</th>
-              <th>ပြည်</th>
-              <th>အိတ်</th>
-            </tr>
-          </thead>
+          <tr>
+            <th style={{ width: 50 }}>စဉ်</th>
+            <th style={{ width: 150 }}>နေ့စွဲ</th>
+            <th style={{ width: 150 }}>အထွက်ဂိုထောင်</th>
+            <th style={{ width: 150 }}>အဝင်ဂိုထောင်</th>
+            <th style={{ width: 150 }}>ဆေးစပ်အမျိုးအစား</th>
+            <th style={{ width: 150 }}>တင်း</th>
+            <th style={{ width: 150 }}>ပြည်</th>
+            <th style={{ width: 150 }}>အိတ်</th>
+          </tr>
           {tabaccoTransfer.map((item) => {
             const itemdate = new Date(item.date);
             return (
               <>
-                <thead key={item.id}>
-                  <tr style={{ border: "1px solid" }}>
-                    <td>{itemdate.toLocaleDateString()}</td>
-                    <td>
-                      {garage.find((g) => g.id === item.exitGarageId)?.name}
-                    </td>
-                    <td>
-                      {
-                        garage.find((g) => g.id === item.enterenceGarageId)
-                          ?.name
-                      }
-                    </td>
-                    <td>
-                      {
-                        tabaccos.find((f) => f.id === item.typeOfTabaccoId)
-                          ?.name
-                      }
-                    </td>
-                    <td>{item.tin}</td>
-                    <td>{item.pyi}</td>
-                    <td>{item.bag}</td>
-                    <td
-                      onClick={() => {
-                        setUpdateOpen(true), setSelectId(item.id);
-                      }}
-                    >
-                      {<EditIcon />}
-                    </td>
-                    <td
-                      onClick={() => {
-                        setDeleteOpen(true), setSelectId(item.id);
-                      }}
-                    >
-                      {<DeleteIcon />}
-                    </td>
-                  </tr>
-                </thead>
+                <tr key={item.id}>
+                  <th>{(no += 1)}</th>
+                  <td style={{ textAlign: "center" }}>
+                    {itemdate.toLocaleDateString()}
+                  </td>
+                  <td style={{ textAlign: "center" }}>
+                    {garage.find((g) => g.id === item.exitGarageId)?.name}
+                  </td>
+                  <td style={{ textAlign: "center" }}>
+                    {garage.find((g) => g.id === item.enterenceGarageId)?.name}
+                  </td>
+                  <td style={{ textAlign: "center" }}>
+                    {tabaccos.find((f) => f.id === item.typeOfTabaccoId)?.name}
+                  </td>
+                  <td style={{ textAlign: "center" }}>{item.tin}</td>
+                  <td style={{ textAlign: "center" }}>{item.pyi}</td>
+                  <td style={{ textAlign: "center" }}>{item.bag}</td>
+                  <td
+                    style={{ textAlign: "center", width: 50 }}
+                    onClick={() => {
+                      setUpdateOpen(true), setSelectId(item.id);
+                    }}
+                  >
+                    {<EditIcon />}
+                  </td>
+                  <td
+                    style={{ textAlign: "center", width: 50 }}
+                    onClick={() => {
+                      setDeleteOpen(true), setSelectId(item.id);
+                    }}
+                  >
+                    {<DeleteIcon />}
+                  </td>
+                </tr>
               </>
             );
           })}

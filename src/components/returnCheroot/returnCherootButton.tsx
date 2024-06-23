@@ -26,12 +26,12 @@ const ReturnCherootButton = ({ newOtherDeduction }: Props) => {
     dispatch(
       CreateOtherDeduction({
         ...newOtherDeduction,
-        onSuccess: () => {
+        onSuccess: (seq: string) => {
           dispatch(setOpenSnackbar({ message: "Add Other Deduction success" }));
           dispatch(setLoadingOtherDeduction(false));
           console.log("hello");
           router.push(
-            `/admin/returnCheroot/printReturnCherootData?agentId=${newOtherDeduction.agentId}&date=${newOtherDeduction.date}&deductDate=${newOtherDeduction.deductDate}`
+            `/admin/returnCheroot/printReturnCherootData?agentId=${newOtherDeduction.agentId}&seq=${seq}&deductSeq=${newOtherDeduction.purchaseSeq}`
           );
         },
       })
@@ -49,7 +49,9 @@ const ReturnCherootButton = ({ newOtherDeduction }: Props) => {
             !newOtherDeduction.cashAdvanceSmallDeduction === undefined ||
             !newOtherDeduction.cashAdvanceBig === undefined ||
             !newOtherDeduction.cashAdvanceSmall === undefined ||
-            !newOtherDeduction.bonusPayment === undefined
+            !newOtherDeduction.bonusPayment === undefined ||
+            !newOtherDeduction.cheroots.length ||
+            !newOtherDeduction.leaf.length
           }
           sx={{
             bgcolor: "#E55252",

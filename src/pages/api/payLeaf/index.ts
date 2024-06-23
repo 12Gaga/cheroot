@@ -34,11 +34,11 @@ export default async function handler(
       amount != undefined &&
       garageId;
     if (!isValid) return res.status(405).send("bad request");
-
     const realBatchNo = await prisma.leaf.findMany({
       where: { id: { in: BatchNos } },
     });
-
+    const seq = nanoid(5);
+    //creat payLeaf
     const newPayLeaf = await prisma.$transaction(
       realBatchNo.map((item) =>
         prisma.payLeaf.create({
@@ -54,20 +54,17 @@ export default async function handler(
             amount,
             enterDate: item.date,
             garageId,
+            seq,
             workShopId,
           },
         })
       )
     );
-    // const addViss = realBatchNo.reduce(
-    //   (totalViss, viss) => (totalViss += viss.viss),
-    //   0
-    // );
+    //remian leaf
     const leftViss = await prisma.agentLeafViss.findFirst({
       where: { typeOfLeafId, agentId },
     });
     let newRemainLeaf;
-    const seq = nanoid(5);
     if (leftViss) {
       const totalViss = netViss + leftViss.viss;
 
@@ -101,13 +98,47 @@ export default async function handler(
         },
       });
     }
-
-    // await prisma.leaf.updateMany({
-    //   data: { isArchived: true },
-    //   where: { id: { in: BatchNos } },
-    // });
-
     return res.status(200).json({ newPayLeaf, newRemainLeaf });
+  } else if (method === "DELETE") {
+    const seq = req.query.seq as string;
+    const isValid = seq;
+    if (!isValid) return res.status(405).send("bad request");
+    const find = await prisma.payLeaf.findFirst({ where: { seq } });
+    const newSeq = nanoid(5);
+    //remain leaf
+    if (find) {
+      const leftViss = await prisma.agentLeafViss.findFirst({
+        where: { typeOfLeafId: find.typeOfLeafId, agentId: find.agentId },
+      });
+      if (leftViss) {
+        const totalViss = leftViss.viss - find.netViss;
+
+        await prisma.agentLeafViss.updateMany({
+          data: { viss: totalViss },
+          where: { typeOfLeafId: find.typeOfLeafId, agentId: find.agentId },
+        });
+
+        await prisma.agentRemineLeaf.create({
+          data: {
+            agentId: find.agentId,
+            leafId: find.typeOfLeafId,
+            workShopId: find.workShopId,
+            Viss: totalViss,
+            seq: newSeq,
+          },
+        });
+      }
+    }
+    //delete payLeaf & reaminLeaf
+    await prisma.payLeaf.updateMany({
+      where: { seq },
+      data: { isArchived: true },
+    });
+    await prisma.agentRemineLeaf.updateMany({
+      where: { seq },
+      data: { isArchived: true },
+    });
+    return res.status(400).send("ok");
   }
   res.status(200).json("bad request");
 }

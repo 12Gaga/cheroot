@@ -1,4 +1,4 @@
-import { extraPurchaseSummerySlice } from "@/types/extraPurchaseSummaryType";
+import { extraPurchaseSummerySlice } from "@/types/extraPurchaseType";
 import { ExtraPurchaseSummery } from "@prisma/client";
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 

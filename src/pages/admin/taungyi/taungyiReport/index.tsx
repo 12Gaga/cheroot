@@ -31,6 +31,7 @@ const TaungyiReport = () => {
       return (total += data.tolBatchNo);
     }, 0);
     console.log("dhfidlh", exitData);
+    console.log("dhfidlh2", enterData);
     setTolBatch(enterData - exitData);
     setStore(storeId);
   };

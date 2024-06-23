@@ -10,7 +10,12 @@ import DeletePlastic from "@/components/asign/deletePlastic";
 
 const Plastic = () => {
   const [open, setOpen] = useState<boolean>(false);
+  const workShopId = useAppSelector((store) => store.workShop.selectedWorkShop)
+    ?.id as number;
   const plastics = useAppSelector((store) => store.typeOfPlastic.item);
+  const concernPlastic = plastics
+    .filter((item) => item.workShopId === workShopId)
+    .sort((a, b) => a.id - b.id);
   const [updateOpen, setUpdateOpen] = useState<boolean>(false);
   const [deleteOpen, setDeleteOpen] = useState<boolean>(false);
   const [selectId, setSelectId] = useState<number>(0);
@@ -47,10 +52,7 @@ const Plastic = () => {
         </Box>
 
         <Box sx={{ display: "flex", flexWrap: "wrap" }}>
-          {plastics.map((item) => {
-            const workShopId = localStorage.getItem("selectedWorkShopId");
-            const exit = item.workShopId === Number(workShopId);
-            if (!exit) return null;
+          {concernPlastic.map((item) => {
             return (
               <ItemCard
                 key={item.id}

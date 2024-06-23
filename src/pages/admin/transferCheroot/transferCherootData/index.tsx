@@ -50,18 +50,20 @@ const TransferCherootData = () => {
     (item) => item.workShopId === workshop?.id
   );
   const handleDate = (date: Date) => {
-    const data = concernCherootTransfer.filter((item) => {
-      const itemdate = new Date(item.date);
-      return itemdate.toLocaleDateString() === date.toLocaleDateString();
-    });
+    const data = concernCherootTransfer
+      .filter((item) => {
+        const itemdate = new Date(item.date);
+        return itemdate.toLocaleDateString() === date.toLocaleDateString();
+      })
+      .sort((a, b) => a.id - b.id);
     setCherootTransfer(data);
     setSelecting({ ...selecting, typeOfCheroot: null, location: null });
   };
 
   const handleCheroot = (cherootId: number) => {
-    const data = concernCherootTransfer.filter(
-      (item) => item.typeOfCherootId === cherootId
-    );
+    const data = concernCherootTransfer
+      .filter((item) => item.typeOfCherootId === cherootId)
+      .sort((a, b) => a.id - b.id);
     setCherootTransfer(data);
     setSelecting({
       ...selecting,
@@ -71,25 +73,27 @@ const TransferCherootData = () => {
   };
 
   const handleLocation = (locationid: number) => {
-    const data = concernCherootTransfer.filter(
-      (item) => item.conveyLocationId === locationid
-    );
+    const data = concernCherootTransfer
+      .filter((item) => item.conveyLocationId === locationid)
+      .sort((a, b) => a.id - b.id);
     setCherootTransfer(data);
     setSelecting({ ...selecting, location: locationid, typeOfCheroot: null });
   };
 
   useEffect(() => {
     if (concernCherootTransfer.length) {
-      const data = concernCherootTransfer.filter((item) => {
-        const itemDate = new Date(item.date);
-        return (
-          itemDate.toLocaleDateString() === selecteddate.toLocaleDateString()
-        );
-      });
+      const data = concernCherootTransfer
+        .filter((item) => {
+          const itemDate = new Date(item.date);
+          return (
+            itemDate.toLocaleDateString() === selecteddate.toLocaleDateString()
+          );
+        })
+        .sort((a, b) => a.id - b.id);
       setCherootTransfer(data);
     }
   }, [cherootTransfers]);
-
+  let no = 0;
   return (
     <>
       <AdminLayout>
@@ -118,7 +122,7 @@ const TransferCherootData = () => {
               }}
             />
           </Box>
-          <Box sx={{ width: 300 }}>
+          <Box sx={{}}>
             <Box sx={{ mt: 2, display: "flex", alignItems: "center" }}>
               <Typography sx={{ fontWeight: "bold", width: 150 }}>
                 ဆေးလိပ်အမျိုးအစား
@@ -178,68 +182,67 @@ const TransferCherootData = () => {
         </Box>
 
         <table border={1}>
-          <thead>
-            <tr style={{ border: "1px solid" }}>
-              <th>နေ့စွဲ</th>
-              <th>မြို့နာမည်</th>
-              <th>ဆေးလိပ်အမျိုးအစား</th>
-              <th>ပါကင်အမျိုးအစား</th>
-              <th>ထုပ်ပိုးမှုအမျိုးအစား</th>
-              <th>အရေအတွက်</th>
-              <th>တန်ဖိုး</th>
-              <th>စုစုပေါင်းတန်ဖိုး</th>
-            </tr>
-          </thead>
+          <tr>
+            <th style={{ width: 50 }}>စဉ်</th>
+            <th style={{ width: 150 }}>နေ့စွဲ</th>
+            <th style={{ width: 150 }}>မြို့နာမည်</th>
+            <th style={{ width: 150 }}>ဆေးလိပ်အမျိုးအစား</th>
+            <th style={{ width: 150 }}>ပါကင်အမျိုးအစား</th>
+            <th style={{ width: 150 }}>ထုပ်ပိုးမှုအမျိုးအစား</th>
+            <th style={{ width: 150 }}>အရေအတွက်</th>
+            <th style={{ width: 150 }}>တန်ဖိုး</th>
+            <th style={{ width: 150 }}>စုစုပေါင်းတန်ဖိုး</th>
+          </tr>
           {cherootTransfer.map((item) => {
             const itemdate = new Date(item.date);
             return (
               <>
-                <thead key={item.id}>
-                  <tr style={{ border: "1px solid" }}>
-                    <td>{itemdate.toLocaleDateString()}</td>
-                    <td>
-                      {
-                        locations.find((l) => l.id === item.conveyLocationId)
-                          ?.name
-                      }
-                    </td>
-                    <td>
-                      {
-                        cheroots.find((l) => l.id === item.typeOfCherootId)
-                          ?.name
-                      }
-                    </td>
-                    <td>
-                      {
-                        typeOfPacking.find((l) => l.id === item.typeOfPackingId)
-                          ?.name
-                      }
-                    </td>
-                    <td>
-                      {
-                        formOfPacking.find((l) => l.id === item.formOfPackingId)
-                          ?.name
-                      }
-                    </td>
-                    <td>{item.quantity}</td>
-                    <td>{item.amount}</td>
-                    <td>{item.totalPrice}</td>
-                    <td
-                      onClick={() => {
-                        setUpdateOpen(true), setSelectId(item.id);
-                      }}
-                    >
-                      {<EditIcon />}
-                    </td>
-                    <td
-                      onClick={() => {
-                        setDeleteOpen(true), setSelectId(item.id);
-                      }}
-                    >
-                      {<DeleteIcon />}
-                    </td>
-                  </tr>
-                </thead>
+                <tr key={item.id}>
+                  <th>{(no += 1)}</th>
+                  <td style={{ textAlign: "center" }}>
+                    {itemdate.toLocaleDateString()}
+                  </td>
+                  <td style={{ textAlign: "center" }}>
+                    {
+                      locations.find((l) => l.id === item.conveyLocationId)
+                        ?.name
+                    }
+                  </td>
+                  <td style={{ textAlign: "center" }}>
+                    {cheroots.find((l) => l.id === item.typeOfCherootId)?.name}
+                  </td>
+                  <td style={{ textAlign: "center" }}>
+                    {
+                      typeOfPacking.find((l) => l.id === item.typeOfPackingId)
+                        ?.name
+                    }
+                  </td>
+                  <td style={{ textAlign: "center" }}>
+                    {
+                      formOfPacking.find((l) => l.id === item.formOfPackingId)
+                        ?.name
+                    }
+                  </td>
+                  <td style={{ textAlign: "center" }}>{item.quantity}</td>
+                  <td style={{ textAlign: "center" }}>{item.amount}</td>
+                  <td style={{ textAlign: "center" }}>{item.totalPrice}</td>
+                  <td
+                    style={{ textAlign: "center", width: 50 }}
+                    onClick={() => {
+                      setUpdateOpen(true), setSelectId(item.id);
+                    }}
+                  >
+                    {<EditIcon />}
+                  </td>
+                  <td
+                    style={{ textAlign: "center", width: 50 }}
+                    onClick={() => {
+                      setDeleteOpen(true), setSelectId(item.id);
+                    }}
+                  >
+                    {<DeleteIcon />}
+                  </td>
+                </tr>
               </>
             );
           })}
