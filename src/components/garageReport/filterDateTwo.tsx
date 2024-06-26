@@ -20,56 +20,44 @@ const FilterDateTwo = ({
 }: Props) => {
   const payOther = useAppSelector((store) => store.payStock.item);
   const extraPurchase = useAppSelector((store) => store.extraPurchase.item);
+
+  const concernPay = concernPayOther.filter(
+    (f) =>
+      new Date(f.date).toLocaleDateString() !==
+        startDate.toLocaleDateString() &&
+      new Date(f.date).toLocaleDateString() !== endDate.toLocaleDateString()
+  );
+  const concernExtra = concernExtraPurchase.filter(
+    (f) =>
+      new Date(f.date).toLocaleDateString() !==
+        startDate.toLocaleDateString() &&
+      new Date(f.date).toLocaleDateString() !== endDate.toLocaleDateString()
+  );
   //start date
-  const exitStartpay = concernPayOther.filter(
+  const startPayArray = payOther.filter(
     (f) =>
-      new Date(f.date).toLocaleDateString() === startDate.toLocaleDateString()
+      new Date(f.date).toLocaleDateString() ===
+        startDate.toLocaleDateString() && f.garageId === garage
   );
-  const exitStartExtra = concernExtraPurchase.filter(
+
+  const startExtraArray = extraPurchase.filter(
     (f) =>
-      new Date(f.date).toLocaleDateString() === startDate.toLocaleDateString()
+      new Date(f.date).toLocaleDateString() ===
+        startDate.toLocaleDateString() && f.garageId === garage
   );
-  let startPayArray: PayOtherItem[] = [];
-  let startExtraArray: ExtraPurchase[] = [];
-  if (!exitStartpay.length) {
-    startPayArray = payOther.filter(
-      (f) =>
-        new Date(f.date).toLocaleDateString() ===
-          startDate.toLocaleDateString() && f.garageId === garage
-    );
-  }
-  if (!exitStartExtra.length) {
-    startExtraArray = extraPurchase.filter(
-      (f) =>
-        new Date(f.date).toLocaleDateString() ===
-          startDate.toLocaleDateString() && f.garageId === garage
-    );
-  }
   //end date
-  const exitEndpay = concernPayOther.filter(
+  const endPayArray = payOther.filter(
     (f) =>
-      new Date(f.date).toLocaleDateString() === endDate.toLocaleDateString()
+      new Date(f.date).toLocaleDateString() === endDate.toLocaleDateString() &&
+      f.garageId === garage
   );
-  const exitEndExtra = concernExtraPurchase.filter(
+
+  const endExtraArray = extraPurchase.filter(
     (f) =>
-      new Date(f.date).toLocaleDateString() === endDate.toLocaleDateString()
+      new Date(f.date).toLocaleDateString() === endDate.toLocaleDateString() &&
+      f.garageId === garage
   );
-  let endPayArray: PayOtherItem[] = [];
-  let endExtraArray: ExtraPurchase[] = [];
-  if (!exitEndpay.length) {
-    endPayArray = payOther.filter(
-      (f) =>
-        new Date(f.date).toLocaleDateString() ===
-          endDate.toLocaleDateString() && f.garageId === garage
-    );
-  }
-  if (!exitEndExtra.length) {
-    endExtraArray = extraPurchase.filter(
-      (f) =>
-        new Date(f.date).toLocaleDateString() ===
-          endDate.toLocaleDateString() && f.garageId === garage
-    );
-  }
+
   return (
     <Box>
       <Typography variant="h6" sx={{ mb: 2 }}>
@@ -85,47 +73,45 @@ const FilterDateTwo = ({
           <th style={{ width: 200, backgroundColor: "#DBB5B5" }}>အိတ်</th>
         </tr>
 
-        {!exitStartpay.length &&
-          startPayArray.map((item) => {
-            return (
-              <tr key={item.id}>
-                <td style={{ textAlign: "center" }}>
-                  {new Date(item.date).toLocaleDateString()}
-                </td>
-                <td style={{ textAlign: "center" }}>
-                  {
-                    concernFilterSizes.find(
-                      (f) => f.id === item.typeOfFilterSizeId
-                    )?.name
-                  }
-                </td>
-                <td style={{ textAlign: "center" }}>{item.filterSizeQty}</td>
-                <td style={{ textAlign: "center" }}>{item.filterSizeBag}</td>
-              </tr>
-            );
-          })}
-        {!exitStartExtra.length &&
-          startExtraArray.map((item) => {
-            return (
-              <tr key={item.id}>
-                <td style={{ textAlign: "center" }}>
-                  {new Date(item.date).toLocaleDateString()}
-                </td>
-                <td style={{ textAlign: "center" }}>
-                  {
-                    concernFilterSizes.find(
-                      (f) => f.id === item.typeOfFilterSizeId
-                    )?.name
-                  }
-                </td>
-                <td style={{ textAlign: "center" }}>{item.filterSizeQty}</td>
-                <td style={{ textAlign: "center" }}>{item.filterSizeBag}</td>
-              </tr>
-            );
-          })}
+        {startPayArray.map((item) => {
+          return (
+            <tr key={item.id}>
+              <td style={{ textAlign: "center" }}>
+                {new Date(item.date).toLocaleDateString()}
+              </td>
+              <td style={{ textAlign: "center" }}>
+                {
+                  concernFilterSizes.find(
+                    (f) => f.id === item.typeOfFilterSizeId
+                  )?.name
+                }
+              </td>
+              <td style={{ textAlign: "center" }}>{item.filterSizeQty}</td>
+              <td style={{ textAlign: "center" }}>{item.filterSizeBag}</td>
+            </tr>
+          );
+        })}
+        {startExtraArray.map((item) => {
+          return (
+            <tr key={item.id}>
+              <td style={{ textAlign: "center" }}>
+                {new Date(item.date).toLocaleDateString()}
+              </td>
+              <td style={{ textAlign: "center" }}>
+                {
+                  concernFilterSizes.find(
+                    (f) => f.id === item.typeOfFilterSizeId
+                  )?.name
+                }
+              </td>
+              <td style={{ textAlign: "center" }}>{item.filterSizeQty}</td>
+              <td style={{ textAlign: "center" }}>{item.filterSizeBag}</td>
+            </tr>
+          );
+        })}
 
         {garage &&
-          concernPayOther.map((item) => {
+          concernPay.map((item) => {
             return (
               <tr key={item.id}>
                 <td style={{ textAlign: "center" }}>
@@ -144,7 +130,7 @@ const FilterDateTwo = ({
             );
           })}
         {garage &&
-          concernExtraPurchase.map((item) => {
+          concernExtra.map((item) => {
             return (
               <tr key={item.id}>
                 <td style={{ textAlign: "center" }}>
@@ -163,44 +149,42 @@ const FilterDateTwo = ({
             );
           })}
 
-        {!exitEndpay.length &&
-          endPayArray.map((item) => {
-            return (
-              <tr key={item.id}>
-                <td style={{ textAlign: "center" }}>
-                  {new Date(item.date).toLocaleDateString()}
-                </td>
-                <td style={{ textAlign: "center" }}>
-                  {
-                    concernFilterSizes.find(
-                      (f) => f.id === item.typeOfFilterSizeId
-                    )?.name
-                  }
-                </td>
-                <td style={{ textAlign: "center" }}>{item.filterSizeQty}</td>
-                <td style={{ textAlign: "center" }}>{item.filterSizeBag}</td>
-              </tr>
-            );
-          })}
-        {!exitEndExtra.length &&
-          endExtraArray.map((item) => {
-            return (
-              <tr key={item.id}>
-                <td style={{ textAlign: "center" }}>
-                  {new Date(item.date).toLocaleDateString()}
-                </td>
-                <td style={{ textAlign: "center" }}>
-                  {
-                    concernFilterSizes.find(
-                      (f) => f.id === item.typeOfFilterSizeId
-                    )?.name
-                  }
-                </td>
-                <td style={{ textAlign: "center" }}>{item.filterSizeQty}</td>
-                <td style={{ textAlign: "center" }}>{item.filterSizeBag}</td>
-              </tr>
-            );
-          })}
+        {endPayArray.map((item) => {
+          return (
+            <tr key={item.id}>
+              <td style={{ textAlign: "center" }}>
+                {new Date(item.date).toLocaleDateString()}
+              </td>
+              <td style={{ textAlign: "center" }}>
+                {
+                  concernFilterSizes.find(
+                    (f) => f.id === item.typeOfFilterSizeId
+                  )?.name
+                }
+              </td>
+              <td style={{ textAlign: "center" }}>{item.filterSizeQty}</td>
+              <td style={{ textAlign: "center" }}>{item.filterSizeBag}</td>
+            </tr>
+          );
+        })}
+        {endExtraArray.map((item) => {
+          return (
+            <tr key={item.id}>
+              <td style={{ textAlign: "center" }}>
+                {new Date(item.date).toLocaleDateString()}
+              </td>
+              <td style={{ textAlign: "center" }}>
+                {
+                  concernFilterSizes.find(
+                    (f) => f.id === item.typeOfFilterSizeId
+                  )?.name
+                }
+              </td>
+              <td style={{ textAlign: "center" }}>{item.filterSizeQty}</td>
+              <td style={{ textAlign: "center" }}>{item.filterSizeBag}</td>
+            </tr>
+          );
+        })}
         <tr>
           <th></th>
           <th></th>
@@ -211,10 +195,10 @@ const FilterDateTwo = ({
               startPayArray.reduce((tol, tf) => {
                 return (tol += tf.filterSizeQty);
               }, 0) +
-              concernExtraPurchase.reduce((tol, f) => {
+              concernExtra.reduce((tol, f) => {
                 return (tol += f.filterSizeQty);
               }, 0) +
-              concernPayOther.reduce((tol, tf) => {
+              concernPay.reduce((tol, tf) => {
                 return (tol += tf.filterSizeQty);
               }, 0) +
               endExtraArray.reduce((tol, f) => {
@@ -231,10 +215,10 @@ const FilterDateTwo = ({
               startPayArray.reduce((tol, tf) => {
                 return (tol += tf.filterSizeBag);
               }, 0) +
-              concernExtraPurchase.reduce((tol, f) => {
+              concernExtra.reduce((tol, f) => {
                 return (tol += f.filterSizeBag);
               }, 0) +
-              concernPayOther.reduce((tol, tf) => {
+              concernPay.reduce((tol, tf) => {
                 return (tol += tf.filterSizeBag);
               }, 0) +
               endExtraArray.reduce((tol, f) => {

@@ -224,7 +224,7 @@ const RemainTabacco = () => {
                   <th>ဆေးလိပ်အဝင်</th>
                   {cheroots.map((cheroot) => {
                     return (
-                      <td style={{ textAlign: "center" }}>
+                      <td style={{ textAlign: "center" }} key={cheroot.id}>
                         {returnCheroot
                           .filter(
                             (rc) =>
@@ -258,7 +258,7 @@ const RemainTabacco = () => {
             <th>လက်ကျန်ဆေးလိပ်</th>
             {cheroots.map((cheroot) => {
               return (
-                <td style={{ textAlign: "center" }}>
+                <td style={{ textAlign: "center" }} key={cheroot.id}>
                   {payStock
                     .filter((p) => p.typeOfCherootId === cheroot.id)
                     .reduce((tol, tp) => {

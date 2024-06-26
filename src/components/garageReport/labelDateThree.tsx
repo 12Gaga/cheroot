@@ -22,32 +22,27 @@ const LabelDateThree = ({
   const labelGarageTransfer = useAppSelector(
     (store) => store.labelTransfer.item
   );
+
+  const concernExit = concernLabelTransferExit.filter(
+    (f) =>
+      new Date(f.date).toLocaleDateString() !==
+        startDate.toLocaleDateString() &&
+      new Date(f.date).toLocaleDateString() !== endDate.toLocaleDateString()
+  );
   //start date
-  const exitStartExit = concernLabelTransferExit.filter(
+  const startExitArray = labelGarageTransfer.filter(
     (f) =>
-      new Date(f.date).toLocaleDateString() === startDate.toLocaleDateString()
+      new Date(f.date).toLocaleDateString() ===
+        startDate.toLocaleDateString() && f.exitGarageId === garage
   );
-  let startExitArray: LabelTransferGarage[] = [];
-  if (!exitStartExit.length) {
-    startExitArray = labelGarageTransfer.filter(
-      (f) =>
-        new Date(f.date).toLocaleDateString() ===
-          startDate.toLocaleDateString() && f.exitGarageId === garage
-    );
-  }
+
   //end date
-  const exitEndExit = concernLabelTransferExit.filter(
+  const endExitArray = labelGarageTransfer.filter(
     (f) =>
-      new Date(f.date).toLocaleDateString() === endDate.toLocaleDateString()
+      new Date(f.date).toLocaleDateString() === endDate.toLocaleDateString() &&
+      f.exitGarageId === garage
   );
-  let endExitArray: LabelTransferGarage[] = [];
-  if (!exitEndExit.length) {
-    endExitArray = labelGarageTransfer.filter(
-      (f) =>
-        new Date(f.date).toLocaleDateString() ===
-          endDate.toLocaleDateString() && f.exitGarageId === garage
-    );
-  }
+
   return (
     <>
       <Box sx={{ mr: 4 }}>
@@ -65,32 +60,27 @@ const LabelDateThree = ({
             </th>
             <th style={{ width: 200, backgroundColor: "#DBB5B5" }}>လိပ်</th>
           </tr>
-          {!exitStartExit.length &&
-            startExitArray.map((item) => {
-              return (
-                <tr key={item.id}>
-                  <td style={{ textAlign: "center" }}>
-                    {new Date(item.date).toLocaleDateString()}
-                  </td>
-                  <td style={{ textAlign: "center" }}>
-                    {
-                      concernGarages.find(
-                        (g) => g.id === item.enterenceGarageId
-                      )?.name
-                    }
-                  </td>
-                  <td style={{ textAlign: "center" }}>
-                    {
-                      concernLabels.find((l) => l.id === item.typeOfLabelId)
-                        ?.name
-                    }
-                  </td>
-                  <td style={{ textAlign: "center" }}>{item.bandle}</td>
-                </tr>
-              );
-            })}
+          {startExitArray.map((item) => {
+            return (
+              <tr key={item.id}>
+                <td style={{ textAlign: "center" }}>
+                  {new Date(item.date).toLocaleDateString()}
+                </td>
+                <td style={{ textAlign: "center" }}>
+                  {
+                    concernGarages.find((g) => g.id === item.enterenceGarageId)
+                      ?.name
+                  }
+                </td>
+                <td style={{ textAlign: "center" }}>
+                  {concernLabels.find((l) => l.id === item.typeOfLabelId)?.name}
+                </td>
+                <td style={{ textAlign: "center" }}>{item.bandle}</td>
+              </tr>
+            );
+          })}
           {garage &&
-            concernLabelTransferExit.map((item) => {
+            concernExit.map((item) => {
               return (
                 <tr key={item.id}>
                   <td style={{ textAlign: "center" }}>
@@ -113,30 +103,25 @@ const LabelDateThree = ({
                 </tr>
               );
             })}
-          {!exitEndExit.length &&
-            endExitArray.map((item) => {
-              return (
-                <tr key={item.id}>
-                  <td style={{ textAlign: "center" }}>
-                    {new Date(item.date).toLocaleDateString()}
-                  </td>
-                  <td style={{ textAlign: "center" }}>
-                    {
-                      concernGarages.find(
-                        (g) => g.id === item.enterenceGarageId
-                      )?.name
-                    }
-                  </td>
-                  <td style={{ textAlign: "center" }}>
-                    {
-                      concernLabels.find((l) => l.id === item.typeOfLabelId)
-                        ?.name
-                    }
-                  </td>
-                  <td style={{ textAlign: "center" }}>{item.bandle}</td>
-                </tr>
-              );
-            })}
+          {endExitArray.map((item) => {
+            return (
+              <tr key={item.id}>
+                <td style={{ textAlign: "center" }}>
+                  {new Date(item.date).toLocaleDateString()}
+                </td>
+                <td style={{ textAlign: "center" }}>
+                  {
+                    concernGarages.find((g) => g.id === item.enterenceGarageId)
+                      ?.name
+                  }
+                </td>
+                <td style={{ textAlign: "center" }}>
+                  {concernLabels.find((l) => l.id === item.typeOfLabelId)?.name}
+                </td>
+                <td style={{ textAlign: "center" }}>{item.bandle}</td>
+              </tr>
+            );
+          })}
           <tr>
             <td></td>
             <td></td>
@@ -145,7 +130,7 @@ const LabelDateThree = ({
               {startExitArray.reduce((tol, l) => {
                 return (tol += l.bandle);
               }, 0) +
-                concernLabelTransferExit.reduce((tol, l) => {
+                concernExit.reduce((tol, l) => {
                   return (tol += l.bandle);
                 }, 0) +
                 endExitArray.reduce((tol, l) => {

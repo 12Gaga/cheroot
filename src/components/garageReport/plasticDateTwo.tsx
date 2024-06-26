@@ -17,32 +17,27 @@ const PlasticDateTwo = ({
   endDate,
 }: Props) => {
   const packing = useAppSelector((store) => store.packingData.item);
+
+  const concernData = concernPacking.filter(
+    (f) =>
+      new Date(f.date).toLocaleDateString() !==
+        startDate.toLocaleDateString() &&
+      new Date(f.date).toLocaleDateString() !== endDate.toLocaleDateString()
+  );
   //start date
-  const exitStart = concernPacking.filter(
+  const startArray = packing.filter(
     (f) =>
-      new Date(f.date).toLocaleDateString() === startDate.toLocaleDateString()
+      new Date(f.date).toLocaleDateString() ===
+        startDate.toLocaleDateString() && f.garageId === garage
   );
-  let startArray: Packing[] = [];
-  if (!exitStart.length) {
-    startArray = packing.filter(
-      (f) =>
-        new Date(f.date).toLocaleDateString() ===
-          startDate.toLocaleDateString() && f.garageId === garage
-    );
-  }
+
   //end date
-  const exitEnd = concernPacking.filter(
+  const endArray = packing.filter(
     (f) =>
-      new Date(f.date).toLocaleDateString() === endDate.toLocaleDateString()
+      new Date(f.date).toLocaleDateString() === endDate.toLocaleDateString() &&
+      f.garageId === garage
   );
-  let endArray: Packing[] = [];
-  if (!exitEnd.length) {
-    endArray = packing.filter(
-      (f) =>
-        new Date(f.date).toLocaleDateString() ===
-          endDate.toLocaleDateString() && f.garageId === garage
-    );
-  }
+
   return (
     <>
       <Box sx={{ ml: 4 }}>
@@ -72,46 +67,43 @@ const PlasticDateTwo = ({
             </th>
           </tr>
 
-          {!exitStart.length &&
-            startArray.map((item) => {
-              return (
-                <tr key={item.id}>
-                  <td style={{ textAlign: "center" }}>
-                    {new Date(item.date).toLocaleDateString()}
-                  </td>
-                  <td style={{ textAlign: "center" }}>
-                    {
-                      concernPlastic.find((l) => l.id === item.packingPlasticId)
-                        ?.name
-                    }
-                  </td>
-                  <td style={{ textAlign: "center" }}>
-                    {item.packingPlasticQty}
-                  </td>
-                  <td style={{ textAlign: "center" }}>
-                    {
-                      concernPlastic.find((l) => l.id === item.warpingPlasticId)
-                        ?.name
-                    }
-                  </td>
-                  <td style={{ textAlign: "center" }}>
-                    {item.warpingPlasticQty}
-                  </td>
-                  <td style={{ textAlign: "center" }}>
-                    {
-                      concernPlastic.find((l) => l.id === item.coverPlasticId)
-                        ?.name
-                    }
-                  </td>
-                  <td style={{ textAlign: "center" }}>
-                    {item.coverPlasticQty}
-                  </td>
-                </tr>
-              );
-            })}
+          {startArray.map((item) => {
+            return (
+              <tr key={item.id}>
+                <td style={{ textAlign: "center" }}>
+                  {new Date(item.date).toLocaleDateString()}
+                </td>
+                <td style={{ textAlign: "center" }}>
+                  {
+                    concernPlastic.find((l) => l.id === item.packingPlasticId)
+                      ?.name
+                  }
+                </td>
+                <td style={{ textAlign: "center" }}>
+                  {item.packingPlasticQty}
+                </td>
+                <td style={{ textAlign: "center" }}>
+                  {
+                    concernPlastic.find((l) => l.id === item.warpingPlasticId)
+                      ?.name
+                  }
+                </td>
+                <td style={{ textAlign: "center" }}>
+                  {item.warpingPlasticQty}
+                </td>
+                <td style={{ textAlign: "center" }}>
+                  {
+                    concernPlastic.find((l) => l.id === item.coverPlasticId)
+                      ?.name
+                  }
+                </td>
+                <td style={{ textAlign: "center" }}>{item.coverPlasticQty}</td>
+              </tr>
+            );
+          })}
 
           {garage &&
-            concernPacking.map((item) => {
+            concernData.map((item) => {
               return (
                 <tr key={item.id}>
                   <td style={{ textAlign: "center" }}>
@@ -148,43 +140,40 @@ const PlasticDateTwo = ({
               );
             })}
 
-          {!exitEnd &&
-            endArray.map((item) => {
-              return (
-                <tr key={item.id}>
-                  <td style={{ textAlign: "center" }}>
-                    {new Date(item.date).toLocaleDateString()}
-                  </td>
-                  <td style={{ textAlign: "center" }}>
-                    {
-                      concernPlastic.find((l) => l.id === item.packingPlasticId)
-                        ?.name
-                    }
-                  </td>
-                  <td style={{ textAlign: "center" }}>
-                    {item.packingPlasticQty}
-                  </td>
-                  <td style={{ textAlign: "center" }}>
-                    {
-                      concernPlastic.find((l) => l.id === item.warpingPlasticId)
-                        ?.name
-                    }
-                  </td>
-                  <td style={{ textAlign: "center" }}>
-                    {item.warpingPlasticQty}
-                  </td>
-                  <td style={{ textAlign: "center" }}>
-                    {
-                      concernPlastic.find((l) => l.id === item.coverPlasticId)
-                        ?.name
-                    }
-                  </td>
-                  <td style={{ textAlign: "center" }}>
-                    {item.coverPlasticQty}
-                  </td>
-                </tr>
-              );
-            })}
+          {endArray.map((item) => {
+            return (
+              <tr key={item.id}>
+                <td style={{ textAlign: "center" }}>
+                  {new Date(item.date).toLocaleDateString()}
+                </td>
+                <td style={{ textAlign: "center" }}>
+                  {
+                    concernPlastic.find((l) => l.id === item.packingPlasticId)
+                      ?.name
+                  }
+                </td>
+                <td style={{ textAlign: "center" }}>
+                  {item.packingPlasticQty}
+                </td>
+                <td style={{ textAlign: "center" }}>
+                  {
+                    concernPlastic.find((l) => l.id === item.warpingPlasticId)
+                      ?.name
+                  }
+                </td>
+                <td style={{ textAlign: "center" }}>
+                  {item.warpingPlasticQty}
+                </td>
+                <td style={{ textAlign: "center" }}>
+                  {
+                    concernPlastic.find((l) => l.id === item.coverPlasticId)
+                      ?.name
+                  }
+                </td>
+                <td style={{ textAlign: "center" }}>{item.coverPlasticQty}</td>
+              </tr>
+            );
+          })}
 
           {/* <tr>
             <td></td>

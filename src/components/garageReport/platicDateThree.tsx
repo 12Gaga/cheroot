@@ -37,29 +37,27 @@ const PlasticDateThree = ({ concernPlastic, garage, endDate }: Props) => {
               });
               const dataArray = findPlasticData.filter(
                 (f) =>
-                  new Date(f.date).toLocaleDateString() ===
+                  new Date(f.date).toLocaleDateString() !==
                   endDate.toLocaleDateString()
               );
-              let endDateQty = 0;
-              if (!dataArray.length) {
-                const datum = plasticStocks.filter(
-                  (f) =>
-                    new Date(f.date).toLocaleDateString() ===
-                      endDate.toLocaleDateString() &&
-                    f.plasticId === item.id &&
-                    f.garageId === garage
-                );
-                endDateQty = datum.reduce((total, pack) => {
-                  return (total += pack.quantity);
-                }, 0);
-              }
+
+              const datum = plasticStocks.filter(
+                (f) =>
+                  new Date(f.date).toLocaleDateString() ===
+                    endDate.toLocaleDateString() &&
+                  f.plasticId === item.id &&
+                  f.garageId === garage
+              );
+              const endDateQty = datum.reduce((total, pack) => {
+                return (total += pack.quantity);
+              }, 0);
 
               const plasticData =
-                findPlasticData.reduce((total, plastic) => {
+                dataArray.reduce((total, plastic) => {
                   return (total += plastic.quantity);
                 }, 0) + endDateQty;
 
-              console.log("data1", findPlasticData);
+              console.log("data1", dataArray);
               //find form packing / packing plastic
               const findPackingPlastic = packing.filter((p) => {
                 const pdate = new Date(p.date);
@@ -72,83 +70,83 @@ const PlasticDateThree = ({ concernPlastic, garage, endDate }: Props) => {
 
               const dataPackingArray = findPackingPlastic.filter(
                 (f) =>
-                  new Date(f.date).toLocaleDateString() ===
+                  new Date(f.date).toLocaleDateString() !==
                   endDate.toLocaleDateString()
               );
-              let endDatePackingQty = 0;
-              if (!dataPackingArray.length) {
-                const datum = packing.filter(
-                  (f) =>
-                    new Date(f.date).toLocaleDateString() ===
-                      endDate.toLocaleDateString() &&
-                    f.packingPlasticId === item.id &&
-                    f.garageId === garage
-                );
-                endDatePackingQty = datum.reduce((total, pack) => {
-                  return (total += pack.quantity);
-                }, 0);
-              }
+
+              const datumTwo = packing.filter(
+                (f) =>
+                  new Date(f.date).toLocaleDateString() ===
+                    endDate.toLocaleDateString() &&
+                  f.packingPlasticId === item.id &&
+                  f.garageId === garage
+              );
+              const endDatePackingQty = datumTwo.reduce((total, pack) => {
+                return (total += pack.quantity);
+              }, 0);
 
               const packingPlastic =
-                findPackingPlastic.reduce((total, plastic) => {
+                dataPackingArray.reduce((total, plastic) => {
                   return (total += plastic.packingPlasticQty);
                 }, 0) + endDatePackingQty;
 
               //warpping Plastic
               const findWarppingPlastic = packing.filter(
-                (p) => p.garageId === garage && p.warpingPlasticId === item.id
+                (p) =>
+                  p.garageId === garage &&
+                  p.warpingPlasticId === item.id &&
+                  new Date(p.date).getTime() <= endDate.getTime()
               );
 
               const dataWarppingArray = findWarppingPlastic.filter(
                 (f) =>
-                  new Date(f.date).toLocaleDateString() ===
+                  new Date(f.date).toLocaleDateString() !==
                   endDate.toLocaleDateString()
               );
-              let endDateWarppingQty = 0;
-              if (!dataWarppingArray.length) {
-                const datum = packing.filter(
-                  (f) =>
-                    new Date(f.date).toLocaleDateString() ===
-                      endDate.toLocaleDateString() &&
-                    f.warpingPlasticId === item.id &&
-                    f.garageId === garage
-                );
-                endDateWarppingQty = datum.reduce((total, pack) => {
-                  return (total += pack.quantity);
-                }, 0);
-              }
+
+              const datumThree = packing.filter(
+                (f) =>
+                  new Date(f.date).toLocaleDateString() ===
+                    endDate.toLocaleDateString() &&
+                  f.warpingPlasticId === item.id &&
+                  f.garageId === garage
+              );
+              const endDateWarppingQty = datumThree.reduce((total, pack) => {
+                return (total += pack.quantity);
+              }, 0);
 
               const warppingPlastic =
-                findWarppingPlastic.reduce((total, plastic) => {
+                dataWarppingArray.reduce((total, plastic) => {
                   return (total += plastic.warpingPlasticQty);
                 }, 0) + endDateWarppingQty;
 
               //cover Plastic
               const findCoverPlastic = packing.filter(
-                (p) => p.garageId === garage && p.coverPlasticId === item.id
+                (p) =>
+                  p.garageId === garage &&
+                  p.coverPlasticId === item.id &&
+                  new Date(p.date).getTime() <= endDate.getTime()
               );
 
               const dataCoverArray = findCoverPlastic.filter(
                 (f) =>
-                  new Date(f.date).toLocaleDateString() ===
+                  new Date(f.date).toLocaleDateString() !==
                   endDate.toLocaleDateString()
               );
-              let endDateCoverQty = 0;
-              if (!dataCoverArray.length) {
-                const datum = packing.filter(
-                  (f) =>
-                    new Date(f.date).toLocaleDateString() ===
-                      endDate.toLocaleDateString() &&
-                    f.coverPlasticId === item.id &&
-                    f.garageId === garage
-                );
-                endDateCoverQty = datum.reduce((total, pack) => {
-                  return (total += pack.quantity);
-                }, 0);
-              }
+
+              const datumFour = packing.filter(
+                (f) =>
+                  new Date(f.date).toLocaleDateString() ===
+                    endDate.toLocaleDateString() &&
+                  f.coverPlasticId === item.id &&
+                  f.garageId === garage
+              );
+              const endDateCoverQty = datumFour.reduce((total, pack) => {
+                return (total += pack.quantity);
+              }, 0);
 
               const coverPlastic =
-                findCoverPlastic.reduce((total, plastic) => {
+                dataCoverArray.reduce((total, plastic) => {
                   return (total += plastic.coverPlasticQty);
                 }, 0) + endDateCoverQty;
 

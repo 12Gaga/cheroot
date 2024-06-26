@@ -25,32 +25,26 @@ const FilterDateThree = ({
   const filterGarageTransfer = useAppSelector(
     (store) => store.filterSizeTransfer.item
   );
+
+  const concernExit = concernFilterTransferExit.filter(
+    (f) =>
+      new Date(f.date).toLocaleDateString() !==
+        startDate.toLocaleDateString() &&
+      new Date(f.date).toLocaleDateString() !== endDate.toLocaleDateString()
+  );
   //start date
-  const exitStartExit = concernFilterTransferExit.filter(
+  const startExitArray = filterGarageTransfer.filter(
     (f) =>
-      new Date(f.date).toLocaleDateString() === startDate.toLocaleDateString()
+      new Date(f.date).toLocaleDateString() ===
+        startDate.toLocaleDateString() && f.exitGarageId === garage
   );
-  let startExitArray: FilterSizeTransferGarage[] = [];
-  if (!exitStartExit.length) {
-    startExitArray = filterGarageTransfer.filter(
-      (f) =>
-        new Date(f.date).toLocaleDateString() ===
-          startDate.toLocaleDateString() && f.exitGarageId === garage
-    );
-  }
+
   //end date
-  const exitEndExit = concernFilterTransferExit.filter(
+  const endExitArray = filterGarageTransfer.filter(
     (f) =>
-      new Date(f.date).toLocaleDateString() === endDate.toLocaleDateString()
+      new Date(f.date).toLocaleDateString() === endDate.toLocaleDateString() &&
+      f.exitGarageId === garage
   );
-  let endExitArray: FilterSizeTransferGarage[] = [];
-  if (!exitEndExit.length) {
-    endExitArray = filterGarageTransfer.filter(
-      (f) =>
-        new Date(f.date).toLocaleDateString() ===
-          endDate.toLocaleDateString() && f.exitGarageId === garage
-    );
-  }
   return (
     <>
       <Box sx={{ mr: 4 }}>
@@ -69,36 +63,34 @@ const FilterDateThree = ({
             <th style={{ width: 200, backgroundColor: "#DBB5B5" }}>အရေအတွက်</th>
             <th style={{ width: 200, backgroundColor: "#DBB5B5" }}>အိတ်</th>
           </tr>
-          {!exitStartExit.length &&
-            startExitArray.map((item) => {
-              const itemdate = new Date(item.date);
-              return (
-                <tr key={item.id}>
-                  <td style={{ textAlign: "center" }}>
-                    {itemdate.toLocaleDateString()}
-                  </td>
-                  <td style={{ textAlign: "center" }}>
-                    {
-                      concernGarages.find(
-                        (g) => g.id === item.enterenceGarageId
-                      )?.name
-                    }
-                  </td>
-                  <td style={{ textAlign: "center" }}>
-                    {
-                      concernFilterSizes.find(
-                        (t) => t.id === item.typeOfFilterSizeId
-                      )?.name
-                    }
-                  </td>
-                  <td style={{ textAlign: "center" }}>{item.quantity}</td>
-                  <td style={{ textAlign: "center" }}>{item.bag}</td>
-                </tr>
-              );
-            })}
+          {startExitArray.map((item) => {
+            const itemdate = new Date(item.date);
+            return (
+              <tr key={item.id}>
+                <td style={{ textAlign: "center" }}>
+                  {itemdate.toLocaleDateString()}
+                </td>
+                <td style={{ textAlign: "center" }}>
+                  {
+                    concernGarages.find((g) => g.id === item.enterenceGarageId)
+                      ?.name
+                  }
+                </td>
+                <td style={{ textAlign: "center" }}>
+                  {
+                    concernFilterSizes.find(
+                      (t) => t.id === item.typeOfFilterSizeId
+                    )?.name
+                  }
+                </td>
+                <td style={{ textAlign: "center" }}>{item.quantity}</td>
+                <td style={{ textAlign: "center" }}>{item.bag}</td>
+              </tr>
+            );
+          })}
 
           {garage &&
-            concernFilterTransferExit.map((item) => {
+            concernExit.map((item) => {
               const itemdate = new Date(item.date);
               return (
                 <tr key={item.id}>
@@ -125,33 +117,31 @@ const FilterDateThree = ({
               );
             })}
 
-          {!exitEndExit.length &&
-            endExitArray.map((item) => {
-              const itemdate = new Date(item.date);
-              return (
-                <tr key={item.id}>
-                  <td style={{ textAlign: "center" }}>
-                    {itemdate.toLocaleDateString()}
-                  </td>
-                  <td style={{ textAlign: "center" }}>
-                    {
-                      concernGarages.find(
-                        (g) => g.id === item.enterenceGarageId
-                      )?.name
-                    }
-                  </td>
-                  <td style={{ textAlign: "center" }}>
-                    {
-                      concernFilterSizes.find(
-                        (t) => t.id === item.typeOfFilterSizeId
-                      )?.name
-                    }
-                  </td>
-                  <td style={{ textAlign: "center" }}>{item.quantity}</td>
-                  <td style={{ textAlign: "center" }}>{item.bag}</td>
-                </tr>
-              );
-            })}
+          {endExitArray.map((item) => {
+            const itemdate = new Date(item.date);
+            return (
+              <tr key={item.id}>
+                <td style={{ textAlign: "center" }}>
+                  {itemdate.toLocaleDateString()}
+                </td>
+                <td style={{ textAlign: "center" }}>
+                  {
+                    concernGarages.find((g) => g.id === item.enterenceGarageId)
+                      ?.name
+                  }
+                </td>
+                <td style={{ textAlign: "center" }}>
+                  {
+                    concernFilterSizes.find(
+                      (t) => t.id === item.typeOfFilterSizeId
+                    )?.name
+                  }
+                </td>
+                <td style={{ textAlign: "center" }}>{item.quantity}</td>
+                <td style={{ textAlign: "center" }}>{item.bag}</td>
+              </tr>
+            );
+          })}
           <tr>
             <td></td>
             <td></td>
@@ -160,7 +150,7 @@ const FilterDateThree = ({
               {startExitArray.reduce((tol, tt) => {
                 return (tol += tt.quantity);
               }, 0) +
-                concernFilterTransferExit.reduce((tol, tt) => {
+                concernExit.reduce((tol, tt) => {
                   return (tol += tt.quantity);
                 }, 0) +
                 endExitArray.reduce((tol, tt) => {
@@ -171,7 +161,7 @@ const FilterDateThree = ({
               {startExitArray.reduce((tol, tt) => {
                 return (tol += tt.bag);
               }, 0) +
-                concernFilterTransferExit.reduce((tol, tt) => {
+                concernExit.reduce((tol, tt) => {
                   return (tol += tt.bag);
                 }, 0) +
                 endExitArray.reduce((tol, tt) => {

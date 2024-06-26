@@ -17,31 +17,24 @@ const LeafDateTwo = ({
   endDate,
 }: Props) => {
   const payLeaf = useAppSelector((store) => store.payLeaf.item);
-  const exitStart = concernPayLeaf.filter(
+  const concernPayData = concernPayLeaf.filter(
     (item) =>
-      new Date(item.date).toLocaleDateString() ===
-      startDate.toLocaleDateString()
+      new Date(item.date).toLocaleDateString() !==
+        startDate.toLocaleDateString() &&
+      new Date(item.date).toLocaleDateString() !== endDate.toLocaleDateString()
   );
-  let startArray: PayLeaf[] = [];
-  if (!exitStart.length) {
-    startArray = payLeaf.filter(
-      (l) =>
-        new Date(l.date).toLocaleDateString() ===
-          startDate.toLocaleDateString() && l.garageId === garage
-    );
-  }
-  const exitEnd = concernPayLeaf.filter(
-    (item) =>
-      new Date(item.date).toLocaleDateString() === endDate.toLocaleDateString()
+  //start
+  const startArray = payLeaf.filter(
+    (l) =>
+      new Date(l.date).toLocaleDateString() ===
+        startDate.toLocaleDateString() && l.garageId === garage
   );
-  let endArray: PayLeaf[] = [];
-  if (!exitEnd.length) {
-    endArray = payLeaf.filter(
-      (l) =>
-        new Date(l.date).toLocaleDateString() ===
-          endDate.toLocaleDateString() && l.garageId === garage
-    );
-  }
+  //end
+  const endArray = payLeaf.filter(
+    (l) =>
+      new Date(l.date).toLocaleDateString() === endDate.toLocaleDateString() &&
+      l.garageId === garage
+  );
   return (
     <>
       <Box>
@@ -60,27 +53,23 @@ const LeafDateTwo = ({
             <th style={{ width: 200, backgroundColor: "#DBB5B5" }}>ပိသာ</th>
           </tr>
 
-          {!exitStart.length &&
-            startArray.map((item) => {
-              return (
-                <tr key={item.id}>
-                  <td style={{ textAlign: "center" }}>
-                    {new Date(item.date).toLocaleDateString()}
-                  </td>
-                  <td style={{ textAlign: "center" }}>
-                    {
-                      concernLeaves.find((l) => l.id === item.typeOfLeafId)
-                        ?.name
-                    }
-                  </td>
-                  <td style={{ textAlign: "center" }}>{item.batchNo}</td>
-                  <td style={{ textAlign: "center" }}>{item.viss}</td>
-                </tr>
-              );
-            })}
+          {startArray.map((item) => {
+            return (
+              <tr key={item.id}>
+                <td style={{ textAlign: "center" }}>
+                  {new Date(item.date).toLocaleDateString()}
+                </td>
+                <td style={{ textAlign: "center" }}>
+                  {concernLeaves.find((l) => l.id === item.typeOfLeafId)?.name}
+                </td>
+                <td style={{ textAlign: "center" }}>{item.batchNo}</td>
+                <td style={{ textAlign: "center" }}>{item.viss}</td>
+              </tr>
+            );
+          })}
 
           {garage &&
-            concernPayLeaf.map((item) => {
+            concernPayData.map((item) => {
               return (
                 <tr key={item.id}>
                   <td style={{ textAlign: "center" }}>
@@ -98,24 +87,20 @@ const LeafDateTwo = ({
               );
             })}
 
-          {!exitEnd.length &&
-            endArray.map((item) => {
-              return (
-                <tr key={item.id}>
-                  <td style={{ textAlign: "center" }}>
-                    {new Date(item.date).toLocaleDateString()}
-                  </td>
-                  <td style={{ textAlign: "center" }}>
-                    {
-                      concernLeaves.find((l) => l.id === item.typeOfLeafId)
-                        ?.name
-                    }
-                  </td>
-                  <td style={{ textAlign: "center" }}>{item.batchNo}</td>
-                  <td style={{ textAlign: "center" }}>{item.viss}</td>
-                </tr>
-              );
-            })}
+          {endArray.map((item) => {
+            return (
+              <tr key={item.id}>
+                <td style={{ textAlign: "center" }}>
+                  {new Date(item.date).toLocaleDateString()}
+                </td>
+                <td style={{ textAlign: "center" }}>
+                  {concernLeaves.find((l) => l.id === item.typeOfLeafId)?.name}
+                </td>
+                <td style={{ textAlign: "center" }}>{item.batchNo}</td>
+                <td style={{ textAlign: "center" }}>{item.viss}</td>
+              </tr>
+            );
+          })}
 
           <tr>
             <th></th>
@@ -125,7 +110,7 @@ const LeafDateTwo = ({
               {startArray.reduce((tol, start) => {
                 return (tol += start.viss);
               }, 0) +
-                concernPayLeaf.reduce((tol, l) => {
+                concernPayData.reduce((tol, l) => {
                   return (tol += l.viss);
                 }, 0) +
                 endArray.reduce((tol, end) => {

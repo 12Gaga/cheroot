@@ -20,56 +20,45 @@ const LabelDateTwo = ({
 }: Props) => {
   const payOther = useAppSelector((store) => store.payStock.item);
   const extraPurchase = useAppSelector((store) => store.extraPurchase.item);
+
+  const concernPay = concernPayOther.filter(
+    (f) =>
+      new Date(f.date).toLocaleDateString() !==
+        startDate.toLocaleDateString() &&
+      new Date(f.date).toLocaleDateString() !== endDate.toLocaleDateString()
+  );
+  const concernExtra = concernExtraPurchase.filter(
+    (f) =>
+      new Date(f.date).toLocaleDateString() !==
+        startDate.toLocaleDateString() &&
+      new Date(f.date).toLocaleDateString() !== endDate.toLocaleDateString()
+  );
   //start date
-  const exitStartpay = concernPayOther.filter(
+  const startPayArray = payOther.filter(
     (f) =>
-      new Date(f.date).toLocaleDateString() === startDate.toLocaleDateString()
+      new Date(f.date).toLocaleDateString() ===
+        startDate.toLocaleDateString() && f.garageId === garage
   );
-  const exitStartExtra = concernExtraPurchase.filter(
+
+  const startExtraArray = extraPurchase.filter(
     (f) =>
-      new Date(f.date).toLocaleDateString() === startDate.toLocaleDateString()
+      new Date(f.date).toLocaleDateString() ===
+        startDate.toLocaleDateString() && f.garageId === garage
   );
-  let startPayArray: PayOtherItem[] = [];
-  let startExtraArray: ExtraPurchase[] = [];
-  if (!exitStartpay.length) {
-    startPayArray = payOther.filter(
-      (f) =>
-        new Date(f.date).toLocaleDateString() ===
-          startDate.toLocaleDateString() && f.garageId === garage
-    );
-  }
-  if (!exitStartExtra.length) {
-    startExtraArray = extraPurchase.filter(
-      (f) =>
-        new Date(f.date).toLocaleDateString() ===
-          startDate.toLocaleDateString() && f.garageId === garage
-    );
-  }
+
   //end date
-  const exitEndpay = concernPayOther.filter(
+  const endPayArray = payOther.filter(
     (f) =>
-      new Date(f.date).toLocaleDateString() === endDate.toLocaleDateString()
+      new Date(f.date).toLocaleDateString() === endDate.toLocaleDateString() &&
+      f.garageId === garage
   );
-  const exitEndExtra = concernExtraPurchase.filter(
+
+  const endExtraArray = extraPurchase.filter(
     (f) =>
-      new Date(f.date).toLocaleDateString() === endDate.toLocaleDateString()
+      new Date(f.date).toLocaleDateString() === endDate.toLocaleDateString() &&
+      f.garageId === garage
   );
-  let endPayArray: PayOtherItem[] = [];
-  let endExtraArray: ExtraPurchase[] = [];
-  if (!exitEndpay.length) {
-    endPayArray = payOther.filter(
-      (f) =>
-        new Date(f.date).toLocaleDateString() ===
-          endDate.toLocaleDateString() && f.garageId === garage
-    );
-  }
-  if (!exitEndExtra.length) {
-    endExtraArray = extraPurchase.filter(
-      (f) =>
-        new Date(f.date).toLocaleDateString() ===
-          endDate.toLocaleDateString() && f.garageId === garage
-    );
-  }
+
   return (
     <>
       <Box>
@@ -85,43 +74,35 @@ const LabelDateTwo = ({
             <th style={{ width: 200, backgroundColor: "#DBB5B5" }}>လိပ်</th>
           </tr>
 
-          {!exitStartpay.length &&
-            startPayArray.map((item) => {
-              return (
-                <tr key={item.id}>
-                  <td style={{ textAlign: "center" }}>
-                    {new Date(item.date).toLocaleDateString()}
-                  </td>
-                  <td style={{ textAlign: "center" }}>
-                    {
-                      concernLabels.find((l) => l.id === item.typeOfLabelId)
-                        ?.name
-                    }
-                  </td>
-                  <td style={{ textAlign: "center" }}>{item.labelBandle}</td>
-                </tr>
-              );
-            })}
-          {!exitStartExtra.length &&
-            startExtraArray.map((item) => {
-              return (
-                <tr key={item.id}>
-                  <td style={{ textAlign: "center" }}>
-                    {new Date(item.date).toLocaleDateString()}
-                  </td>
-                  <td style={{ textAlign: "center" }}>
-                    {
-                      concernLabels.find((l) => l.id === item.typeOfLabelId)
-                        ?.name
-                    }
-                  </td>
-                  <td style={{ textAlign: "center" }}>{item.labelBandle}</td>
-                </tr>
-              );
-            })}
+          {startPayArray.map((item) => {
+            return (
+              <tr key={item.id}>
+                <td style={{ textAlign: "center" }}>
+                  {new Date(item.date).toLocaleDateString()}
+                </td>
+                <td style={{ textAlign: "center" }}>
+                  {concernLabels.find((l) => l.id === item.typeOfLabelId)?.name}
+                </td>
+                <td style={{ textAlign: "center" }}>{item.labelBandle}</td>
+              </tr>
+            );
+          })}
+          {startExtraArray.map((item) => {
+            return (
+              <tr key={item.id}>
+                <td style={{ textAlign: "center" }}>
+                  {new Date(item.date).toLocaleDateString()}
+                </td>
+                <td style={{ textAlign: "center" }}>
+                  {concernLabels.find((l) => l.id === item.typeOfLabelId)?.name}
+                </td>
+                <td style={{ textAlign: "center" }}>{item.labelBandle}</td>
+              </tr>
+            );
+          })}
 
           {garage &&
-            concernPayOther.map((item) => {
+            concernPay.map((item) => {
               return (
                 <tr key={item.id}>
                   <td style={{ textAlign: "center" }}>
@@ -138,7 +119,7 @@ const LabelDateTwo = ({
               );
             })}
           {garage &&
-            concernExtraPurchase.map((item) => {
+            concernExtra.map((item) => {
               return (
                 <tr key={item.id}>
                   <td style={{ textAlign: "center" }}>
@@ -155,40 +136,32 @@ const LabelDateTwo = ({
               );
             })}
 
-          {!exitEndpay.length &&
-            endPayArray.map((item) => {
-              return (
-                <tr key={item.id}>
-                  <td style={{ textAlign: "center" }}>
-                    {new Date(item.date).toLocaleDateString()}
-                  </td>
-                  <td style={{ textAlign: "center" }}>
-                    {
-                      concernLabels.find((l) => l.id === item.typeOfLabelId)
-                        ?.name
-                    }
-                  </td>
-                  <td style={{ textAlign: "center" }}>{item.labelBandle}</td>
-                </tr>
-              );
-            })}
-          {!exitEndExtra.length &&
-            endExtraArray.map((item) => {
-              return (
-                <tr key={item.id}>
-                  <td style={{ textAlign: "center" }}>
-                    {new Date(item.date).toLocaleDateString()}
-                  </td>
-                  <td style={{ textAlign: "center" }}>
-                    {
-                      concernLabels.find((l) => l.id === item.typeOfLabelId)
-                        ?.name
-                    }
-                  </td>
-                  <td style={{ textAlign: "center" }}>{item.labelBandle}</td>
-                </tr>
-              );
-            })}
+          {endPayArray.map((item) => {
+            return (
+              <tr key={item.id}>
+                <td style={{ textAlign: "center" }}>
+                  {new Date(item.date).toLocaleDateString()}
+                </td>
+                <td style={{ textAlign: "center" }}>
+                  {concernLabels.find((l) => l.id === item.typeOfLabelId)?.name}
+                </td>
+                <td style={{ textAlign: "center" }}>{item.labelBandle}</td>
+              </tr>
+            );
+          })}
+          {endExtraArray.map((item) => {
+            return (
+              <tr key={item.id}>
+                <td style={{ textAlign: "center" }}>
+                  {new Date(item.date).toLocaleDateString()}
+                </td>
+                <td style={{ textAlign: "center" }}>
+                  {concernLabels.find((l) => l.id === item.typeOfLabelId)?.name}
+                </td>
+                <td style={{ textAlign: "center" }}>{item.labelBandle}</td>
+              </tr>
+            );
+          })}
 
           <tr>
             <td></td>
@@ -200,10 +173,10 @@ const LabelDateTwo = ({
                 startExtraArray.reduce((tol, lt) => {
                   return (tol += lt.labelBandle);
                 }, 0) +
-                concernPayOther.reduce((tol, l) => {
+                concernPay.reduce((tol, l) => {
                   return (tol += l.labelBandle);
                 }, 0) +
-                concernExtraPurchase.reduce((tol, lt) => {
+                concernExtra.reduce((tol, lt) => {
                   return (tol += lt.labelBandle);
                 }, 0) +
                 endPayArray.reduce((tol, l) => {

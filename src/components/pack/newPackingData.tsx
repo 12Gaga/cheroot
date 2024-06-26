@@ -32,7 +32,6 @@ const defaultValue: addPackingData = {
   typeOfPackingId: null,
   formOfPackingId: null,
   quantity: 0,
-  garageId: null,
   packingPlasticId: null,
   packingPlasticQty: 0,
   warpingPlasticId: null,
@@ -164,7 +163,7 @@ const NewPackingData = ({ open, setOpen }: Props) => {
                 onChange={() => {}}
               />
             </Box>
-            <Box sx={{ my: 3 }}>
+            {/* <Box sx={{ my: 3 }}>
               <Typography sx={{ fontWeight: "bold" }}>ဂိုထောင်</Typography>
               <FormControl variant="filled" sx={{ width: 300 }}>
                 <Select
@@ -186,7 +185,7 @@ const NewPackingData = ({ open, setOpen }: Props) => {
                   ))}
                 </Select>
               </FormControl>
-            </Box>
+            </Box> */}
           </Box>
 
           <Box sx={{ mt: 2 }}>

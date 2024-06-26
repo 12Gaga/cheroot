@@ -22,56 +22,45 @@ const LabelDateOne = ({
   const labelGarageTransfer = useAppSelector(
     (store) => store.labelTransfer.item
   );
+
+  const concernStock = concernLabelStock.filter(
+    (f) =>
+      new Date(f.date).toLocaleDateString() !==
+        startDate.toLocaleDateString() &&
+      new Date(f.date).toLocaleDateString() !== endDate.toLocaleDateString()
+  );
+  const concernEnter = concernLabelTransferEnter.filter(
+    (f) =>
+      new Date(f.date).toLocaleDateString() !==
+        startDate.toLocaleDateString() &&
+      new Date(f.date).toLocaleDateString() !== endDate.toLocaleDateString()
+  );
   //start date
-  const exitStartStock = concernLabelStock.filter(
+  const startStockArray = labelStocks.filter(
     (f) =>
-      new Date(f.date).toLocaleDateString() === startDate.toLocaleDateString()
+      new Date(f.date).toLocaleDateString() ===
+        startDate.toLocaleDateString() && f.garageId === garage
   );
-  const exitStartEnter = concernLabelTransferEnter.filter(
+
+  const startEnterArray = labelGarageTransfer.filter(
     (f) =>
-      new Date(f.date).toLocaleDateString() === startDate.toLocaleDateString()
+      new Date(f.date).toLocaleDateString() ===
+        startDate.toLocaleDateString() && f.enterenceGarageId === garage
   );
-  let startStockArray: Label[] = [];
-  let startEnterArray: LabelTransferGarage[] = [];
-  if (!exitStartStock.length) {
-    startStockArray = labelStocks.filter(
-      (f) =>
-        new Date(f.date).toLocaleDateString() ===
-          startDate.toLocaleDateString() && f.garageId === garage
-    );
-  }
-  if (!exitStartEnter.length) {
-    startEnterArray = labelGarageTransfer.filter(
-      (f) =>
-        new Date(f.date).toLocaleDateString() ===
-          startDate.toLocaleDateString() && f.enterenceGarageId === garage
-    );
-  }
+
   //end date
-  const exitEndStock = concernLabelStock.filter(
+  const endStockArray = labelStocks.filter(
     (f) =>
-      new Date(f.date).toLocaleDateString() === endDate.toLocaleDateString()
+      new Date(f.date).toLocaleDateString() === endDate.toLocaleDateString() &&
+      f.garageId === garage
   );
-  const exitEndEnter = concernLabelTransferEnter.filter(
+
+  const endEnterArray = labelGarageTransfer.filter(
     (f) =>
-      new Date(f.date).toLocaleDateString() === endDate.toLocaleDateString()
+      new Date(f.date).toLocaleDateString() === endDate.toLocaleDateString() &&
+      f.enterenceGarageId === garage
   );
-  let endStockArray: Label[] = [];
-  let endEnterArray: LabelTransferGarage[] = [];
-  if (!exitEndStock.length) {
-    endStockArray = labelStocks.filter(
-      (f) =>
-        new Date(f.date).toLocaleDateString() ===
-          endDate.toLocaleDateString() && f.garageId === garage
-    );
-  }
-  if (!exitEndEnter.length) {
-    endEnterArray = labelGarageTransfer.filter(
-      (f) =>
-        new Date(f.date).toLocaleDateString() ===
-          endDate.toLocaleDateString() && f.enterenceGarageId === garage
-    );
-  }
+
   return (
     <>
       <Box sx={{ mr: 4 }}>
@@ -87,8 +76,37 @@ const LabelDateOne = ({
             <th style={{ width: 200, backgroundColor: "#DBB5B5" }}>လိပ်</th>
           </tr>
 
-          {!exitStartStock.length &&
-            startStockArray.map((item) => {
+          {startStockArray.map((item) => {
+            return (
+              <tr key={item.id}>
+                <td style={{ textAlign: "center" }}>
+                  {new Date(item.date).toLocaleDateString()}
+                </td>
+                <td style={{ textAlign: "center" }}>
+                  {concernLabels.find((l) => l.id === item.typeOfLabelId)?.name}
+                </td>
+                <td style={{ textAlign: "center" }}>{item.bandle}</td>
+              </tr>
+            );
+          })}
+          {startEnterArray.map((item) => {
+            return (
+              <tr key={item.id}>
+                <td style={{ textAlign: "center" }}>
+                  {new Date(item.date).toLocaleDateString()}
+                </td>
+                <td style={{ textAlign: "center" }}>
+                  {concernLabels.find((l) => l.id === item.typeOfLabelId)?.name}
+                </td>
+                <td style={{ textAlign: "center", color: "red" }}>
+                  {item.bandle}
+                </td>
+              </tr>
+            );
+          })}
+
+          {garage &&
+            concernStock.map((item) => {
               return (
                 <tr key={item.id}>
                   <td style={{ textAlign: "center" }}>
@@ -104,8 +122,8 @@ const LabelDateOne = ({
                 </tr>
               );
             })}
-          {!exitStartEnter.length &&
-            startEnterArray.map((item) => {
+          {garage &&
+            concernEnter.map((item) => {
               return (
                 <tr key={item.id}>
                   <td style={{ textAlign: "center" }}>
@@ -124,79 +142,34 @@ const LabelDateOne = ({
               );
             })}
 
-          {garage &&
-            concernLabelStock.map((item) => {
-              return (
-                <tr key={item.id}>
-                  <td style={{ textAlign: "center" }}>
-                    {new Date(item.date).toLocaleDateString()}
-                  </td>
-                  <td style={{ textAlign: "center" }}>
-                    {
-                      concernLabels.find((l) => l.id === item.typeOfLabelId)
-                        ?.name
-                    }
-                  </td>
-                  <td style={{ textAlign: "center" }}>{item.bandle}</td>
-                </tr>
-              );
-            })}
-          {garage &&
-            concernLabelTransferEnter.map((item) => {
-              return (
-                <tr key={item.id}>
-                  <td style={{ textAlign: "center" }}>
-                    {new Date(item.date).toLocaleDateString()}
-                  </td>
-                  <td style={{ textAlign: "center" }}>
-                    {
-                      concernLabels.find((l) => l.id === item.typeOfLabelId)
-                        ?.name
-                    }
-                  </td>
-                  <td style={{ textAlign: "center", color: "red" }}>
-                    {item.bandle}
-                  </td>
-                </tr>
-              );
-            })}
-
-          {!exitEndStock.length &&
-            endStockArray.map((item) => {
-              return (
-                <tr key={item.id}>
-                  <td style={{ textAlign: "center" }}>
-                    {new Date(item.date).toLocaleDateString()}
-                  </td>
-                  <td style={{ textAlign: "center" }}>
-                    {
-                      concernLabels.find((l) => l.id === item.typeOfLabelId)
-                        ?.name
-                    }
-                  </td>
-                  <td style={{ textAlign: "center" }}>{item.bandle}</td>
-                </tr>
-              );
-            })}
-          {!exitEndEnter.length &&
-            endEnterArray.map((item) => {
-              return (
-                <tr key={item.id}>
-                  <td style={{ textAlign: "center" }}>
-                    {new Date(item.date).toLocaleDateString()}
-                  </td>
-                  <td style={{ textAlign: "center" }}>
-                    {
-                      concernLabels.find((l) => l.id === item.typeOfLabelId)
-                        ?.name
-                    }
-                  </td>
-                  <td style={{ textAlign: "center", color: "red" }}>
-                    {item.bandle}
-                  </td>
-                </tr>
-              );
-            })}
+          {endStockArray.map((item) => {
+            return (
+              <tr key={item.id}>
+                <td style={{ textAlign: "center" }}>
+                  {new Date(item.date).toLocaleDateString()}
+                </td>
+                <td style={{ textAlign: "center" }}>
+                  {concernLabels.find((l) => l.id === item.typeOfLabelId)?.name}
+                </td>
+                <td style={{ textAlign: "center" }}>{item.bandle}</td>
+              </tr>
+            );
+          })}
+          {endEnterArray.map((item) => {
+            return (
+              <tr key={item.id}>
+                <td style={{ textAlign: "center" }}>
+                  {new Date(item.date).toLocaleDateString()}
+                </td>
+                <td style={{ textAlign: "center" }}>
+                  {concernLabels.find((l) => l.id === item.typeOfLabelId)?.name}
+                </td>
+                <td style={{ textAlign: "center", color: "red" }}>
+                  {item.bandle}
+                </td>
+              </tr>
+            );
+          })}
 
           <tr>
             <td></td>
@@ -208,10 +181,10 @@ const LabelDateOne = ({
                 startEnterArray.reduce((tol, lt) => {
                   return (tol += lt.bandle);
                 }, 0) +
-                concernLabelStock.reduce((tol, l) => {
+                concernStock.reduce((tol, l) => {
                   return (tol += l.bandle);
                 }, 0) +
-                concernLabelTransferEnter.reduce((tol, lt) => {
+                concernEnter.reduce((tol, lt) => {
                   return (tol += lt.bandle);
                 }, 0) +
                 endStockArray.reduce((tol, l) => {

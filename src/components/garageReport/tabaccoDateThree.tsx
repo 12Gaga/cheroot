@@ -21,32 +21,27 @@ const TabaccoDateThree = ({
   const tabaccoGarageTransfer = useAppSelector(
     (store) => store.tabaccoTransfer.item
   );
+
+  const concernExit = concernTabaccoTransferExit.filter(
+    (f) =>
+      new Date(f.date).toLocaleDateString() !==
+        startDate.toLocaleDateString() &&
+      new Date(f.date).toLocaleDateString() !== endDate.toLocaleDateString()
+  );
   //start date
-  const exitStartExit = concernTabaccoTransferExit.filter(
+  const startExitArray = tabaccoGarageTransfer.filter(
     (f) =>
-      new Date(f.date).toLocaleDateString() === startDate.toLocaleDateString()
+      new Date(f.date).toLocaleDateString() ===
+        startDate.toLocaleDateString() && f.exitGarageId === garage
   );
-  let startExitArray: TabaccoTransferGarage[] = [];
-  if (!exitStartExit.length) {
-    startExitArray = tabaccoGarageTransfer.filter(
-      (f) =>
-        new Date(f.date).toLocaleDateString() ===
-          startDate.toLocaleDateString() && f.exitGarageId === garage
-    );
-  }
+
   //end date
-  const exitEndExit = concernTabaccoTransferExit.filter(
+  const endExitArray = tabaccoGarageTransfer.filter(
     (f) =>
-      new Date(f.date).toLocaleDateString() === endDate.toLocaleDateString()
+      new Date(f.date).toLocaleDateString() === endDate.toLocaleDateString() &&
+      f.exitGarageId === garage
   );
-  let endExitArray: TabaccoTransferGarage[] = [];
-  if (!exitEndExit.length) {
-    endExitArray = tabaccoGarageTransfer.filter(
-      (f) =>
-        new Date(f.date).toLocaleDateString() ===
-          endDate.toLocaleDateString() && f.exitGarageId === garage
-    );
-  }
+
   return (
     <>
       <Box sx={{ mr: 4 }}>
@@ -67,36 +62,34 @@ const TabaccoDateThree = ({
             <th style={{ width: 200, backgroundColor: "#DBB5B5" }}>အိတ်</th>
           </tr>
 
-          {!exitStartExit.length &&
-            startExitArray.map((item) => {
-              const itemdate = new Date(item.date);
-              return (
-                <tr key={item.id}>
-                  <td style={{ textAlign: "center" }}>
-                    {itemdate.toLocaleDateString()}
-                  </td>
-                  <td style={{ textAlign: "center" }}>
-                    {
-                      concernGarages.find(
-                        (g) => g.id === item.enterenceGarageId
-                      )?.name
-                    }
-                  </td>
-                  <td style={{ textAlign: "center" }}>
-                    {
-                      concernTabacco.find((t) => t.id === item.typeOfTabaccoId)
-                        ?.name
-                    }
-                  </td>
-                  <td style={{ textAlign: "center" }}>{item.tin}</td>
-                  <td style={{ textAlign: "center" }}>{item.pyi}</td>
-                  <td style={{ textAlign: "center" }}>{item.bag}</td>
-                </tr>
-              );
-            })}
+          {startExitArray.map((item) => {
+            const itemdate = new Date(item.date);
+            return (
+              <tr key={item.id}>
+                <td style={{ textAlign: "center" }}>
+                  {itemdate.toLocaleDateString()}
+                </td>
+                <td style={{ textAlign: "center" }}>
+                  {
+                    concernGarages.find((g) => g.id === item.enterenceGarageId)
+                      ?.name
+                  }
+                </td>
+                <td style={{ textAlign: "center" }}>
+                  {
+                    concernTabacco.find((t) => t.id === item.typeOfTabaccoId)
+                      ?.name
+                  }
+                </td>
+                <td style={{ textAlign: "center" }}>{item.tin}</td>
+                <td style={{ textAlign: "center" }}>{item.pyi}</td>
+                <td style={{ textAlign: "center" }}>{item.bag}</td>
+              </tr>
+            );
+          })}
 
           {garage &&
-            concernTabaccoTransferExit.map((item) => {
+            concernExit.map((item) => {
               const itemdate = new Date(item.date);
               return (
                 <tr key={item.id}>
@@ -123,33 +116,31 @@ const TabaccoDateThree = ({
               );
             })}
 
-          {!exitEndExit.length &&
-            endExitArray.map((item) => {
-              const itemdate = new Date(item.date);
-              return (
-                <tr key={item.id}>
-                  <td style={{ textAlign: "center" }}>
-                    {itemdate.toLocaleDateString()}
-                  </td>
-                  <td style={{ textAlign: "center" }}>
-                    {
-                      concernGarages.find(
-                        (g) => g.id === item.enterenceGarageId
-                      )?.name
-                    }
-                  </td>
-                  <td style={{ textAlign: "center" }}>
-                    {
-                      concernTabacco.find((t) => t.id === item.typeOfTabaccoId)
-                        ?.name
-                    }
-                  </td>
-                  <td style={{ textAlign: "center" }}>{item.tin}</td>
-                  <td style={{ textAlign: "center" }}>{item.pyi}</td>
-                  <td style={{ textAlign: "center" }}>{item.bag}</td>
-                </tr>
-              );
-            })}
+          {endExitArray.map((item) => {
+            const itemdate = new Date(item.date);
+            return (
+              <tr key={item.id}>
+                <td style={{ textAlign: "center" }}>
+                  {itemdate.toLocaleDateString()}
+                </td>
+                <td style={{ textAlign: "center" }}>
+                  {
+                    concernGarages.find((g) => g.id === item.enterenceGarageId)
+                      ?.name
+                  }
+                </td>
+                <td style={{ textAlign: "center" }}>
+                  {
+                    concernTabacco.find((t) => t.id === item.typeOfTabaccoId)
+                      ?.name
+                  }
+                </td>
+                <td style={{ textAlign: "center" }}>{item.tin}</td>
+                <td style={{ textAlign: "center" }}>{item.pyi}</td>
+                <td style={{ textAlign: "center" }}>{item.bag}</td>
+              </tr>
+            );
+          })}
 
           <tr>
             <td></td>
@@ -159,7 +150,7 @@ const TabaccoDateThree = ({
               {startExitArray.reduce((tol, tt) => {
                 return (tol += tt.tin);
               }, 0) +
-                concernTabaccoTransferExit.reduce((tol, tt) => {
+                concernExit.reduce((tol, tt) => {
                   return (tol += tt.tin);
                 }, 0) +
                 endExitArray.reduce((tol, tt) => {
@@ -170,7 +161,7 @@ const TabaccoDateThree = ({
               {startExitArray.reduce((tol, tt) => {
                 return (tol += tt.pyi);
               }, 0) +
-                concernTabaccoTransferExit.reduce((tol, tt) => {
+                concernExit.reduce((tol, tt) => {
                   return (tol += tt.pyi);
                 }, 0) +
                 endExitArray.reduce((tol, tt) => {
@@ -181,7 +172,7 @@ const TabaccoDateThree = ({
               {startExitArray.reduce((tol, tt) => {
                 return (tol += tt.bag);
               }, 0) +
-                concernTabaccoTransferExit.reduce((tol, tt) => {
+                concernExit.reduce((tol, tt) => {
                   return (tol += tt.bag);
                 }, 0) +
                 endExitArray.reduce((tol, tt) => {

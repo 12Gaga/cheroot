@@ -47,33 +47,31 @@ const FilterDateFour = ({ garage, concernFilterSizes, endDate }: Props) => {
 
               const dataArray = findFilterSizeData.filter(
                 (f) =>
-                  new Date(f.date).toLocaleDateString() ===
+                  new Date(f.date).toLocaleDateString() !==
                   endDate.toLocaleDateString()
               );
-              let endDateQty = 0;
-              let endDateBag = 0;
-              if (!dataArray.length) {
-                const datum = filterSizeStocks.filter(
-                  (f) =>
-                    new Date(f.date).toLocaleDateString() ===
-                      endDate.toLocaleDateString() &&
-                    f.typeOfFilterSizeId === item.id &&
-                    f.garageId === garage
-                );
-                endDateQty = datum.reduce((total, filter) => {
-                  return (total += filter.quantity);
-                }, 0);
-                endDateBag = datum.reduce((total, filter) => {
-                  return (total += filter.bag);
-                }, 0);
-              }
-              console.log("data", findFilterSizeData);
+
+              const datum = filterSizeStocks.filter(
+                (f) =>
+                  new Date(f.date).toLocaleDateString() ===
+                    endDate.toLocaleDateString() &&
+                  f.typeOfFilterSizeId === item.id &&
+                  f.garageId === garage
+              );
+              const endDateQty = datum.reduce((total, filter) => {
+                return (total += filter.quantity);
+              }, 0);
+              const endDateBag = datum.reduce((total, filter) => {
+                return (total += filter.bag);
+              }, 0);
+
+              console.log("data", dataArray);
               const filterSizeQty =
-                findFilterSizeData.reduce((total, filter) => {
+                dataArray.reduce((total, filter) => {
                   return (total += filter.quantity);
                 }, 0) + endDateQty;
               const filterSizeBag =
-                findFilterSizeData.reduce((total, filter) => {
+                dataArray.reduce((total, filter) => {
                   return (total += filter.bag);
                 }, 0) + endDateBag;
 
@@ -88,32 +86,30 @@ const FilterDateFour = ({ garage, concernFilterSizes, endDate }: Props) => {
               });
               const dataEnterArray = findEnterFilter.filter(
                 (f) =>
-                  new Date(f.date).toLocaleDateString() ===
+                  new Date(f.date).toLocaleDateString() !==
                   endDate.toLocaleDateString()
               );
-              let endDateEnterQty = 0;
-              let endDateEnterBag = 0;
-              if (!dataEnterArray.length) {
-                const datum = filterGarageTransfer.filter(
-                  (f) =>
-                    new Date(f.date).toLocaleDateString() ===
-                      endDate.toLocaleDateString() &&
-                    f.typeOfFilterSizeId === item.id &&
-                    f.enterenceGarageId === garage
-                );
-                endDateEnterQty = datum.reduce((total, filter) => {
-                  return (total += filter.quantity);
-                }, 0);
-                endDateEnterBag = datum.reduce((total, filter) => {
-                  return (total += filter.bag);
-                }, 0);
-              }
+
+              const datumTwo = filterGarageTransfer.filter(
+                (f) =>
+                  new Date(f.date).toLocaleDateString() ===
+                    endDate.toLocaleDateString() &&
+                  f.typeOfFilterSizeId === item.id &&
+                  f.enterenceGarageId === garage
+              );
+              const endDateEnterQty = datumTwo.reduce((total, filter) => {
+                return (total += filter.quantity);
+              }, 0);
+              const endDateEnterBag = datumTwo.reduce((total, filter) => {
+                return (total += filter.bag);
+              }, 0);
+
               const enterFilterQty =
-                findEnterFilter.reduce((total, filter) => {
+                dataEnterArray.reduce((total, filter) => {
                   return (total += filter.quantity);
                 }, 0) + endDateEnterQty;
               const enterFilterBag =
-                findEnterFilter.reduce((total, filter) => {
+                dataEnterArray.reduce((total, filter) => {
                   return (total += filter.bag);
                 }, 0) + endDateEnterBag;
 
@@ -129,32 +125,30 @@ const FilterDateFour = ({ garage, concernFilterSizes, endDate }: Props) => {
 
               const dataExitArray = findExitFilter.filter(
                 (f) =>
-                  new Date(f.date).toLocaleDateString() ===
+                  new Date(f.date).toLocaleDateString() !==
                   endDate.toLocaleDateString()
               );
-              let endDateExitQty = 0;
-              let endDateExitBag = 0;
-              if (!dataExitArray.length) {
-                const datum = filterGarageTransfer.filter(
-                  (f) =>
-                    new Date(f.date).toLocaleDateString() ===
-                      endDate.toLocaleDateString() &&
-                    f.typeOfFilterSizeId === item.id &&
-                    f.exitGarageId === garage
-                );
-                endDateExitQty = datum.reduce((total, filter) => {
-                  return (total += filter.quantity);
-                }, 0);
-                endDateExitBag = datum.reduce((total, filter) => {
-                  return (total += filter.bag);
-                }, 0);
-              }
+
+              const datumThree = filterGarageTransfer.filter(
+                (f) =>
+                  new Date(f.date).toLocaleDateString() ===
+                    endDate.toLocaleDateString() &&
+                  f.typeOfFilterSizeId === item.id &&
+                  f.exitGarageId === garage
+              );
+              const endDateExitQty = datumThree.reduce((total, filter) => {
+                return (total += filter.quantity);
+              }, 0);
+              const endDateExitBag = datumThree.reduce((total, filter) => {
+                return (total += filter.bag);
+              }, 0);
+
               const exitFilterQty =
-                findExitFilter.reduce((total, filter) => {
+                dataExitArray.reduce((total, filter) => {
                   return (total += filter.quantity);
                 }, 0) + endDateExitQty;
               const exitFilterBag =
-                findExitFilter.reduce((total, filter) => {
+                dataExitArray.reduce((total, filter) => {
                   return (total += filter.bag);
                 }, 0) + endDateExitBag;
 
@@ -170,33 +164,30 @@ const FilterDateFour = ({ garage, concernFilterSizes, endDate }: Props) => {
 
               const dataPayArray = findPayFilter.filter(
                 (f) =>
-                  new Date(f.date).toLocaleDateString() ===
+                  new Date(f.date).toLocaleDateString() !==
                   endDate.toLocaleDateString()
               );
-              let endDatePayQty = 0;
-              let endDatePayBag = 0;
-              if (!dataPayArray.length) {
-                const datum = payOther.filter(
-                  (f) =>
-                    new Date(f.date).toLocaleDateString() ===
-                      endDate.toLocaleDateString() &&
-                    f.typeOfFilterSizeId === item.id &&
-                    f.garageId === garage
-                );
-                endDatePayQty = datum.reduce((total, filter) => {
-                  return (total += filter.filterSizeQty);
-                }, 0);
-                endDatePayBag = datum.reduce((total, filter) => {
-                  return (total += filter.filterSizeBag);
-                }, 0);
-              }
+
+              const datumFour = payOther.filter(
+                (f) =>
+                  new Date(f.date).toLocaleDateString() ===
+                    endDate.toLocaleDateString() &&
+                  f.typeOfFilterSizeId === item.id &&
+                  f.garageId === garage
+              );
+              const endDatePayQty = datumFour.reduce((total, filter) => {
+                return (total += filter.filterSizeQty);
+              }, 0);
+              const endDatePayBag = datumFour.reduce((total, filter) => {
+                return (total += filter.filterSizeBag);
+              }, 0);
 
               const payFilterQty =
-                findPayFilter.reduce((total, filter) => {
+                dataPayArray.reduce((total, filter) => {
                   return (total += filter.filterSizeQty);
                 }, 0) + endDatePayQty;
               const payFilterBag =
-                findPayFilter.reduce((total, filter) => {
+                dataPayArray.reduce((total, filter) => {
                   return (total += filter.filterSizeBag);
                 }, 0) + endDatePayBag;
 
@@ -212,32 +203,29 @@ const FilterDateFour = ({ garage, concernFilterSizes, endDate }: Props) => {
 
               const dataExtraArray = findExtraFilter.filter(
                 (f) =>
-                  new Date(f.date).toLocaleDateString() ===
+                  new Date(f.date).toLocaleDateString() !==
                   endDate.toLocaleDateString()
               );
-              let endDateExtraQty = 0;
-              let endDateExtraBag = 0;
-              if (!dataExtraArray.length) {
-                const datum = extraPurchase.filter(
-                  (f) =>
-                    new Date(f.date).toLocaleDateString() ===
-                      endDate.toLocaleDateString() &&
-                    f.typeOfFilterSizeId === item.id &&
-                    f.garageId === garage
-                );
-                endDateExtraQty = datum.reduce((total, filter) => {
-                  return (total += filter.filterSizeQty);
-                }, 0);
-                endDateExtraBag = datum.reduce((total, filter) => {
-                  return (total += filter.filterSizeBag);
-                }, 0);
-              }
+              const datumFive = extraPurchase.filter(
+                (f) =>
+                  new Date(f.date).toLocaleDateString() ===
+                    endDate.toLocaleDateString() &&
+                  f.typeOfFilterSizeId === item.id &&
+                  f.garageId === garage
+              );
+              const endDateExtraQty = datumFive.reduce((total, filter) => {
+                return (total += filter.filterSizeQty);
+              }, 0);
+              const endDateExtraBag = datumFive.reduce((total, filter) => {
+                return (total += filter.filterSizeBag);
+              }, 0);
+
               const extraFilterQty =
-                findExtraFilter.reduce((total, filter) => {
+                dataExtraArray.reduce((total, filter) => {
                   return (total += filter.filterSizeQty);
                 }, 0) + endDateExtraQty;
               const extraFilterBag =
-                findExtraFilter.reduce((total, filter) => {
+                dataExtraArray.reduce((total, filter) => {
                   return (total += filter.filterSizeBag);
                 }, 0) + endDateExtraBag;
 

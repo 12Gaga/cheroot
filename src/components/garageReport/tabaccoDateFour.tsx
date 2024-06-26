@@ -48,51 +48,47 @@ const TabaccoDateFour = ({ garage, concernTabacco, endDate }: Props) => {
 
               const dataArray = findTabaccoData.filter(
                 (f) =>
-                  new Date(f.date).toLocaleDateString() ===
+                  new Date(f.date).toLocaleDateString() !==
                   endDate.toLocaleDateString()
               );
-              let endDateTin = 0;
-              let endDatePyi = 0;
-              let endDateBag = 0;
-              if (!dataArray.length) {
-                const datum = tabaccoStocks.filter(
-                  (f) =>
-                    new Date(f.date).toLocaleDateString() ===
-                      endDate.toLocaleDateString() &&
-                    f.typeOfTabaccoId === item.id &&
-                    f.garageId === garage
-                );
-                endDateTin =
-                  datum.reduce((total, tab) => {
-                    return (total += tab.tin);
-                  }, 0) * 16;
-                endDatePyi = datum.reduce((total, tab) => {
-                  return (total += tab.pyi);
-                }, 0);
-                endDateBag = datum.reduce((total, tab) => {
-                  return (total += tab.bag);
-                }, 0);
-              }
+
+              const datum = tabaccoStocks.filter(
+                (f) =>
+                  new Date(f.date).toLocaleDateString() ===
+                    endDate.toLocaleDateString() &&
+                  f.typeOfTabaccoId === item.id &&
+                  f.garageId === garage
+              );
+              const endDateTin =
+                datum.reduce((total, tab) => {
+                  return (total += tab.tin);
+                }, 0) * 16;
+              const endDatePyi = datum.reduce((total, tab) => {
+                return (total += tab.pyi);
+              }, 0);
+              const endDateBag = datum.reduce((total, tab) => {
+                return (total += tab.bag);
+              }, 0);
 
               const tabaccoTin =
-                findTabaccoData.reduce((total, tab) => {
+                dataArray.reduce((total, tab) => {
                   return (total += tab.tin);
                 }, 0) *
                   16 +
                 endDateTin;
               const tabaccoPyi =
-                findTabaccoData.reduce((total, tab) => {
+                dataArray.reduce((total, tab) => {
                   return (total += tab.pyi);
                 }, 0) + endDatePyi;
               const tolTabacco = tabaccoPyi + tabaccoTin;
               const tabaccoBag =
-                findTabaccoData.reduce((total, tab) => {
+                dataArray.reduce((total, tab) => {
                   return (total += tab.bag);
                 }, 0) + endDateBag;
 
               console.log("data1", findTabaccoData);
 
-              //findTabaccoGarageTrnsfer(EnterGarage)
+              //findTabaccoGarageTransfer(EnterGarage)
               const findEnterTabacco = tabaccoGarageTransfer.filter((et) => {
                 const tdate = new Date(et.date);
                 return (
@@ -104,45 +100,41 @@ const TabaccoDateFour = ({ garage, concernTabacco, endDate }: Props) => {
 
               const dataEnterArray = findEnterTabacco.filter(
                 (f) =>
-                  new Date(f.date).toLocaleDateString() ===
+                  new Date(f.date).toLocaleDateString() !==
                   endDate.toLocaleDateString()
               );
-              let endDateEnterTin = 0;
-              let endDateEnterPyi = 0;
-              let endDateEnterBag = 0;
-              if (!dataEnterArray.length) {
-                const datum = tabaccoGarageTransfer.filter(
-                  (f) =>
-                    new Date(f.date).toLocaleDateString() ===
-                      endDate.toLocaleDateString() &&
-                    f.typeOfTabaccoId === item.id &&
-                    f.enterenceGarageId === garage
-                );
-                endDateEnterTin =
-                  datum.reduce((total, tab) => {
-                    return (total += tab.tin);
-                  }, 0) * 16;
-                endDateEnterPyi = datum.reduce((total, tab) => {
-                  return (total += tab.pyi);
-                }, 0);
-                endDateEnterBag = datum.reduce((total, tab) => {
-                  return (total += tab.bag);
-                }, 0);
-              }
+
+              const datumTwo = tabaccoGarageTransfer.filter(
+                (f) =>
+                  new Date(f.date).toLocaleDateString() ===
+                    endDate.toLocaleDateString() &&
+                  f.typeOfTabaccoId === item.id &&
+                  f.enterenceGarageId === garage
+              );
+              const endDateEnterTin =
+                datumTwo.reduce((total, tab) => {
+                  return (total += tab.tin);
+                }, 0) * 16;
+              const endDateEnterPyi = datumTwo.reduce((total, tab) => {
+                return (total += tab.pyi);
+              }, 0);
+              const endDateEnterBag = datumTwo.reduce((total, tab) => {
+                return (total += tab.bag);
+              }, 0);
 
               const enterTabaccoTin =
-                findEnterTabacco.reduce((total, tab) => {
+                dataEnterArray.reduce((total, tab) => {
                   return (total += tab.tin);
                 }, 0) *
                   16 +
                 endDateEnterTin;
               const enterTabaccoPyi =
-                findEnterTabacco.reduce((total, tab) => {
+                dataEnterArray.reduce((total, tab) => {
                   return (total += tab.pyi);
                 }, 0) + endDateEnterPyi;
               const tolEnterTabacco = enterTabaccoPyi + enterTabaccoTin;
               const enterTabaccoBag =
-                findEnterTabacco.reduce((total, tab) => {
+                dataEnterArray.reduce((total, tab) => {
                   return (total += tab.bag);
                 }, 0) + endDateEnterBag;
 
@@ -160,44 +152,41 @@ const TabaccoDateFour = ({ garage, concernTabacco, endDate }: Props) => {
 
               const dataExitArray = findExitTabacco.filter(
                 (f) =>
-                  new Date(f.date).toLocaleDateString() ===
+                  new Date(f.date).toLocaleDateString() !==
                   endDate.toLocaleDateString()
               );
-              let endDateExitTin = 0;
-              let endDateExitPyi = 0;
-              let endDateExitBag = 0;
-              if (!dataExitArray.length) {
-                const datum = tabaccoGarageTransfer.filter(
-                  (f) =>
-                    new Date(f.date).toLocaleDateString() ===
-                      endDate.toLocaleDateString() &&
-                    f.typeOfTabaccoId === item.id &&
-                    f.exitGarageId === garage
-                );
-                endDateExitTin =
-                  datum.reduce((total, tab) => {
-                    return (total += tab.tin);
-                  }, 0) * 16;
-                endDateExitPyi = datum.reduce((total, tab) => {
-                  return (total += tab.pyi);
-                }, 0);
-                endDateExitBag = datum.reduce((total, tab) => {
-                  return (total += tab.bag);
-                }, 0);
-              }
+
+              const datumThree = tabaccoGarageTransfer.filter(
+                (f) =>
+                  new Date(f.date).toLocaleDateString() ===
+                    endDate.toLocaleDateString() &&
+                  f.typeOfTabaccoId === item.id &&
+                  f.exitGarageId === garage
+              );
+              const endDateExitTin =
+                datumThree.reduce((total, tab) => {
+                  return (total += tab.tin);
+                }, 0) * 16;
+              const endDateExitPyi = datumThree.reduce((total, tab) => {
+                return (total += tab.pyi);
+              }, 0);
+              const endDateExitBag = datumThree.reduce((total, tab) => {
+                return (total += tab.bag);
+              }, 0);
+
               const exitTabaccoTin =
-                findExitTabacco.reduce((total, tab) => {
+                dataExitArray.reduce((total, tab) => {
                   return (total += tab.tin);
                 }, 0) *
                   16 +
                 endDateExitTin;
               const exitTabaccoPyi =
-                findExitTabacco.reduce((total, tab) => {
+                dataExitArray.reduce((total, tab) => {
                   return (total += tab.pyi);
                 }, 0) + endDateExitPyi;
               const tolExitTabacco = exitTabaccoPyi + exitTabaccoTin;
               const exitTabaccoBag =
-                findExitTabacco.reduce((total, tab) => {
+                dataExitArray.reduce((total, tab) => {
                   return (total += tab.bag);
                 }, 0) + endDateExitBag;
 
@@ -214,45 +203,41 @@ const TabaccoDateFour = ({ garage, concernTabacco, endDate }: Props) => {
 
               const dataPayArray = findPayTabacco.filter(
                 (f) =>
-                  new Date(f.date).toLocaleDateString() ===
+                  new Date(f.date).toLocaleDateString() !==
                   endDate.toLocaleDateString()
               );
-              let endDatePayTin = 0;
-              let endDatePayPyi = 0;
-              let endDatePayBag = 0;
-              if (!dataPayArray.length) {
-                const datum = payOther.filter(
-                  (f) =>
-                    new Date(f.date).toLocaleDateString() ===
-                      endDate.toLocaleDateString() &&
-                    f.typeOfTabaccoId === item.id &&
-                    f.garageId === garage
-                );
-                endDatePayTin =
-                  datum.reduce((total, tab) => {
-                    return (total += tab.tabaccoTin);
-                  }, 0) * 16;
-                endDatePayPyi = datum.reduce((total, tab) => {
-                  return (total += tab.tabaccoPyi);
-                }, 0);
-                endDatePayBag = datum.reduce((total, tab) => {
-                  return (total += tab.tabaccoBag);
-                }, 0);
-              }
+
+              const datumFour = payOther.filter(
+                (f) =>
+                  new Date(f.date).toLocaleDateString() ===
+                    endDate.toLocaleDateString() &&
+                  f.typeOfTabaccoId === item.id &&
+                  f.garageId === garage
+              );
+              const endDatePayTin =
+                datumFour.reduce((total, tab) => {
+                  return (total += tab.tabaccoTin);
+                }, 0) * 16;
+              const endDatePayPyi = datumFour.reduce((total, tab) => {
+                return (total += tab.tabaccoPyi);
+              }, 0);
+              const endDatePayBag = datumFour.reduce((total, tab) => {
+                return (total += tab.tabaccoBag);
+              }, 0);
 
               const payTabaccoTin =
-                findPayTabacco.reduce((total, tab) => {
+                dataPayArray.reduce((total, tab) => {
                   return (total += tab.tabaccoTin);
                 }, 0) *
                   16 +
                 endDatePayTin;
               const payTabaccoPyi =
-                findPayTabacco.reduce((total, tab) => {
+                dataPayArray.reduce((total, tab) => {
                   return (total += tab.tabaccoPyi);
                 }, 0) + endDatePayPyi;
               const tolPayTabacco = payTabaccoPyi + payTabaccoTin;
               const payTabaccoBag =
-                findPayTabacco.reduce((tol, tab) => {
+                dataPayArray.reduce((tol, tab) => {
                   return (tol += tab.tabaccoBag);
                 }, 0) + endDatePayBag;
 
@@ -270,45 +255,41 @@ const TabaccoDateFour = ({ garage, concernTabacco, endDate }: Props) => {
 
               const dataExtraArray = findExtraTabacco.filter(
                 (f) =>
-                  new Date(f.date).toLocaleDateString() ===
+                  new Date(f.date).toLocaleDateString() !==
                   endDate.toLocaleDateString()
               );
-              let endDateExtraTin = 0;
-              let endDateExtraPyi = 0;
-              let endDateExtraBag = 0;
-              if (!dataExtraArray.length) {
-                const datum = extraPurchase.filter(
-                  (f) =>
-                    new Date(f.date).toLocaleDateString() ===
-                      endDate.toLocaleDateString() &&
-                    f.typeOfTabaccoId === item.id &&
-                    f.garageId === garage
-                );
-                endDateExtraTin =
-                  datum.reduce((total, tab) => {
-                    return (total += tab.tabaccoTin);
-                  }, 0) * 16;
-                endDateExtraPyi = datum.reduce((total, tab) => {
-                  return (total += tab.tabaccoPyi);
-                }, 0);
-                endDateExtraBag = datum.reduce((total, tab) => {
-                  return (total += tab.tabaccoBag);
-                }, 0);
-              }
+
+              const datumFive = extraPurchase.filter(
+                (f) =>
+                  new Date(f.date).toLocaleDateString() ===
+                    endDate.toLocaleDateString() &&
+                  f.typeOfTabaccoId === item.id &&
+                  f.garageId === garage
+              );
+              const endDateExtraTin =
+                datumFive.reduce((total, tab) => {
+                  return (total += tab.tabaccoTin);
+                }, 0) * 16;
+              const endDateExtraPyi = datumFive.reduce((total, tab) => {
+                return (total += tab.tabaccoPyi);
+              }, 0);
+              const endDateExtraBag = datumFive.reduce((total, tab) => {
+                return (total += tab.tabaccoBag);
+              }, 0);
 
               const extraTabaccoTin =
-                findExtraTabacco.reduce((total, tab) => {
+                dataExtraArray.reduce((total, tab) => {
                   return (total += tab.tabaccoTin);
                 }, 0) *
                   16 +
                 endDateExtraTin;
               const extraTabaccoPyi =
-                findExtraTabacco.reduce((total, tab) => {
+                dataExtraArray.reduce((total, tab) => {
                   return (total += tab.tabaccoPyi);
                 }, 0) + endDateExtraPyi;
               const tolExtraTabacco = extraTabaccoPyi + extraTabaccoTin;
               const extraTabaccobag =
-                findExtraTabacco.reduce((total, tab) => {
+                dataExtraArray.reduce((total, tab) => {
                   return (total += tab.tabaccoBag);
                 }, 0) + endDateExtraBag;
 

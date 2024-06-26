@@ -28,11 +28,11 @@ export const AddPackingData = createAsyncThunk(
       coverPlasticId,
       coverPlasticQty,
       quantity,
-      garageId,
       onSuccess,
       onError,
     } = option;
     const workShopId = localStorage.getItem("selectedWorkShopId");
+    const garageId = Number(localStorage.getItem("selectedGarageId"));
     try {
       const response = await fetch(
         `${Config.apiBaseUrl}/packingData?workShopId=${workShopId}`,

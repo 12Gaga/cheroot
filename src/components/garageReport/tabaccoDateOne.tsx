@@ -22,56 +22,45 @@ const TabaccoDateOne = ({
   const tabaccoGarageTransfer = useAppSelector(
     (store) => store.tabaccoTransfer.item
   );
+
+  const concernStock = concernTabaccoStock.filter(
+    (f) =>
+      new Date(f.date).toLocaleDateString() !==
+        startDate.toLocaleDateString() &&
+      new Date(f.date).toLocaleDateString() !== endDate.toLocaleDateString()
+  );
+  const concernEnter = concernTabaccoTransferEnter.filter(
+    (f) =>
+      new Date(f.date).toLocaleDateString() !==
+        startDate.toLocaleDateString() &&
+      new Date(f.date).toLocaleDateString() !== endDate.toLocaleDateString()
+  );
   //start date
-  const exitStartStock = concernTabaccoStock.filter(
+  const startStockArray = tabaccoStocks.filter(
     (f) =>
-      new Date(f.date).toLocaleDateString() === startDate.toLocaleDateString()
+      new Date(f.date).toLocaleDateString() ===
+        startDate.toLocaleDateString() && f.garageId === garage
   );
-  const exitStartEnter = concernTabaccoTransferEnter.filter(
+
+  const startEnterArray = tabaccoGarageTransfer.filter(
     (f) =>
-      new Date(f.date).toLocaleDateString() === startDate.toLocaleDateString()
+      new Date(f.date).toLocaleDateString() ===
+        startDate.toLocaleDateString() && f.enterenceGarageId === garage
   );
-  let startStockArray: Tabacco[] = [];
-  let startEnterArray: TabaccoTransferGarage[] = [];
-  if (!exitStartStock.length) {
-    startStockArray = tabaccoStocks.filter(
-      (f) =>
-        new Date(f.date).toLocaleDateString() ===
-          startDate.toLocaleDateString() && f.garageId === garage
-    );
-  }
-  if (!exitStartEnter.length) {
-    startEnterArray = tabaccoGarageTransfer.filter(
-      (f) =>
-        new Date(f.date).toLocaleDateString() ===
-          startDate.toLocaleDateString() && f.enterenceGarageId === garage
-    );
-  }
+
   //end date
-  const exitEndStock = concernTabaccoStock.filter(
+  const endStockArray = tabaccoStocks.filter(
     (f) =>
-      new Date(f.date).toLocaleDateString() === endDate.toLocaleDateString()
+      new Date(f.date).toLocaleDateString() === endDate.toLocaleDateString() &&
+      f.garageId === garage
   );
-  const exitEndEnter = concernTabaccoTransferEnter.filter(
+
+  const endEnterArray = tabaccoGarageTransfer.filter(
     (f) =>
-      new Date(f.date).toLocaleDateString() === endDate.toLocaleDateString()
+      new Date(f.date).toLocaleDateString() === endDate.toLocaleDateString() &&
+      f.enterenceGarageId === garage
   );
-  let endStockArray: Tabacco[] = [];
-  let endEnterArray: TabaccoTransferGarage[] = [];
-  if (!exitEndStock.length) {
-    endStockArray = tabaccoStocks.filter(
-      (f) =>
-        new Date(f.date).toLocaleDateString() ===
-          endDate.toLocaleDateString() && f.garageId === garage
-    );
-  }
-  if (!exitEndEnter.length) {
-    endEnterArray = tabaccoGarageTransfer.filter(
-      (f) =>
-        new Date(f.date).toLocaleDateString() ===
-          endDate.toLocaleDateString() && f.enterenceGarageId === garage
-    );
-  }
+
   return (
     <>
       <Box sx={{ mr: 4 }}>
@@ -89,8 +78,53 @@ const TabaccoDateOne = ({
             <th style={{ width: 200, backgroundColor: "#DBB5B5" }}>အိတ်</th>
           </tr>
 
-          {!exitStartStock.length &&
-            startStockArray.map((item) => {
+          {startStockArray.map((item) => {
+            const itemdate = new Date(item.date);
+            return (
+              <tr key={item.id}>
+                <td style={{ textAlign: "center" }}>
+                  {itemdate.toLocaleDateString()}
+                </td>
+                <td style={{ textAlign: "center" }}>
+                  {
+                    concernTabacco.find((t) => t.id === item.typeOfTabaccoId)
+                      ?.name
+                  }
+                </td>
+                <td style={{ textAlign: "center" }}>{item.tin}</td>
+                <td style={{ textAlign: "center" }}>{item.pyi}</td>
+                <td style={{ textAlign: "center" }}>{item.bag}</td>
+              </tr>
+            );
+          })}
+          {startEnterArray.map((item) => {
+            const itemdate = new Date(item.date);
+            return (
+              <tr key={item.id}>
+                <td style={{ textAlign: "center" }}>
+                  {itemdate.toLocaleDateString()}
+                </td>
+                <td style={{ textAlign: "center" }}>
+                  {
+                    concernTabacco.find((t) => t.id === item.typeOfTabaccoId)
+                      ?.name
+                  }
+                </td>
+                <td style={{ textAlign: "center", color: "red" }}>
+                  {item.tin}
+                </td>
+                <td style={{ textAlign: "center", color: "red" }}>
+                  {item.pyi}
+                </td>
+                <td style={{ textAlign: "center", color: "red" }}>
+                  {item.bag}
+                </td>
+              </tr>
+            );
+          })}
+
+          {garage &&
+            concernStock.map((item) => {
               const itemdate = new Date(item.date);
               return (
                 <tr key={item.id}>
@@ -109,8 +143,8 @@ const TabaccoDateOne = ({
                 </tr>
               );
             })}
-          {!exitStartEnter.length &&
-            startEnterArray.map((item) => {
+          {garage &&
+            concernEnter.map((item) => {
               const itemdate = new Date(item.date);
               return (
                 <tr key={item.id}>
@@ -136,99 +170,50 @@ const TabaccoDateOne = ({
               );
             })}
 
-          {garage &&
-            concernTabaccoStock.map((item) => {
-              const itemdate = new Date(item.date);
-              return (
-                <tr key={item.id}>
-                  <td style={{ textAlign: "center" }}>
-                    {itemdate.toLocaleDateString()}
-                  </td>
-                  <td style={{ textAlign: "center" }}>
-                    {
-                      concernTabacco.find((t) => t.id === item.typeOfTabaccoId)
-                        ?.name
-                    }
-                  </td>
-                  <td style={{ textAlign: "center" }}>{item.tin}</td>
-                  <td style={{ textAlign: "center" }}>{item.pyi}</td>
-                  <td style={{ textAlign: "center" }}>{item.bag}</td>
-                </tr>
-              );
-            })}
-          {garage &&
-            concernTabaccoTransferEnter.map((item) => {
-              const itemdate = new Date(item.date);
-              return (
-                <tr key={item.id}>
-                  <td style={{ textAlign: "center" }}>
-                    {itemdate.toLocaleDateString()}
-                  </td>
-                  <td style={{ textAlign: "center" }}>
-                    {
-                      concernTabacco.find((t) => t.id === item.typeOfTabaccoId)
-                        ?.name
-                    }
-                  </td>
-                  <td style={{ textAlign: "center", color: "red" }}>
-                    {item.tin}
-                  </td>
-                  <td style={{ textAlign: "center", color: "red" }}>
-                    {item.pyi}
-                  </td>
-                  <td style={{ textAlign: "center", color: "red" }}>
-                    {item.bag}
-                  </td>
-                </tr>
-              );
-            })}
-
-          {!exitEndStock.length &&
-            endStockArray.map((item) => {
-              const itemdate = new Date(item.date);
-              return (
-                <tr key={item.id}>
-                  <td style={{ textAlign: "center" }}>
-                    {itemdate.toLocaleDateString()}
-                  </td>
-                  <td style={{ textAlign: "center" }}>
-                    {
-                      concernTabacco.find((t) => t.id === item.typeOfTabaccoId)
-                        ?.name
-                    }
-                  </td>
-                  <td style={{ textAlign: "center" }}>{item.tin}</td>
-                  <td style={{ textAlign: "center" }}>{item.pyi}</td>
-                  <td style={{ textAlign: "center" }}>{item.bag}</td>
-                </tr>
-              );
-            })}
-          {!exitEndEnter.length &&
-            endEnterArray.map((item) => {
-              const itemdate = new Date(item.date);
-              return (
-                <tr key={item.id}>
-                  <td style={{ textAlign: "center" }}>
-                    {itemdate.toLocaleDateString()}
-                  </td>
-                  <td style={{ textAlign: "center" }}>
-                    {
-                      concernTabacco.find((t) => t.id === item.typeOfTabaccoId)
-                        ?.name
-                    }
-                  </td>
-                  <td style={{ textAlign: "center", color: "red" }}>
-                    {item.tin}
-                  </td>
-                  <td style={{ textAlign: "center", color: "red" }}>
-                    {item.pyi}
-                  </td>
-                  <td style={{ textAlign: "center", color: "red" }}>
-                    {item.bag}
-                  </td>
-                </tr>
-              );
-            })}
+          {endStockArray.map((item) => {
+            const itemdate = new Date(item.date);
+            return (
+              <tr key={item.id}>
+                <td style={{ textAlign: "center" }}>
+                  {itemdate.toLocaleDateString()}
+                </td>
+                <td style={{ textAlign: "center" }}>
+                  {
+                    concernTabacco.find((t) => t.id === item.typeOfTabaccoId)
+                      ?.name
+                  }
+                </td>
+                <td style={{ textAlign: "center" }}>{item.tin}</td>
+                <td style={{ textAlign: "center" }}>{item.pyi}</td>
+                <td style={{ textAlign: "center" }}>{item.bag}</td>
+              </tr>
+            );
+          })}
+          {endEnterArray.map((item) => {
+            const itemdate = new Date(item.date);
+            return (
+              <tr key={item.id}>
+                <td style={{ textAlign: "center" }}>
+                  {itemdate.toLocaleDateString()}
+                </td>
+                <td style={{ textAlign: "center" }}>
+                  {
+                    concernTabacco.find((t) => t.id === item.typeOfTabaccoId)
+                      ?.name
+                  }
+                </td>
+                <td style={{ textAlign: "center", color: "red" }}>
+                  {item.tin}
+                </td>
+                <td style={{ textAlign: "center", color: "red" }}>
+                  {item.pyi}
+                </td>
+                <td style={{ textAlign: "center", color: "red" }}>
+                  {item.bag}
+                </td>
+              </tr>
+            );
+          })}
 
           <tr>
             <td></td>
@@ -240,10 +225,10 @@ const TabaccoDateOne = ({
                 startEnterArray.reduce((tol, et) => {
                   return (tol += et.tin);
                 }, 0) +
-                concernTabaccoStock.reduce((tol, t) => {
+                concernStock.reduce((tol, t) => {
                   return tol + t.tin;
                 }, 0) +
-                concernTabaccoTransferEnter.reduce((tol, et) => {
+                concernEnter.reduce((tol, et) => {
                   return (tol += et.tin);
                 }, 0) +
                 endStockArray.reduce((tol, t) => {
@@ -260,10 +245,10 @@ const TabaccoDateOne = ({
                 startEnterArray.reduce((tol, et) => {
                   return (tol += et.pyi);
                 }, 0) +
-                concernTabaccoStock.reduce((tol, t) => {
+                concernStock.reduce((tol, t) => {
                   return tol + t.pyi;
                 }, 0) +
-                concernTabaccoTransferEnter.reduce((tol, et) => {
+                concernEnter.reduce((tol, et) => {
                   return (tol += et.pyi);
                 }, 0) +
                 endStockArray.reduce((tol, t) => {
@@ -280,10 +265,10 @@ const TabaccoDateOne = ({
                 startEnterArray.reduce((tol, et) => {
                   return (tol += et.bag);
                 }, 0) +
-                concernTabaccoStock.reduce((tol, t) => {
+                concernStock.reduce((tol, t) => {
                   return tol + t.bag;
                 }, 0) +
-                concernTabaccoTransferEnter.reduce((tol, et) => {
+                concernEnter.reduce((tol, et) => {
                   return (tol += et.bag);
                 }, 0) +
                 endStockArray.reduce((tol, t) => {

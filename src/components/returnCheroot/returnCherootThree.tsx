@@ -18,7 +18,7 @@ import { useState } from "react";
 
 const defaultValue: selectedAgent = {
   agentId: undefined,
-  phoneNo: undefined,
+  phoneNo: "",
   address: "",
   cashBig: 0,
   cashSmall: 0,

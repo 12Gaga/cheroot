@@ -74,6 +74,7 @@ const packing = [
   { label: "ပါကင်အမျိုးအစား", url: "/admin/packing" },
   { label: "ထုပ်ပိုးမှုအမျိုးအစား", url: "/admin/packing/packingForm" },
   { label: "ပါကင်စာရင်းထည့်ခြင်း", url: "/admin/packing/packingData" },
+  { label: "ပါကင်လက်ကျန်စာရင်းစစ်ခြင်း", url: "/admin/packing/packingReport" },
 ];
 
 const transferring = [
@@ -213,6 +214,18 @@ const GarageReport = [
 
 const FilterTabLabelReport = [
   {
+    label: "အစီခံလက်ကျန်",
+    url: "/admin/agentItemsReport",
+  },
+  {
+    label: "ဆေးစပ်လက်ကျန်",
+    url: "/admin/agentItemsReport/remainTabacco",
+  },
+  {
+    label: "တံဆိပ်လက်ကျန်",
+    url: "/admin/agentItemsReport/remainLabel",
+  },
+  {
     label: "ဖက်အလျော်အစားစာရင်း",
     url: "/admin/agentItemsReport/leafCompensation",
   },
@@ -227,18 +240,6 @@ const FilterTabLabelReport = [
   {
     label: "တံဆိပ်အလျော်အစားစာရင်း",
     url: "/admin/agentItemsReport/labelCompensation",
-  },
-  {
-    label: "အစီခံလက်ကျန်",
-    url: "/admin/agentItemsReport",
-  },
-  {
-    label: "ဆေးစပ်လက်ကျန်",
-    url: "/admin/agentItemsReport/remainTabacco",
-  },
-  {
-    label: "တံဆိပ်လက်ကျန်",
-    url: "/admin/agentItemsReport/remainLabel",
   },
 ];
 

@@ -42,24 +42,23 @@ const LabelDateFour = ({ concernLabels, garage, endDate }: Props) => {
 
               const dataArray = findLabelData.filter(
                 (f) =>
-                  new Date(f.date).toLocaleDateString() ===
+                  new Date(f.date).toLocaleDateString() !==
                   endDate.toLocaleDateString()
               );
-              let endDateBandle = 0;
-              if (!dataArray.length) {
-                const datum = labelStocks.filter(
-                  (f) =>
-                    new Date(f.date).toLocaleDateString() ===
-                      endDate.toLocaleDateString() &&
-                    f.typeOfLabelId === item.id &&
-                    f.garageId === garage
-                );
-                endDateBandle = datum.reduce((total, label) => {
-                  return (total += label.bandle);
-                }, 0);
-              }
+
+              const datum = labelStocks.filter(
+                (f) =>
+                  new Date(f.date).toLocaleDateString() ===
+                    endDate.toLocaleDateString() &&
+                  f.typeOfLabelId === item.id &&
+                  f.garageId === garage
+              );
+              const endDateBandle = datum.reduce((total, label) => {
+                return (total += label.bandle);
+              }, 0);
+
               const labelBandle =
-                findLabelData.reduce((total, label) => {
+                dataArray.reduce((total, label) => {
                   return (total += label.bandle);
                 }, 0) + endDateBandle;
 
@@ -75,24 +74,23 @@ const LabelDateFour = ({ concernLabels, garage, endDate }: Props) => {
 
               const dataEnterArray = findEnterLabel.filter(
                 (f) =>
-                  new Date(f.date).toLocaleDateString() ===
+                  new Date(f.date).toLocaleDateString() !==
                   endDate.toLocaleDateString()
               );
-              let endDateEnterBandle = 0;
-              if (!dataEnterArray.length) {
-                const datum = labelGarageTransfer.filter(
-                  (f) =>
-                    new Date(f.date).toLocaleDateString() ===
-                      endDate.toLocaleDateString() &&
-                    f.typeOfLabelId === item.id &&
-                    f.enterenceGarageId === garage
-                );
-                endDateEnterBandle = datum.reduce((total, label) => {
-                  return (total += label.bandle);
-                }, 0);
-              }
+
+              const datumTwo = labelGarageTransfer.filter(
+                (f) =>
+                  new Date(f.date).toLocaleDateString() ===
+                    endDate.toLocaleDateString() &&
+                  f.typeOfLabelId === item.id &&
+                  f.enterenceGarageId === garage
+              );
+              const endDateEnterBandle = datumTwo.reduce((total, label) => {
+                return (total += label.bandle);
+              }, 0);
+
               const enterLabelBandle =
-                findEnterLabel.reduce((total, label) => {
+                dataEnterArray.reduce((total, label) => {
                   return (total += label.bandle);
                 }, 0) + endDateEnterBandle;
 
@@ -108,24 +106,23 @@ const LabelDateFour = ({ concernLabels, garage, endDate }: Props) => {
 
               const dataExitArray = findExitLabel.filter(
                 (f) =>
-                  new Date(f.date).toLocaleDateString() ===
+                  new Date(f.date).toLocaleDateString() !==
                   endDate.toLocaleDateString()
               );
-              let endDateExitBandle = 0;
-              if (!dataExitArray.length) {
-                const datum = labelGarageTransfer.filter(
-                  (f) =>
-                    new Date(f.date).toLocaleDateString() ===
-                      endDate.toLocaleDateString() &&
-                    f.typeOfLabelId === item.id &&
-                    f.exitGarageId === garage
-                );
-                endDateExitBandle = datum.reduce((total, label) => {
-                  return (total += label.bandle);
-                }, 0);
-              }
+
+              const datumThree = labelGarageTransfer.filter(
+                (f) =>
+                  new Date(f.date).toLocaleDateString() ===
+                    endDate.toLocaleDateString() &&
+                  f.typeOfLabelId === item.id &&
+                  f.exitGarageId === garage
+              );
+              const endDateExitBandle = datumThree.reduce((total, label) => {
+                return (total += label.bandle);
+              }, 0);
+
               const exitLabelBandle =
-                findExitLabel.reduce((total, label) => {
+                dataExitArray.reduce((total, label) => {
                   return (total += label.bandle);
                 }, 0) + endDateExitBandle;
 
@@ -141,24 +138,23 @@ const LabelDateFour = ({ concernLabels, garage, endDate }: Props) => {
 
               const dataPayArray = findPayLabel.filter(
                 (f) =>
-                  new Date(f.date).toLocaleDateString() ===
+                  new Date(f.date).toLocaleDateString() !==
                   endDate.toLocaleDateString()
               );
-              let endDatePayBandle = 0;
-              if (!dataPayArray.length) {
-                const datum = payOther.filter(
-                  (f) =>
-                    new Date(f.date).toLocaleDateString() ===
-                      endDate.toLocaleDateString() &&
-                    f.typeOfLabelId === item.id &&
-                    f.garageId === garage
-                );
-                endDatePayBandle = datum.reduce((total, label) => {
-                  return (total += label.labelBandle);
-                }, 0);
-              }
+
+              const datumFour = payOther.filter(
+                (f) =>
+                  new Date(f.date).toLocaleDateString() ===
+                    endDate.toLocaleDateString() &&
+                  f.typeOfLabelId === item.id &&
+                  f.garageId === garage
+              );
+              const endDatePayBandle = datumFour.reduce((total, label) => {
+                return (total += label.labelBandle);
+              }, 0);
+
               const payLabelBandle =
-                findPayLabel.reduce((total, label) => {
+                dataPayArray.reduce((total, label) => {
                   return (total += label.labelBandle);
                 }, 0) + endDatePayBandle;
 
@@ -174,24 +170,23 @@ const LabelDateFour = ({ concernLabels, garage, endDate }: Props) => {
 
               const dataExtraArray = findExtraLabel.filter(
                 (f) =>
-                  new Date(f.date).toLocaleDateString() ===
+                  new Date(f.date).toLocaleDateString() !==
                   endDate.toLocaleDateString()
               );
-              let endDateExtraBandle = 0;
-              if (!dataExtraArray.length) {
-                const datum = extraPurchase.filter(
-                  (f) =>
-                    new Date(f.date).toLocaleDateString() ===
-                      endDate.toLocaleDateString() &&
-                    f.typeOfLabelId === item.id &&
-                    f.garageId === garage
-                );
-                endDateExtraBandle = datum.reduce((total, label) => {
-                  return (total += label.labelBandle);
-                }, 0);
-              }
+
+              const datumFive = extraPurchase.filter(
+                (f) =>
+                  new Date(f.date).toLocaleDateString() ===
+                    endDate.toLocaleDateString() &&
+                  f.typeOfLabelId === item.id &&
+                  f.garageId === garage
+              );
+              const endDateExtraBandle = datumFive.reduce((total, label) => {
+                return (total += label.labelBandle);
+              }, 0);
+
               const extraLabelBandle =
-                findExtraLabel.reduce((total, label) => {
+                dataExtraArray.reduce((total, label) => {
                   return (total += label.labelBandle);
                 }, 0) + endDateExtraBandle;
 
