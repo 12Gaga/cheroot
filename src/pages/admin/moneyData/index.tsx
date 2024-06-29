@@ -7,6 +7,8 @@ import { useState } from "react";
 import HomeWorkIcon from "@mui/icons-material/HomeWork";
 import UpdateTitle from "@/components/money/updateTitle";
 import DeleteTitle from "@/components/money/deleteTitle";
+import EditIcon from "@mui/icons-material/Edit";
+import DeleteIcon from "@mui/icons-material/Delete";
 const MoneyData = () => {
   const workShopId = useAppSelector((store) => store.workShop.selectedWorkShop)
     ?.id as number;
@@ -18,6 +20,7 @@ const MoneyData = () => {
   const [updateOpen, setUpdateOpen] = useState<boolean>(false);
   const [deleteOpen, setDeleteOpen] = useState<boolean>(false);
   const [selectId, setSelectId] = useState<number>(0);
+  let no = 0;
   return (
     <>
       <AdminLayout>
@@ -48,25 +51,36 @@ const MoneyData = () => {
             ငွေစာရင်းခေါင်းစဉ်အသစ်ထည့်ခြင်း
           </Button>
         </Box>
-        <Box sx={{ display: "flex", flexWrap: "wrap" }}>
+        <table border={1}>
+          <tr>
+            <th style={{ width: 50 }}>စဉ်</th>
+            <th style={{ width: 200 }}>ငွေစာရင်းခေါင်းစဉ်</th>
+          </tr>
           {concernTiltes.map((item) => {
             return (
-              <ItemCard
-                key={item.id}
-                icon={<HomeWorkIcon />}
-                title={item.name}
-                onUpdateClcik={() => {
-                  setUpdateOpen(true);
-                  setSelectId(item.id);
-                }}
-                onDeleteClcik={() => {
-                  setDeleteOpen(true);
-                  setSelectId(item.id);
-                }}
-              />
+              <tr key={item.id}>
+                <th style={{ height: 15 }}>{(no += 1)}</th>
+                <td style={{ textAlign: "center" }}>{item.name}</td>
+                <td
+                  style={{ textAlign: "center", width: 50 }}
+                  onClick={() => {
+                    setUpdateOpen(true), setSelectId(item.id);
+                  }}
+                >
+                  {<EditIcon />}
+                </td>
+                <td
+                  style={{ textAlign: "center", width: 50 }}
+                  onClick={() => {
+                    setDeleteOpen(true), setSelectId(item.id);
+                  }}
+                >
+                  {<DeleteIcon />}
+                </td>
+              </tr>
             );
           })}
-        </Box>
+        </table>
 
         <NewMoneyTitle open={open} setOpen={setOpen} />
         <UpdateTitle
